@@ -2,7 +2,7 @@
 // For the uuid PostgreSQL data type, you can use a TypeScrypt string.
 import { UUID } from "crypto"
 
-export type IventoryType = {
+export type InventoryType = {
   inventory_item_id: string; // UUID
   name: Text;
   category: string;
