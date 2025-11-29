@@ -1,4 +1,4 @@
-insert into example
+insert into tickets
   (id, name)
 values
   (1, 'alice'),

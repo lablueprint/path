@@ -1,15 +1,33 @@
-create table "tickets"{
-    "ticket_id" SERIAL, -- SERIAL is an int that create unique sequential values??
-    "requestor_user_id" INT,
-    "store_id" INT,
-    "status" VARCHAR(50), -- max 50 character status
-    "date_submitted"  TIMESTAMP WITH TIME ZONE,
-    PRIMARY KEY (ticket_id),
-    FOREIGN KEY (requestor_user_id) REFERENCES users(user_id),
-    FOREIGN KEY (store_id) REFERENCES stores(store_id)
-}
+create table "tickets" (
+    "ticket_id" uuid default uuid_generate_v4() primary key,
+    "requestor_user_id" uuid not null,
+    "store_id" uuid not null,
+    "status" VARCHAR(50) not null, -- max 50 character status
+    "date_submitted"  TIMESTAMP WITH TIME ZONE default now()
+    -- FOREIGN KEY (requestor_user_id) REFERENCES users(user_id),
+    -- FOREIGN KEY (store_id) REFERENCES stores(store_id)
+);
 
 alter table tickets enable row level security;
 
--- create the policies here, idk enough sql rn to do so. Also we have to delete these comments lol
+create policy "public can read entries in tickets"
+on public.tickets
+for select to anon
+using (true);
+
+create policy "public can insert entries in tickets"
+on public.tickets
+for insert to anon
+with check (true);
+
+create policy "public can update entries in tickets"
+on public.tickets
+for update to anon
+using (true)
+with check (true);
+
+create policy "public can delete entries in tickets"
+on public.tickets
+for delete to anon
+using (true);
 
