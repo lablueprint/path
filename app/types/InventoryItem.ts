@@ -4,12 +4,14 @@ import { UUID } from "crypto"
 
 export type InventoryType = {
   inventory_item_id: string; // UUID
-  name: Text;
+  store_id: string; // UUID
   category: string;
   subcategory: string;
   item: string;
-  description: Text;
-  photo_url: Text;
+  description: string;
+  photo_url: string;
   quantity_available: number;
   is_hidden: boolean;
 };
+
+export type InventoryItemUpdate = Partial<InventoryType>;
