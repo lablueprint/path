@@ -1,8 +1,10 @@
+create type ticket_status as enum ('requested', 'ready', 'rejected', 'fulfilled');
+
 create table "tickets" (
     "ticket_id" uuid default uuid_generate_v4() primary key,
     "requestor_user_id" uuid not null,
     "store_id" uuid not null,
-    "status" VARCHAR(50) not null, -- max 50 character status
+    "status" ticket_status not null, -- max 50 character status
     "date_submitted"  TIMESTAMP WITH TIME ZONE default now()
     -- FOREIGN KEY (requestor_user_id) REFERENCES users(user_id),
     -- FOREIGN KEY (store_id) REFERENCES stores(store_id)

@@ -18,7 +18,7 @@ export async function createTicket(formData: Ticket) {
     return { success: true };
 }
 
-export async function deleteTickets(ticketId: string) {
+export async function deleteTicket(ticketId: string) {
     const supabase = await createClient();
     const { error: err } = await supabase.from("tickets").delete().eq("ticket_id", ticketId);
     if (err) {
@@ -27,8 +27,11 @@ export async function deleteTickets(ticketId: string) {
     return { success: true };
 }
 
-export async function updateTicketStatus(status: string) {
+export async function updateTicketStatus(newStatus: string, ticketId: string) {
     const supabase = await createClient();
-    const { error: err } = await supabase.from("tickets")
-    //finish and check doc for the 4 status can also make enum 
+    const { error: err } = await supabase.from("tickets").update({status: newStatus }).eq("ticket_id", ticketId);
+    if (err) {
+        return { success : false, error: err};
+    }
+    return { success : true };
 }

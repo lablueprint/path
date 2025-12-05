@@ -1,9 +1,11 @@
+create type "public"."ticket_status" as enum ('requested', 'ready', 'rejected', 'fulfilled');
+
 
   create table "public"."tickets" (
     "ticket_id" uuid not null default extensions.uuid_generate_v4(),
     "requestor_user_id" uuid not null,
     "store_id" uuid not null,
-    "status" character varying(50) not null,
+    "status" public.ticket_status not null,
     "date_submitted" timestamp with time zone default now()
       );
 
