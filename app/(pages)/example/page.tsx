@@ -21,8 +21,7 @@ export default function InventoryType() {
   
   const data: InventoryType = {
     store_id: "4c7b2b65-16df-44b5-a3c2-e2fcd090b76c",
-    category: "example",
-    subcategory: "example",
+    subcategory: 1,
     item: "Sample Item",
     description: "test description",
     photo_url: "http://example.com/photo.jpg",

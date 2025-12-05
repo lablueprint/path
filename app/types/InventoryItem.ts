@@ -5,8 +5,7 @@ import { UUID } from "crypto"
 export type InventoryType = {
   inventory_item_id?: string; // UUID
   store_id: string; // UUID
-  category: string;
-  subcategory: string;
+  subcategory: number;
   item: string;
   description: string;
   photo_url: string;

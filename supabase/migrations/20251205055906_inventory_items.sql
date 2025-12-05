@@ -2,8 +2,7 @@
   create table "public"."inventory_items" (
     "inventory_item_id" uuid not null default extensions.uuid_generate_v4(),
     "store_id" uuid not null,
-    "category" character varying(50) not null,
-    "subcategory" character varying(50) not null,
+    "subcategory" integer not null,
     "item" character varying(255) not null,
     "description" text not null,
     "photo_url" text,
