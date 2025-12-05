@@ -4,7 +4,7 @@ import { useState } from "react";
 
 //import { createExampleEntry } from "@/app/api/example/actions";
 //import { ExampleType } from "@/app/types/ExampleType";
-import { createItem, changeItemQuantity } from "@/app/api/inventory-items/actions";
+import { createItem, changeItemQuantity, deleteItem} from "@/app/api/inventory-items/actions";
 import type { InventoryType } from "@/app/types/InventoryItem";
 
 // export default function Example() {
@@ -16,6 +16,7 @@ import type { InventoryType } from "@/app/types/InventoryItem";
 
 export default function InventoryType() {
   const [inventoryId, setInventoryId] = useState("");
+  const [inventoryIdToDelete, setInventoryIdToDelete] = useState("");
   const [updatedQuantity, setUpdatedQuantity] = useState<number>(0);
   
   const data: InventoryType = {
@@ -38,46 +39,70 @@ export default function InventoryType() {
   }
 
   const handleChangeItemQuantity = async () => {
-    if (!inventoryId) return;
     await changeItemQuantity(inventoryId, Number(updatedQuantity));
   }
 
-  // const deleteItem = async () => {
-  //   await deleteItem(data);
-  // }
+  const handleDeleteItem = async () => {
+    await deleteItem(inventoryIdToDelete);
+  }
 
   return (
     <div>
       Welcome to PATH! This is an example page.
       <br />
+      <br />
+      <h2>Create an Item</h2>
       <button onClick={handleCreateItem}>
         Click to add inventory item
       </button>
       <br />
-      <label>
-        Inventory Item ID:
+      <br />
+      <h2>Update an Item</h2>
+      <div>
+        <label>
+        Inventory Item ID to Update:
         <input
           type="text"
           value={inventoryId}
           onChange={(e) => setInventoryId(e.target.value)}
           placeholder="inventory_item_id"
         />
-      </label>
-      <br />
-      <label>
-        New Quantity:
-        <input
-          type="number"
-          value={updatedQuantity}
-          onChange={(e) => setUpdatedQuantity(Number(e.target.value))}
-          placeholder="0"
-          min={0}
-        />
-      </label>
-      <br />
-      <button onClick={handleChangeItemQuantity}>
+        </label>
+        <br />
+        <label>
+          New Quantity:
+          <input
+            type="number"
+            value={updatedQuantity}
+            onChange={(e) => setUpdatedQuantity(Number(e.target.value))}
+            placeholder="0"
+            min={0}
+          />
+        </label>
+        <br />
+        <button onClick={handleChangeItemQuantity}>
         Update inventory quantity
-      </button>
+        </button>
+      </div>
+      <br />
+      <h2>Delete an Item</h2>
+      <div>
+        <label>
+          Inventory Item ID to Delete:
+          <input
+            type="text"
+            value={inventoryIdToDelete}
+            onChange={(e) => setInventoryIdToDelete(e.target.value)}
+            placeholder="inventory_item_id"
+          />
+        </label>
+        <br />
+        <button onClick={handleDeleteItem}>
+          Delete inventory item
+        </button>
+      </div>
+      <br />
+      
     </div>
   );
 }
