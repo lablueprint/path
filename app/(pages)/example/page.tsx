@@ -14,14 +14,13 @@ import type { InventoryType } from "@/app/types/InventoryItem";
 
 export default function InventoryType() {
   const data: InventoryType = {
-    inventory_item_id: "1",
-    store_id: "example",
+    store_id: "4c7b2b65-16df-44b5-a3c2-e2fcd090b76c",
     category: "example",
     subcategory: "example",
-    quantity_available: 2,
     item: "Sample Item",
     description: "test description",
     photo_url: "http://example.com/photo.jpg",
+    quantity_available: 2,
     is_hidden: false,
   };
 
