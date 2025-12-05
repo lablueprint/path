@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { createStore } from "@/app/api/stores/action";
 import { ExampleType } from "@/app/types/ExampleType";
+import { Ticket } from "@/app/types/Ticket";
 import { Store } from "@/app/types/Store";
 import { deleteStore } from "@/app/api/stores/action";
 import TestDonationsPage from "../test-donations/page";
@@ -19,7 +20,7 @@ export default function Example() {
 
   const [updateStatus, setStatus] = useState("");
 
-  const data = {
+  const data: ExampleType = {
     id: 5,
     name: "harry",
   };
@@ -30,7 +31,7 @@ export default function Example() {
     street_address: "test address",
   };
 
-  const ticketData = {
+  const ticketData: Ticket = {
     ticket_id: "",
     requestor_user_id: "4c4f3502-1b31-4040-8a7a-2baedbc8a347",
     store_id: "94b6329f-7383-46e2-978d-e105d31c3813",
