@@ -5,6 +5,7 @@ import { createStore } from "@/app/api/example/stores/action";
 import { ExampleType } from "@/app/types/ExampleType";
 import { Store } from "@/app/types/Store";
 import { deleteStore } from "@/app/api/example/stores/action";
+import TestDonationsPage from "../test-donations/page";
 
 export default function Example() {
   const data: ExampleType = {
@@ -36,6 +37,7 @@ export default function Example() {
       <button onClick={handleExampleClick}>Click to add data to the example table</button>
       <button onClick={handleAddStoreClick}>Click to add store to stores table</button>
       <button onClick={handleDeleteStoreClick}>Click to delete store from stores table</button>
+      <TestDonationsPage />
     </div>
   );
 }
