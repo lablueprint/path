@@ -1,14 +1,15 @@
 "use client";
 
 import { createExampleEntry } from "@/app/api/example/actions";
+import { ExampleType } from "@/app/types/ExampleType";
 
 export default function Example() {
-  const data = {
+  const data: ExampleType = {
     id: 5,
     name: 'harry',
   };
 
-  const handleClick = async () => {
+  const handleExampleClick = async () => {
     await createExampleEntry(data);
   };
 
@@ -16,7 +17,7 @@ export default function Example() {
     <div>
       Welcome to PATH! This is an example page.
       <br />
-      <button onClick={handleClick}>
+      <button onClick={handleExampleClick}>
         Click to add data to the example table
       </button>
     </div>
