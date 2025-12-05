@@ -1,7 +1,6 @@
 CREATE TABLE ticket_items
 (
-
-    ticket_item_id UUID default uuid_generate_v4() /*primary key*/,
+    ticket_item_id UUID default uuid_generate_v4() primary key,
     ticket_id UUID not null,
     inventory_item_id UUID,
     free_text_description TEXT,
@@ -33,7 +32,7 @@ for update to anon
 using (true)
 with check (true);
 
-create policy "public can delete tiecket_items"
+create policy "public can delete ticket_items"
 on public.ticket_items
 for delete to anon
 using (true);

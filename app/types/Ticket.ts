@@ -8,3 +8,5 @@ export type TicketItem = {
 };
 
 export type TicketItemUpdate = Partial<TicketItem>;
+
+export type TicketItemInsert = Omit<TicketItem, 'ticket_item_id'>

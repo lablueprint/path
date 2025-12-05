@@ -1,5 +1,6 @@
 "use server";
 
+import { TicketItemInsert } from '@/app/types/Ticket';
 import { createClient } from "@/app/lib/supabase/server-client";
 
 export async function createTicketItem(ticketItemData) {
