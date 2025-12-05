@@ -1,10 +1,10 @@
 "use client";
 
 import { createExampleEntry } from "@/app/api/example/actions";
-import { createStore } from "@/app/api/example/stores/action";
+import { createStore } from "@/app/api/stores/action";
 import { ExampleType } from "@/app/types/ExampleType";
 import { Store } from "@/app/types/Store";
-import { deleteStore } from "@/app/api/example/stores/action";
+import { deleteStore } from "@/app/api/stores/action";
 import TestDonationsPage from "../test-donations/page";
 
 export default function Example() {
