@@ -7,6 +7,11 @@ import {
   updateTicketStatus,
 } from "@/app/api/tickets/actions";
 import { useState } from "react";
+import { createStore } from "@/app/api/stores/action";
+import { ExampleType } from "@/app/types/ExampleType";
+import { Store } from "@/app/types/Store";
+import { deleteStore } from "@/app/api/stores/action";
+import TestDonationsPage from "../test-donations/page";
 
 export default function Example() {
   const [ticketToDelete, setDelete] = useState("");
@@ -19,6 +24,12 @@ export default function Example() {
     name: "harry",
   };
 
+  const storeData: Store = {
+    store_id: "550e8400-e29b-41d4-a716-446655440000",
+    name: "test store",
+    street_address: "test address",
+  };
+
   const ticketData = {
     ticket_id: "",
     requestor_user_id: "4c4f3502-1b31-4040-8a7a-2baedbc8a347",
@@ -27,7 +38,7 @@ export default function Example() {
     date_submitted: "",
   };
 
-  const handleClick = async () => {
+  const handleExampleClick = async () => {
     await createExampleEntry(data);
   };
 
@@ -43,14 +54,23 @@ export default function Example() {
     await updateTicketStatus(updateStatus, ticketToUpdate);
   };
 
+  const handleAddStoreClick = async () => {
+    await createStore(storeData);
+  };
+
+  const handleDeleteStoreClick = async () => {
+    await deleteStore(storeData.store_id);
+  };
   return (
     <div>
       Welcome to PATH! This is an example page.
       <br />
-      <button onClick={handleClick}>
+      <button onClick={handleExampleClick}>
         Click to add data to the example table
       </button>
       <br />
+      <br />
+      <h2>Ticket Testing</h2>
       <button onClick={submitTicket}>
         Click to add ticket to the ticket table
       </button>
@@ -93,6 +113,16 @@ export default function Example() {
       </label>
       <br />
       <button onClick={updateTicket}>Click to update status of ticket</button>
+      <br />
+      <br />
+      <h2>Store Testing</h2>
+      <button onClick={handleAddStoreClick}>
+        Click to add store to stores table
+      </button>
+      <button onClick={handleDeleteStoreClick}>
+        Click to delete store from stores table
+      </button>
+      <TestDonationsPage />
     </div>
   );
 }
