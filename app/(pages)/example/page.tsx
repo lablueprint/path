@@ -2,6 +2,7 @@
 
 import { createExampleEntry } from "@/app/api/example/actions";
 import { ExampleType } from "@/app/types/ExampleType";
+import TestDonationsPage from "../test-donations/page";
 
 export default function Example() {
   const data: ExampleType = {
@@ -20,6 +21,7 @@ export default function Example() {
       <button onClick={handleExampleClick}>
         Click to add data to the example table
       </button>
+      <TestDonationsPage />
     </div>
   );
 }
