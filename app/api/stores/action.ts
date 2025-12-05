@@ -1,9 +1,10 @@
 "use server";
+
 import { createClient } from "@/app/lib/supabase/server-client";
-import { Store } from "@/app/types/Store";
+import { StoreInsert } from "@/app/types/Store";
 
 // create store
-export const createStore = async (data: Store) => {
+export const createStore = async (data: StoreInsert) => {
   const supabase = await createClient();
   const { data: entry, error } = await supabase.from("stores").insert(data);
   if (error) {
@@ -19,7 +20,7 @@ export const deleteStore = async (store_id: string) => {
   const { data: deletedData, error } = await supabase
     .from("stores")
     .delete()
-    .eq("store_id", "550e8400-e29b-41d4-a716-446655440000");
+    .eq("store_id", store_id);
   if (error) {
     throw error;
   }
