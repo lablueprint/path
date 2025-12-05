@@ -16,12 +16,12 @@ export const createStore = async (data: Store) => {
 // delete store given store_id
 export const deleteStore = async (store_id: string) => {
   const supabase = await createClient();
-  const { data: deletedData, error } = await supabase.from("stores").delete().eq(store_id, 1);
-
+  const { data: deletedData, error } = await supabase
+    .from("stores")
+    .delete()
+    .eq("store_id", "550e8400-e29b-41d4-a716-446655440000");
   if (error) {
     throw error;
   }
   return deletedData;
 };
-
-

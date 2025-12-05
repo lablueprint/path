@@ -1,5 +1,5 @@
 create table "stores" (
-    store_id text,
+    store_id uuid default uuid_generate_v4() primary key,
     name text,
     street_address text
 );

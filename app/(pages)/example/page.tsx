@@ -13,7 +13,7 @@ export default function Example() {
   };
 
   const storeData: Store = {
-    store_id: "123",
+    store_id: "550e8400-e29b-41d4-a716-446655440000",
     name: "test store",
     street_address: "test address",
   };
@@ -27,13 +27,15 @@ export default function Example() {
   };
 
   const handleDeleteStoreClick = async () => {
-    await deleteStore("123");
+    await deleteStore(storeData.store_id);
   };
-  <div>
-    Welcome to PATH! This is an example page.
-    <br />
-    <button onClick={handleExampleClick}>Click to add data to the example table</button>
-    <button onClick={handleAddStoreClick}>Click to add store to stores table</button>
-    <button></button>
-  </div>;
+  return (
+    <div>
+      Welcome to PATH! This is an example page.
+      <br />
+      <button onClick={handleExampleClick}>Click to add data to the example table</button>
+      <button onClick={handleAddStoreClick}>Click to add store to stores table</button>
+      <button onClick={handleDeleteStoreClick}>Click to delete store from stores table</button>
+    </div>
+  );
 }
