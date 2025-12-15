@@ -6,5 +6,16 @@
   "tabWidth": 2,
   "useTabs": false,
   "jsxSingleQuote": false,
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "plugins": ["prettier-plugin-sql"],
+  "overrides": [
+    {
+      "files": "*.sql",
+      "options": {
+        "language": "postgresql",
+        "keywordCase": "lower",
+        "dataTypeCase": "lower"
+      }
+    }
+  ]
 }
