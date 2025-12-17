@@ -2,7 +2,7 @@
 
 import { createDonation, deleteDonation } from '@/app/api/donations/actions';
 
-export default function TestDonationsPage() {
+export default function DonationsTestComponent() {
   const handleCreate = async () => {
     try {
       const donation = await createDonation({
@@ -29,7 +29,7 @@ export default function TestDonationsPage() {
   };
 
   const handleDelete = async () => {
-    const idToDelete = '5001e28d-91b6-4df8-8976-4c88c4ad112f'; // hard-coded ID for now
+    const idToDelete = '40b188ab-e9a1-444d-9e6b-6b99d5017c90'; // hard-coded ID for now
     try {
       const result = await deleteDonation(idToDelete);
       console.log('Deleted donation:', result);

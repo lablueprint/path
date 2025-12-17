@@ -1,28 +1,26 @@
 'use server';
 
 import { createClient } from '@/app/lib/supabase/server-client';
-import { StoreInsert } from '@/app/types/Store';
+import { StoreInsert } from '@/app/types/store';
 
 // create store
 export const createStore = async (data: StoreInsert) => {
   const supabase = await createClient();
-  const { data: entry, error } = await supabase.from('stores').insert(data);
+  const { error } = await supabase.from('stores').insert(data);
   if (error) {
     throw error;
   }
-  return entry;
 };
 
 // action deleteStore
 // delete store given store_id
-export const deleteStore = async (store_id: string) => {
+export const deleteStore = async (storeId: string) => {
   const supabase = await createClient();
-  const { data: deletedData, error } = await supabase
+  const { error } = await supabase
     .from('stores')
     .delete()
-    .eq('store_id', store_id);
+    .eq('store_id', storeId);
   if (error) {
     throw error;
   }
-  return deletedData;
 };

@@ -1,6 +1,6 @@
 'use server';
 
-import { DonationInsert } from '@/app/types/Donation';
+import { DonationInsert } from '@/app/types/donation';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 export async function createDonation(data: DonationInsert) {
@@ -13,7 +13,7 @@ export async function createDonation(data: DonationInsert) {
     .single(); // expect just one row, if more or less, throw an error
 
   if (error) {
-    console.error('Error creating donation: ', error);
+    console.error('Error creating donation:', error);
     throw new Error(error.message);
   }
 
@@ -21,13 +21,13 @@ export async function createDonation(data: DonationInsert) {
 }
 
 // deletes donation based on donation_id
-export async function deleteDonation(donation_id: string) {
+export async function deleteDonation(donationId: string) {
   const supabase = await createClient();
 
   const { error } = await supabase
     .from('donations')
     .delete()
-    .eq('donation_id', donation_id);
+    .eq('donation_id', donationId);
 
   if (error) {
     console.error('Error deleting donation:', error);

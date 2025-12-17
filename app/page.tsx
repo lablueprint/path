@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     // replace() avoids adding to browser history
-    router.replace('/example');
+    router.replace('/test');
   }, [router]);
 
   return null;
