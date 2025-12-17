@@ -4,4 +4,4 @@ export type Store = {
   street_address: string;
 };
 
-export type StoreInsert = Omit<Store, 'store_id'>
+export type StoreInsert = Omit<Store, 'store_id'>;
