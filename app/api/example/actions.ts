@@ -1,14 +1,13 @@
-"use server";
+'use server';
 
-import { ExampleType } from "@/app/types/ExampleType";
-import { createClient } from "@/app/lib/supabase/server-client";
+import { Example } from '@/app/types/example';
+import { createClient } from '@/app/lib/supabase/server-client';
 
-export const createExampleEntry = async (data: ExampleType) => {
+export const createExampleEntry = async (data: Example) => {
   const supabase = await createClient();
-  const { data: entry, error } = await supabase.from("example").insert(data);
+  const { error } = await supabase.from('example').insert(data);
 
   if (error) {
     throw error;
   }
-  return entry;
-}
+};
