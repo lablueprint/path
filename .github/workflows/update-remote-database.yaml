@@ -1,4 +1,4 @@
-name: Release (Production)
+name: Update Remote Database
 
 on:
   push:
@@ -21,4 +21,4 @@ jobs:
           version: latest
 
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID
-      - run: supabase db push
+      - run: supabase db push --include-all
