@@ -12,7 +12,7 @@ create table donations (
   donor_individual_name text, -- optional, used if donor is an individual
   donor_business_name text, -- optional, used if donor is a business
   donor_business_contact_name text, -- optional, used if donor is a business
-  donor_email varchar(255), -- optional, can't store more than 255 characters
+  donor_email varchar(255) not null, -- can't store more than 255 characters
   donor_phone varchar(20), -- optional, can't store more than 20 characters
   donor_street_address text, -- optional, street address
   donor_receive_mailings boolean not null, -- required, whether or not donor wants to receive mailings

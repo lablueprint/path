@@ -1,7 +1,7 @@
 create table "stores" (
   store_id uuid default uuid_generate_v4 () primary key,
-  name text,
-  street_address text
+  name text not null,
+  street_address text not null
 );
 
 alter table "stores" enable row level security;

@@ -1,7 +1,7 @@
 create table "inventory_items" (
   "inventory_item_id" uuid primary key default uuid_generate_v4 (),
   "store_id" uuid not null,
-  "subcategory" int not null,
+  "subcategory_id" int not null,
   "item" varchar(255) not null,
   "description" text not null,
   "photo_url" text,
