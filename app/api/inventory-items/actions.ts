@@ -5,36 +5,46 @@ import { createClient } from '@/app/lib/supabase/server-client';
 
 export const createItem = async (data: InventoryItemInsert) => {
   const supabase = await createClient();
-  const { error } = await supabase.from('inventory_items').insert(data);
+  const { data: entry, error: err } = await supabase
+    .from('inventory_items')
+    .insert(data)
+    .select()
+    .single();
 
-  if (error) {
-    throw error;
+  if (err) {
+    console.error('Error creating inventory item:', err);
+    return { success: false, error: err };
   }
+  return { success: true, data: entry };
 };
 
 export const changeItemQuantity = async (
-  inventoryId: string,
-  updatedAvailableQuantity: number,
+  inventoryItemId: string,
+  newQuantity: number,
 ) => {
   const supabase = await createClient();
-  const { error } = await supabase
+  const { error: err } = await supabase
     .from('inventory_items')
-    .update({ quantity_available: updatedAvailableQuantity })
-    .eq('inventory_item_id', inventoryId);
+    .update({ quantity_available: newQuantity })
+    .eq('inventory_item_id', inventoryItemId);
 
-  if (error) {
-    throw error;
+  if (err) {
+    console.error('Error changing inventory item quantity:', err);
+    return { success: false, error: err };
   }
+  return { success: true };
 };
 
-export const deleteItem = async (inventoryId: string) => {
+export const deleteItem = async (inventoryItemId: string) => {
   const supabase = await createClient();
-  const { error } = await supabase
+  const { error: err } = await supabase
     .from('inventory_items')
     .delete()
-    .eq('inventory_item_id', inventoryId);
+    .eq('inventory_item_id', inventoryItemId);
 
-  if (error) {
-    throw error;
+  if (err) {
+    console.error('Error deleting inventory item:', err);
+    return { success: false, error: err };
   }
+  return { success: true };
 };

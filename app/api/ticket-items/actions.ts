@@ -3,30 +3,37 @@
 import { TicketItemInsert } from '@/app/types/ticket';
 import { createClient } from '@/app/lib/supabase/server-client';
 
-export async function createTicketItem(ticketItemData: TicketItemInsert) {
+export async function createTicketItem(data: TicketItemInsert) {
   const supabase = await createClient();
   // Server Action uses a mutation method
-  const { error } = await supabase.from('ticket_items').insert(ticketItemData);
-  //.select().single(); <- kept only for debugging to see inserted entry
-  if (error) {
-    console.error('Error inserting ticket item:', error);
-    throw new Error(error.message);
+  const { data: entry, error: err } = await supabase
+    .from('ticket_items')
+    .insert(data)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error creating ticket item:', err);
+    return { success: false, error: err };
   }
+  return { success: true, data: entry };
 }
 
 export async function changeTicketItemQuantity(
   ticketItemId: string,
-  newQuantity: number | null,
+  newQuantity: number,
 ) {
   const supabase = await createClient();
-  const { error } = await supabase
+  const { error: err } = await supabase
     .from('ticket_items')
     .update({ quantity_requested: newQuantity })
     .eq('ticket_item_id', ticketItemId);
-  if (error) {
-    console.log('Error updating ticket item:', error);
-    throw new Error(error.message);
+
+  if (err) {
+    console.error('Error changing ticket item quantity:', err);
+    return { success: false, error: err };
   }
+  return { success: true };
 }
 
 export async function changeTicketItemDescription(
@@ -34,24 +41,28 @@ export async function changeTicketItemDescription(
   newDescription: string,
 ) {
   const supabase = await createClient();
-  const { error } = await supabase
+  const { error: err } = await supabase
     .from('ticket_items')
     .update({ free_text_description: newDescription })
     .eq('ticket_item_id', ticketItemId);
-  if (error) {
-    console.log('Error updating ticket free text description:', error);
-    throw new Error(error.message);
+
+  if (err) {
+    console.error('Error changing ticket item description:', err);
+    return { success: false, error: err };
   }
+  return { success: true };
 }
 
 export async function deleteTicketItem(ticketItemId: string) {
   const supabase = await createClient();
-  const { error } = await supabase
+  const { error: err } = await supabase
     .from('ticket_items')
     .delete()
     .eq('ticket_item_id', ticketItemId);
-  if (error) {
-    console.log('Error deleting ticket:', error);
-    throw new Error(error.message);
+
+  if (err) {
+    console.error('Error deleting ticket item:', err);
+    return { success: false, error: err };
   }
+  return { success: true };
 }
