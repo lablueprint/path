@@ -1,10 +1,8 @@
 create schema if not exists private;
 
-create or replace function private.can_assign_role(new_role_id int)
-returns boolean
-language plpgsql
-security definer set search_path = ''
-as $$
+create or replace function private.can_assign_role (new_role_id int) returns boolean language plpgsql security definer
+set
+  search_path = '' as $$
 declare
   is_owner boolean;
   is_superadmin boolean;
@@ -21,7 +19,7 @@ begin
   select exists (
     select 1
     from public.user_roles ur
-    join public.roles r on ur.role_id = r.id
+    join public.roles r on ur.role_id = r.role_id
     where ur.user_id = auth.uid()
     and r.name = 'owner'
   ) into is_owner;
@@ -35,7 +33,7 @@ begin
   select exists (
     select 1
     from public.user_roles ur
-    join public.roles r on ur.role_id = r.id
+    join public.roles r on ur.role_id = r.role_id
     where ur.user_id = auth.uid()
     and r.name = 'superadmin'
   ) into is_superadmin;
@@ -49,7 +47,7 @@ begin
   select exists (
     select 1
     from public.user_roles ur
-    join public.roles r on ur.role_id = r.id
+    join public.roles r on ur.role_id = r.role_id
     where ur.user_id = auth.uid()
     and r.name = 'admin'
   ) into is_admin;
