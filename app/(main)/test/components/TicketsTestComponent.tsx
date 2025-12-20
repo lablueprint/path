@@ -4,7 +4,7 @@ import {
   createTicket,
   deleteTicket,
   updateTicketStatus,
-} from '@/app/api/tickets/actions';
+} from '@/app/actions/ticket';
 import { useState } from 'react';
 import { TicketInsert } from '@/app/types/ticket';
 

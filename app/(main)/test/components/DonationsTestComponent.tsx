@@ -1,6 +1,6 @@
 'use client';
 
-import { createDonation, deleteDonation } from '@/app/api/donations/actions';
+import { createDonation, deleteDonation } from '@/app/actions/donation';
 
 export default function DonationsTestComponent() {
   const handleCreate = async () => {

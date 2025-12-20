@@ -1,6 +1,6 @@
 'use client';
 
-import { createExampleEntry } from '@/app/api/example/actions';
+import { createExampleEntry } from '@/app/actions/example';
 import { Example } from '@/app/types/example';
 
 export default function ExampleTestComponent() {

@@ -5,7 +5,7 @@ import {
   changeTicketItemDescription,
   changeTicketItemQuantity,
   deleteTicketItem,
-} from '@/app/api/ticket-items/actions';
+} from '@/app/actions/ticket';
 import { TicketItemInsert } from '@/app/types/ticket';
 
 export default function TicketItemTestComponent() {

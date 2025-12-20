@@ -6,7 +6,7 @@ import {
   createItem,
   changeItemQuantity,
   deleteItem,
-} from '@/app/api/inventory-items/actions';
+} from '@/app/actions/inventory';
 
 export default function InventoryItemsTestComponent() {
   const [inventoryId, setInventoryId] = useState('');

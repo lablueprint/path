@@ -1,6 +1,6 @@
 'use client';
 
-import { createStore, deleteStore } from '@/app/api/stores/actions';
+import { createStore, deleteStore } from '@/app/actions/store';
 import { StoreInsert } from '@/app/types/store';
 
 export default function StoresTestComponent() {
