@@ -2,8 +2,8 @@
 
 import {
   createTicketItem,
-  changeTicketItemDescription,
-  changeTicketItemQuantity,
+  updateTicketItemDescription,
+  updateTicketItemQuantity,
   deleteTicketItem,
 } from '@/app/actions/ticket';
 import { TicketItemInsert } from '@/app/types/ticket';
@@ -28,11 +28,11 @@ export default function TicketItemTestComponent() {
   };
 
   const handleChangeDescription = async () => {
-    await changeTicketItemDescription(ticketItemId, 'new description');
+    await updateTicketItemDescription(ticketItemId, 'new description');
   };
 
   const handleChangeQuantity = async () => {
-    await changeTicketItemQuantity(ticketItemId, 5);
+    await updateTicketItemQuantity(ticketItemId, 5);
   };
 
   return (

@@ -13,12 +13,12 @@ export const createItem = async (data: InventoryItemInsert) => {
 
   if (err) {
     console.error('Error creating inventory item:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true, data: entry };
 };
 
-export const changeItemQuantity = async (
+export const updateItemQuantity = async (
   inventoryItemId: string,
   newQuantity: number,
 ) => {
@@ -30,7 +30,7 @@ export const changeItemQuantity = async (
 
   if (err) {
     console.error('Error changing inventory item quantity:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 };
@@ -44,7 +44,7 @@ export const deleteItem = async (inventoryItemId: string) => {
 
   if (err) {
     console.error('Error deleting inventory item:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 };

@@ -13,7 +13,7 @@ export const createExampleEntry = async (data: Example) => {
 
   if (err) {
     console.error('Error creating example:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true, data: entry };
 };

@@ -14,7 +14,7 @@ export async function createDonation(data: DonationInsert) {
 
   if (err) {
     console.error('Error creating donation:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true, data: entry }; // return the row that was created
 }
@@ -30,7 +30,7 @@ export async function deleteDonation(donationId: string) {
 
   if (err) {
     console.error('Error deleting donation:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 }

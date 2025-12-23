@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { InventoryItemInsert } from '@/app/types/inventory';
 import {
   createItem,
-  changeItemQuantity,
+  updateItemQuantity,
   deleteItem,
 } from '@/app/actions/inventory';
 
@@ -27,8 +27,8 @@ export default function InventoryItemsTestComponent() {
     await createItem(data);
   };
 
-  const handleChangeItemQuantity = async () => {
-    await changeItemQuantity(inventoryId, Number(updatedQuantity));
+  const handleUpdateItemQuantity = async () => {
+    await updateItemQuantity(inventoryId, Number(updatedQuantity));
   };
 
   const handleDeleteItem = async () => {
@@ -65,7 +65,7 @@ export default function InventoryItemsTestComponent() {
           />
         </label>
         <br />
-        <button onClick={handleChangeItemQuantity}>
+        <button onClick={handleUpdateItemQuantity}>
           Update inventory quantity
         </button>
       </div>

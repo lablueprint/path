@@ -14,7 +14,7 @@ export async function createTicket(data: TicketInsert) {
 
   if (err) {
     console.error('Error creating ticket:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true, data: entry };
 }
@@ -28,7 +28,7 @@ export async function deleteTicket(ticketId: string) {
 
   if (err) {
     console.error('Error deleting ticket:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 }
@@ -42,7 +42,7 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
 
   if (err) {
     console.error('Error changing ticket status:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 }
@@ -58,12 +58,12 @@ export async function createTicketItem(data: TicketItemInsert) {
 
   if (err) {
     console.error('Error creating ticket item:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true, data: entry };
 }
 
-export async function changeTicketItemQuantity(
+export async function updateTicketItemQuantity(
   ticketItemId: string,
   newQuantity: number,
 ) {
@@ -75,12 +75,12 @@ export async function changeTicketItemQuantity(
 
   if (err) {
     console.error('Error changing ticket item quantity:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 }
 
-export async function changeTicketItemDescription(
+export async function updateTicketItemDescription(
   ticketItemId: string,
   newDescription: string,
 ) {
@@ -92,7 +92,7 @@ export async function changeTicketItemDescription(
 
   if (err) {
     console.error('Error changing ticket item description:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 }
@@ -106,7 +106,7 @@ export async function deleteTicketItem(ticketItemId: string) {
 
   if (err) {
     console.error('Error deleting ticket item:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 }

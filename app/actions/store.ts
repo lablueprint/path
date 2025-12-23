@@ -14,7 +14,7 @@ export const createStore = async (data: StoreInsert) => {
 
   if (err) {
     console.error('Error creating store:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true, data: entry };
 };
@@ -29,7 +29,7 @@ export const deleteStore = async (storeId: string) => {
 
   if (err) {
     console.error('Error deleting store:', err);
-    return { success: false, error: err };
+    return { success: false, error: err.message };
   }
   return { success: true };
 };
