@@ -26,7 +26,7 @@ For Windows users, make sure to install and set up WSL.
 
 ## Starting the Local Database
 
-Start the local database instance.
+With Docker Desktop running in the background, start the local database instance.
 
 ```bash
 npx supabase start
