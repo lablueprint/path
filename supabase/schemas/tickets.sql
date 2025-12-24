@@ -6,15 +6,22 @@ create table "tickets" (
   "store_id" uuid not null,
   "status" ticket_status not null, -- max 50 character status
   "date_submitted" timestamp with time zone default now()
-  -- FOREIGN KEY (requestor_user_id) REFERENCES users(user_id),
-  -- FOREIGN KEY (store_id) REFERENCES stores(store_id)
+  
+  /*constraint fk_users
+    foreign key (requestor_user_id)
+    references users (user_id)
+  */
+  
+  constraint fk_stores
+    foreign key (store_id)
+    references stores (store_id)
 );
 
 alter table tickets enable row level security;
 
-create policy "public can read entries in tickets" on public.tickets for
+create policy "auth can read tickets if requestor_user_id or >= superadmin" on public.tickets for
 select
-  to anon using (true);
+  to authenticated using ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner'] or (select (auth.uid())) = requestor_user_id );
 
 create policy "public can insert entries in tickets" on public.tickets for insert to anon
 with
