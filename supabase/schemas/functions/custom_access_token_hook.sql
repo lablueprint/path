@@ -5,21 +5,21 @@ set
   search_path = public as $$
   declare
     claims jsonb;
-    user_roles_array jsonb;
+    user_role text;
   begin
-    -- Aggregate all roles into an array
-    select jsonb_agg(r.name) into user_roles_array
+    select r.name into user_role
     from public.user_roles ur
     join public.roles r on ur.role_id = r.role_id
-    where ur.user_id = (event->>'user_id')::uuid;
+    where ur.user_id = (event ->> 'user_id')::uuid
+    limit 1;
 
-    claims := event->'claims';
+    claims := event -> 'claims';
 
-    if user_roles_array is not null then
-      -- Set the claim as an array
-      claims := jsonb_set(claims, '{user_roles}', user_roles_array);
+    if user_role is not null then
+      -- Set the claim
+      claims := jsonb_set(claims, '{user_role}', to_jsonb(user_role));
     else
-      claims := jsonb_set(claims, '{user_roles}', '[]'::jsonb);
+      claims := jsonb_set(claims, '{user_role}', 'null'::jsonb);
     end if;
 
     -- Update the claims object in the original event

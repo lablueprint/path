@@ -14,14 +14,6 @@ npm install
 
 Follow the [official guide](https://docs.docker.com/desktop) to install and configure Docker Desktop.
 
-For MacOS users:
-
-![MacOS Docker configuration](https://supabase.com/docs/_next/image?url=%2Fdocs%2Fimg%2Fguides%2Fcli%2Fdocker-mac.png&w=3840&q=75)
-
-For Windows users:
-
-![Windows Docker configuration](https://supabase.com/docs/_next/image?url=%2Fdocs%2Fimg%2Fguides%2Fcli%2Fdocker-win.png&w=3840&q=75)
-
 For Windows users, make sure to install and set up WSL.
 
 ## Starting the Local Database
