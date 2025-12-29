@@ -5,11 +5,11 @@ create table "tickets" (
   "requestor_user_id" uuid not null,
   "store_id" uuid not null,
   "status" ticket_status not null, -- max 50 character status
-  "date_submitted" timestamp with time zone default now()
+  "date_submitted" timestamp with time zone default now(),
   
   /*constraint fk_users
     foreign key (requestor_user_id)
-    references users (user_id)
+    references users (user_id),
   */
   
   constraint fk_stores

@@ -11,7 +11,7 @@ import { TicketItemInsert } from '@/app/types/ticket';
 export default function TicketItemTestComponent() {
   const data: TicketItemInsert = {
     ticket_id: 'c088b0b7-e4c3-40ae-80ca-9d8376dbb4fa',
-    inventory_item_id: 'bec1fdd9-d6f0-4c49-aa2f-c67a18fc05f2',
+    store_item_id: 'bec1fdd9-d6f0-4c49-aa2f-c67a18fc05f2',
     free_text_description: 'sample description',
     quantity_requested: 10,
     is_in_stock_request: true,
