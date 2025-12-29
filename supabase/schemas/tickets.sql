@@ -23,14 +23,18 @@ create policy "auth can read tickets if requestor_user_id or >= superadmin" on p
 select
   to authenticated using ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner'] or (select (auth.uid())) = requestor_user_id );
 
-create policy "public can insert entries in tickets" on public.tickets for insert to anon
+create policy "auth can insert tickets if >= requestor" on public.tickets for 
+insert 
+  to authenticated
 with
-  check (true);
+  check ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner', 'admin'] or (select (auth.uid())) = requestor_user_id );
 
-create policy "public can update entries in tickets" on public.tickets
-for update
-  to anon using (true)
+create policy "auth can update tickets if requestor_user_id" on public.tickets for 
+update
+  to authenticated using ((select (auth.uid())) = requestor_user_id )
 with
-  check (true);
+  check ((select (auth.uid())) = requestor_user_id );
 
-create policy "public can delete entries in tickets" on public.tickets for delete to anon using (true);
+create policy "auth can delete tickets if requestor_user_id or >= superadmin" on public.tickets for 
+delete 
+  to anon using ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner'] or (select (auth.uid())) = requestor_user_id);
