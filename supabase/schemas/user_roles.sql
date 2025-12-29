@@ -18,8 +18,8 @@ select
   to authenticated using (
     (
       select
-        auth.jwt () ->> 'user_role'
-    ) in ('requestor', 'admin', 'superadmin', 'owner')
+        auth.jwt ()
+    ) ->> 'user_role' in ('requestor', 'admin', 'superadmin', 'owner')
   );
 
 create policy "no user can insert user_roles" on public.user_roles for insert
