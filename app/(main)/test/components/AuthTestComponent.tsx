@@ -1,7 +1,7 @@
 'use client';
 
-import { signIn, signUp, signOut } from '@/app/actions/auth';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { useUserStore } from '@/app/lib/store/user-store';
 
 export default function AuthTestComponent() {
   const supabase = createClient();
@@ -12,38 +12,33 @@ export default function AuthTestComponent() {
   };
 
   const handleSignIn = async () => {
-    await signIn(data);
+    await supabase.auth.signInWithPassword(data);
   };
 
   const handleSignUp = async () => {
-    await signUp(data);
+    await supabase.auth.signUp(data);
   };
 
   const handleSignOut = async () => {
-    await signOut();
+    await supabase.auth.signOut();
   };
 
   const handleRefresh = async () => {
-    const { error: err } = await supabase.auth.refreshSession();
-
-    if (err) {
-      console.error('Error refreshing session:', err.message);
-    } else {
-      console.log('Refresh successful!');
-    }
+    await supabase.auth.refreshSession();
   };
 
   const handleGetClaims = async () => {
-    const { data, error: err } = await supabase.auth.getClaims();
-    if (err) {
-      console.error('Error getting claims:', err.message);
-    } else if (data) {
+    const { data } = await supabase.auth.getClaims();
+    if (data) {
       console.log(data.claims);
     }
   };
 
+  const role = useUserStore((state) => state.role);
+
   return (
     <div>
+      <div>{role ? <div>Logged in as {role}.</div> : null}</div>
       <button onClick={handleSignIn}>Sign in</button>
       <button onClick={handleSignUp}>Sign up</button>
       <button onClick={handleSignOut}>Sign out</button>
