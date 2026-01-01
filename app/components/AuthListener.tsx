@@ -4,19 +4,13 @@ import { useEffect } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useUserStore } from '@/app/lib/store/user-store';
 
-export default function UserProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthListener() {
   const supabase = createClient();
 
-  const { setId, setRole, setLoading, clearUserStore } =
-    useUserStore();
+  const { setId, setRole, setLoading, clearUserStore } = useUserStore();
 
   useEffect(() => {
     setLoading(true);
-
     // Listen for Supabase Auth events
     const {
       data: { subscription },
@@ -41,6 +35,5 @@ export default function UserProvider({
       subscription.unsubscribe();
     };
   }, [setId, setRole, setLoading, clearUserStore]);
-
-  return <>{children}</>;
+  return null;
 }

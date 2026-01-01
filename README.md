@@ -10,18 +10,18 @@ Install and set up [Docker Desktop](https://docs.docker.com/desktop).
 
 Clone the GitHub repo and install the required packages.
 
-```console
-$ git clone https://github.com/lablueprint/path.git
-$ cd path
-$ npm install
+```sh
+git clone https://github.com/lablueprint/path.git
+cd path
+npm install
 ```
 
 ## Starting the Local Database
 
 With Docker Desktop running in the background, start the local database instance.
 
-```console
-$ npx supabase start
+```sh
+npx supabase start
 ```
 
 Copy the publishable key and the API URL from the terminal output. Create an `.env.local` file in the root directory of the project and add the values to the file.
@@ -37,8 +37,8 @@ Open [http://localhost:54323](http://localhost:54323/) with your browser to view
 
 Run the web app.
 
-```console
-$ npm run dev
+```sh
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to view the application locally.
@@ -47,6 +47,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to view th
 
 Stop the local database instance.
 
-```console
-$ npx supabase stop
+```sh
+npx supabase stop
 ```

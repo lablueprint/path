@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import UserProvider from '@/app/components/UserProvider';
+import AuthListener from '@/app/components/AuthListener';
 
 export const metadata: Metadata = {
   title: 'PATH App',
@@ -15,7 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserProvider>{children}</UserProvider>
+        <AuthListener />
+        {children}
       </body>
     </html>
   );
