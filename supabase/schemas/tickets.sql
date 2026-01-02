@@ -1,40 +1,77 @@
 create type ticket_status as enum('requested', 'ready', 'rejected', 'fulfilled');
 
-create table "tickets" (
-  "ticket_id" uuid default uuid_generate_v4 () primary key,
-  "requestor_user_id" uuid not null,
-  "store_id" uuid not null,
-  "status" ticket_status not null, -- max 50 character status
-  "date_submitted" timestamp with time zone default now(),
-  
+create table tickets (
+  ticket_id uuid default uuid_generate_v4 () primary key,
+  requestor_user_id uuid not null,
+  store_id uuid not null,
+  status ticket_status not null,
+  date_submitted timestamp with time zone default now(),
   /*constraint fk_users
-    foreign key (requestor_user_id)
-    references users (user_id),
+  foreign key (requestor_user_id)
+  references users (user_id),
   */
-  
-  constraint fk_stores
-    foreign key (store_id)
-    references stores (store_id)
+  constraint fk_stores foreign key (store_id) references stores (store_id)
 );
 
 alter table tickets enable row level security;
 
 create policy "auth can read tickets if requestor_user_id or >= superadmin" on public.tickets for
 select
-  to authenticated using ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner'] or (select (auth.uid())) = requestor_user_id );
+  to authenticated using (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('superadmin', 'owner')
+    or (
+      select
+        auth.uid ()
+    ) = requestor_user_id
+  );
 
-create policy "auth can insert tickets if >= requestor" on public.tickets for 
-insert 
-  to authenticated
+create policy "auth can insert tickets if >= requestor" on public.tickets for insert to authenticated
 with
-  check ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner', 'admin'] or (select (auth.uid())) = requestor_user_id );
+  check (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('admin', 'superadmin', 'owner')
+    or (
+      select
+        auth.uid ()
+    ) = requestor_user_id
+  );
 
-create policy "auth can update tickets if requestor_user_id" on public.tickets for 
-update
-  to authenticated using ((select (auth.uid())) = requestor_user_id )
+create policy "auth can update tickets if requestor_user_id" on public.tickets
+for update
+  to authenticated using (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('superadmin', 'owner')
+    or (
+      select
+        auth.uid ()
+    ) = requestor_user_id
+  )
 with
-  check ((select (auth.uid())) = requestor_user_id );
+  check (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('superadmin', 'owner')
+    or (
+      select
+        auth.uid ()
+    ) = requestor_user_id
+  );
 
-create policy "auth can delete tickets if requestor_user_id or >= superadmin" on public.tickets for 
-delete 
-  to anon using ((select (auth.jwt() -> 'user_roles')) ?| array['superadmin', 'owner'] or (select (auth.uid())) = requestor_user_id);
+create policy "auth can delete tickets if requestor_user_id or >= superadmin" on public.tickets for delete to authenticated using (
+  (
+    select
+      auth.jwt ()
+  ) ->> 'user_role' in ('superadmin', 'owner')
+  or (
+    select
+      auth.uid ()
+  ) = requestor_user_id
+);
