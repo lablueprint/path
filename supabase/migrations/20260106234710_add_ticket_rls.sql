@@ -26,42 +26,6 @@ alter table "public"."tickets" add constraint "fk_stores" FOREIGN KEY (store_id)
 
 alter table "public"."tickets" validate constraint "fk_stores";
 
-set check_function_bodies = off;
-
-CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
- RETURNS jsonb
- LANGUAGE plpgsql
- STABLE
- SET search_path TO 'public'
-AS $function$
-  declare
-    claims jsonb;
-    user_roles_array jsonb;
-  begin
-    -- Aggregate all roles into an array
-    select jsonb_agg(r.name) into user_roles_array
-    from public.user_roles ur
-    join public.roles r on ur.role_id = r.role_id
-    where ur.user_id = (event->>'user_id')::uuid;
-
-    claims := event->'claims';
-
-    if user_roles_array is not null then
-      -- Set the claim as an array
-      claims := jsonb_set(claims, '{user_roles}', user_roles_array);
-    else
-      claims := jsonb_set(claims, '{user_roles}', '[]'::jsonb);
-    end if;
-
-    -- Update the claims object in the original event
-    event := jsonb_set(event, '{claims}', claims);
-
-    -- Return the modified or original event
-    return event;
-  end;
-$function$
-;
-
 
   create policy "auth can delete ticket_items if can read tickets"
   on "public"."ticket_items"
@@ -70,7 +34,7 @@ $function$
   to authenticated
 using ((EXISTS ( SELECT 1
    FROM public.tickets t
-  WHERE (t.ticket_id = t.ticket_id))));
+  WHERE (t.ticket_id = ticket_items.ticket_id))));
 
 
 
@@ -81,7 +45,7 @@ using ((EXISTS ( SELECT 1
   to authenticated
 with check ((EXISTS ( SELECT 1
    FROM public.tickets t
-  WHERE (t.ticket_id = t.ticket_id))));
+  WHERE (t.ticket_id = ticket_items.ticket_id))));
 
 
 
@@ -92,7 +56,7 @@ with check ((EXISTS ( SELECT 1
   to authenticated
 using ((EXISTS ( SELECT 1
    FROM public.tickets t
-  WHERE (t.ticket_id = t.ticket_id))));
+  WHERE (t.ticket_id = ticket_items.ticket_id))));
 
 
 
@@ -103,7 +67,7 @@ using ((EXISTS ( SELECT 1
   to authenticated
 using ((EXISTS ( SELECT 1
    FROM public.tickets t
-  WHERE (t.ticket_id = t.ticket_id))))
+  WHERE (t.ticket_id = ticket_items.ticket_id))))
 with check ((EXISTS ( SELECT 1
    FROM public.tickets t
   WHERE (t.ticket_id = t.ticket_id))));
@@ -124,7 +88,7 @@ using ((((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['super
   as permissive
   for insert
   to authenticated
-with check ((((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['admin'::text, 'superadmin'::text, 'owner'::text])) OR (( SELECT auth.uid() AS uid) = requestor_user_id)));
+with check ((((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'superadmin'::text, 'owner'::text])) AND (( SELECT auth.uid() AS uid) = requestor_user_id)));
 
 
 

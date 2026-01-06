@@ -5,8 +5,10 @@ import {
   deleteTicket,
   updateTicketStatus,
 } from '@/app/actions/ticket';
-import { useState } from 'react';
-import { TicketInsert } from '@/app/types/ticket';
+import { useState, useEffect } from 'react';
+import { Ticket, TicketInsert } from '@/app/types/ticket';
+import { createClient } from '@/app/lib/supabase/browser-client';
+
 
 export default function TicketsTestComponent() {
   const [ticketToDelete, setDelete] = useState('');
@@ -14,10 +16,24 @@ export default function TicketsTestComponent() {
   const [updateStatus, setStatus] = useState('');
 
   const ticketData: TicketInsert = {
-    requestor_user_id: '4c4f3502-1b31-4040-8a7a-2baedbc8a347',
-    store_id: '94b6329f-7383-46e2-978d-e105d31c3813',
+    requestor_user_id: '8bdd5113-c0d4-42da-8f8c-2fd71100a09e',
+    store_id: 'f11145b6-127d-4e68-ab5c-27ec619950d6',
     status: 'ready',
   };
+
+    const [tickets, setTickets] = useState<Ticket[] | null>(null);
+    const supabase = createClient();
+  
+  useEffect(() => {
+      const getData = async () => {
+        const { data, error: err } = await supabase.from('tickets').select('*');
+        if (err) {
+          console.error('Error fetching people:', err);
+        }
+        setTickets(data);
+      };
+      getData();
+    }, []);
 
   const submitTicket = async () => {
     await createTicket(ticketData);
@@ -34,6 +50,12 @@ export default function TicketsTestComponent() {
   return (
     <div>
       <h2>Ticket Testing</h2>
+      <ul>
+        <li>Tickets you can read will appear here.</li>
+        {tickets?.map((ticket) => (
+          <li key={ticket.ticket_id}>{ticket.ticket_id}</li>
+        ))}
+      </ul>
       <button onClick={submitTicket}>
         Click to add ticket to the ticket table
       </button>

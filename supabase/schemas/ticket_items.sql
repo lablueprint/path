@@ -23,7 +23,7 @@ select
       from
         tickets as t -- Shows only tickets caller can read, essentially filtering to the tickets table's select rls
       where
-        t.ticket_id = ticket_id -- Link to parent ticket so we can reference other fields for rls
+        t.ticket_id = ticket_items.ticket_id -- Link to parent ticket so we can reference other fields for rls
     )
   );
 
@@ -36,7 +36,7 @@ with
       from
         tickets as t
       where
-        t.ticket_id = ticket_id
+        t.ticket_id = ticket_items.ticket_id --need to specifically reference the ticket_items' ticket_id
     )
   );
 
@@ -49,7 +49,7 @@ for update
       from
         tickets as t
       where
-        t.ticket_id = ticket_id
+        t.ticket_id = ticket_items.ticket_id
     )
   )
 with
@@ -71,6 +71,6 @@ create policy "auth can delete ticket_items if can read tickets" on public.ticke
     from
       tickets as t
     where
-      t.ticket_id = ticket_id
+      t.ticket_id = ticket_items.ticket_id
   )
 );
