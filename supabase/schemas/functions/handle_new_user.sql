@@ -20,8 +20,6 @@ begin
 end;
 $$;
 
-drop trigger if exists "after create auth.users" on auth.users;
-
 create trigger "after create auth.users"
 after insert on auth.users
 for each row

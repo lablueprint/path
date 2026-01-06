@@ -1,5 +1,3 @@
-create schema if not exists "private";
-
 
   create table "public"."users" (
     "user_id" uuid not null default extensions.uuid_generate_v4(),
@@ -25,9 +23,16 @@ CREATE OR REPLACE FUNCTION private.handle_new_user()
  SET search_path TO ''
 AS $function$
 begin
-    insert into users (user_id, first_name, last_name)
-    values (new.id, new.raw_user_meta_data ->> 'first_name', new.raw_user_meta_data ->> 'last_name');
-    return new;
+
+  insert into public.users (user_id, first_name, last_name, email)
+  values (
+    new.id,
+    new.raw_user_meta_data ->> 'first_name',
+    new.raw_user_meta_data ->> 'last_name',
+    new.email
+  );
+
+  return new;
 end;
 $function$
 ;
@@ -111,6 +116,6 @@ using (true);
 with check (true);
 
 
-CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION private.handle_new_user();
+CREATE TRIGGER "after create auth.users" AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION private.handle_new_user();
 
 
