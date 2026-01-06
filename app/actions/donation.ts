@@ -1,6 +1,6 @@
 'use server';
 
-import { DonationInsert } from '@/app/types/donation';
+import { Donation, DonationInsert } from '@/app/types/donation';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 export async function createDonation(data: DonationInsert) {
@@ -14,9 +14,9 @@ export async function createDonation(data: DonationInsert) {
 
   if (err) {
     console.error('Error creating donation:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true, data: entry }; // return the row that was created
+  return { success: true, data: entry as Donation }; // return the row that was created
 }
 
 // deletes donation based on donation_id

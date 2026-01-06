@@ -1,6 +1,11 @@
 'use server'; // directive that indicates that the functions we define are server actions
 
-import { TicketInsert, TicketItemInsert } from '@/app/types/ticket';
+import {
+  Ticket,
+  TicketInsert,
+  TicketItem,
+  TicketItemInsert,
+} from '@/app/types/ticket';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 export async function createTicket(data: TicketInsert) {
@@ -14,9 +19,9 @@ export async function createTicket(data: TicketInsert) {
 
   if (err) {
     console.error('Error creating ticket:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true, data: entry };
+  return { success: true, data: entry as Ticket };
 }
 
 export async function deleteTicket(ticketId: string) {
@@ -35,16 +40,18 @@ export async function deleteTicket(ticketId: string) {
 
 export async function updateTicketStatus(newStatus: string, ticketId: string) {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('tickets')
     .update({ status: newStatus })
-    .eq('ticket_id', ticketId);
+    .eq('ticket_id', ticketId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error changing ticket status:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as Ticket };
 }
 
 export async function createTicketItem(data: TicketItemInsert) {
@@ -58,9 +65,9 @@ export async function createTicketItem(data: TicketItemInsert) {
 
   if (err) {
     console.error('Error creating ticket item:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true, data: entry };
+  return { success: true, data: entry as TicketItem };
 }
 
 export async function updateTicketItemQuantity(
@@ -68,16 +75,18 @@ export async function updateTicketItemQuantity(
   newQuantity: number,
 ) {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('ticket_items')
     .update({ quantity_requested: newQuantity })
-    .eq('ticket_item_id', ticketItemId);
+    .eq('ticket_item_id', ticketItemId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error changing ticket item quantity:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as TicketItem };
 }
 
 export async function updateTicketItemDescription(
@@ -85,16 +94,18 @@ export async function updateTicketItemDescription(
   newDescription: string,
 ) {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('ticket_items')
     .update({ free_text_description: newDescription })
-    .eq('ticket_item_id', ticketItemId);
+    .eq('ticket_item_id', ticketItemId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error changing ticket item description:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as TicketItem };
 }
 
 export async function deleteTicketItem(ticketItemId: string) {

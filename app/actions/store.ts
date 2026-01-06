@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/app/lib/supabase/server-client';
-import { StoreInsert } from '@/app/types/store';
+import { Store, StoreInsert } from '@/app/types/store';
 
 // create store
 export const createStore = async (data: StoreInsert) => {
@@ -14,9 +14,9 @@ export const createStore = async (data: StoreInsert) => {
 
   if (err) {
     console.error('Error creating store:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true, data: entry };
+  return { success: true, data: entry as Store };
 };
 
 // delete store given store_id

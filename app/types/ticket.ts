@@ -6,8 +6,6 @@ export type Ticket = {
   date_submitted: Date | string; // Date | string corresponds to time stamp with time zone
 };
 
-export type TicketUpdate = Partial<Ticket>;
-
 export type TicketInsert = Omit<Ticket, 'ticket_id' | 'date_submitted'>;
 
 export type TicketItem = {
@@ -18,7 +16,5 @@ export type TicketItem = {
   quantity_requested?: number | null;
   is_in_stock_request: boolean;
 };
-
-export type TicketItemUpdate = Partial<TicketItem>;
 
 export type TicketItemInsert = Omit<TicketItem, 'ticket_item_id'>;

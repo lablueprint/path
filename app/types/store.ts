@@ -5,3 +5,5 @@ export type Store = {
 };
 
 export type StoreInsert = Omit<Store, 'store_id'>;
+
+export type StoreUpdate = Partial<StoreInsert>;

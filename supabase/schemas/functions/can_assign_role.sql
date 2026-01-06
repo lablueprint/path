@@ -16,7 +16,7 @@ begin
   into new_role_name;
   
   -- Determine if the current user has the 'owner' role
-  select (auth.jwt() -> 'user_roles') ? 'owner' into is_owner;
+  select (auth.jwt() ->> 'user_role') = 'owner' into is_owner;
 
   -- If the current user is an owner and the new role is one of the allowed roles, return true
   if is_owner and new_role_name in ('superadmin', 'admin', 'requestor') then
@@ -24,7 +24,7 @@ begin
   end if;
 
   -- Determine if the current user has the 'superadmin' role
-  select (auth.jwt() -> 'user_roles') ? 'superadmin' into is_superadmin;
+  select (auth.jwt() ->> 'user_role') = 'superadmin' into is_superadmin;
 
   -- If the current user is a superadmin and the new role is one of the allowed roles, return true
   if is_superadmin and new_role_name in ('admin', 'requestor') then
@@ -32,7 +32,7 @@ begin
   end if;
 
    -- Determine if the current user has the 'admin' role
-  select (auth.jwt() -> 'user_roles') ? 'admin' into is_admin;
+  select (auth.jwt() ->> 'user_role') = 'admin' into is_admin;
 
   -- If the current user is an admin and the new role is one of the allowed roles, return true
   if is_admin and new_role_name in ('requestor') then

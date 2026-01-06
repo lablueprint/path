@@ -9,6 +9,6 @@ export type InventoryItem = {
   is_hidden: boolean;
 };
 
-export type InventoryItemUpdate = Partial<InventoryItem>;
-
 export type InventoryItemInsert = Omit<InventoryItem, 'inventory_item_id'>;
+
+export type InventoryItemUpdate = Partial<InventoryItemInsert>;
