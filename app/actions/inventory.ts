@@ -1,6 +1,15 @@
 'use server';
 
-import { InventoryItem, InventoryItemInsert, Subcategory, SubcategoryInsert, SubcategoryUpdate } from '@/app/types/inventory';
+import {
+  InventoryItem,
+  InventoryItemInsert,
+  Category,
+  CategoryInsert,
+  CategoryUpdate,
+  Subcategory,
+  SubcategoryInsert,
+  SubcategoryUpdate,
+} from '@/app/types/inventory';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 export const createItem = async (data: InventoryItemInsert) => {
@@ -98,3 +107,52 @@ export const deleteSubcategory = async (subcategoryId: number) => {
   }
   return { success: true };
 };
+
+export const createCategory = async (data: CategoryInsert) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('categories')
+    .insert(data)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error creating category:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as Category };
+};
+
+export const updateCategory = async (
+  categoryId: number,
+  data: CategoryUpdate,
+) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('categories')
+    .update(data)
+    .eq('category_id', categoryId)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error updating category:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as Category };
+};
+
+export const deleteCategory = async (categoryId: number) => {
+  const supabase = await createClient();
+  const { error: err } = await supabase
+    .from('categories')
+    .delete()
+    .eq('category_id', categoryId);
+
+  if (err) {
+    console.error('Error deleting category:', err);
+    return { success: false, error: err.message };
+  }
+  return { success: true };
+};
+
