@@ -5,16 +5,16 @@ create table store_admins
     store_id uuid not null,
 
 
-constraint fk_users
-    foreign key (users)
-    references users(user_id)
-    on delete cascade
+    constraint fk_users
+        foreign key (user_id)
+        references users(user_id)
+        on delete cascade,
 
-constraint fk_stores
-    foreign key (stores)
-    references stores(store_id)
-    on delete cascade
-)
+    constraint fk_stores
+        foreign key (store_id)
+        references stores(store_id)
+        on delete cascade
+);
 
 alter table store_admins enable row level security;
 

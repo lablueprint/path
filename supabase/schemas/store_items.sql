@@ -7,13 +7,13 @@ create table store_items
     is_hidden boolean not null,
 
     constraint fk_inventory_items
-    foreign key (inventory_items)
-    references inventory_itmes(inventory_items_id)
-    on delete cascade
+    foreign key (inventory_item_id)
+    references inventory_items(inventory_item_id)
+    on delete cascade,
 
-     constraint fk_stores
-    foreign key (stores)
+    constraint fk_stores
+    foreign key (store_id)
     references stores(store_id)
     on delete cascade
 
-)
+);
