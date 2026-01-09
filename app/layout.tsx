@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
+import AuthListener from '@/app/components/AuthListener';
 
 export const metadata: Metadata = {
-  title: "PATH App",
-  description: "Resource management application for PATH",
+  title: 'PATH App',
+  description: 'Resource management application for PATH',
 };
 
 export default function RootLayout({
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <AuthListener />
         {children}
       </body>
     </html>
