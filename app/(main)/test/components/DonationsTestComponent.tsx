@@ -6,8 +6,6 @@ export default function DonationsTestComponent() {
   const handleCreate = async () => {
     try {
       const donation = await createDonation({
-        receiver_user_id: '00000000-0000-0000-0000-000000000000',
-        store_id: null,
         donor_is_individual: true,
         donor_individual_name: 'Test User',
         donor_business_name: 'Donor Business Name',
@@ -20,6 +18,10 @@ export default function DonationsTestComponent() {
         donor_remain_anonymous: false,
         estimated_value: 50,
         items_donated: 'Items donated!',
+        receiver_first_name: 'DonorFirst',
+        receiver_last_name: 'DonorLast',
+        store_name: 'Example Store',
+        store_street_address: '1234 Example St',
       });
 
       console.log('Created donation:', donation);
