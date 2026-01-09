@@ -6,8 +6,8 @@ import type { User } from '@/app/types/user';
 export default function PersonalProfilePage() {
     const user: User = {
         user_id: 'example_user_id',
-        first_name: 'example_first',
-        last_name: 'example_last',
+        first_name: 'example_first_name',
+        last_name: 'example_last_name',
         email: 'example@example.com',
         profile_photo_url: 'https://example.com/photo.jpg'
     };
