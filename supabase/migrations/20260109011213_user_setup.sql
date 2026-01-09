@@ -14,6 +14,10 @@ CREATE UNIQUE INDEX users_pkey ON public.users USING btree (user_id);
 
 alter table "public"."users" add constraint "users_pkey" PRIMARY KEY using index "users_pkey";
 
+alter table "public"."users" add constraint "fk_auth_users" FOREIGN KEY (user_id) REFERENCES auth.users(id) not valid;
+
+alter table "public"."users" validate constraint "fk_auth_users";
+
 set check_function_bodies = off;
 
 CREATE OR REPLACE FUNCTION private.handle_new_user()
@@ -84,8 +88,8 @@ grant update on table "public"."users" to "service_role";
   on "public"."users"
   as permissive
   for select
-  to anon
-using (true);
+  to authenticated
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'superadmin'::text, 'owner'::text])));
 
 
 
@@ -93,9 +97,9 @@ using (true);
   on "public"."users"
   as permissive
   for update
-  to anon
-using (true)
-with check (true);
+  to authenticated
+using ((( SELECT auth.uid() AS uid) = user_id))
+with check ((( SELECT auth.uid() AS uid) = user_id));
 
 
 
@@ -103,8 +107,8 @@ with check (true);
   on "public"."users"
   as permissive
   for delete
-  to anon
-using (true);
+  to public
+using (false);
 
 
 
@@ -112,8 +116,8 @@ using (true);
   on "public"."users"
   as permissive
   for insert
-  to anon
-with check (true);
+  to public
+with check (false);
 
 
 CREATE TRIGGER "after create auth.users" AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION private.handle_new_user();

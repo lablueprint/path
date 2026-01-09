@@ -1,11 +1,8 @@
 create schema if not exists private;
 
-create or replace function private.handle_new_user()
-returns trigger
-language plpgsql
-security definer
-set search_path = ''
-as $$
+create or replace function private.handle_new_user () returns trigger language plpgsql security definer
+set
+  search_path = '' as $$
 begin
 
   insert into public.users (user_id, first_name, last_name, email)
@@ -21,6 +18,5 @@ end;
 $$;
 
 create trigger "after create auth.users"
-after insert on auth.users
-for each row
-execute procedure private.handle_new_user();
+after insert on auth.users for each row
+execute procedure private.handle_new_user ();
