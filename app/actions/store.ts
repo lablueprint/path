@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/app/lib/supabase/server-client';
-import { Store, StoreInsert } from '@/app/types/store';
+import { Store, StoreInsert, StoreUpdate, StoreAdmin, StoreAdminInsert, StoreItem, StoreItemInsert, } from '@/app/types/store';
 
 // create store
 export const createStore = async (data: StoreInsert) => {
@@ -14,6 +14,25 @@ export const createStore = async (data: StoreInsert) => {
 
   if (err) {
     console.error('Error creating store:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as Store };
+};
+
+export const updateStore = async (
+  storeId: string,
+  data: StoreUpdate,
+) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('stores')
+    .update(data)
+    .eq('store_id', storeId)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error updating store:', err);
     return { success: false, data: null, error: err.message };
   }
   return { success: true, data: entry as Store };
@@ -33,3 +52,108 @@ export const deleteStore = async (storeId: string) => {
   }
   return { success: true };
 };
+
+export const createStoreAdmin = async (
+  data: StoreAdminInsert,
+) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('store_admins')
+    .insert(data)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error creating store admin:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as StoreAdmin };
+};
+
+export const deleteStoreAdmin = async (
+  storeAdminId: string,
+) => {
+  const supabase = await createClient();
+  const { error: err } = await supabase
+    .from('store_admins')
+    .delete()
+    .eq('store_admins_id', storeAdminId);
+
+  if (err) {
+    console.error('Error deleting store admin:', err);
+    return { success: false, error: err.message };
+  }
+  return { success: true };
+};
+
+export const createStoreItem = async (
+  data: StoreItemInsert,
+) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('store_items')
+    .insert(data)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error creating store item:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as StoreItem };
+};
+
+export const deleteStoreItem = async (
+  storeItemId: string,
+) => {
+  const supabase = await createClient();
+  const { error: err } = await supabase
+    .from('store_items')
+    .delete()
+    .eq('store_item_id', storeItemId);
+
+  if (err) {
+    console.error('Error deleting store item:', err);
+    return { success: false, error: err.message };
+  }
+  return { success: true };
+};
+
+export const updateStoreItemQuantity = async (
+  storeItemId: string,
+  newQuantity: number,
+) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('store_items')
+    .update({ quantity: newQuantity })
+    .eq('store_item_id', storeItemId)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error updating store item quantity:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as StoreItem };
+};
+
+export const updateStoreItemIsHidden = async (
+  storeItemId: string,
+  newIsHidden: boolean,
+) => {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('store_items')
+    .update({ is_hidden: newIsHidden })
+    .eq('store_item_id', storeItemId)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error updating store item visibility:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  return { success: true, data: entry as StoreItem };
+};
+
