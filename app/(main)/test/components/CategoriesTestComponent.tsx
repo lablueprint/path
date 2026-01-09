@@ -19,15 +19,18 @@ export default function CategoriesTestComponent() {
     const [deleteSubcategoryId, setDeleteSubcategoryId] = useState('');
 
     const handleCreateSubcategory = async () => {
-        await createSubcategory(data);
+        const result = await createSubcategory(data);
+        console.log('Create Subcategory Result:', result);
     };
 
     const handleUpdateSubcategory = async () => {
-        await updateSubcategory(Number(subcategoryId), {name: updatedName});
+        const result = await updateSubcategory(Number(subcategoryId), { name: updatedName });
+        console.log('Update Subcategory Result:', result);
     };
 
     const handleDeleteSubcategory = async () => {
-        await deleteSubcategory(Number(deleteSubcategoryId));
+        const result = await deleteSubcategory(Number(deleteSubcategoryId));
+        console.log('Delete Subcategory Result:', result);
     };
 
     return (

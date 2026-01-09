@@ -105,6 +105,7 @@ export const deleteSubcategory = async (subcategoryId: number) => {
     console.error('Error deleting subcategory:', err);
     return { success: false, error: err.message };
   }
+  
   return { success: true };
 };
 
