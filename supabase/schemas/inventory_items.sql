@@ -1,12 +1,14 @@
 create table "inventory_items" (
   "inventory_item_id" uuid primary key default uuid_generate_v4 (),
-  "store_id" uuid not null,
-  "subcategory_id" int not null,
-  "item" varchar(255) not null,
+  "subcategory_id" int,
+  "name" varchar(255) not null,
   "description" text not null,
   "photo_url" text,
-  "quantity_available" int not null,
-  "is_hidden" boolean not null
+
+  constraint fk_subcategories
+    foreign key (subcategories)
+    references subcategories(subcategory_id)
+    on update cascade
 );
 
 alter table "inventory_items" enable row level security;
