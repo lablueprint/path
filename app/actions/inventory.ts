@@ -48,16 +48,18 @@ export const updateItemQuantity = async (
 
 export const deleteItem = async (inventoryItemId: string) => {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('inventory_items')
     .delete()
-    .eq('inventory_item_id', inventoryItemId);
+    .eq('inventory_item_id', inventoryItemId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting inventory item:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as InventoryItem };
 };
 
 export const createSubcategory = async (data: SubcategoryInsert) => {
@@ -96,17 +98,18 @@ export const updateSubcategory = async (
 
 export const deleteSubcategory = async (subcategoryId: number) => {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('subcategories')
     .delete()
-    .eq('subcategory_id', subcategoryId);
+    .eq('subcategory_id', subcategoryId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting subcategory:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-
-  return { success: true };
+  return { success: true, data: entry as Subcategory };
 };
 
 export const createCategory = async (data: CategoryInsert) => {
@@ -145,14 +148,16 @@ export const updateCategory = async (
 
 export const deleteCategory = async (categoryId: number) => {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('categories')
     .delete()
-    .eq('category_id', categoryId);
+    .eq('category_id', categoryId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting category:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as Category };
 };
