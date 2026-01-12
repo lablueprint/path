@@ -28,7 +28,7 @@ select
     ) = requestor_user_id
   );
 
-create policy "auth can insert tickets if >= requestor" on public.tickets for insert to authenticated
+create policy "auth can insert tickets if requestor_user_id and >= requestor" on public.tickets for insert to authenticated
 with
   check (
     (
@@ -38,7 +38,7 @@ with
     and (
       select
         auth.uid ()
-    ) = requestor_user_id  -- Supabase was doing this before this clause was added
+    ) = requestor_user_id -- Supabase was doing this before this clause was added
   );
 
 create policy "auth can update tickets if requestor_user_id" on public.tickets

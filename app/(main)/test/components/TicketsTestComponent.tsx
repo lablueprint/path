@@ -9,31 +9,30 @@ import { useState, useEffect } from 'react';
 import { Ticket, TicketInsert } from '@/app/types/ticket';
 import { createClient } from '@/app/lib/supabase/browser-client';
 
-
 export default function TicketsTestComponent() {
   const [ticketToDelete, setDelete] = useState('');
   const [ticketToUpdate, setUpdateTicket] = useState('');
   const [updateStatus, setStatus] = useState('');
 
   const ticketData: TicketInsert = {
-    requestor_user_id: '8bdd5113-c0d4-42da-8f8c-2fd71100a09e',
+    requestor_user_id: 'ac05fc68-ad0c-42fa-a383-1612313fc608',
     store_id: 'f11145b6-127d-4e68-ab5c-27ec619950d6',
     status: 'ready',
   };
 
-    const [tickets, setTickets] = useState<Ticket[] | null>(null);
-    const supabase = createClient();
-  
+  const [tickets, setTickets] = useState<Ticket[] | null>(null);
+  const supabase = createClient();
+
   useEffect(() => {
-      const getData = async () => {
-        const { data, error: err } = await supabase.from('tickets').select('*');
-        if (err) {
-          console.error('Error fetching people:', err);
-        }
-        setTickets(data);
-      };
-      getData();
-    }, []);
+    const getData = async () => {
+      const { data, error: err } = await supabase.from('tickets').select('*');
+      if (err) {
+        console.error('Error fetching people:', err);
+      }
+      setTickets(data);
+    };
+    getData();
+  }, []);
 
   const submitTicket = async () => {
     await createTicket(ticketData);

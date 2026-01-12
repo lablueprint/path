@@ -60,7 +60,7 @@ with
       from
         tickets as t
       where
-        t.ticket_id = ticket_id
+        t.ticket_id = ticket_items.ticket_id
     )
   );
 
