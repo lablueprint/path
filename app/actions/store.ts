@@ -41,16 +41,18 @@ export const updateStore = async (
 // delete store given store_id
 export const deleteStore = async (storeId: string) => {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('stores')
     .delete()
-    .eq('store_id', storeId);
+    .eq('store_id', storeId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting store:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as Store };
 };
 
 export const createStoreAdmin = async (

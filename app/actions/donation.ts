@@ -23,14 +23,16 @@ export async function createDonation(data: DonationInsert) {
 export async function deleteDonation(donationId: string) {
   const supabase = await createClient();
 
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('donations')
     .delete()
-    .eq('donation_id', donationId);
+    .eq('donation_id', donationId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting donation:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as Donation };
 }

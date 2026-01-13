@@ -10,14 +10,14 @@ import { TicketItemInsert } from '@/app/types/ticket';
 
 export default function TicketItemTestComponent() {
   const data: TicketItemInsert = {
-    ticket_id: 'c088b0b7-e4c3-40ae-80ca-9d8376dbb4fa',
-    inventory_item_id: 'bec1fdd9-d6f0-4c49-aa2f-c67a18fc05f2',
+    ticket_id: '1d76da91-2d16-4252-8832-9b28ed1fa6fa',
+    store_item_id: 'bec1fdd9-d6f0-4c49-aa2f-c67a18fc05f2',
     free_text_description: 'sample description',
     quantity_requested: 10,
     is_in_stock_request: true,
   };
 
-  const ticketItemId = '4a3e0f98-e17a-4891-9d7c-d72f44245adc';
+  const ticketItemId = '874841cc-852e-4f00-8488-cf603ae2543b';
 
   const handleCreate = async () => {
     await createTicketItem(data);
@@ -32,7 +32,7 @@ export default function TicketItemTestComponent() {
   };
 
   const handleChangeQuantity = async () => {
-    await updateTicketItemQuantity(ticketItemId, 5);
+    await updateTicketItemQuantity(ticketItemId, 10);
   };
 
   return (
