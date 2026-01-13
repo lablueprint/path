@@ -3,6 +3,7 @@
 import {
   InventoryItem,
   InventoryItemInsert,
+  InventoryItemUpdate,
   Category,
   CategoryInsert,
   CategoryUpdate,
@@ -27,20 +28,20 @@ export const createItem = async (data: InventoryItemInsert) => {
   return { success: true, data: entry as InventoryItem };
 };
 
-export const updateItemQuantity = async (
+export const updateItem = async (
   inventoryItemId: string,
-  newQuantity: number,
+  data: InventoryItemUpdate,
 ) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('inventory_items')
-    .update({ quantity_available: newQuantity })
+    .update(data)
     .eq('inventory_item_id', inventoryItemId)
     .select()
     .single();
 
   if (err) {
-    console.error('Error changing inventory item quantity:', err);
+    console.error('Error updating inventory item:', err);
     return { success: false, data: null, error: err.message };
   }
   return { success: true, data: entry as InventoryItem };
