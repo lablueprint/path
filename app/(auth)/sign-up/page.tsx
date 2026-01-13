@@ -69,7 +69,7 @@ export default function SignUpPage() {
       <input
         {...register('email', {
           required: true,
-          pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/,
+          pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         })}
         placeholder="email"
       />
@@ -85,11 +85,15 @@ export default function SignUpPage() {
           pattern:
             /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
         })}
+        placeholder= "password"
         //Minimum eight characters, at least one letter, one number and one special character
         type="password"
       />
       {errors.password?.type === 'required' && (
         <p role="alert">Password is required</p>
+      )}
+      {errors.password?.type === 'minLength' && (
+        <p role="alert">Password must be at least 8 characters with one letter, one number, and one special character</p>
       )}
       {errors.password?.type === 'pattern' && (
         <p role="alert">
@@ -103,17 +107,21 @@ export default function SignUpPage() {
           required: true,
           validate: (value) => value === password || "Passwords don't match",
         })}
+        placeholder='confirm password'
         type="password"
       />
       {errors.passwordConfirmation?.type === 'required' && (
         <p role="alert">Please confirm your password</p>
       )}
       {errors.passwordConfirmation?.type === 'validate' && (
-        <p role="alert">Passwords don't match</p>
+        <p role="alert">Passwords do not match</p>
       )}
       <button type="submit" disabled={isLoading}>
         {isLoading ? 'Creating Account...' : 'Sign Up'}
-      </button>
+        </button>
+        <button >
+            <a href="/sign-in">Sign in</a>
+        </button>
     </form>
   );
 }
