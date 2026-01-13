@@ -11,18 +11,6 @@ create table "inventory_items" (
 
 alter table "inventory_items" enable row level security;
 
-create policy "public can select entries in inventory_items" on public.inventory_items 
-for select to anon using (true);
-
-create policy "public can insert entries in inventory_items" on public.inventory_items 
-for insert to anon with check (true);
-
-create policy "public can update entries in inventory_items" on public.inventory_items
-for update to anon using (true) with check (true);
-
-create policy "public can delete entries in inventory_items" on public.inventory_items 
-for delete to anon using (true);
-
 create policy "auth can read inventory_items if >= requestor" on public.inventory_items 
 for select to authenticated 
 using ((select auth.jwt()) ->> 'user_role' in ('requestor', 'admin', 'superadmin','owner')); 

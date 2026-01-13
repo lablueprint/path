@@ -27,25 +27,18 @@ create table donations (
 -- write RLS policies that enable select, insert, update, and delete across all unauthenticated users
 alter table donations enable row level security;
 
--- select
-create policy "public can read entries in donations" on public.donations for
-select
-  to anon -- applies to anon role (anonymous/public users)
-  using (true);
+create policy "auth can read donations if >= superadmin" on public.donations
+for select to authenticated 
+using ((select auth.jwt()) ->> 'user_role' in ('superadmin','owner')); 
 
--- all rows satisfy condition, all rows are readable
--- insert
-create policy "public can insert entries in donations" on public.donations for insert to anon --  applies to anon role (anonymous/public users)
-with
-  check (true);
+create policy "auth can insert donations if >= admin" on public.donations 
+for insert to authenticated 
+with check ((select auth.jwt()) ->> 'user_role' in ('admin', 'superadmin','owner')); 
 
--- for insert/update row validation, only rows where condition evaluates to true can be inserted/updated
--- update
-create policy "public can update entries in donations" on public.donations
-for update
-  to anon
-with
-  check (true);
+create policy "auth can update donations if >= superadmin" on public.donations
+for update to authenticated 
+using ((select auth.jwt()) ->> 'user_role' in ('superadmin','owner')); 
 
--- delete
-create policy "public can delete entries in donations" on public.donations for delete to anon using (true);
+create policy "auth can delete donations if >= superadmin" on public.donations
+for delete to authenticated 
+using ((select auth.jwt()) ->> 'user_role' in ('superadmin','owner')); 
