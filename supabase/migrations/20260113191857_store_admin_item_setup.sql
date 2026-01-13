@@ -1,6 +1,6 @@
 
   create table "public"."store_admins" (
-    "store_admins_id" uuid not null default extensions.uuid_generate_v4(),
+    "store_admin_id" uuid not null default extensions.uuid_generate_v4(),
     "user_id" uuid not null,
     "store_id" uuid not null
       );
@@ -11,12 +11,14 @@ alter table "public"."store_admins" enable row level security;
 
   create table "public"."store_items" (
     "store_item_id" uuid not null default extensions.uuid_generate_v4(),
-    "inventory_item_id" uuid,
+    "inventory_item_id" uuid not null,
     "store_id" uuid not null,
     "quantity_available" integer not null,
     "is_hidden" boolean not null
       );
 
+
+alter table "public"."store_items" enable row level security;
 
 alter table "public"."inventory_items" drop column "is_hidden";
 
@@ -30,7 +32,7 @@ alter table "public"."inventory_items" add column "name" character varying(255) 
 
 alter table "public"."inventory_items" alter column "subcategory_id" drop not null;
 
-CREATE UNIQUE INDEX store_admins_pkey ON public.store_admins USING btree (store_admins_id);
+CREATE UNIQUE INDEX store_admins_pkey ON public.store_admins USING btree (store_admin_id);
 
 CREATE UNIQUE INDEX store_items_pkey ON public.store_items USING btree (store_item_id);
 
@@ -168,6 +170,43 @@ using (true);
 
   create policy "all authenticated users can update"
   on "public"."store_admins"
+  as permissive
+  for update
+  to authenticated
+using (true)
+with check (true);
+
+
+
+  create policy "all authenticated users can delete"
+  on "public"."store_items"
+  as permissive
+  for delete
+  to authenticated
+using (true);
+
+
+
+  create policy "all authenticated users can insert"
+  on "public"."store_items"
+  as permissive
+  for insert
+  to authenticated
+with check (true);
+
+
+
+  create policy "all authenticated users can select"
+  on "public"."store_items"
+  as permissive
+  for select
+  to authenticated
+using (true);
+
+
+
+  create policy "all authenticated users can update"
+  on "public"."store_items"
   as permissive
   for update
   to authenticated

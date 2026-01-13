@@ -5,11 +5,6 @@ create table "inventory_items" (
   "description" text not null,
   "photo_url" text
 );
-  /*constraint fk_subcategories
-    foreign key (subcategories)
-    references subcategories(subcategory_id)
-    on update cascade*/
-
 
 alter table "inventory_items" enable row level security;
 

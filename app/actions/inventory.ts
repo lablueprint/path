@@ -2,7 +2,8 @@
 
 import {
   InventoryItem,
-  InventoryItemInsert, InventoryItemUpdate,
+  InventoryItemInsert,
+  InventoryItemUpdate,
   Category,
   CategoryInsert,
   CategoryUpdate,

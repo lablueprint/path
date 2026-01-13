@@ -1,7 +1,15 @@
 'use server';
 
 import { createClient } from '@/app/lib/supabase/server-client';
-import { Store, StoreInsert, StoreUpdate, StoreAdmin, StoreAdminInsert, StoreItem, StoreItemInsert, } from '@/app/types/store';
+import {
+  Store,
+  StoreInsert,
+  StoreUpdate,
+  StoreAdmin,
+  StoreAdminInsert,
+  StoreItem,
+  StoreItemInsert,
+} from '@/app/types/store';
 
 // create store
 export const createStore = async (data: StoreInsert) => {
@@ -19,10 +27,7 @@ export const createStore = async (data: StoreInsert) => {
   return { success: true, data: entry as Store };
 };
 
-export const updateStore = async (
-  storeId: string,
-  data: StoreUpdate,
-) => {
+export const updateStore = async (storeId: string, data: StoreUpdate) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('stores')
@@ -55,9 +60,7 @@ export const deleteStore = async (storeId: string) => {
   return { success: true, data: entry as Store };
 };
 
-export const createStoreAdmin = async (
-  data: StoreAdminInsert,
-) => {
+export const createStoreAdmin = async (data: StoreAdminInsert) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('store_admins')
@@ -72,25 +75,23 @@ export const createStoreAdmin = async (
   return { success: true, data: entry as StoreAdmin };
 };
 
-export const deleteStoreAdmin = async (
-  storeAdminId: string,
-) => {
+export const deleteStoreAdmin = async (storeAdminId: string) => {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('store_admins')
     .delete()
-    .eq('store_admins_id', storeAdminId);
+    .eq('store_admin_id', storeAdminId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting store admin:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as StoreAdmin };
 };
 
-export const createStoreItem = async (
-  data: StoreItemInsert,
-) => {
+export const createStoreItem = async (data: StoreItemInsert) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('store_items')
@@ -105,20 +106,20 @@ export const createStoreItem = async (
   return { success: true, data: entry as StoreItem };
 };
 
-export const deleteStoreItem = async (
-  storeItemId: string,
-) => {
+export const deleteStoreItem = async (storeItemId: string) => {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('store_items')
     .delete()
-    .eq('store_item_id', storeItemId);
+    .eq('store_item_id', storeItemId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting store item:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as StoreItem };
 };
 
 export const updateStoreItemQuantity = async (
@@ -128,7 +129,7 @@ export const updateStoreItemQuantity = async (
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('store_items')
-    .update({ quantity: newQuantity })
+    .update({ quantity_available: newQuantity })
     .eq('store_item_id', storeItemId)
     .select()
     .single();
@@ -158,4 +159,3 @@ export const updateStoreItemIsHidden = async (
   }
   return { success: true, data: entry as StoreItem };
 };
-
