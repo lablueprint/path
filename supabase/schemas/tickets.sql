@@ -38,7 +38,7 @@ with
     and (
       select
         auth.uid ()
-    ) = requestor_user_id  -- Supabase was doing this before this clause was added
+    ) = requestor_user_id -- Supabase was doing this before this clause was added
   );
 
 create policy "auth can update tickets if requestor_user_id" on public.tickets
