@@ -21,7 +21,9 @@ export default function SignInPage() {
       password: Input.password,
     });
     if (error) {
-      console.log(error);
+      alert(error.message);
+    } else {
+      alert('Welcome back!');
     }
   };
 
