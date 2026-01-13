@@ -1,11 +1,14 @@
 'use client';
 
 import { createDonation, deleteDonation } from '@/app/actions/donation';
+import { useState } from 'react';
 
 export default function DonationsTestComponent() {
+  const [idToDelete, setIdToDelete] = useState('');
+
   const handleCreate = async () => {
     try {
-      const donation = await createDonation({
+      const result = await createDonation({
         donor_is_individual: true,
         donor_individual_name: 'Test User',
         donor_business_name: 'Donor Business Name',
@@ -24,14 +27,22 @@ export default function DonationsTestComponent() {
         store_street_address: '1234 Example St',
       });
 
-      console.log('Created donation:', donation);
+      console.log('Created donation:', result);
+      
+      if (result.success && result.data) {
+        setIdToDelete(result.data.donation_id);
+      }
     } catch (err) {
       console.error('Create failed:', err);
     }
   };
 
   const handleDelete = async () => {
-    const idToDelete = '40b188ab-e9a1-444d-9e6b-6b99d5017c90'; // hard-coded ID for now
+    if (!idToDelete) {
+      alert('Please enter a valid UUID to delete');
+      return;
+    }
+
     try {
       const result = await deleteDonation(idToDelete);
       console.log('Deleted donation:', result);
