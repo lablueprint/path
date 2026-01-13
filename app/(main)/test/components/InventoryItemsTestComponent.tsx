@@ -24,15 +24,33 @@ export default function InventoryItemsTestComponent() {
   };
 
   const handleCreateItem = async () => {
-    await createItem(data);
+    try {
+      const result = await createItem(data);
+      console.log('Created item:', result);
+    } catch (err) {
+      console.error('Create item failed:', err);
+    }
   };
 
   const handleUpdateItemQuantity = async () => {
-    await updateItemQuantity(inventoryId, Number(updatedQuantity));
+    try {
+      const result = await updateItemQuantity(
+        inventoryId,
+        Number(updatedQuantity),
+      );
+      console.log('Updated item quantity:', result);
+    } catch (err) {
+      console.error('Update quantity failed:', err);
+    }
   };
 
   const handleDeleteItem = async () => {
-    await deleteItem(inventoryIdToDelete);
+    try {
+      const result = await deleteItem(inventoryIdToDelete);
+      console.log('Deleted item:', result);
+    } catch (err) {
+      console.error('Delete item failed:', err);
+    }
   };
 
   return (
