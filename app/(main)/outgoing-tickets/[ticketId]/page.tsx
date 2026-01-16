@@ -19,8 +19,15 @@ async function fetchTicket(id: string) {
 }
 
 
-aysnc function fetchStore(storeId: string) {
-    const supabase = createClient
+async function fetchStore(storeId: string) {
+    const supabase = await createClient();
+    const { error, data } = await supabase
+        .from('stores')
+        .select('*')
+        .eq('store_id', storeId)
+        .single()
+    if (error) throw error;
+    return data; 
 }
 export default async function OutGoingTicketsDetailsPage({
     params
@@ -37,7 +44,6 @@ export default async function OutGoingTicketsDetailsPage({
     if(!ticket.store_id){
         throw new Error('Store not found')
     }
-
     return (
         <div>{ticket.status}</div>
     );
