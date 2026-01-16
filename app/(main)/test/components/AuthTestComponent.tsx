@@ -7,7 +7,7 @@ export default function AuthTestComponent() {
   const supabase = createClient();
 
   const data = {
-    email: 'luka@mavs.org',
+    email: 'test@test.org',
     password: 'test123***',
   };
 
@@ -16,7 +16,19 @@ export default function AuthTestComponent() {
   };
 
   const handleSignUp = async () => {
-    await supabase.auth.signUp(data);
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          first_name: 'John',
+          last_name: 'Doe',
+        },
+      },
+    });
+    if (error) {
+      console.error(error);
+    }
   };
 
   const handleSignOut = async () => {

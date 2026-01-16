@@ -70,7 +70,7 @@ using ((EXISTS ( SELECT 1
   WHERE (t.ticket_id = ticket_items.ticket_id))))
 with check ((EXISTS ( SELECT 1
    FROM public.tickets t
-  WHERE (t.ticket_id = t.ticket_id))));
+  WHERE (t.ticket_id = ticket_items.ticket_id))));
 
 
 
@@ -83,7 +83,7 @@ using ((((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['super
 
 
 
-  create policy "auth can insert tickets if >= requestor"
+  create policy "auth can insert tickets if requestor_user_id and >= requestor"
   on "public"."tickets"
   as permissive
   for insert

@@ -7,6 +7,7 @@ import StoresTestComponent from './components/StoresTestComponent';
 import InventoryItemsTestComponent from './components/InventoryItemsTestComponent';
 import TicketsTestComponent from './components/TicketsTestComponent';
 import TicketItemsTestComponent from './components/TicketItemsTestComponent';
+import CategoriesTestComponent from './components/CategoriesTestComponent';
 
 export default function TestPage() {
   return (
@@ -20,6 +21,7 @@ export default function TestPage() {
       <InventoryItemsTestComponent />
       <TicketsTestComponent />
       <TicketItemsTestComponent />
+      <CategoriesTestComponent />
     </div>
   );
 }

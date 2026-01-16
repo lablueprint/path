@@ -28,7 +28,7 @@ select
     ) = requestor_user_id
   );
 
-create policy "auth can insert tickets if >= requestor" on public.tickets for insert to authenticated
+create policy "auth can insert tickets if requestor_user_id and >= requestor" on public.tickets for insert to authenticated
 with
   check (
     (

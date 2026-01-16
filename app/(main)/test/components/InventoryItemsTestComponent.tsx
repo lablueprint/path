@@ -2,11 +2,7 @@
 
 import { useState } from 'react';
 import type { InventoryItemInsert } from '@/app/types/inventory';
-import {
-  createItem,
-  updateItemQuantity,
-  deleteItem,
-} from '@/app/actions/inventory';
+import { createItem, updateItem, deleteItem } from '@/app/actions/inventory';
 
 export default function InventoryItemsTestComponent() {
   const [inventoryId, setInventoryId] = useState('');
@@ -14,21 +10,21 @@ export default function InventoryItemsTestComponent() {
   const [updatedQuantity, setUpdatedQuantity] = useState<number>(0);
 
   const data: InventoryItemInsert = {
-    store_id: '4c7b2b65-16df-44b5-a3c2-e2fcd090b76c',
     subcategory_id: 1,
-    item: 'Sample Item',
+    name: 'test name',
     description: 'test description',
     photo_url: 'http://example.com/photo.jpg',
-    quantity_available: 2,
-    is_hidden: false,
   };
 
   const handleCreateItem = async () => {
     await createItem(data);
   };
 
-  const handleUpdateItemQuantity = async () => {
-    await updateItemQuantity(inventoryId, Number(updatedQuantity));
+  const handleUpdateItem = async () => {
+    await updateItem(inventoryId, {
+      name: 'new name',
+      description: 'new description',
+    });
   };
 
   const handleDeleteItem = async () => {
@@ -54,20 +50,7 @@ export default function InventoryItemsTestComponent() {
           />
         </label>
         <br />
-        <label>
-          New Quantity:
-          <input
-            type="number"
-            value={updatedQuantity}
-            onChange={(e) => setUpdatedQuantity(Number(e.target.value))}
-            placeholder="0"
-            min={0}
-          />
-        </label>
-        <br />
-        <button onClick={handleUpdateItemQuantity}>
-          Update inventory quantity
-        </button>
+        <button onClick={handleUpdateItem}>Update inventory item</button>
       </div>
       <br />
       <h2>Delete an Item</h2>

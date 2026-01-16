@@ -17,7 +17,7 @@ export default function TicketsTestComponent() {
   const url = './';
 
   const ticketData: TicketInsert = {
-    requestor_user_id: '8bdd5113-c0d4-42da-8f8c-2fd71100a09e',
+    requestor_user_id: 'ac05fc68-ad0c-42fa-a383-1612313fc608',
     store_id: 'f11145b6-127d-4e68-ab5c-27ec619950d6',
     status: 'ready',
   };
