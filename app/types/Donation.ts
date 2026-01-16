@@ -18,7 +18,7 @@ export type Donation = {
     donor_receive_emails: boolean;
     donor_remain_anonymous: boolean;
 
-    estimated_value: number;
+    estimated_value: number | null;
     items_donated: string;
 };
 

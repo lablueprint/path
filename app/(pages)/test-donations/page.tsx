@@ -1,6 +1,7 @@
 "use client";
 
 import { createDonation, deleteDonation } from "@/app/api/donations/actions";
+import DonationForm from "@/app/components/DonationForm";
 
 export default function TestDonationsPage() {
 
@@ -40,10 +41,13 @@ export default function TestDonationsPage() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Test Donations</h1>
-      <button onClick={handleCreate}>Create Donation</button>
-      <button onClick={handleDelete} style={{ marginLeft: 10 }}>Delete Donation</button>
+    // <div style={{ padding: 20 }}>
+    //   <h1>Test Donations</h1>
+    //   <button onClick={handleCreate}>Create Donation</button>
+    //   <button onClick={handleDelete} style={{ marginLeft: 10 }}>Delete Donation</button>
+    // </div>
+    <div>
+      <DonationForm />
     </div>
   );
 }
