@@ -9,6 +9,8 @@ create sequence "public"."subcategories_subcategory_id_seq";
       );
 
 
+alter table "public"."categories" enable row level security;
+
 
   create table "public"."subcategories" (
     "subcategory_id" integer not null default nextval('public.subcategories_subcategory_id_seq'::regclass),
@@ -128,6 +130,43 @@ grant truncate on table "public"."subcategories" to "service_role";
 grant update on table "public"."subcategories" to "service_role";
 
 
+  create policy "auth can delete categories if >= superadmin"
+  on "public"."categories"
+  as permissive
+  for delete
+  to authenticated
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
+
+
+
+  create policy "auth can insert categories if >= admin"
+  on "public"."categories"
+  as permissive
+  for insert
+  to authenticated
+with check (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['admin'::text, 'superadmin'::text, 'owner'::text])));
+
+
+
+  create policy "auth can read categories if >= requestor"
+  on "public"."categories"
+  as permissive
+  for select
+  to authenticated
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'superadmin'::text, 'owner'::text])));
+
+
+
+  create policy "auth can update categories if >= superadmin"
+  on "public"."categories"
+  as permissive
+  for update
+  to authenticated
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])))
+with check (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
+
+
+
   create policy "auth can delete subcategories if >= superadmin"
   on "public"."subcategories"
   as permissive
@@ -160,6 +199,7 @@ using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['reques
   as permissive
   for update
   to authenticated
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])))
 with check (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
 
 
