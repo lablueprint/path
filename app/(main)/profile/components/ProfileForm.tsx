@@ -1,6 +1,8 @@
+'use client';
+
 import type { User } from '@/app/types/user';
 import { useForm } from 'react-hook-form';
-import { updateUser } from '@/app/actions/user'
+import { updateUser } from '@/app/actions/user';
 
 export default function ProfileForm( {user} : {user: User} ) {
     const { register, handleSubmit } = useForm({
