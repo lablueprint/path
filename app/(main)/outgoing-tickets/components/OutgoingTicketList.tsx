@@ -7,22 +7,32 @@ interface TicketListProps {
   status: Status;
 }
 
-export default async function OutgoingTicketsList(props: TicketListProps) {
+export default function OutgoingTicketsList(props: TicketListProps) {
   const filteredTickets = props.tickets.filter(
     (ticket) => ticket.status === props.status,
   );
 
-  <div>
-    <h2>{props.status}</h2>
-    <table>
-        
-      {filteredTickets.map((ticket) => (
-        <tr key={ticket.ticket_id}>
-          <td>{ticket.store_id}</td>
-          <td>{ticket.status}</td>
-          <td>{ticket.date_submitted.toString()}</td>
-        </tr>
-      ))}
-    </table>
-  </div>;
+  return (
+    <div>
+      <h2>{props.status.toUpperCase()} TICKETS</h2>
+      {filteredTickets.length > 0 ? <table style={{border: "1px solid white"}}>
+        <thead>
+          <tr>
+            <th style={{border: "1px solid white"}}>Store ID</th>
+            <th style={{border: "1px solid white"}}>Status</th>
+            <th style={{border: "1px solid white"}}>Date Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+        {filteredTickets.map((ticket) => (
+          <tr key={ticket.ticket_id}>
+            <td style={{border: "1px solid white"}}>{ticket.store_id}</td>
+            <td style={{border: "1px solid white"}}>{ticket.status}</td>
+            <td style={{border: "1px solid white"}}>{ticket.date_submitted.toString()}</td>
+          </tr>
+        ))}
+        </tbody>
+      </table> : <p>No ticket with status: {props.status}</p>}
+    </div>
+  );
 }
