@@ -7,7 +7,7 @@ export default function AuthTestComponent() {
   const supabase = createClient();
 
   const data = {
-    email: 'klay@mavs.org',
+    email: 'luka@mavs.org',
     password: 'test123***',
   };
 

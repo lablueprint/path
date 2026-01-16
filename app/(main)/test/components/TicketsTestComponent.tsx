@@ -14,7 +14,7 @@ export default function TicketsTestComponent() {
   const [ticketToUpdate, setUpdateTicket] = useState('');
   const [updateStatus, setStatus] = useState('');
 
-  const url = 'http://localhost:3000/';
+  const url = './';
 
   const ticketData: TicketInsert = {
     requestor_user_id: '8bdd5113-c0d4-42da-8f8c-2fd71100a09e',

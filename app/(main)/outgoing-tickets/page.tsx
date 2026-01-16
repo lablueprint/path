@@ -11,13 +11,12 @@ export default async function OutgoingTicketsPage() {
   const { data: userTickets, error: err } = await supabase
     .from('tickets')
     .select('*');
-  console.log(userTickets);
   if (err) {
     console.error('Error fetching tickets:', err);
     return <div>Failed to load data.</div>;
   }
 
-  const url = 'http://localhost:3000/';
+  const url = './';
 
   return (
     <div>
