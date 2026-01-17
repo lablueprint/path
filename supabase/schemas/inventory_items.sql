@@ -8,18 +8,43 @@ create table "inventory_items" (
 
 alter table "inventory_items" enable row level security;
 
-create policy "public can select entries in inventory_items" on public.inventory_items for
+create policy "auth can read inventory_items if >= requestor" on public.inventory_items for
 select
-  to anon using (true);
+  to authenticated using (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('requestor', 'admin', 'superadmin', 'owner')
+  );
 
-create policy "public can insert entries in inventory_items" on public.inventory_items for insert to anon
+create policy "auth can insert inventory_items if >= admin" on public.inventory_items for insert to authenticated
 with
-  check (true);
+  check (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('admin', 'superadmin', 'owner')
+  );
 
-create policy "public can update entries in inventory_items" on public.inventory_items
+create policy "auth can update inventory_items if >= superadmin" on public.inventory_items
 for update
-  to anon using (true)
+  to authenticated using (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('superadmin', 'owner')
+  )
 with
-  check (true);
+  check (
+    (
+      select
+        auth.jwt ()
+    ) ->> 'user_role' in ('superadmin', 'owner')
+  );
 
-create policy "public can delete entries in inventory_items" on public.inventory_items for delete to anon using (true);
+create policy "auth can delete inventory_items if >= superadmin" on public.inventory_items for delete to authenticated using (
+  (
+    select
+      auth.jwt ()
+  ) ->> 'user_role' in ('superadmin', 'owner')
+);
