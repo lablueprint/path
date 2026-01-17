@@ -3,6 +3,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 type Inputs = {
@@ -20,15 +21,14 @@ export default function SignUpPage() {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
   const password = watch('password');
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
-    setAuthError(null);
-    setIsLoading(true);
-    const { data, error } = await supabase.auth.signUp({
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: {
@@ -38,32 +38,31 @@ export default function SignUpPage() {
         },
       },
     });
-    setIsLoading(false);
+    setLoading(false);
     if (error) {
-      setAuthError(error.message);
-      console.error('Sign up error: ', error);
-      return;
+      console.error('Sign-up error:', error);
     }
+    router.push('/home');
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input
         {...register('firstName', { required: true })}
-        placeholder="First Name"
+        placeholder="First name"
         type="text"
       />
       {errors.firstName?.type === 'required' && (
-        <p role="alert"> First name is required</p>
+        <p role="alert">First name is required.</p>
       )}
 
       <input
         {...register('lastName', { required: true })}
-        placeholder="Last Name "
+        placeholder="Last name"
         type="text"
       />
       {errors.lastName?.type === 'required' && (
-        <p role="alert"> Last name is required</p>
+        <p role="alert">Last name is required.</p>
       )}
 
       <input
@@ -71,12 +70,14 @@ export default function SignUpPage() {
           required: true,
           pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         })}
-        placeholder="email"
+        placeholder="Email"
       />
       {errors.email?.type === 'required' && (
-        <p role="alert"> Email is required </p>
+        <p role="alert">Email is required.</p>
       )}
-      {errors.email?.type === 'pattern' && <p role="alert">Invalid Email</p>}
+      {errors.email?.type === 'pattern' && (
+        <p role="alert">Enter a valid email.</p>
+      )}
 
       <input
         {...register('password', {
@@ -85,43 +86,46 @@ export default function SignUpPage() {
           pattern:
             /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
         })}
-        placeholder= "password"
-        //Minimum eight characters, at least one letter, one number and one special character
+        placeholder="Password"
+        // Minimum eight characters, at least one letter, one number and one special character
         type="password"
       />
       {errors.password?.type === 'required' && (
-        <p role="alert">Password is required</p>
+        <p role="alert">Password is required.</p>
       )}
       {errors.password?.type === 'minLength' && (
-        <p role="alert">Password must be at least 8 characters with one letter, one number, and one special character</p>
+        <p role="alert">
+          Password must be at least 8 characters and include letters, numbers,
+          and special characters.
+        </p>
       )}
       {errors.password?.type === 'pattern' && (
         <p role="alert">
-          Minimum eight characters, at least one letter, one number, and one
-          special character
+          Password must be at least 8 characters and include letters, numbers,
+          and special characters.
         </p>
       )}
 
       <input
         {...register('passwordConfirmation', {
           required: true,
-          validate: (value) => value === password || "Passwords don't match",
+          validate: (value) => value === password || 'Passwords do not match.',
         })}
-        placeholder='confirm password'
+        placeholder="Confirm password"
         type="password"
       />
       {errors.passwordConfirmation?.type === 'required' && (
-        <p role="alert">Please confirm your password</p>
+        <p role="alert">Please confirm your password.</p>
       )}
       {errors.passwordConfirmation?.type === 'validate' && (
-        <p role="alert">Passwords do not match</p>
+        <p role="alert">Passwords do not match.</p>
       )}
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Creating Account...' : 'Sign Up'}
-        </button>
-        <button >
-            <a href="/sign-in">Sign in</a>
-        </button>
+
+      <button type="submit" disabled={loading}>
+        {loading ? 'Creating account...' : 'Sign up'}
+      </button>
+
+      <Link href="/sign-in">Sign in</Link>
     </form>
   );
 }
