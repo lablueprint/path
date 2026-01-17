@@ -1,5 +1,22 @@
 'use client';
+import { createClient } from '@/app/lib/supabase/browser-client';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  return <div>Welcome to PATH! This is the home page.</div>;
+  const router = useRouter();
+  const supabase = createClient();
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Sign-out error:', error.message);
+    }
+    router.push('/home');
+  }
+
+  return (
+    <div>
+      <div>Welcome to PATH! This is the home page.</div>
+      <button onClick={signOut}>Sign out</button>
+    </div>
+  );
 }
