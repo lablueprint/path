@@ -28,7 +28,7 @@ export default function DonationsTestComponent() {
       });
 
       console.log('Created donation:', result);
-      
+
       if (result.success && result.data) {
         setIdToDelete(result.data.donation_id);
       }
