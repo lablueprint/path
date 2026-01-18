@@ -14,6 +14,8 @@ export default function TicketsTestComponent() {
   const [ticketToUpdate, setUpdateTicket] = useState('');
   const [updateStatus, setStatus] = useState('');
 
+  const url = './';
+
   const ticketData: TicketInsert = {
     requestor_user_id: 'ac05fc68-ad0c-42fa-a383-1612313fc608',
     store_id: 'f11145b6-127d-4e68-ab5c-27ec619950d6',
@@ -49,6 +51,9 @@ export default function TicketsTestComponent() {
   return (
     <div>
       <h2>Ticket Testing</h2>
+      <a href={url + 'outgoing-tickets'}>
+        <button>View Outgoing Tickets</button>
+      </a>
       <ul>
         <li>Tickets you can read will appear here.</li>
         {tickets?.map((ticket) => (
