@@ -11,15 +11,15 @@ export default function ProfileForm({ user }: { user: User }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      first_name: user.first_name,
-      last_name: user.last_name,
+      firstName: user.first_name,
+      lastName: user.last_name,
     },
   });
 
-  const onSubmit = (data: { first_name: string; last_name: string }) => {
+  const onSubmit = (data: { firstName: string; lastName: string }) => {
     updateUser(user.user_id, {
-      first_name: data.first_name,
-      last_name: data.last_name,
+      first_name: data.firstName,
+      last_name: data.lastName,
       email: user.email,
       profile_photo_url: user.profile_photo_url,
     });
@@ -29,15 +29,15 @@ export default function ProfileForm({ user }: { user: User }) {
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* First name */}
       <label>First name</label>
-      <input {...register('first_name', { required: true })} />
-      {errors.first_name?.type === 'required' && (
+      <input {...register('firstName', { required: true })} />
+      {errors.firstName?.type === 'required' && (
         <p role="alert">First name is required.</p>
       )}
       <br />
       {/* Last name */}
       <label>Last name</label>
-      <input {...register('last_name', { required: true })} />
-      {errors.last_name?.type === 'required' && (
+      <input {...register('lastName', { required: true })} />
+      {errors.lastName?.type === 'required' && (
         <p role="alert">Last name is required.</p>
       )}
       <br />
