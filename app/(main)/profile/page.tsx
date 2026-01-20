@@ -19,7 +19,7 @@ export default async function PersonalProfilePage() {
     .single();
 
   if (err) {
-    console.error('profile error:', err);
+    console.error('Error fetching profile:', err);
   }
 
   if (!profile) {

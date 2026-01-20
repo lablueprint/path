@@ -46,7 +46,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
   // If authenticated user tries to access /sign-up or /sign-in, redirect to /home
-  else if (
+  if (
     user &&
     (request.nextUrl.pathname.startsWith('/sign-in') ||
       request.nextUrl.pathname.startsWith('/sign-up'))
@@ -54,6 +54,15 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/home';
     return NextResponse.redirect(url);
+  }
+  // Restrict access to /profile
+  if (request.nextUrl.pathname.startsWith('/profile')) {
+    const allowedRoles = ['requestor', 'admin', 'superadmin', 'owner'];
+    if (!user || !allowedRoles.includes(user.user_role)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/home';
+      return NextResponse.redirect(url);
+    }
   }
 
   // Refresh auth token
