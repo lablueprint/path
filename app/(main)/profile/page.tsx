@@ -3,25 +3,32 @@ import ProfileForm from './components/ProfileForm';
 import type { User } from '@/app/types/user';
 
 export default async function PersonalProfilePage() {
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const { data: { user }, } = await supabase.auth.getUser();
-    console.log('AUTH USER ID (server):', user?.id);
-    if (!user) { return <div>Please sign in.</div>; }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return <div>Please sign in.</div>;
+  }
 
-    const { data: profile, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-    console.log('profile error:', error);
-    if (!profile) { return <div>User profile not found.</div>; }
+  const { data: profile, error: err } = await supabase
+    .from('users')
+    .select('*')
+    .eq('user_id', user.id)
+    .single();
 
-    return (
-        <div>
-            This is a Profile Page.
-            <br />
-            <ProfileForm user={profile as User} />
-        </div>
-    );
+  if (err) {
+    console.error('profile error:', err);
+  }
+
+  if (!profile) {
+    return <div>User profile not found.</div>;
+  }
+
+  return (
+    <div>
+      <ProfileForm user={profile as User} />
+    </div>
+  );
 }

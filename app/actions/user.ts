@@ -1,12 +1,12 @@
 'use server';
 
-import { UserUpdate } from '@/app/types/user';
+import { User, UserUpdate } from '@/app/types/user';
 import { createClient } from '@/app/lib/supabase/server-client';
 import { revalidatePath } from 'next/cache';
 
 export const updateUser = async (userId: string, data: UserUpdate) => {
   const supabase = await createClient();
-  const updateData = { first_name: data.first_name, last_name:data.last_name };
+  const updateData = { first_name: data.first_name, last_name: data.last_name };
 
   const { data: updatedUser, error: err } = await supabase
     .from('users')
@@ -22,5 +22,5 @@ export const updateUser = async (userId: string, data: UserUpdate) => {
 
   revalidatePath('/profile');
 
-  return { success: true, data: updatedUser };
+  return { success: true, data: updatedUser as User };
 };
