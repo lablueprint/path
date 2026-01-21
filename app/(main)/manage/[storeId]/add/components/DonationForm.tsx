@@ -1,12 +1,12 @@
-import { DonationInsert } from "../types/Donation";
-import { useState } from 'react';
+"use client";
+
+import { DonationInsert } from "../../../../../types/Donation";
 import { useForm, Controller } from "react-hook-form";
-import { NumericFormat, PatternFormat } from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { createDonation } from "@/app/api/donations/actions";
-// import usePlacesAutocomplete from "use-places-autocomplete";
 
 type FormData = {
-  donor_type: "individual" | "business";
+  donor_type?: "individual" | "business";
 
   individual_name?: string;
   business_name?: string;
@@ -36,66 +36,13 @@ export default function DonationForm() {
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
+      donor_type: undefined,
       phone: "",
       estimated_value: null,
     }
   });
 
   const donorType = watch("donor_type");
-
-  // const onSubmit = async (data: FormData) => {
-  //   const donation: DonationInsert = {
-  //     receiver_user_id: "00000000-0000-0000-0000-000000000000", // TODO: real ID
-  //     store_id: null,
-
-  //     donor_is_individual: data.donor_type === "individual",
-
-  //     donor_individual_name:
-  //       data.donor_type === "individual"
-  //         ? data.individual_name ?? null
-  //         : null,
-
-  //     donor_business_name:
-  //       data.donor_type === "business"
-  //         ? data.business_name ?? null
-  //         : null,
-
-  //     donor_business_contact_name:
-  //       data.donor_type === "business"
-  //         ? data.business_contact_name ?? null
-  //         : null,
-
-  //     donor_email: data.email ?? null,
-  //     donor_phone: data.phone ?? null,
-  //     donor_street_address: data.address ?? null,
-
-  //     donor_receive_emails: data.receive_emails,
-  //     donor_receive_mailings: data.receive_mailings,
-  //     donor_remain_anonymous: data.remain_anonymous,
-
-  //     estimated_value: data.estimated_value,
-  //     items_donated: data.items_donated,
-  //   };
-
-
-  //   try {
-  //     const result = await createDonation(donation);
-  //     console.log("Donation created:", result);
-
-  //     // Reset form with default values including estimated_value
-  //     reset({
-  //       phone: "",
-  //       estimated_value: null,
-  //       donor_type: undefined,
-  //       receive_emails: false,
-  //       receive_mailings: false,
-  //       remain_anonymous: false,
-  //     });
-
-  //   } catch (error) {
-  //     console.error("Failed to create donation:", error);
-  //   }
-  // };
 
   const onSubmit = async (data: FormData) => {
     const donation: DonationInsert = {
@@ -130,27 +77,28 @@ export default function DonationForm() {
       estimated_value: data.estimated_value,
       items_donated: data.items_donated,
     };
-
     try {
       const result = await createDonation(donation);
       console.log("Donation created:", result);
 
-      // Reset form with default values including estimated_value
-     reset({
-  donor_type: undefined,
-  individual_name: "",
-  business_name: "",
-  business_contact_name: "",
-  email: "",
-  phone: "",
-  address: "",
-  receiving_site: "",
-  receive_emails: false,
-  receive_mailings: false,
-  remain_anonymous: false,
-  estimated_value: undefined,
-  items_donated: "",
-});
+      // Reset all fields to empty/default values
+      reset({
+        donor_type: undefined,
+        individual_name: "",
+        business_name: "",
+        business_contact_name: "",
+        email: "",
+        phone: "",
+        address: "",
+        receiving_site: "",
+        receive_emails: false,
+        receive_mailings: false,
+        remain_anonymous: false,
+        estimated_value: null,
+        items_donated: "",
+      });
+      clearErrors();
+
     } catch (error) {
       console.error("Failed to create donation:", error);
     }
@@ -158,7 +106,18 @@ export default function DonationForm() {
 
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Donation Form</h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center", 
+          gap: "1rem", 
+          marginTop: "20px",
+          marginBottom: "20px",
+          justifyContent: "center",
+        }}
+      >
+        <h1 style={{ margin: 0 }}>Donation Form</h1>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
 
         {/* Receiving Site */}
@@ -173,22 +132,32 @@ export default function DonationForm() {
         </div>
 
         {/* Donor Type */}
-        <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-          <label>
-            <input
-              type="radio"
-              value="individual"
-              {...register("donor_type", { required: true })}
-            /> Individual
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="business"
-              {...register("donor_type", { required: true })}
-            /> Business
-          </label>
-        </div>
+        <Controller
+          name="donor_type"
+          control={control}
+          rules={{ required: "Please select a donor type" }}
+          render={({ field }) => (
+            <>
+              <label>
+                <input
+                  type="radio"
+                  value="individual"
+                  checked={field.value === "individual"}
+                  onChange={() => field.onChange("individual")}
+                /> Individual
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="business"
+                  checked={field.value === "business"}
+                  onChange={() => field.onChange("business")}
+                /> Business
+              </label>
+              {errors.donor_type && <p style={{ color: "red" }}>{errors.donor_type.message}</p>}
+            </>
+          )}
+        />
 
         {/* Conditional Name Fields */}
         {donorType === "individual" && (
@@ -286,55 +255,28 @@ export default function DonationForm() {
           </label>
         </div>
 
-        {/* Estimated Value
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <label style={{ fontWeight: "bold", marginBottom: "5px" }}>Estimated value (USD)</label>
-          <input
-            placeholder="$123.45"
-            {...register("estimated_value", {
-              required: "Estimated donation value required",
-              pattern: {
-                value: /^\d+(\.\d{1,2})?$/,
-                message: "Enter a valid amount (e.g., 123.45)",
-              },
-            })}
-            style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-          />
-          {errors.estimated_value && <p style={{ color: "red", marginTop: "5px" }}>{errors.estimated_value.message}</p>}
-        </div> */}
-
         {/* Estimated Value */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <label style={{ fontWeight: "bold", marginBottom: "5px" }}>
             Estimated value (USD)
           </label>
 
-          <Controller
-            name="estimated_value"
-            control={control}
-            rules={{
-  validate: (value) => value != null || "Estimated donation value required",
-}}
-            render={({ field }) => (
-              <NumericFormat
-                value={field.value ?? ""}
-                thousandSeparator=","
-                decimalScale={2}
-                fixedDecimalScale
-                prefix="$"
-                placeholder="$1,234.00"
-                onValueChange={(values) => {
-                  field.onChange(values.floatValue ?? null);
-                }}
-                style={{
-                  padding: "8px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                }}
-              />
-            )}
+          <input
+            type="text"
+            placeholder="1,234.00"
+            {...register("estimated_value", {
+              required: "Estimated donation value is required",
+              pattern: {
+                value: /^\d+(\.\d{1,2})?$/,
+                message: "Please enter a valid dollar amount in the form 1234.56",
+              },
+            })}
+            style={{
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
           />
-
 
           {errors.estimated_value && (
             <p style={{ color: "red", marginTop: "5px" }}>
@@ -371,7 +313,6 @@ export default function DonationForm() {
             backgroundColor: "#007bff",
             color: "#fff",
             fontWeight: "bold",
-            cursor: "pointer"
           }}
         >
           Submit
