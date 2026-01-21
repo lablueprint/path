@@ -14,13 +14,33 @@ export default async function ticketIdPage({
 
   const { data: userTicket, error: err } = await supabase
     .from('tickets')
-    .select('*')
+    .select(`store_id, ticket_id, requestor_user_id, status, date_submitted,
+      stores (
+        name,
+        street_address
+      )
+    `)
     .eq('ticket_id', ticketId)
+    .eq('is_in_stock_request', true)
     .single();
 
   if (err) {
     console.error('Error fetching ticket:', err);
     return <div>Failed to load data.</div>;
+  }
+
+  let ticketItems = [];
+  if (userTicket) {
+    const {data: items} = await supabase
+      .from('ticket_items')
+      .select(`*,
+        store_items(
+          quantity_available
+        )
+      `)
+      .eq('ticket_id', ticketId)
+      .eq('is_in_stock_request', true); 
+      ticketItems = items || [];
   }
 
   return (
@@ -33,8 +53,11 @@ export default async function ticketIdPage({
             {user?.email ? user.email : 'User not Found'}{' '}
           </h2>
           <h3>---Your Requestor ID: {userTicket.requestor_user_id}---</h3>
-          <h2>Store ID: {userTicket.store_id}</h2>
           <h2>Status: {userTicket.status}</h2>
+          <h2>Date Submitted: {userTicket.date_submitted}</h2>
+          <h2>Store ID: {userTicket.store_id}</h2>
+          <h2>Store Name: {userTicket.stores?.[0]?.name} </h2>
+          <h2>Store Address: {userTicket.stores?.[1]?.street_address}</h2>
         </div>
       ) : (
         <h1>Ticket Not Found</h1>
