@@ -1,50 +1,47 @@
-'use server';
 import { createClient } from '@/app/lib/supabase/server-client';
 
-interface OutGoingTicketsDetailsPageProps{
-    params: {
-        ticketId : string;
-    };
-}
+export default async function ticketIdPage({
+  params,
+}: {
+  params: Promise<{ ticketId: string }>;
+}) {
+  const { ticketId } = await params;
 
-async function fetchTicket(id: string) {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-        .from('tickets')
-        .select('*')
-        .eq('id', id)
-        .single();
-    if (error) throw error;
-    return data;
-}
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
+  const { data: userTicket, error: err } = await supabase
+    .from('tickets')
+    .select('*')
+    .eq('ticket_id', ticketId)
+    .single();
 
-async function fetchStore(storeId: string) {
-    const supabase = await createClient();
-    const { error, data } = await supabase
-        .from('stores')
-        .select('*')
-        .eq('store_id', storeId)
-        .single()
-    if (error) throw error;
-    return data; 
-}
-export default async function OutGoingTicketsDetailsPage({
-    params
-}: OutGoingTicketsDetailsPageProps) {
-    const { ticketId } = await params;
-    //1. Fetch Ticket
-    const ticket = await fetchTicket(ticketId)
-    if(!ticketId){
-        throw new Error('Ticket not found');
-    }
+  if (err) {
+    console.error('Error fetching ticket:', err);
+    return <div>Failed to load data.</div>;
+  }
 
-    //2. Fetch store using ticket object
-    const store = await fetchStore(ticket.store_id);
-    if(!ticket.store_id){
-        throw new Error('Store not found')
-    }
-    return (
-        <div>{ticket.status}</div>
-    );
+  return (
+    <div>
+      {userTicket ? (
+        <div>
+          <h1>Ticket - {userTicket.ticket_id}</h1>
+          <h2>
+            Your Email Address:{' '}
+            {user?.email ? user.email : 'User not Found'}{' '}
+          </h2>
+          <h3>---Your Requestor ID: {userTicket.requestor_user_id}---</h3>
+          <h2>Store ID: {userTicket.store_id}</h2>
+          <h2>Status: {userTicket.status}</h2>
+        </div>
+      ) : (
+        <h1>Ticket Not Found</h1>
+      )}
+      <a href="./">
+        <button>--Back--</button>
+      </a>
+    </div>
+  );
 }

@@ -29,13 +29,13 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Do not run code b/w create ServerClient and supabase.auth.getClaims()
-  // IMPORTANT: if remove getCalims() and use server-siude rendering with Supabase client, users may be randomly logged out
+  // Do not run code between createServerClient and supabase.auth.getClaims()
+  // IMPORTANT: if remove getClaims() and use server-side rendering with Supabase client, users may be randomly logged out
 
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  // if unauthenticated user tries to access a page other than /sign-up or /sign-in, redirect to /sign-in
+  // If unauthenticated user tries to access a page other than /sign-up or /sign-in, redirect to /sign-in
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/sign-in') &&
@@ -45,8 +45,8 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/sign-in';
     return NextResponse.redirect(url);
   }
-  // if authenticated user tries to access /sign-up or /sign-in, redirect to /home
-  else if (
+  // If authenticated user tries to access /sign-up or /sign-in, redirect to /home
+  if (
     user &&
     (request.nextUrl.pathname.startsWith('/sign-in') ||
       request.nextUrl.pathname.startsWith('/sign-up'))
@@ -54,6 +54,40 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/home';
     return NextResponse.redirect(url);
+  }
+  // TODO: restrict access to /home
+  // Restrict access to specific pages
+  if (
+    ['/profile', '/request', '/outgoing-tickets', '/team'].some((path) =>
+      request.nextUrl.pathname.startsWith(path),
+    )
+  ) {
+    const allowedRoles = ['requestor', 'admin', 'superadmin', 'owner'];
+    if (!user || !allowedRoles.includes(user.user_role)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/home';
+      return NextResponse.redirect(url);
+    }
+  }
+  if (
+    ['/manage', '/incoming-tickets'].some((path) =>
+      request.nextUrl.pathname.startsWith(path),
+    )
+  ) {
+    const allowedRoles = ['admin', 'superadmin', 'owner'];
+    if (!user || !allowedRoles.includes(user.user_role)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/home';
+      return NextResponse.redirect(url);
+    }
+  }
+  if (['/hq'].some((path) => request.nextUrl.pathname.startsWith(path))) {
+    const allowedRoles = ['superadmin', 'owner'];
+    if (!user || !allowedRoles.includes(user.user_role)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/home';
+      return NextResponse.redirect(url);
+    }
   }
 
   // Refresh auth token

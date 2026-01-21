@@ -1,8 +1,11 @@
 'use client';
-import { createClient } from '@/app/lib/supabase/browser-client';
-import { useForm, SubmitHandler } from 'react-hook-form';
 
-type FormInput = {
+import { createClient } from '@/app/lib/supabase/browser-client';
+import { useForm } from 'react-hook-form';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+type Inputs = {
   email: string;
   password: string;
 };
@@ -12,19 +15,19 @@ export default function SignInPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInput>();
+  } = useForm<Inputs>();
+  const router = useRouter();
   const supabase = createClient();
 
-  const onSubmit = async (Input: FormInput) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: Input.email,
-      password: Input.password,
+  const onSubmit = async (formData: Inputs) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
     });
     if (error) {
       alert(error.message);
-    } else {
-      alert('Welcome back!');
     }
+    router.push('/home');
   };
 
   return (
@@ -37,20 +40,21 @@ export default function SignInPage() {
         placeholder="Email"
       />
       {errors.email?.type === 'required' && (
-        <p role="alert"> Email is required </p>
+        <p role="alert">Email is required.</p>
       )}
-      {errors.email?.type === 'pattern' && <p role="alert">Invalid Email</p>}
+      {errors.email?.type === 'pattern' && (
+        <p role="alert">Please enter a valid email.</p>
+      )}
       <input
         {...register('password', { required: true })}
         placeholder="Password"
         type="password"
       />
-
       {errors.password?.type === 'required' && (
-        <p role="alert"> Password is required </p>
+        <p role="alert">Password is required.</p>
       )}
-      <button type="submit">Sign In</button>
-      <a href="/sign-up">Sign Up</a>
+      <button type="submit">Sign in</button>
+      <Link href="/sign-up">Sign up</Link>
     </form>
   );
 }

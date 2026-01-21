@@ -26,16 +26,18 @@ export async function createTicket(data: TicketInsert) {
 
 export async function deleteTicket(ticketId: string) {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('tickets')
     .delete()
-    .eq('ticket_id', ticketId);
+    .eq('ticket_id', ticketId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting ticket:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as Ticket };
 }
 
 export async function updateTicketStatus(newStatus: string, ticketId: string) {
@@ -110,14 +112,16 @@ export async function updateTicketItemDescription(
 
 export async function deleteTicketItem(ticketItemId: string) {
   const supabase = await createClient();
-  const { error: err } = await supabase
+  const { data: entry, error: err } = await supabase
     .from('ticket_items')
     .delete()
-    .eq('ticket_item_id', ticketItemId);
+    .eq('ticket_item_id', ticketItemId)
+    .select()
+    .single();
 
   if (err) {
     console.error('Error deleting ticket item:', err);
-    return { success: false, error: err.message };
+    return { success: false, data: null, error: err.message };
   }
-  return { success: true };
+  return { success: true, data: entry as TicketItem };
 }
