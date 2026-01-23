@@ -12,7 +12,7 @@ begin
 	-- Logic
     --  Determine if current user is 'superadmin' or 'owner', return true
     select (auth.jwt() ->> 'user_role') == 'owner' into is_owner;
-    select (auth.jwt() ->> 'user_role') == 'superadmin' into is_superadmin
+    select (auth.jwt() ->> 'user_role') == 'superadmin' into is_superadmin;
 
     if is_owner or is_superadmin then
         return true;
@@ -26,6 +26,6 @@ begin
         return true;
     end if;
 
-    return false
+    return false;
 end;
 $$;

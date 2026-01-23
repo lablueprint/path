@@ -16,9 +16,9 @@ select
   );
 
 -- auth user can insert an entry if private.can_manage_store(store_id) returns true
-create policy "auth can insert store_admins if can_manage_store" on public.store_admins for insert to authenticated using (private.can_manage_store (store_id))
+create policy "auth can insert store_admins if can_manage_store" on public.store_admins for insert to authenticated
 with
-  check (true);
+  check (private.can_manage_store (store_id));
 
 -- No user can update entries
 create policy "no user can update store_admins" on public.store_admins

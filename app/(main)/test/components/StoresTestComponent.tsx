@@ -40,7 +40,7 @@ export default function StoresTestComponent() {
   };
 
   const handleDeleteStoreClick = async () => {
-    await deleteStore('ea9a0fac-c881-4740-894c-34139859a057');
+    await deleteStore('0128ff16-54bd-45d8-a0b7-bdf77b0250eb');
   };
 
   const handleAddStoreAdminClick = async () => {
@@ -68,7 +68,7 @@ export default function StoresTestComponent() {
   };
 
   const handleUpdateStore = async () => {
-    await updateStore('035364a2-e9d5-46da-aadc-e4e8bb1aeebc', {
+    await updateStore('94221d81-3ee9-495f-9210-b8a754007c14', {
       name: 'new store',
     });
   };

@@ -10,18 +10,21 @@ create table store_items (
 
 alter table store_items enable row level security;
 
-create policy "all authenticated users can select" on public.store_items for
+create policy "auth can read store_items if can_manage_store" on public.store_items for
 select
-  to authenticated using (true);
+  to authenticated using (
+    private.can_manage_store (store_id)
+    and not is_hidden
+  );
 
-create policy "all authenticated users can insert" on public.store_items for insert to authenticated
+create policy "auth can insert store_items if can_manage_store" on public.store_items for insert to authenticated
 with
-  check (true);
+  check (private.can_manage_store (store_id));
 
-create policy "all authenticated users can update" on public.store_items
+create policy "auth can update store_items if can_manage_store" on public.store_items
 for update
-  to authenticated using (true)
+  to authenticated using (private.can_manage_store (store_id))
 with
   check (true);
 
-create policy "all authenticated users can delete" on public.store_items for delete to authenticated using (true);
+create policy "auth can delete store_items if can_manage_store" on public.store_items for delete to authenticated using (private.can_manage_store (store_id));

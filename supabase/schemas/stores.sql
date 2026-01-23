@@ -6,18 +6,26 @@ create table "stores" (
 
 alter table "stores" enable row level security;
 
-create policy "public can read entries in stores" on public.stores for
+create policy "auth can read stores if >= requestor" on public.stores for
 select
-  to anon using (true);
+  to authenticated using (
+    (auth.jwt () ->> 'user_role') in ('requestor', 'admin', 'owner', 'superadmin')
+  );
 
-create policy "public can insert entries in stores" on public.stores for insert to anon
+create policy "auth can insert stores if >= superadmin" on public.stores for insert to authenticated
 with
-  check (true);
+  check (
+    (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
+  );
 
-create policy "public can update entries in stores" on public.stores
+create policy "auth can update stores if >= superadmin" on public.stores
 for update
-  to anon using (true)
+  to authenticated
 with
-  check (true);
+  check (
+    (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
+  );
 
-create policy "public can delete entries in stores" on public.stores for delete to anon using (true);
+create policy "auth can delete stores if >= superadmin" on public.stores for delete to authenticated using (
+  (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
+);
