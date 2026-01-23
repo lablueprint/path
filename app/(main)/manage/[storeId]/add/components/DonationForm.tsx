@@ -1,6 +1,6 @@
 "use client";
 
-import { DonationInsert } from "../../../../../types/donation";
+import { DonationInsert } from "@/app/types/donation";
 import { useForm, Controller } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { createDonation } from "@/app/actions/donation";
