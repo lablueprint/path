@@ -1,9 +1,9 @@
 "use client";
 
-import { DonationInsert } from "../../../../../types/Donation";
+import { DonationInsert } from "../../../../../types/donation";
 import { useForm, Controller } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
-import { createDonation } from "@/app/api/donations/actions";
+import { createDonation } from "@/app/actions/donation";
 
 type FormData = {
   donor_type?: "individual" | "business";
@@ -21,7 +21,7 @@ type FormData = {
   receive_mailings: boolean;
   remain_anonymous: boolean;
 
-  estimated_value: number | null;
+  estimated_value: number;
   items_donated: string;
 };
 
@@ -33,12 +33,12 @@ export default function DonationForm() {
     control,
     reset,
     clearErrors,
-    formState: { errors }
+    formState: { errors, isSubmitSuccessful }
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
       phone: "",
-      estimated_value: null,
+      estimated_value: undefined,
     }
   });
 
@@ -46,9 +46,6 @@ export default function DonationForm() {
 
   const onSubmit = async (data: FormData) => {
     const donation: DonationInsert = {
-      receiver_user_id: "00000000-0000-0000-0000-000000000000", // TODO: real ID
-      store_id: null,
-
       donor_is_individual: data.donor_type === "individual",
 
       donor_individual_name:
@@ -76,6 +73,9 @@ export default function DonationForm() {
 
       estimated_value: data.estimated_value,
       items_donated: data.items_donated,
+
+      receiver_first_name: "FIRST-NAME",
+      receiver_last_name: "LAST-NAME",
     };
     try {
       const result = await createDonation(donation);
@@ -94,7 +94,7 @@ export default function DonationForm() {
         receive_emails: false,
         receive_mailings: false,
         remain_anonymous: false,
-        estimated_value: null,
+        estimated_value: undefined,
         items_donated: "",
       });
       clearErrors();
@@ -109,8 +109,8 @@ export default function DonationForm() {
       <div
         style={{
           display: "flex",
-          alignItems: "center", 
-          gap: "1rem", 
+          alignItems: "center",
+          gap: "1rem",
           marginTop: "20px",
           marginBottom: "20px",
           justifyContent: "center",
@@ -317,6 +317,22 @@ export default function DonationForm() {
         >
           Submit
         </button>
+
+        {isSubmitSuccessful && (
+          <div
+            style={{
+              backgroundColor: "#d4edda",
+              color: "#155724",
+              padding: "12px",
+              borderRadius: "5px",
+              marginBottom: "15px",
+              textAlign: "center",
+              fontWeight: "bold",
+            }}
+          >
+            Form submitted successfully! Thank you for your donation.
+          </div>
+        )}
       </form>
     </div>
   );
