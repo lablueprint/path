@@ -7,7 +7,13 @@ import { revalidatePath } from 'next/cache';
 export const updateUser = async (userId: string, data: UserUpdate) => {
   const supabase = await createClient();
   const updateData = { first_name: data.first_name, last_name: data.last_name };
-
+  const { data: authData, error: authError } = await supabase.auth.updateUser({
+    email: data.email,
+    data: {
+    first_name: data.first_name,
+    last_name: data.last_name,
+    },
+  });
   const { data: updatedUser, error: err } = await supabase
     .from('users')
     .update(updateData)
