@@ -17,7 +17,12 @@ export default function InventoryItemsTestComponent() {
   };
 
   const handleCreateItem = async () => {
-    await createItem(data);
+    try {
+      const result = await createItem(data);
+      console.log('Created item:', result);
+    } catch (err) {
+      console.error('Create item failed:', err);
+    }
   };
 
   const handleUpdateItem = async () => {
@@ -28,7 +33,12 @@ export default function InventoryItemsTestComponent() {
   };
 
   const handleDeleteItem = async () => {
-    await deleteItem(inventoryIdToDelete);
+    try {
+      const result = await deleteItem(inventoryIdToDelete);
+      console.log('Deleted item:', result);
+    } catch (err) {
+      console.error('Delete item failed:', err);
+    }
   };
 
   return (
