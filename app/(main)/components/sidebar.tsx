@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/app/lib/supabase/server-client';
 
-type Role = 'DEFAULT' | 'REQUESTOR' | 'ADMIN' | 'SUPERADMIN' | 'OWNER';
+type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
 type SidebarLink = {
   label: string;
@@ -12,54 +12,53 @@ type SidebarLink = {
 export default async function Sidebar() {
   const supabase = await createClient();
 
-  // Get user claims (JWT), uses user_role claim, (reference: auth test component)
+  // Get user claims (JWT)
   const { data } = await supabase.auth.getClaims();
   const role = data?.claims?.user_role as Role | undefined;
 
-  // Not logged in, no sidebar shows
+  // Not logged in → no sidebar
   if (!role) return null;
 
-  // the only routes from sitemap: /home, /profile, /request, /outgoing-tickets, /manage, /incoming-tickets, /team, /hq
   const links: SidebarLink[] = [
     {
       label: 'Home',
       href: '/home',
-      allowedRoles: ['DEFAULT', 'REQUESTOR', 'ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['default', 'requestor', 'admin', 'superadmin', 'owner'],
     },
     {
       label: 'Profile',
       href: '/profile',
-      allowedRoles: ['REQUESTOR', 'ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
     {
       label: 'Request',
       href: '/request',
-      allowedRoles: ['REQUESTOR', 'ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
     {
       label: 'Outgoing Tickets',
       href: '/outgoing-tickets',
-      allowedRoles: ['REQUESTOR', 'ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
     {
       label: 'Manage',
       href: '/manage',
-      allowedRoles: ['ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['admin', 'superadmin', 'owner'],
     },
     {
       label: 'Incoming Tickets',
       href: '/incoming-tickets',
-      allowedRoles: ['ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['admin', 'superadmin', 'owner'],
     },
     {
       label: 'Team',
       href: '/team',
-      allowedRoles: ['REQUESTOR', 'ADMIN', 'SUPERADMIN', 'OWNER'],
+      allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
     {
       label: 'HQ',
       href: '/hq',
-      allowedRoles: ['SUPERADMIN', 'OWNER'],
+      allowedRoles: ['superadmin', 'owner'],
     },
   ];
 
@@ -68,11 +67,9 @@ export default async function Sidebar() {
       <nav>
         <ul>
           {links
-        //   mapped from sitemap role rules, links are displayed conditionally by role
             .filter((link) => link.allowedRoles.includes(role))
             .map((link) => (
               <li key={link.href}>
-              {/* creates list of links using <Link> */}
                 <Link href={link.href}>{link.label}</Link>
               </li>
             ))}
