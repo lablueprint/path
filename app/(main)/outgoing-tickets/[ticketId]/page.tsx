@@ -22,7 +22,8 @@ export default async function ticketIdPage({
       )
     `)
     .eq('ticket_id', ticketId)
-    .eq('is_in_stock_request', true)
+    //REVISIT WHY THIS DOES NOT WORK - 
+    //.eq('is_in_stock_request', true)
     .single();
 
   if (err) {
@@ -50,7 +51,7 @@ export default async function ticketIdPage({
         )
       `)
       .eq('ticket_id', ticketId)
-      .eq('is_in_stock_request', true); 
+      //.eq('is_in_stock_request', true); 
       ticketItems = items || [];
   }  
 
