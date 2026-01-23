@@ -3,7 +3,8 @@ create table "inventory_items" (
   "subcategory_id" int,
   "name" varchar(255) not null,
   "description" text not null,
-  "photo_url" text
+  "photo_url" text,
+  constraint fk_subcategories foreign key (subcategory_id) references subcategories (subcategory_id) on update cascade,
 );
 
 alter table "inventory_items" enable row level security;

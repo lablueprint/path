@@ -1,4 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import InStockTicketItemCard from '@/app/components/InStockTicketItemCard';
 
 export default async function ticketIdPage({
   params,
@@ -35,13 +36,23 @@ export default async function ticketIdPage({
       .from('ticket_items')
       .select(`*,
         store_items(
-          quantity_available
+          quantity_available,
+          inventory_items(
+            name,
+            photo_url,
+            subcategories(
+              name,
+              categories(
+                name
+              )
+            )
+          )
         )
       `)
       .eq('ticket_id', ticketId)
       .eq('is_in_stock_request', true); 
       ticketItems = items || [];
-  }
+  }  
 
   return (
     <div>
@@ -57,11 +68,23 @@ export default async function ticketIdPage({
           <h2>Date Submitted: {userTicket.date_submitted}</h2>
           <h2>Store ID: {userTicket.store_id}</h2>
           <h2>Store Name: {userTicket.stores?.[0]?.name} </h2>
-          <h2>Store Address: {userTicket.stores?.[1]?.street_address}</h2>
+          <h2>Store Address: {userTicket.stores?.[0]?.street_address}</h2>
         </div>
       ) : (
         <h1>Ticket Not Found</h1>
       )}
+      <div className="ticket-list">
+      <h2>Available Tickets</h2>
+      {/* {tickets
+        .filter(ticket => ticket.status === "in-stock")
+        .map(ticket => (
+          <InStockTicketItemCard 
+            key={ticket.id} 
+            ticketData={ticket} 
+          />
+        ))
+      } */}
+    </div>
       <a href="./">
         <button>--Back--</button>
       </a>
