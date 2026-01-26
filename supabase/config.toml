@@ -57,7 +57,8 @@ schema_paths = [
   "./schemas/functions/*.sql",
   "./schemas/stores.sql",
   "./schemas/tickets.sql",
-  "./schemas/*.sql"
+  "./schemas/users.sql",
+  "./schemas/*.sql",
 ]
 
 [db.seed]
