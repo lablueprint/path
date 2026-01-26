@@ -10,7 +10,7 @@ declare
 begin
     update public.users
     set email = new.email
-    where user_id = new.user_id;
+    where user_id = new.id;
 	return new;
 end;
 $function$

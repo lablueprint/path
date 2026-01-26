@@ -18,7 +18,11 @@ export default function ProfileForm({ user }: { user: User }) {
     },
   });
 
-  const onSubmit = async (data: { firstName: string; lastName: string; email: string;}) => {
+  const onSubmit = async (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
     await updateUser(user.user_id, {
       first_name: data.firstName,
       last_name: data.lastName,
@@ -26,12 +30,16 @@ export default function ProfileForm({ user }: { user: User }) {
       profile_photo_url: user.profile_photo_url,
     });
 
-    reset(data);
+    reset({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: user.email,
+    });
   };
   const onCancel = () => {
     reset();
   };
-  
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* First name */}
@@ -56,7 +64,7 @@ export default function ProfileForm({ user }: { user: User }) {
       )}
       {isDirty && (
         <>
-          <button type ="button" onClick={onCancel}>
+          <button type="button" onClick={onCancel}>
             Cancel
           </button>
           <button type="submit">Save</button>
