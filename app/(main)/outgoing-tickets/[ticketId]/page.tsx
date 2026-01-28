@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import InStockTicketItemCard from '@/app/components/InStockTicketItemCard';
+import OutOfStockTicketItemCard from '@/app/components/OutOfStockTicketItemCard';
 
 export default async function ticketIdPage({
   params,
@@ -31,7 +32,8 @@ export default async function ticketIdPage({
     return <div>Failed to load data.</div>;
   }
 
-  let ticketItems = [];
+  let ticketItems: any[] = [];
+  let OutOfStockTicketItems: { ticket_item_id: string; free_text_description: string | null }[] = [];
   if (userTicket) {
     const {data: items} = await supabase
       .from('ticket_items')
@@ -53,6 +55,17 @@ export default async function ticketIdPage({
       .eq('ticket_id', ticketId)
       //.eq('is_in_stock_request', true); 
       ticketItems = items || [];
+
+
+    const { data: outOfStock } = await supabase
+      .from('ticket_items') 
+      .select(`ticket_item_id,
+        free_text_description
+      `)
+      .eq('ticket_id', ticketId)
+      .eq('is_in_stock_request', false);
+      OutOfStockTicketItems = outOfStock || [];
+
   }  
 
   return (
@@ -70,6 +83,35 @@ export default async function ticketIdPage({
           <h2>Store ID: {userTicket.store_id}</h2>
           <h2>Store Name: {userTicket.stores?.[0]?.name} </h2>
           <h2>Store Address: {userTicket.stores?.[0]?.street_address}</h2>
+          <div className='mt-8'>
+            <h2 className="text-xl font-semibold mb-4"> In-stock Requests</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {ticketItems.map((item) => (
+                <InStockTicketItemCard
+                key={item.ticket_item_id}
+                ticketItemId={item.ticket_item_id}
+                quantityRequested={item.quantity_requested}
+                quantityAvailable={item.store_items?.quantity_available || 0}
+                itemName={item.store_items?.inventory_items?.name || 'Unknown'}
+                photoUrl={item.store_items?.inventory_items?.photo_url || ''}
+                subcategoryName={item.store_items?.inventory_items?.subcategories?.name || 'Unknown'}
+                categoryName={item.store_items?.inventory_items?.subcategories?.categories?.name || 'Unknown'}
+              />
+              ))}
+            </div>
+        </div>
+        <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">Out-of-Stock Requests</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {OutOfStockTicketItems.map((item) => (
+                <OutOfStockTicketItemCard
+                  key={item.ticket_item_id}
+                  ticketItemId={item.ticket_item_id}
+                  freeTextDescription={item.free_text_description || 'No description'}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <h1>Ticket Not Found</h1>

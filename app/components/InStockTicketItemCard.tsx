@@ -1,23 +1,32 @@
 'use client';
 
-import { useEffect } from 'react';
-import { createClient } from '@/app/lib/supabase/browser-client';
-import { useUserStore } from '@/app/lib/store/user-store';
-
-interface Ticket {
-  id: number | string;
-  name: string;
-  price: number;
-  status: string;
+interface InStockTicketItemCardProps {
+  ticketItemId: string;
+  quantityRequested: number;
+  quantityAvailable: number;
+  itemName: string;
+  photoUrl: string;
+  subcategoryName: string;
+  categoryName: string;
 }
 
-export default function InStockTicketItemCard({ ticketData }: { ticketData: Ticket }) {
+export default function InStockTicketItemCard({
+  ticketItemId,
+  quantityRequested,
+  quantityAvailable,
+  itemName,
+  photoUrl,
+  subcategoryName,
+  categoryName,
+}: InStockTicketItemCardProps) {
   return (
-    <div className="card">
-      <h3>{ticketData.name}</h3>
-      <p>Price: ${ticketData.price}</p>
-      <button>Buy Now</button>
+    <div className="border p-4 rounded-lg">
+      <img src={photoUrl} alt={itemName} className="w-32 h-32 object-cover" />
+      <h3>{itemName}</h3>
+      <p>Category: {categoryName}</p>
+      <p>Subcategory: {subcategoryName}</p>
+      <p>Quantity Requested: {quantityRequested}</p>
+      <p>Available: {quantityAvailable}</p>
     </div>
   );
 }
-
