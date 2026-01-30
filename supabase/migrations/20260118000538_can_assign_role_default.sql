@@ -1,8 +1,11 @@
-create schema if not exists private;
+set check_function_bodies = off;
 
-create or replace function private.can_assign_role (new_role_id int) returns boolean language plpgsql security definer
-set
-  search_path = '' as $$
+CREATE OR REPLACE FUNCTION private.can_assign_role(new_role_id integer)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
 declare
   is_owner boolean;
   is_superadmin boolean;
@@ -41,4 +44,7 @@ begin
 
   return false;
 end;
-$$;
+$function$
+;
+
+
