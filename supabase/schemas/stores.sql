@@ -22,6 +22,10 @@ create policy "auth can update stores if >= superadmin" on public.stores
 for update
   to authenticated using (
     (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
+  )
+with
+  check (
+    (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
   );
 
 create policy "auth can delete stores if >= superadmin" on public.stores for delete to authenticated using (

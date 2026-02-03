@@ -14,7 +14,10 @@ create policy "auth can read store_items if can_manage_store" on public.store_it
 select
   to authenticated using (
     private.can_manage_store (store_id)
-    and not is_hidden
+    or (
+      (auth.jwt () ->> 'user_role') in ('requestor', 'admin')
+      and not is_hidden
+    )
   );
 
 create policy "auth can insert store_items if can_manage_store" on public.store_items for insert to authenticated
@@ -25,6 +28,6 @@ create policy "auth can update store_items if can_manage_store" on public.store_
 for update
   to authenticated using (private.can_manage_store (store_id))
 with
-  check (true);
+  check (private.can_manage_store (store_id));
 
 create policy "auth can delete store_items if can_manage_store" on public.store_items for delete to authenticated using (private.can_manage_store (store_id));
