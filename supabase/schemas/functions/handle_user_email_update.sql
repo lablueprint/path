@@ -5,9 +5,9 @@ set
   search_path = '' as $$
 declare
 begin
-    update public.users
-    set email = new.email
-    where user_id = new.id;
+  update public.users
+  set email = new.email
+  where user_id = new.id;
 	return new;
 end;
 $$;

@@ -5,7 +5,8 @@
   .NewEmail }}:
 </p>
 <p>
-  <a href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=email_change"
+  <a
+    href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=email_change&next=/profile"
     >Change email</a
   >
 </p>
