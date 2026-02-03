@@ -20,9 +20,7 @@ with
 
 create policy "auth can update stores if >= superadmin" on public.stores
 for update
-  to authenticated
-with
-  check (
+  to authenticated using (
     (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
   );
 

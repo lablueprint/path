@@ -1,16 +1,17 @@
-create schema if not exists private;
+set check_function_bodies = off;
 
-create or replace function private.can_manage_store (store_to_manage_id uuid) returns boolean language plpgsql security definer
-set
-  search_path = '' as $$
+CREATE OR REPLACE FUNCTION private.can_manage_store(store_to_manage_id uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
 declare
 	-- Declare variables
     is_owner boolean;
     is_superadmin boolean;
 
 begin
-  raise notice 'jwt user_role=%', auth.jwt() ->> 'user_role';
-
 	-- Logic
     --  Determine if current user is 'superadmin' or 'owner', return true
     select (auth.jwt() ->> 'user_role') = 'owner' into is_owner;
@@ -29,4 +30,7 @@ begin
     end if;
     return false;
 end;
-$$;
+$function$
+;
+
+

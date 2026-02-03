@@ -1,16 +1,19 @@
-create schema if not exists private;
+drop policy "auth can update stores if >= superadmin" on "public"."stores";
 
-create or replace function private.can_manage_store (store_to_manage_id uuid) returns boolean language plpgsql security definer
-set
-  search_path = '' as $$
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION private.can_manage_store(store_to_manage_id uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
 declare
 	-- Declare variables
     is_owner boolean;
     is_superadmin boolean;
 
 begin
-  raise notice 'jwt user_role=%', auth.jwt() ->> 'user_role';
-
 	-- Logic
     --  Determine if current user is 'superadmin' or 'owner', return true
     select (auth.jwt() ->> 'user_role') = 'owner' into is_owner;
@@ -27,6 +30,19 @@ begin
         where store_to_manage_id = store_id and auth.uid() = user_id) then 
         return true;
     end if;
+
     return false;
 end;
-$$;
+$function$
+;
+
+
+  create policy "auth can update stores if >= superadmin"
+  on "public"."stores"
+  as permissive
+  for update
+  to authenticated
+using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
+
+
+

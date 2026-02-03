@@ -24,13 +24,13 @@ export default function StoresTestComponent() {
   };
 
   const storeAdminData: StoreAdminInsert = {
-    user_id: 'e8010a20-b154-44aa-8d42-a1339b92ce1f',
-    store_id: '035364a2-e9d5-46da-aadc-e4e8bb1aeebc',
+    user_id: '1208e8ae-75e1-4bb4-a0ea-d8c6a11686bd',
+    store_id: '46a05380-298a-4115-b5d0-b680e3a26bd2',
   };
 
   const storeItemData: StoreItemInsert = {
     inventory_item_id: 'd14c2249-5fcf-4498-a573-f407d2b46b6b',
-    store_id: '035364a2-e9d5-46da-aadc-e4e8bb1aeebc',
+    store_id: '46a05380-298a-4115-b5d0-b680e3a26bd2',
     quantity_available: 4,
     is_hidden: true,
   };
@@ -40,7 +40,7 @@ export default function StoresTestComponent() {
   };
 
   const handleDeleteStoreClick = async () => {
-    await deleteStore('0128ff16-54bd-45d8-a0b7-bdf77b0250eb');
+    await deleteStore('487b2f25-8867-49df-8d67-80b992206817');
   };
 
   const handleAddStoreAdminClick = async () => {
@@ -68,7 +68,7 @@ export default function StoresTestComponent() {
   };
 
   const handleUpdateStore = async () => {
-    await updateStore('94221d81-3ee9-495f-9210-b8a754007c14', {
+    await updateStore('46a05380-298a-4115-b5d0-b680e3a26bd2', {
       name: 'new store',
     });
   };
