@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Link from "next/link"
 
 type StoreCardProps = {
@@ -11,8 +14,11 @@ export default function StoreCard({
   name,
   streetAddress,
 }: StoreCardProps) {
+
+  const pathname = usePathname();
+
   return (
-    <Link href={`./${id}`}>
+    <Link href={`${pathname}/${id}`}>
       <div
          style={{
           borderRadius: "12px",
