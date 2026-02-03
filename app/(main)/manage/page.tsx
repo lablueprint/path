@@ -1,8 +1,7 @@
 export default function ManagePage() {
   return (
-    <main>
-      <h1>Manage</h1>
-      <p>Manage page, to be completed.</p>
-    </main>
+    <div>
+      <h1>Manage Inventory</h1>
+    </div>
   );
 }

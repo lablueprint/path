@@ -28,6 +28,9 @@ export default async function PersonalProfilePage() {
 
   return (
     <div>
+      <h1>
+        Profile
+      </h1>
       <ProfileForm user={profile as User} />
     </div>
   );

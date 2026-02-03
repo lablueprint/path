@@ -31,7 +31,7 @@ export default async function Sidebar() {
       allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
     {
-      label: 'Request',
+      label: 'Request Inventory',
       href: '/request',
       allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
@@ -41,7 +41,7 @@ export default async function Sidebar() {
       allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
     },
     {
-      label: 'Manage',
+      label: 'Manage Inventory',
       href: '/manage',
       allowedRoles: ['admin', 'superadmin', 'owner'],
     },
