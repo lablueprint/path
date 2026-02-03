@@ -93,7 +93,6 @@ export default function Donations() {
         </div>
       )}
 
-      <button type="submit">Submit</button>
       <button onClick={handleExport}> Export</button>
     </form>
   );
