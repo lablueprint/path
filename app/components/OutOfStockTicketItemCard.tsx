@@ -44,7 +44,6 @@ export default function OutOfStockTicketItemCard({
       )}
 
       
-      <p>Description: {freeTextDescription}</p>
     </div>
   );
 }

@@ -23,8 +23,6 @@ export default async function ticketIdPage({
       )
     `)
     .eq('ticket_id', ticketId)
-    //REVISIT WHY THIS DOES NOT WORK - 
-    //.eq('is_in_stock_request', true)
     .single();
 
   if (err) {
@@ -32,7 +30,7 @@ export default async function ticketIdPage({
     return <div>Failed to load data.</div>;
   }
 
-  let ticketItems: any[] = [];
+  let InStockTicketItems: any[] = [];
   let OutOfStockTicketItems: { ticket_item_id: string; free_text_description: string | null }[] = [];
   if (userTicket) {
     const {data: items} = await supabase
@@ -53,8 +51,8 @@ export default async function ticketIdPage({
         )
       `)
       .eq('ticket_id', ticketId)
-      //.eq('is_in_stock_request', true); 
-      ticketItems = items || [];
+      .eq('is_in_stock_request', true); 
+      InStockTicketItems = items || [];
 
 
     const { data: outOfStock } = await supabase
@@ -86,7 +84,7 @@ export default async function ticketIdPage({
           <div className='mt-8'>
             <h2 className="text-xl font-semibold mb-4"> In-stock Requests</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {ticketItems.map((item) => (
+                {InStockTicketItems.map((item) => (
                 <InStockTicketItemCard
                 key={item.ticket_item_id}
                 ticketItemId={item.ticket_item_id}
