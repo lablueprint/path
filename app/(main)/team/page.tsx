@@ -9,7 +9,7 @@ type Store = {
     streetAddress: string
 }
 
-export default async function RequestPage() {
+export default async function TeamPage() {
     // get all stores from the stores table
     const { data: stores, error: err } = await supabase
         .from('stores')
@@ -29,7 +29,7 @@ export default async function RequestPage() {
 
     return (
         <div>
-            <h1>Request Page</h1>
+            <h1>Team Page</h1>
             <StoresList stores={mappedStores} />
         </div>
     )

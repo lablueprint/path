@@ -14,11 +14,13 @@ export default function StoreCard({
   return (
     <Link href={`./${id}`}>
       <div
-        style={{
-          border: "1px solid black",
-          backgroundColor: "gray",
-          padding: "32px",
+         style={{
+          borderRadius: "12px",
+          border: "1px solid #ddd",
+          backgroundColor: "#fff",
+          padding: "20px",
           marginBottom: "16px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         }}
       >
         <h2 style={{ fontSize: "24px", fontWeight: "bold" }}>
