@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { createClient } from '@/app/lib/supabase/browser-client';
 
 type FormValues = {
   newPassword: string;
@@ -11,8 +12,8 @@ export function UpdatePasswordForm() {
   const {
     register,
     handleSubmit,
-    reset,
     watch,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -21,11 +22,27 @@ export function UpdatePasswordForm() {
     },
   });
 
+  const supabase = createClient();
+
   const newPassword = watch('newPassword');
   const newPasswordConfirmation = watch('newPasswordConfirmation');
 
-  const onSubmit = (values: FormValues) => {
-    console.log('Submitted:', values);
+  const passwordsMatch =
+    newPassword.length > 0 &&
+    newPasswordConfirmation.length > 0 &&
+    newPassword === newPasswordConfirmation;
+
+  const onSubmit = async (formData: FormValues) => {
+    const { error } = await supabase.auth.updateUser({
+      password: formData.newPassword,
+    });
+
+    if (error) {
+      console.error('Password update error:', error);
+      return;
+    }
+
+    reset();
   };
 
   return (
@@ -33,43 +50,42 @@ export function UpdatePasswordForm() {
       <label>New password</label>
       <input
         type="password"
-        placeholder="Password"
         {...register('newPassword', {
-          required: true,
-          minLength: 8,
-          pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};'"\\:|<>?,./`~]).{8,}$/,
         })}
       />
-        {errors.newPassword?.type === 'required' && (
-        <p role="alert">Password is required.</p>
-        )}
-        {errors.newPassword?.type === 'minLength' && (
-        <p role="alert">Password must be at least 8 characters.</p>
-        )}
-        {errors.newPassword?.type === 'pattern' && (
-        <p role="alert">Password does not meet requirements.</p>
-        )}
+      {errors.newPassword && (
+        <p role="alert">
+          Password must be at least 8 characters and include uppercase, lowercase, a number, and a symbol.
+        </p>
+      )}
 
-      <br />
-
-      <label>New password confirmation</label>
+      <label>Confirm new password</label>
       <input
         type="password"
         {...register('newPasswordConfirmation')}
       />
-      <br />
 
-      <button type="button" onClick={() => reset()}>
-        Cancel
-      </button>
-      <button type="submit">
-        Save
-      </button>
+      {newPasswordConfirmation.length > 0 && !passwordsMatch && (
+        <p role="alert">Passwords do not match.</p>
+      )}
 
-      <div style={{ marginTop: 12 }}>
-        <div>newPassword length: {newPassword.length}</div>
-        <div>confirmation length: {newPasswordConfirmation.length}</div>
-      </div>
+      {passwordsMatch && (
+        <>
+          <button
+            type="button"
+            onClick={() =>
+              reset({
+                newPassword: '',
+                newPasswordConfirmation: '',
+              })
+            }
+          >
+            Cancel
+          </button>
+          <button type="submit">Save</button>
+        </>
+      )}
     </form>
   );
 }
