@@ -15,7 +15,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <div>Welcome to PATH! This is the home page.</div>
+      <h1>Home</h1>
       <button onClick={signOut}>Sign out</button>
     </div>
   );
