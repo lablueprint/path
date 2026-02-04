@@ -9,9 +9,6 @@ declare
     is_superadmin boolean;
 
 begin
-  raise notice 'jwt user_role=%', auth.jwt() ->> 'user_role';
-
-	-- Logic
     --  Determine if current user is 'superadmin' or 'owner', return true
     select (auth.jwt() ->> 'user_role') = 'owner' into is_owner;
     select (auth.jwt() ->> 'user_role') = 'superadmin' into is_superadmin;
