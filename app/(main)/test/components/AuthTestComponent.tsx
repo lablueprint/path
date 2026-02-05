@@ -8,7 +8,7 @@ export default function AuthTestComponent() {
 
   const data = {
     email: 'test@test.org',
-    password: 'test123***',
+    password: 'Test123***',
   };
 
   const handleSignIn = async () => {
