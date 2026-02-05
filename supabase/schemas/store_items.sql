@@ -15,7 +15,12 @@ select
   to authenticated using (
     private.can_manage_store (store_id)
     or (
-      (auth.jwt () ->> 'user_role') in ('requestor', 'admin')
+      (
+        (
+          select
+            auth.jwt ()
+        ) ->> 'user_role'
+      ) in ('requestor', 'admin')
       and not is_hidden
     )
   );

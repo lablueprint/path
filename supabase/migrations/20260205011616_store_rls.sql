@@ -31,29 +31,45 @@ CREATE OR REPLACE FUNCTION private.can_manage_store(store_to_manage_id uuid)
  SET search_path TO ''
 AS $function$
 declare
-	-- Declare variables
-    is_owner boolean;
-    is_superadmin boolean;
+  -- Declare variables
+  is_owner boolean;
+  is_superadmin boolean;
 
 begin
-	-- Logic
-    --  Determine if current user is 'superadmin' or 'owner', return true
-    select (auth.jwt() ->> 'user_role') == 'owner' into is_owner;
-    select (auth.jwt() ->> 'user_role') == 'superadmin' into is_superadmin;
+  -- Determine if current user is 'superadmin' or 'owner', return true
+  select (auth.jwt() ->> 'user_role') = 'owner' into is_owner;
+  select (auth.jwt() ->> 'user_role') = 'superadmin' into is_superadmin;
 
-    if is_owner or is_superadmin then
-        return true;
-    end if;
+  if is_owner or is_superadmin then
+    return true;
+  end if;
     
-    -- if current user is a store admin return true
-    if  exists (
-        select 1
-        from public.store_admins
-        where store_to_manage_id = store_id and auth.uid() = user_id) then 
-        return true;
-    end if;
+  -- If current user is a store admin, return true
+  if exists (
+    select 1
+    from public.store_admins
+    where store_to_manage_id = store_id and auth.uid() = user_id
+  ) then 
+    return true;
+  end if;
+  return false;
 
-    return false;
+end;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION private.handle_user_email_update()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+begin
+  update public.users
+  set email = new.email
+  where user_id = new.id;
+	return new;
 end;
 $function$
 ;
@@ -73,7 +89,7 @@ with check (private.can_manage_store(store_id));
   as permissive
   for select
   to authenticated
-using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'owner'::text, 'superadmin'::text])));
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'owner'::text, 'superadmin'::text])));
 
 
 
@@ -82,6 +98,7 @@ using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admi
   as permissive
   for update
   to public
+using (false)
 with check (false);
 
 
@@ -109,7 +126,7 @@ with check (private.can_manage_store(store_id));
   as permissive
   for select
   to authenticated
-using ((private.can_manage_store(store_id) AND (NOT is_hidden)));
+using ((private.can_manage_store(store_id) OR (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text])) AND (NOT is_hidden))));
 
 
 
@@ -119,7 +136,7 @@ using ((private.can_manage_store(store_id) AND (NOT is_hidden)));
   for update
   to authenticated
 using (private.can_manage_store(store_id))
-with check (true);
+with check (private.can_manage_store(store_id));
 
 
 
@@ -128,7 +145,7 @@ with check (true);
   as permissive
   for delete
   to authenticated
-using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
 
 
 
@@ -137,7 +154,7 @@ using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'own
   as permissive
   for insert
   to authenticated
-with check (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
+with check (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
 
 
 
@@ -146,7 +163,7 @@ with check (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text,
   as permissive
   for select
   to authenticated
-using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'owner'::text, 'superadmin'::text])));
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admin'::text, 'superadmin'::text, 'owner'::text])));
 
 
 
@@ -155,7 +172,8 @@ using (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['requestor'::text, 'admi
   as permissive
   for update
   to authenticated
-with check (((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
+using (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])))
+with check (((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text])));
 
 
 

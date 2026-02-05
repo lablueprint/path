@@ -8,14 +8,19 @@ create table store_admins (
 
 alter table store_admins enable row level security;
 
--- auth user can read entries if "requester", "admin", "superadmin", or "owner"
+-- Auth user can read entries if "requestor", "admin", "superadmin", or "owner"
 create policy "auth can read store_admins if >= requestor" on public.store_admins for
 select
   to authenticated using (
-    (auth.jwt () ->> 'user_role') in ('requestor', 'admin', 'owner', 'superadmin')
+    (
+      (
+        select
+          auth.jwt ()
+      ) ->> 'user_role'
+    ) in ('requestor', 'admin', 'owner', 'superadmin')
   );
 
--- auth user can insert an entry if private.can_manage_store(store_id) returns true
+-- Auth user can insert an entry if private.can_manage_store(store_id) returns true
 create policy "auth can insert store_admins if can_manage_store" on public.store_admins for insert to authenticated
 with
   check (private.can_manage_store (store_id));
@@ -23,8 +28,9 @@ with
 -- No user can update entries
 create policy "no user can update store_admins" on public.store_admins
 for update
+  using (false)
 with
   check (false);
 
--- auth user can delete entry if private.can_manage_store(store_id) returns true
+-- Auth user can delete entry if private.can_manage_store(store_id) returns true
 create policy "all authenticated users can delete" on public.store_admins for delete to authenticated using (private.can_manage_store (store_id));
