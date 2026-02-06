@@ -51,41 +51,38 @@ export function UpdatePasswordForm() {
       <input
         type="password"
         {...register('newPassword', {
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};'"\\:|<>?,./`~]).{8,}$/,
+          pattern:
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};'"\\:|<>?,./`~]).{8,}$/,
         })}
       />
       {errors.newPassword && (
         <p role="alert">
-          Password must be at least 8 characters and include uppercase, lowercase, a number, and a symbol.
+          Password must be at least 8 characters and include uppercase,
+          lowercase, a number, and a symbol.
         </p>
       )}
-
+      <br />
       <label>Confirm new password</label>
-      <input
-        type="password"
-        {...register('newPasswordConfirmation')}
-      />
+      <input type="password" {...register('newPasswordConfirmation')} />
 
       {newPasswordConfirmation.length > 0 && !passwordsMatch && (
         <p role="alert">Passwords do not match.</p>
       )}
-
-      {passwordsMatch && (
-        <>
-          <button
-            type="button"
-            onClick={() =>
-              reset({
-                newPassword: '',
-                newPasswordConfirmation: '',
-              })
-            }
-          >
-            Cancel
-          </button>
-          <button type="submit">Save</button>
-        </>
+      <br />
+      {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+        <button
+          type="button"
+          onClick={() =>
+            reset({
+              newPassword: '',
+              newPasswordConfirmation: '',
+            })
+          }
+        >
+          Cancel
+        </button>
       )}
+      {passwordsMatch && <button type="submit">Save</button>}
     </form>
   );
 }

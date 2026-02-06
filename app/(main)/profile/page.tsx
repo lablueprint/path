@@ -29,7 +29,9 @@ export default async function PersonalProfilePage() {
 
   return (
     <div>
+      <h2>Public Profile</h2>
       <ProfileForm user={profile as User} />
+      <h2>Authentication</h2>
       <UpdatePasswordForm />
     </div>
   );
