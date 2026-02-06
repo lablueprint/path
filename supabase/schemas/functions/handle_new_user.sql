@@ -13,6 +13,17 @@ begin
     new.email
   );
 
+  insert into public.user_role(user_id, role_id) {
+    values (
+      new.id,
+      case
+        when right(new.email, 9) = 'epath.org' then 2
+        else 1
+      end
+    )
+  }
+
+
   return new;
 end;
 $$;
