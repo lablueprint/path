@@ -8,21 +8,36 @@ export default function ProfileForm({ user }: { user: User }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty },
   } = useForm({
     defaultValues: {
       firstName: user.first_name,
       lastName: user.last_name,
+      email: user.email,
     },
   });
 
-  const onSubmit = (data: { firstName: string; lastName: string }) => {
-    updateUser(user.user_id, {
+  const onSubmit = async (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => {
+    await updateUser(user.user_id, {
       first_name: data.firstName,
       last_name: data.lastName,
-      email: user.email,
+      email: data.email,
       profile_photo_url: user.profile_photo_url,
     });
+
+    reset({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: user.email,
+    });
+  };
+  const onCancel = () => {
+    reset();
   };
 
   return (
@@ -41,8 +56,21 @@ export default function ProfileForm({ user }: { user: User }) {
         <p role="alert">Last name is required.</p>
       )}
       <br />
-      {/* Save button */}
-      <button type="submit">Save</button>
+      {/* Email */}
+      <label>Email</label>
+      <input {...register('email', { required: true })} />
+      {errors.email?.type === 'required' && (
+        <p role="alert">Email is required.</p>
+      )}
+      <br />
+      {isDirty && (
+        <>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+          <button type="submit">Save</button>
+        </>
+      )}
     </form>
   );
 }

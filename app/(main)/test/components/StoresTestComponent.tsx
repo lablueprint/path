@@ -24,13 +24,13 @@ export default function StoresTestComponent() {
   };
 
   const storeAdminData: StoreAdminInsert = {
-    user_id: 'e8010a20-b154-44aa-8d42-a1339b92ce1f',
-    store_id: '035364a2-e9d5-46da-aadc-e4e8bb1aeebc',
+    user_id: '4f515b9a-cec6-4c85-ab6a-2dab5fb1d884',
+    store_id: '5942ab5c-aad1-4f7e-acdc-07a3033b7c6c',
   };
 
   const storeItemData: StoreItemInsert = {
-    inventory_item_id: 'd14c2249-5fcf-4498-a573-f407d2b46b6b',
-    store_id: '035364a2-e9d5-46da-aadc-e4e8bb1aeebc',
+    inventory_item_id: 'f8434368-0c6a-409f-878a-03cfc7568579',
+    store_id: '5942ab5c-aad1-4f7e-acdc-07a3033b7c6c',
     quantity_available: 4,
     is_hidden: true,
   };
@@ -40,7 +40,7 @@ export default function StoresTestComponent() {
   };
 
   const handleDeleteStoreClick = async () => {
-    await deleteStore('ea9a0fac-c881-4740-894c-34139859a057');
+    await deleteStore('70427a92-803f-43aa-ab38-fa82376cf4cf');
   };
 
   const handleAddStoreAdminClick = async () => {
@@ -48,7 +48,7 @@ export default function StoresTestComponent() {
   };
 
   const handleDeleteStoreAdminClick = async () => {
-    await deleteStoreAdmin('0b35c60e-f82d-4431-a1a2-8e696c151000');
+    await deleteStoreAdmin('035b82ac-80bb-4979-bdda-1db83229a1ee');
   };
 
   const handleAddStoreItemClick = async () => {
@@ -56,19 +56,22 @@ export default function StoresTestComponent() {
   };
 
   const handleDeleteStoreItemClick = async () => {
-    await deleteStoreItem('3ef33ad7-7e44-4a9f-9926-0aa81fa2c9ee');
+    await deleteStoreItem('4518b9b5-3401-47ce-b1e4-f09171e0a805');
   };
 
   const handleUpdateStoreItemQuantity = async () => {
-    await updateStoreItemQuantity('3ef33ad7-7e44-4a9f-9926-0aa81fa2c9ee', 10);
+    await updateStoreItemQuantity('4518b9b5-3401-47ce-b1e4-f09171e0a805', 10);
   };
 
   const handleUpdateStoreItemIsHidden = async () => {
-    await updateStoreItemIsHidden('3ef33ad7-7e44-4a9f-9926-0aa81fa2c9ee', true);
+    await updateStoreItemIsHidden(
+      '4518b9b5-3401-47ce-b1e4-f09171e0a805',
+      false,
+    );
   };
 
   const handleUpdateStore = async () => {
-    await updateStore('035364a2-e9d5-46da-aadc-e4e8bb1aeebc', {
+    await updateStore('70427a92-803f-43aa-ab38-fa82376cf4cf', {
       name: 'new store',
     });
   };
