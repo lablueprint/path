@@ -62,6 +62,7 @@ export default function ProfileForm({ user }: { user: User }) {
       {errors.email?.type === 'required' && (
         <p role="alert">Email is required.</p>
       )}
+      <br />
       {isDirty && (
         <>
           <button type="button" onClick={onCancel}>
