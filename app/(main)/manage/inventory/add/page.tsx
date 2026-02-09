@@ -1,6 +1,11 @@
 'use server';
-import AddInventoryItemForm from '../components/AddInventoryItemForm';
+import AddInventoryItemForm from './components/AddInventoryItemForm';
 
 export default function AddInventoryItemPage() {
-  <AddInventoryItemForm />;
-}
+  return (
+    <div>
+      <AddInventoryItemForm />;
+    </div>
+  );
+};
+
