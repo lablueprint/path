@@ -1,30 +1,28 @@
 create schema if not exists private;
 
-create or replace function private.handle_new_store_admin()
+create or replace function private.handle_user_role_update()
 returns trigger
 language plpgsql
 security definer set search_path = ''
 as $$
 declare
-    current_role_name text;
+    updated_role_name text;
 	-- Declare variables
 begin
 	-- Logic
-    select r.name into current_role_name
-    from public.user_roles ur
-    join public.roles r on ur.role_id = r.role_id
-    where ur.user_id = new.user_id;
+    select r.name into updated_role_name
+    from public.roles r
+    where r.role_id = new.role_id;
 
-    if current_role_name in ('default', 'requestor') then
-        update public.user_roles
-        set role_id = 3
+    if updated_role_name in ('default', 'requestor') then
+        delete from public.store_admins
         where user_id = new.user_id;
     end if;
     return new;
 end;
 $$;
 
-create trigger "after create store_admins"
-after insert on store_admins
+create trigger "after update user_roles"
+after insert on user_roles
 for each row
-execute procedure private.handle_new_store_admin();
+execute procedure private.handle_user_role_update();
