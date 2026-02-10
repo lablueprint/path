@@ -55,7 +55,7 @@ export default function SignUpPage() {
       {errors.firstName?.type === 'required' && (
         <p role="alert">First name is required.</p>
       )}
-
+      <br />
       <input
         {...register('lastName', { required: true })}
         placeholder="Last name"
@@ -64,7 +64,7 @@ export default function SignUpPage() {
       {errors.lastName?.type === 'required' && (
         <p role="alert">Last name is required.</p>
       )}
-
+      <br />
       <input
         {...register('email', {
           required: true,
@@ -78,7 +78,7 @@ export default function SignUpPage() {
       {errors.email?.type === 'pattern' && (
         <p role="alert">Enter a valid email.</p>
       )}
-
+      <br />
       <input
         {...register('password', {
           required: true,
@@ -105,7 +105,7 @@ export default function SignUpPage() {
           and special characters.
         </p>
       )}
-
+      <br />
       <input
         {...register('passwordConfirmation', {
           required: true,
@@ -120,11 +120,11 @@ export default function SignUpPage() {
       {errors.passwordConfirmation?.type === 'validate' && (
         <p role="alert">Passwords do not match.</p>
       )}
-
+      <br />
       <button type="submit" disabled={loading}>
         {loading ? 'Creating account...' : 'Sign up'}
       </button>
-
+      <br />
       <Link href="/sign-in">Sign in</Link>
     </form>
   );
