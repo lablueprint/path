@@ -1,7 +1,7 @@
 'use server';
 import AddInventoryItemForm from './components/AddInventoryItemForm';
 
-export default function AddInventoryItemPage() {
+export default async function AddInventoryItemPage() {
   return (
     <div>
       <AddInventoryItemForm />;

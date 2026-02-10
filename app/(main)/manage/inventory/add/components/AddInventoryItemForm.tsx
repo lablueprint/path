@@ -1,6 +1,6 @@
 'use client';
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { InventoryItem, Subcategory } from '@/app/types/inventory';
+import { InventoryItem, Subcategory, Category } from '@/app/types/inventory';
 import { createItem } from '@/app/actions/inventory';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect, useState } from 'react';
@@ -20,7 +20,7 @@ export default function AddInventoryItemForm() {
     reset,
     formState: { errors },
   } = useForm<Inputs>();
-  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const supabase = createClient();
   const selectedCategory = watch('selectedCategory');
@@ -48,17 +48,17 @@ export default function AddInventoryItemForm() {
   };
 
   useEffect(() => {
-    async function fetchInventoryItems() {
+    async function fetchCategories() {
       const { data, error: err } = await supabase
-        .from('inventory_items')
+        .from('categories')
         .select('*');
       if (err) {
-        console.error('Error fetching inventory items:', err);
+        console.error('Error fetching Categories:', err);
       } else {
-        setInventoryItems(data);
+        setCategories(data);
       }
     }
-    fetchInventoryItems();
+    fetchCategories();
   }, [supabase]);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function AddInventoryItemForm() {
       <h2>Add Inventory Item</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
-          Inventory Item Name:
+          Inventory Item Name: 
           <input
             type="text"
             {...register('name', { required: true })}
@@ -91,6 +91,7 @@ export default function AddInventoryItemForm() {
         {errors.name?.type === 'required' && (
           <p role="alert">Item name is required.</p>
         )}
+        <br></br>
         <label>
           Description:
           <input
@@ -101,14 +102,15 @@ export default function AddInventoryItemForm() {
         {errors.description?.type === 'required' && (
           <p role="alert">Description is required.</p>
         )}
+        <br></br>
         <label>
           Categories:
           <select {...register('selectedCategory', { required: true })}>
             <option value="">None</option>
-            {inventoryItems.map((item) => (
+            {categories.map((item) => (
               <option
-                key={item.inventory_item_id}
-                value={item.inventory_item_id}
+                key={item.category_id}
+                value={item.category_id}
               >
                 {item.name}
               </option>
@@ -139,6 +141,7 @@ export default function AddInventoryItemForm() {
             )}
           </>
         )}
+        <br></br>
         <button type="submit">Submit</button>
       </form>
     </div>
