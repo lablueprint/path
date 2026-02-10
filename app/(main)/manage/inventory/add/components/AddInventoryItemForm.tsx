@@ -63,7 +63,10 @@ export default function AddInventoryItemForm() {
 
   useEffect(() => {
     async function fetchSubcategories() {
-      if (!selectedCategory) return;
+      if (!selectedCategory) {
+        setSubcategories([]);
+        return;
+      }
       const { data, error: err } = await supabase
         .from('subcategories')
         .select('*')
