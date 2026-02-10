@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthListener />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

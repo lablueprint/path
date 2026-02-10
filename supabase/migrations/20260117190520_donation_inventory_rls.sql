@@ -14,13 +14,13 @@ drop policy "public can select entries in inventory_items" on "public"."inventor
 
 drop policy "public can update entries in inventory_items" on "public"."inventory_items";
 
-drop policy "public can delete entries in stores" on "public"."stores";
+drop policy if exists "public can delete entries in stores" on "public"."stores";
 
-drop policy "public can insert entries in stores" on "public"."stores";
+drop policy if exists "public can insert entries in stores" on "public"."stores";
 
-drop policy "public can read entries in stores" on "public"."stores";
+drop policy if exists "public can read entries in stores" on "public"."stores";
 
-drop policy "public can update entries in stores" on "public"."stores";
+drop policy if exists "public can update entries in stores" on "public"."stores";
 
 alter table "public"."donations" drop column "receiver_user_id";
 
