@@ -26,6 +26,7 @@ export default function SignInPage() {
     });
     if (error) {
       alert(error.message);
+      return;
     }
     router.push('/home');
   };
@@ -56,6 +57,8 @@ export default function SignInPage() {
       )}
       <br />
       <button type="submit">Sign in</button>
+      <br />
+      <Link href = "/forgot-password">Forgot password?</Link>
       <br />
       <Link href="/sign-up">Sign up</Link>
     </form>
