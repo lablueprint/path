@@ -66,7 +66,7 @@ begin
     new.email
   );
 
-  insert into public.user_role(user_id, role_id)
+  insert into public.user_roles(user_id, role_id)
   values (
     new.id,
     case
@@ -99,6 +99,6 @@ $function$
 
 CREATE TRIGGER "after create store_admins" AFTER INSERT ON public.store_admins FOR EACH ROW EXECUTE FUNCTION private.handle_new_store_admin();
 
-CREATE TRIGGER "after update user_roles" AFTER INSERT ON public.user_roles FOR EACH ROW EXECUTE FUNCTION private.handle_user_role_update();
+CREATE TRIGGER "after update user_roles" AFTER UPDATE ON public.user_roles FOR EACH ROW EXECUTE FUNCTION private.handle_user_role_update();
 
 

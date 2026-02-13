@@ -23,6 +23,6 @@ end;
 $$;
 
 create trigger "after update user_roles"
-after insert on user_roles
+after update on user_roles
 for each row
 execute procedure private.handle_user_role_update();

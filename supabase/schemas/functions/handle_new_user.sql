@@ -13,7 +13,7 @@ begin
     new.email
   );
 
-  insert into public.user_role(user_id, role_id)
+  insert into public.user_roles(user_id, role_id)
   values (
     new.id,
     case
