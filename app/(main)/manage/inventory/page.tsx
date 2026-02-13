@@ -26,8 +26,8 @@ export default async function InventoryPage() {
     <div>
       <div>
         {items?.map((item) => (
-          <div>
-            <InventoryItemCard key={item.inventory_item_id} item={item} />
+          <div key={item.inventory_item_id}>
+            <InventoryItemCard item={item} />
           </div>
         ))}
       </div>
