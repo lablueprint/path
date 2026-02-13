@@ -21,7 +21,7 @@ type FormData = {
   receive_mailings: boolean;
   remain_anonymous: boolean;
 
-  estimated_value: number;
+  estimated_value: string;
   items_donated: string;
 };
 
@@ -37,9 +37,9 @@ export default function DonationForm() {
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
-      phone: '',
-      estimated_value: undefined,
-    },
+      phone: "",
+      estimated_value: "",
+    }
   });
 
   const donorType = watch('donor_type');
@@ -69,7 +69,7 @@ export default function DonationForm() {
       donor_receive_mailings: data.receive_mailings,
       donor_remain_anonymous: data.remain_anonymous,
 
-      estimated_value: data.estimated_value,
+      estimated_value: parseFloat(data.estimated_value),
       items_donated: data.items_donated,
 
       receiver_first_name: 'FIRST-NAME',
@@ -92,8 +92,8 @@ export default function DonationForm() {
         receive_emails: false,
         receive_mailings: false,
         remain_anonymous: false,
-        estimated_value: undefined,
-        items_donated: '',
+        estimated_value: "",
+        items_donated: "",
       });
       clearErrors();
     } catch (error) {
@@ -183,52 +183,66 @@ export default function DonationForm() {
           )}
         />
 
-        {/* Conditional Name Fields */}
-        {donorType === 'individual' && (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+        {/* Conditional Name Field: Individual */}
+        {donorType === "individual" && (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <label style={{ fontWeight: "bold", marginBottom: "5px" }}>
               Individual Name
             </label>
+
             <input
-              {...register('individual_name', { required: true })}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ccc',
-              }}
+              {...register("individual_name", {
+                required: "Individual name is required",
+              })}
+              style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
             />
+
+            {errors.individual_name && (
+              <p style={{ color: "red", marginTop: "5px" }}>
+                {errors.individual_name.message}
+              </p>
+            )}
           </div>
         )}
-
-        {donorType === 'business' && (
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+        {/* Conditional Name Field: Business */}
+        {donorType === "business" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label style={{ fontWeight: "bold", marginBottom: "5px" }}>
                 Business Name
               </label>
+
               <input
-                {...register('business_name', { required: true })}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
+                {...register("business_name", {
+                  required: "Business name is required",
+                })}
+                style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
               />
+
+              {errors.business_name && (
+                <p style={{ color: "red", marginTop: "5px" }}>
+                  {errors.business_name.message}
+                </p>
+              )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label style={{ fontWeight: "bold", marginBottom: "5px" }}>
                 Business Contact Name
               </label>
+
               <input
-                {...register('business_contact_name', { required: true })}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
+                {...register("business_contact_name", {
+                  required: "Business contact name is required",
+                })}
+                style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
               />
+
+              {errors.business_contact_name && (
+                <p style={{ color: "red", marginTop: "5px" }}>
+                  {errors.business_contact_name.message}
+                </p>
+              )}
             </div>
           </div>
         )}
