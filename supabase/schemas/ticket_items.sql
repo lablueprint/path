@@ -5,10 +5,7 @@ create table ticket_items (
   free_text_description text,
   quantity_requested int,
   is_in_stock_request boolean not null,
-  /*constraint fk_store_items
-  foreign key (store_item_id)
-  references store_items (store_item_id)
-  on update cascade,*/
+  constraint fk_store_items foreign key (store_item_id) references store_items (store_item_id) on update cascade,
   constraint fk_tickets foreign key (ticket_id) references tickets (ticket_id) on delete cascade on update cascade
 );
 
