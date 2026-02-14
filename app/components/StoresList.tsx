@@ -1,32 +1,12 @@
-import StoreCard from "./StoreCard"
+import StoreCard from '@/app/components/StoreCard';
+import { Store } from '@/app/types/store';
 
-type Store = {
-    id: string
-    name: string
-    streetAddress: string
-}
-
-type StoresListProps = {
-    stores: Store[]
-}
-
-
-
-export default function StoresList({ stores }: StoresListProps) {
-
-    console.log(stores.map(s => s?.id));
-    console.log(stores[0], stores[0]?.id);
-
-    return (
-        <div>
-            {stores.map((store) => (
-                <StoreCard  
-                    key={store.id}
-                    id={store.id}
-                    name={store.name}
-                    streetAddress={store.streetAddress}
-                />
-            ))}
-        </div>
-    )
+export default function StoresList({ stores }: { stores: Store[] }) {
+  return (
+    <div>
+      {stores?.map((store) => (
+        <StoreCard key={store.store_id} store={store} />
+      ))}
+    </div>
+  );
 }

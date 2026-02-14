@@ -1,75 +1,54 @@
-import { createClient } from "@/app/lib/supabase/server-client";
-import StoresList from "@/app/components/StoresList";
-type Store = {
-    id: string;
-    name: string;
-    streetAddress: string;
-}
-
-type StoreFromDB = {
-    store_id: string;
-    name: string;
-    street_address: string;
-}
-
-type StoreAdminRow = {
-    stores: StoreFromDB | null;
-}
-
+import { createClient } from '@/app/lib/supabase/server-client';
+import StoresList from '@/app/components/StoresList';
+import { Store } from '@/app/types/store';
 
 export default async function IncomingTicketsPage() {
-    const supabase = await createClient();
-    // get user's claims
-    const { data, error } = await supabase.auth.getClaims();
+  const supabase = await createClient();
+
+  // get user's claims
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
+
+  if (claimsError) {
+    console.error('Error fetching claims data:', claimsError);
+  }
+
+  const userRole = claimsData?.claims?.user_role;
+  const userId = claimsData?.claims?.sub;
+
+  let stores: Store[] = [];
+
+  // if user's role is "superadmin" or "owner" get all stores from stores table
+  if (userRole === 'superadmin' || userRole === 'owner') {
+    const { data, error } = await supabase.from('stores').select('*');
+
     if (error) {
-        console.error("Error fetching claims data", error);
-        return <div>Error loading page</div>
+      console.error('Error fetching stores:', error);
     }
 
-    let stores: Store[] = [];
+    stores = data as Store[];
+  } else {
+    const { data, error } = await supabase
+      .from('store_admins')
+      .select('stores(*)')
+      .eq('user_id', userId)
+      .overrideTypes<
+        {
+          stores: Store | null;
+        }[],
+        { merge: false }
+      >();
 
-    const user_role = data?.claims.user_role;
-    if (user_role == "superadmin" || user_role == "owner") {
-        const { data, error } = await supabase.from("stores").select("*");
-        if (error) {
-            console.error("Error fetching stores: ", error)
-        }
-        else {
-            stores = data.map(store => ({
-                id: store.store_id,
-                name: store.name,
-                streetAddress: store.street_address,
-            })) ?? []
-        }
-    }
-    else {
-        // get user's id
-        const { data: userData, error: getUserError } = await supabase.auth.getUser();
-
-        if (getUserError || !userData.user) {
-            console.error("Error fetching user: ", getUserError);
-            return <div>Error fetching user</div>
-        }
-        const userID = userData.user.id;
-
-        // get all stores user is admin of
-        const { data, error } = await supabase.from("store_admins").select("stores(*)").eq("user_id", userID).returns<StoreAdminRow[]>();
-
-
-        if (error) {
-            console.error(error);
-            return <div>Error loading stores</div>
-        }
-        stores =
-            data
-                ?.map(row => row.stores as StoreFromDB)
-                .filter(store => store !== null && store !== undefined)
-                .map(store => ({
-                    id: store.store_id,
-                    name: store.name,
-                    streetAddress: store.street_address,
-                })) ?? [];
+    if (error) {
+      console.error('Error fetching stores:', error);
     }
 
-    return <StoresList stores={stores} />
+    stores = (data ?? []).map((row) => row.stores as Store);
+  }
+  return (
+    <div>
+      <h1>Incoming Tickets</h1>
+      <StoresList stores={stores} />
+    </div>
+  );
 }
