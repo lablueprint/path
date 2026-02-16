@@ -58,6 +58,8 @@ schema_paths = [
   "./schemas/users.sql",
   "./schemas/stores.sql",
   "./schemas/tickets.sql",
+  "./schemas/categories.sql",
+  "./schemas/subcategories.sql",
   "./schemas/*.sql"
 ]
 

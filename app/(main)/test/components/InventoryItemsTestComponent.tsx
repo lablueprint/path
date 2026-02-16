@@ -10,7 +10,7 @@ export default function InventoryItemsTestComponent() {
   const [updatedQuantity, setUpdatedQuantity] = useState<number>(0);
 
   const data: InventoryItemInsert = {
-    subcategory_id: 1,
+    subcategory_id: 2, // changed from 1 -> 2 to make default case work w my specific db mods
     name: 'test name',
     description: 'test description',
     photo_url: 'http://example.com/photo.jpg',
