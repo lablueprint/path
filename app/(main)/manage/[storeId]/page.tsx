@@ -24,12 +24,12 @@ export default async function ManageStorePage({
     .from('store_items')
     .select(
       `
-            store_item_id,
-            item_name:inventory_item_id(name),
-            item_photo_url:inventory_item_id(photo_url),
-            subcategory_name:inventory_items(subcategories(name)),
-            category_name:inventory_items(subcategories(categories(name)))
-        `,
+        store_item_id,
+        item_name:inventory_item_id(name),
+        item_photo_url:inventory_item_id(photo_url),
+        subcategory_name:inventory_items(subcategories(name)),
+        category_name:inventory_items(subcategories(categories(name)))
+      `
     )
     .eq('store_id', storeId);
   if (items_error) {
