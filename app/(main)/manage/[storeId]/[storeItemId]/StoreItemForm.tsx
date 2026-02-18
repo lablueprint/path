@@ -4,10 +4,12 @@ import { useForm } from 'react-hook-form';
 import { updateStoreItemQuantity, updateStoreItemIsHidden } from '@/app/actions/store';
 
 export default function StoreItemForm({
+    store_id,
     store_item_id,
     quantity,
     visibility,
 }: {
+    store_id: string;
     store_item_id: string;
     quantity: number;
     visibility: boolean;
@@ -33,8 +35,8 @@ export default function StoreItemForm({
         setSaveError("");
         
         try {
-            await updateStoreItemQuantity(store_item_id, values.quantity_available);
-            await updateStoreItemIsHidden(store_item_id, values.is_hidden);
+            await updateStoreItemQuantity(store_id, store_item_id, values.quantity_available);
+            await updateStoreItemIsHidden(store_id, store_item_id, values.is_hidden);
             reset(values);
         } catch (e: any) {
             setSaveError(e?.message ?? 'Failed to save changes.');

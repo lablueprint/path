@@ -35,7 +35,12 @@ export default async function ManageStoreItempage ({ params, }: {
             <p>Subcategory Name: {(item_data.inventory_items as any).subcategories.name}</p>
             <p>Category Name: {(item_data.inventory_items as any).subcategories.categories.name}</p>
 
-            <StoreItemForm store_item_id={storeItemId} quantity={item_data.quantity_available ?? 0} visibility={item_data.is_hidden ?? false} />
+            <StoreItemForm
+                store_id={storeId}
+                store_item_id={storeItemId}
+                quantity={item_data.quantity_available ?? 0}
+                visibility={item_data.is_hidden ?? false}
+            />
         </div>
     );
 }
