@@ -71,6 +71,10 @@ sql_paths = [
   "./seeds/roles.sql",
   "./seeds/auth.sql",
   "./seeds/stores.sql",
+  "./seeds/categories.sql",
+  "./seeds/subcategories.sql",
+  "./seeds/inventory_items.sql",
+  "./seeds/tickets.sql",
   "./seeds/*.sql"
 ]
 
