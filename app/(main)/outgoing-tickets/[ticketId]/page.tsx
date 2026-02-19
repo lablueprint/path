@@ -1,8 +1,8 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import InStockTicketItemCard from '@/app/components/InStockTicketItemCard';
-import OutOfStockTicketItemCard from '@/app/components/OutOfStockTicketItemCard';
+import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
+import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
 
-export default async function ticketIdPage({
+export default async function OutgoingTicketDetailsPage({
   params,
 }: {
   params: Promise<{ ticketId: string }>;

@@ -1,5 +1,5 @@
 'use client';
-import { updateTicketItemDescription } from '../actions/ticket';
+import { updateTicketItemDescription } from '../../actions/ticket';
 import { useState } from 'react';
 
 interface OutOfStockTicketItemCardProps {

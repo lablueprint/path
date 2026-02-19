@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { updateTicketItemQuantity } from '../actions/ticket';
+import { updateTicketItemQuantity } from '../../actions/ticket';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;

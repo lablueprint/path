@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import StoresList from '@/app/components/StoresList';
+import StoresList from '@/app/(main)/components/StoresList';
 import UsersList from '@/app/(main)/team/components/UsersList';
 
 export default async function TeamPage() {

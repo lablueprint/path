@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import StoresList from '@/app/components/StoresList';
+import StoresList from '@/app/(main)/components/StoresList';
 import { Store } from '@/app/types/store';
 
 export default async function IncomingTicketsPage() {
