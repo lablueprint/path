@@ -5,7 +5,7 @@ const supabase = await createClient();
 
 export default async function RequestPage() {
   // get all stores from the stores table
-  const { data: stores, error: err } = await supabase
+  const { data: storesData, error: err } = await supabase
     .from('stores')
     .select('store_id, name, street_address');
 
@@ -13,10 +13,12 @@ export default async function RequestPage() {
     console.error('Error fetching stores:', err);
   }
 
+  const stores = storesData || [];
+
   return (
     <div>
       <h1>Request Inventory</h1>
-      <StoresList stores={stores || []} />
+      {stores.length > 0 ? <StoresList stores={stores} /> : <p>No stores found.</p>}
     </div>
   );
 }
