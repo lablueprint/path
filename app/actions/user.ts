@@ -26,6 +26,18 @@ export async function updateUserRole(userId: string, roleId: number) {
 export const updateUser = async (userId: string, data: UserUpdate) => {
   const supabase = await createClient();
   const updateData = { first_name: data.first_name, last_name: data.last_name };
+  const { error: authError } = await supabase.auth.updateUser({
+    email: data.email,
+    data: {
+      first_name: data.first_name,
+      last_name: data.last_name,
+    },
+  });
+
+  if (authError) {
+    console.error('Auth error:', authError);
+    return { success: false, data: null, error: authError.message };
+  }
 
   const { data: updatedUser, error: err } = await supabase
     .from('users')
