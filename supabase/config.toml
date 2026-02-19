@@ -55,11 +55,18 @@ enabled = true
 # Supports glob patterns relative to supabase directory: "./schemas/*.sql"
 schema_paths = [
   "./schemas/functions/*.sql",
+  "./schemas/roles.sql",
   "./schemas/users.sql",
-  "./schemas/stores.sql",
-  "./schemas/tickets.sql",
+  "./schemas/user_roles.sql",
   "./schemas/categories.sql",
   "./schemas/subcategories.sql",
+  "./schemas/inventory_items.sql",
+  "./schemas/stores.sql",
+  "./schemas/store_admins.sql",
+  "./schemas/store_items.sql",
+  "./schemas/tickets.sql",
+  "./schemas/ticket_items.sql",
+  "./schemas/donations.sql",
   "./schemas/*.sql"
 ]
 
@@ -71,11 +78,15 @@ enabled = true
 sql_paths = [
   "./seeds/roles.sql",
   "./seeds/auth.sql",
-  "./seeds/stores.sql",
+  "./seeds/user_roles.sql",
   "./seeds/categories.sql",
   "./seeds/subcategories.sql",
   "./seeds/inventory_items.sql",
+  "./seeds/stores.sql",
+  "./seeds/store_admins.sql",
+  "./seeds/store_items.sql",
   "./seeds/tickets.sql",
+  "./seeds/ticket_items.sql",
   "./seeds/*.sql"
 ]
 
