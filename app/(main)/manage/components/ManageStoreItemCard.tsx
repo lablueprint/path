@@ -20,7 +20,7 @@ export default function ManageStoreItemCard ({ item, storeId, }: {
       >
         <div
           style={{
-            border: '2px solid white',
+            border: '2px solid black',
             borderRadius: '12px',
             padding: '12px',
             margin: '4px',
