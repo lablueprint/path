@@ -3,16 +3,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function UsersList({
-  userInfo,
+  users,
 }: {
-  userInfo: {
+  users: {
     user_id: string;
     first_name: string;
     last_name: string;
-    user_roles: string;
+    role: string;
   }[];
 }) {
-  console.log(userInfo);
   const roleOptions = [
     {
       id: 0,
@@ -42,7 +41,6 @@ export default function UsersList({
   const [filterRole, setFilterRole] = useState('All');
   return (
     <div>
-      <label>Filter By Role:</label>
       <select
         value={filterRole}
         onChange={(e) => {
@@ -50,20 +48,19 @@ export default function UsersList({
         }}
       >
         {roleOptions.map((o) => (
-          <option>{o.roleName}</option>
+          <option key={o.id}>{o.roleName}</option>
         ))}
       </select>
-      {userInfo.map(
+      {users.map(
         (user) =>
-          (filterRole === 'All' || user.user_roles === filterRole) && (
+          (filterRole === 'All' || user.role === filterRole) && (
             <Link
               key={user.user_id}
-              href={`/team/${user.user_id}`} // Where to navigate
-              style={{ textDecoration: 'none', color: 'black' }}
+              href={`/team/profile/${user.user_id}`} // Where to navigate
             >
               <div>
                 Name: {user.first_name ?? 'FirstName'}{' '}
-                {user.last_name ?? 'LastName'} — Role: {user.user_roles}
+                {user.last_name ?? 'LastName'} — Role: {user.role}
               </div>
             </Link>
           ),

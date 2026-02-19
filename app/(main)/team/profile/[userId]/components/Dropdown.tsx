@@ -1,10 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/user';
 
-//import { Example } from '@/app/types/example';
-
-export default function Dropdown({ userId, roleId }) {
+export default function Dropdown({ userId, roleId }: { userId: string, roleId: number }) {
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
   const allRoles = [
     {
@@ -28,23 +27,20 @@ export default function Dropdown({ userId, roleId }) {
       roleName: 'owner',
     },
   ];
-  useEffect(() => {
-    console.log(currentRoleId);
-  }, [currentRoleId]);
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         const res = await updateUserRole(userId, currentRoleId);
         if (!res.success) {
-          alert('Incorrect privileges to update role');
+          alert('Insufficient privileges to update role');
         }
       }}
     >
       <select
         name="role"
         value={currentRoleId}
-        onChange={(e) => setCurrentRoleId(e.target.value)}
+        onChange={(e) => setCurrentRoleId(Number(e.target.value))}
       >
         {allRoles.map((r) => (
           <option key={r.id} value={r.id}>
@@ -52,7 +48,7 @@ export default function Dropdown({ userId, roleId }) {
           </option>
         ))}
       </select>
-      <button type="submit">Update Role</button>
+      <button type="submit">Update role</button>
     </form>
   );
 }

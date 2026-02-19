@@ -14,10 +14,9 @@ export async function updateUserRole(userId: string, roleId: number) {
     .select()
     .single();
   if (err) {
-    console.error('Error creating example:', err);
+    console.error('Error updating user role:', err);
     return { success: false, data: null, error: err.message };
   }
-  console.log(entry);
   revalidatePath('/profile');
   revalidatePath('/team/[userId]');
   return { success: true, data: entry as UserRole };
