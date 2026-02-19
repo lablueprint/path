@@ -1,8 +1,6 @@
 'use client';
-
 import { useState } from "react";
 import { updateTicketItemQuantity } from "../actions/ticket";
-import { set } from "react-hook-form";
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -36,25 +34,24 @@ export default function InStockTicketItemCard({
   };
 
   return (
-    
-    <div className="border p-4 rounded-lg">
-      <input
-        type="number"
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-       />
-      {hasChanged && (
-        <>
-        <button onClick={handleSave}>Save</button>
-        <button onClick={handleCancel}>Cancel</button>
-        </>
-      )}
+    <div>
       <h3>{itemName}</h3>
       <p>Category: {categoryName}</p>
       <p>Subcategory: {subcategoryName}</p>
-      <p>Quantity Requested: {quantityRequested}</p>
-      <p>Available: {quantityAvailable}</p>
-      <button></button>
+      <p>Quantity available: {quantityAvailable}</p>
+      <label>Quantity requested:{' '}
+        <input
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+        />
+      </label>
+      {hasChanged && (
+        <>
+          <button onClick={handleSave}>Save</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </>
+      )}
     </div>
   );
 }

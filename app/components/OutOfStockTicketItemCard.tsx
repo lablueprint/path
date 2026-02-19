@@ -1,6 +1,6 @@
 'use client';
-import {updateTicketItemDescription} from '../actions/ticket';
-import {useState} from 'react';
+import { updateTicketItemDescription } from '../actions/ticket';
+import { useState } from 'react';
 
 interface OutOfStockTicketItemCardProps {
   ticketItemId: string;
@@ -29,21 +29,17 @@ export default function OutOfStockTicketItemCard({
   }
   return (
     <div>
-      <h3>Update Text Description</h3>
       <textarea
         value={description}
         onChange={handleChange}
         rows={4}
       />
-      
       {isChanged && (
-        <div className="flex gap-2">
+        <div>
           <button onClick={handleSave}>Save</button>
           <button onClick={handleCancel}>Cancel</button>
         </div>
       )}
-
-      
     </div>
   );
 }

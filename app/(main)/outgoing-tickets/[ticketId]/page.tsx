@@ -10,9 +10,6 @@ export default async function ticketIdPage({
   const { ticketId } = await params;
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   const { data: userTicket, error: err } = await supabase
     .from('tickets')
@@ -33,7 +30,7 @@ export default async function ticketIdPage({
   let InStockTicketItems: any[] = [];
   let OutOfStockTicketItems: { ticket_item_id: string; free_text_description: string | null }[] = [];
   if (userTicket) {
-    const {data: items} = await supabase
+    const { data: items } = await supabase
       .from('ticket_items')
       .select(`*,
         store_items(
@@ -51,84 +48,66 @@ export default async function ticketIdPage({
         )
       `)
       .eq('ticket_id', ticketId)
-      .eq('is_in_stock_request', true); 
-      InStockTicketItems = items || [];
-
+      .eq('is_in_stock_request', true);
+    InStockTicketItems = items || [];
 
     const { data: outOfStock } = await supabase
-      .from('ticket_items') 
+      .from('ticket_items')
       .select(`ticket_item_id,
         free_text_description
       `)
       .eq('ticket_id', ticketId)
       .eq('is_in_stock_request', false);
-      OutOfStockTicketItems = outOfStock || [];
+    OutOfStockTicketItems = outOfStock || [];
+  }
 
-  }  
+  const store = userTicket.stores as unknown as { name: string, street_address: string };
 
   return (
     <div>
       {userTicket ? (
         <div>
-          <h1>Ticket - {userTicket.ticket_id}</h1>
-          <h2>
-            Your Email Address:{' '}
-            {user?.email ? user.email : 'User not Found'}{' '}
-          </h2>
-          <h3>---Your Requestor ID: {userTicket.requestor_user_id}---</h3>
-          <h2>Status: {userTicket.status}</h2>
+          <h1>Outgoing Ticket Details</h1>
+          <h2>Ticket: {userTicket.ticket_id}</h2>
           <h2>Date Submitted: {userTicket.date_submitted}</h2>
-          <h2>Store ID: {userTicket.store_id}</h2>
-          <h2>Store Name: {userTicket.stores?.[0]?.name} </h2>
-          <h2>Store Address: {userTicket.stores?.[0]?.street_address}</h2>
-          <div className='mt-8'>
-            <h2 className="text-xl font-semibold mb-4"> In-stock Requests</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h2>Status: {userTicket.status}</h2>
+          <h2>Store: {store.name} </h2>
+          <h2>Store Address: {store.street_address}</h2>
+          {InStockTicketItems.length > 0 ?
+            <div>
+              <h2> In-Stock Requests</h2>
+              <div>
                 {InStockTicketItems.map((item) => (
-                <InStockTicketItemCard
-                key={item.ticket_item_id}
-                ticketItemId={item.ticket_item_id}
-                quantityRequested={item.quantity_requested}
-                quantityAvailable={item.store_items?.quantity_available || 0}
-                itemName={item.store_items?.inventory_items?.name || 'Unknown'}
-                photoUrl={item.store_items?.inventory_items?.photo_url || ''}
-                subcategoryName={item.store_items?.inventory_items?.subcategories?.name || 'Unknown'}
-                categoryName={item.store_items?.inventory_items?.subcategories?.categories?.name || 'Unknown'}
-              />
-              ))}
-            </div>
-        </div>
-        <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Out-of-Stock Requests</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {OutOfStockTicketItems.map((item) => (
-                <OutOfStockTicketItemCard
-                  key={item.ticket_item_id}
-                  ticketItemId={item.ticket_item_id}
-                  freeTextDescription={item.free_text_description || 'No description'}
-                />
-              ))}
-            </div>
-          </div>
+                  <InStockTicketItemCard
+                    key={item.ticket_item_id}
+                    ticketItemId={item.ticket_item_id}
+                    quantityRequested={item.quantity_requested}
+                    quantityAvailable={item.store_items?.quantity_available || 0}
+                    itemName={item.store_items?.inventory_items?.name || 'Unknown'}
+                    photoUrl={item.store_items?.inventory_items?.photo_url || ''}
+                    subcategoryName={item.store_items?.inventory_items?.subcategories?.name || 'Unknown'}
+                    categoryName={item.store_items?.inventory_items?.subcategories?.categories?.name || 'Unknown'}
+                  />
+                ))}
+              </div>
+            </div> : null}
+          {OutOfStockTicketItems.length > 0 ?
+            <div>
+              <h2>Out-of-Stock Requests</h2>
+              <div>
+                {OutOfStockTicketItems.map((item) => (
+                  <OutOfStockTicketItemCard
+                    key={item.ticket_item_id}
+                    ticketItemId={item.ticket_item_id}
+                    freeTextDescription={item.free_text_description || 'No description'}
+                  />
+                ))}
+              </div>
+            </div> : null}
         </div>
       ) : (
-        <h1>Ticket Not Found</h1>
+        <p>No ticket found.</p>
       )}
-      <div className="ticket-list">
-      <h2>Available Tickets</h2>
-      {/* {tickets
-        .filter(ticket => ticket.status === "in-stock")
-        .map(ticket => (
-          <InStockTicketItemCard 
-            key={ticket.id} 
-            ticketData={ticket} 
-          />
-        ))
-      } */}
-    </div>
-      <a href="./">
-        <button>--Back--</button>
-      </a>
     </div>
   );
 }
