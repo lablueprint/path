@@ -13,12 +13,14 @@ export default async function ticketIdPage({
 
   const { data: userTicket, error: err } = await supabase
     .from('tickets')
-    .select(`store_id, ticket_id, requestor_user_id, status, date_submitted,
+    .select(
+      `store_id, ticket_id, requestor_user_id, status, date_submitted,
       stores (
         name,
         street_address
       )
-    `)
+    `,
+    )
     .eq('ticket_id', ticketId)
     .single();
 
@@ -28,11 +30,15 @@ export default async function ticketIdPage({
   }
 
   let InStockTicketItems: any[] = [];
-  let OutOfStockTicketItems: { ticket_item_id: string; free_text_description: string | null }[] = [];
+  let OutOfStockTicketItems: {
+    ticket_item_id: string;
+    free_text_description: string | null;
+  }[] = [];
   if (userTicket) {
     const { data: items } = await supabase
       .from('ticket_items')
-      .select(`*,
+      .select(
+        `*,
         store_items(
           quantity_available,
           inventory_items(
@@ -46,22 +52,28 @@ export default async function ticketIdPage({
             )
           )
         )
-      `)
+      `,
+      )
       .eq('ticket_id', ticketId)
       .eq('is_in_stock_request', true);
     InStockTicketItems = items || [];
 
     const { data: outOfStock } = await supabase
       .from('ticket_items')
-      .select(`ticket_item_id,
+      .select(
+        `ticket_item_id,
         free_text_description
-      `)
+      `,
+      )
       .eq('ticket_id', ticketId)
       .eq('is_in_stock_request', false);
     OutOfStockTicketItems = outOfStock || [];
   }
 
-  const store = userTicket.stores as unknown as { name: string, street_address: string };
+  const store = userTicket.stores as unknown as {
+    name: string;
+    street_address: string;
+  };
 
   return (
     <div>
@@ -73,7 +85,7 @@ export default async function ticketIdPage({
           <h2>Status: {userTicket.status}</h2>
           <h2>Store: {store.name} </h2>
           <h2>Store Address: {store.street_address}</h2>
-          {InStockTicketItems.length > 0 ?
+          {InStockTicketItems.length > 0 ? (
             <div>
               <h2> In-Stock Requests</h2>
               <div>
@@ -82,16 +94,29 @@ export default async function ticketIdPage({
                     key={item.ticket_item_id}
                     ticketItemId={item.ticket_item_id}
                     quantityRequested={item.quantity_requested}
-                    quantityAvailable={item.store_items?.quantity_available || 0}
-                    itemName={item.store_items?.inventory_items?.name || 'Unknown'}
-                    photoUrl={item.store_items?.inventory_items?.photo_url || ''}
-                    subcategoryName={item.store_items?.inventory_items?.subcategories?.name || 'Unknown'}
-                    categoryName={item.store_items?.inventory_items?.subcategories?.categories?.name || 'Unknown'}
+                    quantityAvailable={
+                      item.store_items?.quantity_available || 0
+                    }
+                    itemName={
+                      item.store_items?.inventory_items?.name || 'Unknown'
+                    }
+                    photoUrl={
+                      item.store_items?.inventory_items?.photo_url || ''
+                    }
+                    subcategoryName={
+                      item.store_items?.inventory_items?.subcategories?.name ||
+                      'Unknown'
+                    }
+                    categoryName={
+                      item.store_items?.inventory_items?.subcategories
+                        ?.categories?.name || 'Unknown'
+                    }
                   />
                 ))}
               </div>
-            </div> : null}
-          {OutOfStockTicketItems.length > 0 ?
+            </div>
+          ) : null}
+          {OutOfStockTicketItems.length > 0 ? (
             <div>
               <h2>Out-of-Stock Requests</h2>
               <div>
@@ -99,11 +124,14 @@ export default async function ticketIdPage({
                   <OutOfStockTicketItemCard
                     key={item.ticket_item_id}
                     ticketItemId={item.ticket_item_id}
-                    freeTextDescription={item.free_text_description || 'No description'}
+                    freeTextDescription={
+                      item.free_text_description || 'No description'
+                    }
                   />
                 ))}
               </div>
-            </div> : null}
+            </div>
+          ) : null}
         </div>
       ) : (
         <p>No ticket found.</p>

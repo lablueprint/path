@@ -22,18 +22,14 @@ export default function OutOfStockTicketItemCard({
   const handleCancel = () => {
     setDescription(freeTextDescription);
     setIsChanged(false);
-  }
+  };
   const handleSave = async () => {
     await updateTicketItemDescription(ticketItemId, description);
     setIsChanged(false);
-  }
+  };
   return (
     <div>
-      <textarea
-        value={description}
-        onChange={handleChange}
-        rows={4}
-      />
+      <textarea value={description} onChange={handleChange} rows={4} />
       {isChanged && (
         <div>
           <button onClick={handleSave}>Save</button>

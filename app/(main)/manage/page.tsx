@@ -48,7 +48,11 @@ export default async function ManagePage() {
   return (
     <div>
       <h1>Manage Inventory</h1>
-      {stores.length > 0 ? <StoresList stores={stores} /> : <p>No stores found.</p>}
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
     </div>
   );
 }

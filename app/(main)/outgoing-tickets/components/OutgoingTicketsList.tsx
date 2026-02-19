@@ -30,13 +30,13 @@ export default function OutgoingTicketsList(props: outgoingTicketsListProps) {
             {filteredTickets.map((ticket) => (
               <tr key={ticket.ticket_id}>
                 <td>
-                  <Link href={`/outgoing-tickets/${ticket.ticket_id}`}>View</Link>
+                  <Link href={`/outgoing-tickets/${ticket.ticket_id}`}>
+                    View
+                  </Link>
                 </td>
                 <td>{ticket.store_id}</td>
                 <td>{ticket.status}</td>
-                <td>
-                  {ticket.date_submitted.toString()}
-                </td>
+                <td>{ticket.date_submitted.toString()}</td>
               </tr>
             ))}
           </tbody>

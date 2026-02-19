@@ -34,8 +34,7 @@ export default async function TeamProfilePage({
   return (
     <div>
       <p>
-        Name: {user.first_name || 'FirstName'}{' '}
-        {user.last_name || 'LastName'}
+        Name: {user.first_name || 'FirstName'} {user.last_name || 'LastName'}
       </p>
       <p>Email: {user.email}</p>
       <Dropdown userId={userId} roleId={role?.role_id} />

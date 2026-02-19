@@ -48,7 +48,11 @@ export default async function IncomingTicketsPage() {
   return (
     <div>
       <h1>Incoming Tickets</h1>
-      {stores.length > 0 ? <StoresList stores={stores} /> : <p>No stores found.</p>}
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
     </div>
   );
 }

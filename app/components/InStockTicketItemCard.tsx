@@ -1,6 +1,6 @@
 'use client';
-import { useState } from "react";
-import { updateTicketItemQuantity } from "../actions/ticket";
+import { useState } from 'react';
+import { updateTicketItemQuantity } from '../actions/ticket';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -22,7 +22,7 @@ export default function InStockTicketItemCard({
   categoryName,
 }: InStockTicketItemCardProps) {
   const [quantity, setQuantity] = useState(quantityRequested);
-  const [savedQuantity, setSavedQuantity] = useState(quantityRequested);  // NEW
+  const [savedQuantity, setSavedQuantity] = useState(quantityRequested); // NEW
   const hasChanged = quantity !== savedQuantity;
 
   const handleSave = async () => {
@@ -39,7 +39,8 @@ export default function InStockTicketItemCard({
       <p>Category: {categoryName}</p>
       <p>Subcategory: {subcategoryName}</p>
       <p>Quantity available: {quantityAvailable}</p>
-      <label>Quantity requested:{' '}
+      <label>
+        Quantity requested:{' '}
         <input
           type="number"
           value={quantity}
