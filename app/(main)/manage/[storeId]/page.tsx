@@ -50,13 +50,17 @@ export default async function ManageStorePage({
       {/* store items + info */}
       <div>
         <h1>Store Items:</h1>
-        {(items ?? []).map((item) => (
-          <ManageStoreItemCard 
-            key={item.store_item_id} 
-            item={item} 
-            storeId={storeId}
-          />
-        ))}
+        {items?.length ? (
+          items.map((item) => (
+            <ManageStoreItemCard 
+              key={item.store_item_id} 
+              item={item} 
+              storeId={storeId}
+            />
+          ))
+        ) : (
+          <div>No items to display.</div>
+        )}
       </div>
     </div>
   );
