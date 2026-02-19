@@ -21,7 +21,6 @@ export default async function ManageStoreItempage ({ params, }: {
         `)
         .eq('store_item_id', storeItemId)
         .single();
-    console.log("HELLOOOOO", item_data)
     if (item_error) {
         console.error('Error fetching store item info:', item_error);
         return <div>Failed to load store item.</div>;
