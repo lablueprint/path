@@ -1,36 +1,28 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import StoresList from '@/app/components/StoresList';
+import StoresList from '@/app/(main)/components/StoresList';
 
 const supabase = await createClient();
 
-type Store = {
-    id: string
-    name: string
-    streetAddress: string
-}
-
 export default async function RequestPage() {
-    // get all stores from the stores table
-    const { data: stores, error: err } = await supabase
-        .from('stores')
-        .select('store_id, name, street_address');
+  // get all stores from the stores table
+  const { data: storesData, error: err } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address');
 
-    if (err) {
-        console.error('Error fetching stores:', err);
-        return <p>Failed to load stores</p>;
-    }
+  if (err) {
+    console.error('Error fetching stores:', err);
+  }
 
-    // map database fields to component props
-    const mappedStores: Store[] = stores.map((s) => ({
-        id: s.store_id,
-        name: s.name,
-        streetAddress: s.street_address,
-    }))
+  const stores = storesData || [];
 
-    return (
-        <div>
-            <h1>Request Page</h1>
-            <StoresList stores={mappedStores} />
-        </div>
-    )
+  return (
+    <div>
+      <h1>Request Inventory</h1>
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
+    </div>
+  );
 }

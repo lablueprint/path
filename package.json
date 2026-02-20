@@ -17,8 +17,8 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-hook-form": "^7.70.0",
-    "zustand": "^5.0.9",
-    "react-number-format": "^5.4.4"
+    "react-number-format": "^5.4.4",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
