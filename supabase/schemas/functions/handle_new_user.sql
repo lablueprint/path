@@ -22,7 +22,6 @@ begin
     end
   );
 
-
   return new;
 end;
 $$;
