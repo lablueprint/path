@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import StoresList from '@/app/components/StoresList';
+import StoresList from '@/app/(main)/components/StoresList';
 import { Store } from '@/app/types/store';
 
 export default async function ManagePage() {
@@ -48,7 +48,11 @@ export default async function ManagePage() {
   return (
     <div>
       <h1>Manage Inventory</h1>
-      <StoresList stores={stores} />
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
     </div>
   );
 }
