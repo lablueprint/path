@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Sidebar from './components/sidebar';
+import Breadcrumbs from './components/Breadcrumbs';
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
@@ -7,8 +8,11 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <Sidebar />
 
-      {/* Main page content */}
-      {children}
+      <main style={{ flex: 1 }}>
+        <Breadcrumbs />
+        {/* Main page content */}
+        {children}
+      </main>
     </div>
   );
 }
