@@ -54,14 +54,19 @@ enabled = true
 # Specifies an ordered list of schema files that describe your database.
 # Supports glob patterns relative to supabase directory: "./schemas/*.sql"
 schema_paths = [
-  "./schemas/users.sql",
-  "./schemas/stores.sql",
-  "./schemas/tickets.sql",
-  "./schemas/store_admins.sql",
-  "./schemas/functions/can_assign_role.sql",
-  "./schemas/roles.sql",
-  "./schemas/user_roles.sql",
   "./schemas/functions/*.sql",
+  "./schemas/roles.sql",
+  "./schemas/users.sql",
+  "./schemas/user_roles.sql",
+  "./schemas/categories.sql",
+  "./schemas/subcategories.sql",
+  "./schemas/inventory_items.sql",
+  "./schemas/stores.sql",
+  "./schemas/store_admins.sql",
+  "./schemas/store_items.sql",
+  "./schemas/tickets.sql",
+  "./schemas/ticket_items.sql",
+  "./schemas/donations.sql",
   "./schemas/*.sql"
 ]
 
@@ -70,7 +75,20 @@ schema_paths = [
 enabled = true
 # Specifies an ordered list of seed files to load during db reset.
 # Supports glob patterns relative to supabase directory: "./seeds/*.sql"
-sql_paths = ["./seeds/*.sql"]
+sql_paths = [
+  "./seeds/roles.sql",
+  "./seeds/auth.sql",
+  "./seeds/user_roles.sql",
+  "./seeds/categories.sql",
+  "./seeds/subcategories.sql",
+  "./seeds/inventory_items.sql",
+  "./seeds/stores.sql",
+  "./seeds/store_admins.sql",
+  "./seeds/store_items.sql",
+  "./seeds/tickets.sql",
+  "./seeds/ticket_items.sql",
+  "./seeds/*.sql"
+]
 
 [db.network_restrictions]
 # Enable management of network restrictions.
