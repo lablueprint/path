@@ -39,22 +39,26 @@ export async function updateSession(request: NextRequest) {
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/sign-in') &&
-    !request.nextUrl.pathname.startsWith('/sign-up')
+    !request.nextUrl.pathname.startsWith('/sign-up') &&
+    !request.nextUrl.pathname.startsWith('/forgot-password') &&
+    !request.nextUrl.pathname.startsWith('/confirm') &&
+    !request.nextUrl.pathname.startsWith('/reset-password')
   ) {
     const url = request.nextUrl.clone();
     url.pathname = '/sign-in';
     return NextResponse.redirect(url);
   }
   // If authenticated user tries to access /sign-up or /sign-in, redirect to /home
-  if (
-    user &&
-    (request.nextUrl.pathname.startsWith('/sign-in') ||
-      request.nextUrl.pathname.startsWith('/sign-up'))
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/home';
-    return NextResponse.redirect(url);
-  }
+ if (
+  user &&
+  (request.nextUrl.pathname.startsWith('/sign-in') ||
+    request.nextUrl.pathname.startsWith('/sign-up') ||
+    request.nextUrl.pathname.startsWith('/forgot-password'))
+) {
+  const url = request.nextUrl.clone();
+  url.pathname = '/home';
+  return NextResponse.redirect(url);
+}
   // TODO: restrict access to /home
   // Restrict access to specific pages
   if (
