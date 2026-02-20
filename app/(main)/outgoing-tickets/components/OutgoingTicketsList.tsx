@@ -1,45 +1,42 @@
 import { Ticket } from '@/app/types/ticket';
+import Link from 'next/link';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
-interface TicketListProps {
+interface outgoingTicketsListProps {
   tickets: Ticket[];
   status: Status;
 }
 
-export default function OutgoingTicketsList(props: TicketListProps) {
+export default function OutgoingTicketsList(props: outgoingTicketsListProps) {
   const filteredTickets = props.tickets.filter(
     (ticket) => ticket.status === props.status,
   );
-
-  const url = './outgoing-tickets/';
 
   return (
     <div>
       <h2>{props.status.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
-        <table style={{ border: '1px solid white' }}>
+        <table>
           <thead>
             <tr>
-              <th style={{ border: '1px solid white' }}>Ticket</th>
-              <th style={{ border: '1px solid white' }}>Store ID</th>
-              <th style={{ border: '1px solid white' }}>Status</th>
-              <th style={{ border: '1px solid white' }}>Date Submitted</th>
+              <th>Ticket</th>
+              <th>Store ID</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
             </tr>
           </thead>
           <tbody>
             {filteredTickets.map((ticket) => (
               <tr key={ticket.ticket_id}>
-                <td style={{ border: '1px solid white' }}>
-                  <a href={`${url}${ticket.ticket_id}`}>
-                    <button>View</button>
-                  </a>
+                <td>
+                  <Link href={`/outgoing-tickets/${ticket.ticket_id}`}>
+                    View
+                  </Link>
                 </td>
-                <td style={{ border: '1px solid white' }}>{ticket.store_id}</td>
-                <td style={{ border: '1px solid white' }}>{ticket.status}</td>
-                <td style={{ border: '1px solid white' }}>
-                  {ticket.date_submitted.toString()}
-                </td>
+                <td>{ticket.store_id}</td>
+                <td>{ticket.status}</td>
+                <td>{ticket.date_submitted.toString()}</td>
               </tr>
             ))}
           </tbody>
