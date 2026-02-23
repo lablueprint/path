@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import Dropdown from './components/Dropdown';
+import Dropdown from '@/app/(main)/team/profile/[userId]/components/Dropdown';
 
 export default async function TeamProfilePage({
   params,
