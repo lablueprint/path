@@ -55,9 +55,18 @@ enabled = true
 # Supports glob patterns relative to supabase directory: "./schemas/*.sql"
 schema_paths = [
   "./schemas/functions/*.sql",
+  "./schemas/roles.sql",
   "./schemas/users.sql",
+  "./schemas/user_roles.sql",
+  "./schemas/categories.sql",
+  "./schemas/subcategories.sql",
+  "./schemas/inventory_items.sql",
   "./schemas/stores.sql",
+  "./schemas/store_admins.sql",
+  "./schemas/store_items.sql",
   "./schemas/tickets.sql",
+  "./schemas/ticket_items.sql",
+  "./schemas/donations.sql",
   "./schemas/*.sql"
 ]
 
@@ -66,7 +75,21 @@ schema_paths = [
 enabled = true
 # Specifies an ordered list of seed files to load during db reset.
 # Supports glob patterns relative to supabase directory: "./seeds/*.sql"
-sql_paths = ["./seeds/*.sql"]
+sql_paths = [
+  "./seeds/roles.sql",
+  "./seeds/auth.sql",
+  "./seeds/user_roles.sql",
+  "./seeds/categories.sql",
+  "./seeds/subcategories.sql",
+  "./seeds/inventory_items.sql",
+  "./seeds/stores.sql",
+  "./seeds/store_admins.sql",
+  "./seeds/store_items.sql",
+  "./seeds/tickets.sql",
+  "./seeds/ticket_items.sql",
+  "./seeds/donations.sql",
+  "./seeds/*.sql"
+]
 
 [db.network_restrictions]
 # Enable management of network restrictions.
@@ -126,9 +149,9 @@ file_size_limit = "50MiB"
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "http://127.0.0.1:3000"
+site_url = "http://localhost:3000"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000"]
+additional_redirect_urls = ["https://localhost:3000"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 900
 # JWT issuer URL. If not set, defaults to the local API URL (http://127.0.0.1:<port>/auth/v1).
@@ -205,6 +228,10 @@ otp_expiry = 3600
 # [auth.email.template.invite]
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.email_change]
+subject = "Confirm email change"
+content_path = "./supabase/templates/email-change.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]

@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ProfileForm from './components/ProfileForm';
 import type { User } from '@/app/types/user';
+import { UpdatePasswordForm } from './components/UpdatePasswordForm';
 
 export default async function PersonalProfilePage() {
   const supabase = await createClient();
@@ -28,7 +29,11 @@ export default async function PersonalProfilePage() {
 
   return (
     <div>
+      <h1>Profile</h1>
+      <h2>Public Profile</h2>
       <ProfileForm user={profile as User} />
+      <h2>Authentication</h2>
+      <UpdatePasswordForm />
     </div>
   );
 }
