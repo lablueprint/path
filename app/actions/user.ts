@@ -1,8 +1,26 @@
 'use server';
 
-import { User, UserUpdate } from '@/app/types/user';
 import { createClient } from '@/app/lib/supabase/server-client';
+import { User, UserUpdate } from '@/app/types/user';
 import { revalidatePath } from 'next/cache';
+import { UserRole } from '@/app/types/user';
+
+export async function updateUserRole(userId: string, roleId: number) {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('user_roles')
+    .update({ role_id: roleId })
+    .eq('user_id', userId)
+    .select()
+    .single();
+  if (err) {
+    console.error('Error updating user role:', err);
+    return { success: false, data: null, error: err.message };
+  }
+  revalidatePath('/profile');
+  revalidatePath('/team/[userId]');
+  return { success: true, data: entry as UserRole };
+}
 
 export const updateUser = async (userId: string, data: UserUpdate) => {
   const supabase = await createClient();
@@ -26,7 +44,6 @@ export const updateUser = async (userId: string, data: UserUpdate) => {
     .eq('user_id', userId)
     .select()
     .single();
-
   if (err) {
     console.error('Error updating user:', err);
     return { success: false, data: null, error: err.message };

@@ -45,6 +45,7 @@ export default function SignInPage() {
       {errors.email?.type === 'pattern' && (
         <p role="alert">Please enter a valid email.</p>
       )}
+      <br />
       <input
         {...register('password', { required: true })}
         placeholder="Password"
@@ -53,7 +54,9 @@ export default function SignInPage() {
       {errors.password?.type === 'required' && (
         <p role="alert">Password is required.</p>
       )}
+      <br />
       <button type="submit">Sign in</button>
+      <br />
       <Link href="/sign-up">Sign up</Link>
     </form>
   );
