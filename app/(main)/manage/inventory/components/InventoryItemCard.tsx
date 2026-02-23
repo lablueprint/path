@@ -9,7 +9,11 @@ type InventoryItemProps = {
 };
 
 export default async function InventoryItemCard({
-  inventory_item_id, photo_url, item, subcategory, category
+  inventory_item_id,
+  photo_url,
+  item,
+  subcategory,
+  category,
 }: InventoryItemProps) {
   return (
     <Link href={`/manage/inventory/${inventory_item_id}`}>
