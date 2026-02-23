@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import Dropdown from './components/Dropdown';
+import Dropdown from '@/app/(main)/team/profile/[userId]/components/Dropdown';
 
 export default async function TeamProfilePage({
   params,
@@ -34,8 +34,7 @@ export default async function TeamProfilePage({
   return (
     <div>
       <p>
-        Name: {user.first_name || 'FirstName'}{' '}
-        {user.last_name || 'LastName'}
+        Name: {user.first_name || 'FirstName'} {user.last_name || 'LastName'}
       </p>
       <p>Email: {user.email}</p>
       <Dropdown userId={userId} roleId={role?.role_id} />

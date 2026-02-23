@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/user';
 
-export default function Dropdown({ userId, roleId }: { userId: string, roleId: number }) {
+export default function Dropdown({
+  userId,
+  roleId,
+}: {
+  userId: string;
+  roleId: number;
+}) {
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
   const allRoles = [
     {

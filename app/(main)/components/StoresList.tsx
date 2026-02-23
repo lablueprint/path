@@ -1,4 +1,4 @@
-import StoreCard from '@/app/components/StoreCard';
+import StoreCard from '@/app/(main)/components/StoreCard';
 import { Store } from '@/app/types/store';
 
 export default function StoresList({ stores }: { stores: Store[] }) {

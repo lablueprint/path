@@ -44,4 +44,7 @@ values
     '00000000-0000-0000-0000-000000000008',
     '00000000-0000-0000-0000-000000000008',
     '2'
-  );
+  )
+on conflict (user_id) do update
+set
+  role_id = excluded.role_id;
