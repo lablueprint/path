@@ -1,14 +1,23 @@
-'use server';
+import Link from 'next/link';
 
-export default async function InventoryItemCard(inventoryItem) {
-  console.log('inventory item:', inventoryItem.item);
+type InventoryItemProps = {
+  inventory_item_id: string;
+  photo_url: string;
+  item: string;
+  subcategory: string;
+  category: string;
+};
+
+export default async function InventoryItemCard({
+  inventory_item_id, photo_url, item, subcategory, category
+}: InventoryItemProps) {
   return (
-    <div>
-      <p>Item Name: {inventoryItem?.item?.name}</p>
-      <p>Subcategory Name: {inventoryItem?.item?.subcategories?.name}</p>
-      <p>
-        Category Name: {inventoryItem?.item?.subcategories?.categories?.name}
-      </p>
-    </div>
+    <Link href={`/manage/inventory/${inventory_item_id}`}>
+      <div>
+        <h3>{item}</h3>
+        <p>Category: {category}</p>
+        <p>Subcategory: {subcategory}</p>
+      </div>
+    </Link>
   );
 }
