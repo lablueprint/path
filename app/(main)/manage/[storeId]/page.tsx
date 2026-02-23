@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import ManageStoreItemCard from '@/app/(main)/manage/[storeId]/components/ManageStoreItemCard';
+import ItemCard from '@/app/(main)/manage/components/ItemCard';
 
 export default async function ManageStorePage({
   params,
@@ -20,7 +20,7 @@ export default async function ManageStorePage({
     return <div>Failed to load store.</div>;
   }
 
-  const { data: items, error: itemsError } = await supabase
+  const { data: itemsData, error: itemsError } = await supabase
     .from('store_items')
     .select(
       `
@@ -37,6 +37,15 @@ export default async function ManageStorePage({
     return <div>Failed to load store items.</div>;
   }
 
+  const items = itemsData?.map((item) => ({
+    id: item.store_item_id as string,
+    item: (item.item_name as any).name as string,
+    subcategory: (item.subcategory_name as any).subcategories.name as string,
+    category:
+      (item.category_name as any)?.subcategories.categories.name as string,
+    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+  }));
+
   return (
     <div>
       {/* store info */}
@@ -49,10 +58,13 @@ export default async function ManageStorePage({
         <h2>Items</h2>
         {items?.length ? (
           items.map((item) => (
-            <ManageStoreItemCard
-              key={item.store_item_id}
-              item={item}
-              storeId={storeId}
+            <ItemCard
+              key={item.id}
+              id={item.id}
+              item={item.item}
+              photoUrl={item.photoUrl}
+              subcategory={item.subcategory}
+              category={item.category}
             />
           ))
         ) : (

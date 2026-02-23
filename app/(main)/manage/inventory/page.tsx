@@ -1,4 +1,4 @@
-import InventoryItemCard from '@/app/(main)/manage/inventory/components/InventoryItemCard';
+import ItemCard from '@/app/(main)/manage/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 
@@ -26,9 +26,9 @@ export default async function InventoryPage() {
   }
 
   const items = itemsData?.map((item) => ({
-    inventory_item_id: item.inventory_item_id as string,
+    id: item.inventory_item_id as string,
     item: item.name as string,
-    photo_url: item.photo_url as string,
+    photoUrl: item.photo_url as string,
     subcategory: (item.subcategories as any).name as string,
     category: (item.subcategories as any).categories.name as string,
   }));
@@ -40,11 +40,11 @@ export default async function InventoryPage() {
       <h2>Items</h2>
       <div>
         {items?.map((item) => (
-          <div key={item.inventory_item_id}>
-            <InventoryItemCard
-              inventory_item_id={item.inventory_item_id}
+          <div key={item.id}>
+            <ItemCard
+              id={item.id}
               item={item.item}
-              photo_url={item.photo_url}
+              photoUrl={item.photoUrl}
               subcategory={item.subcategory}
               category={item.category}
             />

@@ -53,7 +53,7 @@ export default function StoreItemForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div style={{ marginBottom: '14px' }}>
+      <div>
         <label>Quantity available: </label>
         <input
           type="number"
