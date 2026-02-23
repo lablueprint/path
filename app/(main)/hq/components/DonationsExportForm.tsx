@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import {
   exportDonations,
   exportDonationsInRange,
-} from '../../../../actions/donation';
+} from '@/app/actions/donation';
 
 type FormValues = {
   dateMode: 'all' | 'range';
@@ -28,14 +28,18 @@ export default function Donations() {
   const dateMode = watch('dateMode');
 
   const onSubmit = (data: FormValues) => {
-    console.log(data);
+    handleExport();
   };
 
   const handleExport = async () => {
     if (dateMode === 'range') {
       const { startDate, endDate } = getValues();
-      const csvString = await exportDonationsInRange({ startDate, endDate });
-      const blob = new Blob([csvString], { type: 'text/csv' });
+      const result = await exportDonationsInRange({
+        startDate: startDate || '',
+        endDate: endDate || '',
+      });
+      const csvString = result?.data;
+      const blob = new Blob([csvString || ''], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.setAttribute('href', url);
@@ -43,8 +47,9 @@ export default function Donations() {
       a.click();
       window.URL.revokeObjectURL(url);
     } else {
-      const csvString = await exportDonations();
-      const blob = new Blob([csvString], { type: 'text/csv' });
+      const result = await exportDonations();
+      const csvString = result?.data;
+      const blob = new Blob([csvString || ''], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.setAttribute('href', url);
@@ -56,36 +61,31 @@ export default function Donations() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <fieldset>
-        <legend>Date Filter</legend>
-
-        <label>
-          <input type="radio" value="all" {...register('dateMode')} />
-          All Dates
-        </label>
-
-        <br />
-
-        <label>
-          <input type="radio" value="range" {...register('dateMode')} />
-          Date Range
-        </label>
-      </fieldset>
-
+      <label>
+        <input type="radio" value="all" {...register('dateMode')} />
+        All time
+      </label>
+      <br />
+      <label>
+        <input type="radio" value="range" {...register('dateMode')} />
+        Date range
+      </label>
+      <br />
       {dateMode === 'range' && (
         <div>
-          <label>Start Date</label>
+          <label>Start date</label>
           <input
             type="date"
-            {...register('startDate', { required: 'Start date is required' })}
+            {...register('startDate', { required: 'Start date is required.' })}
           />
           {errors.startDate && (
             <p style={{ color: 'red' }}>{errors.startDate.message}</p>
           )}
-          <label>End Date</label>
+          <br />
+          <label>End date</label>
           <input
             type="date"
-            {...register('endDate', { required: 'End date is required' })}
+            {...register('endDate', { required: 'End date is required.' })}
           />
           {errors.endDate && (
             <p style={{ color: 'red' }}>{errors.endDate.message}</p>
@@ -93,7 +93,7 @@ export default function Donations() {
         </div>
       )}
 
-      <button onClick={handleExport}> Export</button>
+      <button type="submit">Export</button>
     </form>
   );
 }
