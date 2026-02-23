@@ -89,6 +89,7 @@ sql_paths = [
   "./seeds/store_items.sql",
   "./seeds/tickets.sql",
   "./seeds/ticket_items.sql",
+  "./seeds/donations.sql",
   "./seeds/*.sql"
 ]
 
