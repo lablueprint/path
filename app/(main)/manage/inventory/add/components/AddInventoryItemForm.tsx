@@ -82,39 +82,29 @@ export default function AddInventoryItemForm() {
 
   return (
     <div>
-      <h2>Add Inventory Item</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
-          Inventory Item Name: 
-          <input
-            type="text"
-            {...register('name', { required: true })}
-          />
+          Inventory item name
+          <input type="text" {...register('name', { required: true })} />
         </label>
         {errors.name?.type === 'required' && (
           <p role="alert">Item name is required.</p>
         )}
         <br></br>
         <label>
-          Description:
-          <input
-            type="text"
-            {...register('description', { required: true })}
-          />
+          Description
+          <input type="text" {...register('description', { required: true })} />
         </label>
         {errors.description?.type === 'required' && (
           <p role="alert">Description is required.</p>
         )}
         <br></br>
         <label>
-          Categories:
+          Category
           <select {...register('selectedCategory', { required: true })}>
             <option value="">None</option>
             {categories.map((item) => (
-              <option
-                key={item.category_id}
-                value={item.category_id}
-              >
+              <option key={item.category_id} value={item.category_id}>
                 {item.name}
               </option>
             ))}
@@ -125,8 +115,9 @@ export default function AddInventoryItemForm() {
         )}
         {selectedCategory !== '' && (
           <>
+            <br></br>
             <label>
-              Subcategories:
+              Subcategory
               <select {...register('selectedSubcategory', { required: true })}>
                 <option value="">None</option>
                 {subcategories.map((subcat) => (

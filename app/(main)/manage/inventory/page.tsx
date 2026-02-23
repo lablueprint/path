@@ -1,5 +1,6 @@
 import InventoryItemCard from '@/app/(main)/manage/inventory/components/InventoryItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
+import Link from 'next/link';
 
 export default async function InventoryPage() {
   const supabase = await createClient();
@@ -35,6 +36,7 @@ export default async function InventoryPage() {
   return (
     <div>
       <h1>Library</h1>
+      <Link href="/manage/inventory/add">Add inventory item</Link>
       <h2>Items</h2>
       <div>
         {items?.map((item) => (
