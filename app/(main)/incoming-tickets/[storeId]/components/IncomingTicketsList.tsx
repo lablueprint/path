@@ -9,7 +9,7 @@ interface IncomingTicketsListProps {
   status: Status;
 }
 
-export default function IncomingTicketsList({ tickets, status }: IncomingTicketsListProps) {
+export default function IncomingTicketsList({ tickets, status, basePath }: IncomingTicketsListProps) {
   // Filter tickets to only show tickets with the given status
   const filteredTickets = tickets.filter(
     (ticket) => ticket.status === status,
@@ -26,7 +26,7 @@ export default function IncomingTicketsList({ tickets, status }: IncomingTickets
           {filteredTickets.map((ticket) => (
             <Link
               key={ticket.ticket_id} 
-              href={ticket.ticket_id}
+              href={`${basePath}/${ticket.ticket_id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <IncomingTicketCard ticket={ticket} />

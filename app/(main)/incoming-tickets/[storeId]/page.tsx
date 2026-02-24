@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import { notFound } from 'next/navigation';
 import IncomingTicketsList from './components/IncomingTicketsList';
+import { headers } from 'next/headers';
 
 export default async function IncomingTicketsPage({
   params,
@@ -109,18 +110,22 @@ export default async function IncomingTicketsPage({
       <IncomingTicketsList
         tickets={tickets}
         status="requested"
+        basePath={`/incoming-tickets/${storeId}`}
       ></IncomingTicketsList>
       <IncomingTicketsList
         tickets={tickets}
         status="ready"
+        basePath={`/incoming-tickets/${storeId}`}
       ></IncomingTicketsList>
       <IncomingTicketsList
         tickets={tickets}
         status="rejected"
+        basePath={`/incoming-tickets/${storeId}`}
       ></IncomingTicketsList>
       <IncomingTicketsList
         tickets={tickets}
         status="fulfilled"
+        basePath={`/incoming-tickets/${storeId}`}
       ></IncomingTicketsList>
     </div>
   );
