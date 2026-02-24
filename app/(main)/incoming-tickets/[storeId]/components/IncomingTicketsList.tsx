@@ -1,5 +1,6 @@
 import { Ticket } from '@/app/types/ticket';
 import IncomingTicketCard from './IncomingTicketCard';
+import Link from 'next/link';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -23,13 +24,13 @@ export default function IncomingTicketsList({ tickets, status }: IncomingTickets
         <div>
           {/* Map the list of tickets to IncomingTicketCard components */}
           {filteredTickets.map((ticket) => (
-            <a 
+            <Link
               key={ticket.ticket_id} 
-              href={`./${ticket.ticket_id}`}
+              href={ticket.ticket_id}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <IncomingTicketCard ticket={ticket} />
-            </a>
+            </Link>
           ))}
         </div>
       ) : (

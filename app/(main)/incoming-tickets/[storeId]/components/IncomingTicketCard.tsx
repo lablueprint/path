@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import { Ticket } from '@/app/types/ticket';
+import Link from 'next/link';
 
 interface IncomingTicketCardProps {
   ticket: Ticket;

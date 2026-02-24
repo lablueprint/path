@@ -54,5 +54,7 @@ export default async function IncomingTicketsPage() {
         <p>No stores found.</p>
       )}
     </div>
+
+    
   );
 }
