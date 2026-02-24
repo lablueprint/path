@@ -1,48 +1,42 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-// exports server component RequestStoreItemPage
+
 export default async function RequestStoreItemPage({
   params,
 }: {
   params: Promise<{ storeId: string; storeItemId: string }>;
 }) {
-  const { storeId, storeItemId } = await params; // page takes storeId and storeItemId as props
+  const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
 
-  // select store_item_id and quantity_available from store_items
-  // select name, description, and photo_url from inventory_items
-  // select subcategories.name and categories.name
-  const { data: storeItem, error: itemError } = await supabase
+  const { data: storeItem, error } = await supabase
     .from('store_items')
-    .select(
-      `
-        store_item_id,
-        quantity_available,
-        inventory_items (
-          name,
-          description,
-          photo_url,
-          subcategories (
-            name,
-            categories (
-              name
-            )
-          )
-        )
-      `
-    )
-    // match storeItemId
+    .select(`
+      store_item_id,
+      quantity_available,
+      item_name:inventory_item_id(name),
+      item_description:inventory_item_id(description),
+      item_photo_url:inventory_item_id(photo_url),
+      subcategory_name:inventory_item_id(subcategories(name)),
+      category_name:inventory_item_id(subcategories(categories(name)))
+    `)
     .eq('store_item_id', storeItemId)
     .single();
 
-  if (itemError) {
-    console.error('Error fetching store item:', itemError);
+  if (error || !storeItem) {
+    console.error(error);
     return <div>Failed to load data.</div>;
   }
-// extract nested values:  name description, category, subcategory
-  const inv = storeItem.inventory_items?.[0];
-  const subcat = inv?.subcategories?.[0];
-  const category = subcat?.categories?.[0];
+
+  const name = (storeItem.item_name as any)?.name;
+  const description = (storeItem.item_description as any)?.description;
+  const photoUrl = (storeItem.item_photo_url as any)?.photo_url;
+
+  const subcategory =
+    (storeItem.subcategory_name as any)?.subcategories?.name;
+
+  const category =
+    (storeItem.category_name as any)?.subcategories?.categories?.name;
 
   return (
     <div
@@ -54,35 +48,31 @@ export default async function RequestStoreItemPage({
       }}
     >
       <h1>Request Item Details</h1>
-      {/* display inventory item name  */}
-      <h2>{inv?.name}</h2> 
 
-      {inv?.photo_url && (
+      <h2>{name}</h2>
+
+      {photoUrl && (
         <img
-          src={inv.photo_url}
-          alt={inv?.name}
+          src={photoUrl}
+          alt={name}
           width="200"
           style={{ borderRadius: '6px', marginBottom: '1rem' }}
         />
       )}
 
-{/* Display inventory item description */}
       <p>
         <strong>Description:</strong>{' '}
-        {inv?.description ?? 'No description available'}
+        {description ?? 'No description available'}
       </p>
 
-{/* display category name */}
       <p>
-        <strong>Category:</strong> {category?.name ?? 'None'}
+        <strong>Category:</strong> {category ?? 'None'}
       </p>
 
-{/* display subcategory name */}
       <p>
-        <strong>Subcategory:</strong> {subcat?.name ?? 'None'}
+        <strong>Subcategory:</strong> {subcategory ?? 'None'}
       </p>
 
-{/* display quantity available  */}
       <p>
         <strong>Quantity Available:</strong>{' '}
         {storeItem.quantity_available ?? 'Unknown'}

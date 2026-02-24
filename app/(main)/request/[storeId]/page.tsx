@@ -1,80 +1,73 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import RequestStoreItemCard from '@/app/(main)/request/components/RequestStoreItemCard';
+import ItemCard from '@/app/(main)/components/ItemCard';
 
-// server component exported 
 export default async function RequestStorePage({
   params,
 }: {
-    // takes in storeId as prop
   params: Promise<{ storeId: string }>;
 }) {
   const { storeId } = await params;
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  //fetch store's entry in stores table (filters on store_id)
-  const { data: store } = await supabase
+  // Fetch store
+  const { data: store, error: storeError } = await supabase
     .from('stores')
     .select('*')
     .eq('store_id', storeId)
     .single();
 
-// get all non-hidden store items for store
-// fetch nested inventory + category data 
-  const { data: storeItems } = await supabase
+  if (storeError || !store) {
+    console.error('Error fetching store:', storeError);
+    return <div>Failed to load store.</div>;
+  }
+
+  // Fetch non-hidden store items
+  const { data: itemsData, error: itemsError } = await supabase
     .from('store_items')
-    .select(
-      `
-        store_item_id,
-        inventory_items (
-          name,
-          photo_url,
-          subcategories (
-            name,
-            categories (
-              name
-            )
-          )
-        )
-      `
-    )
+    .select(`
+      store_item_id,
+      item_name:inventory_item_id(name),
+      item_photo_url:inventory_item_id(photo_url),
+      subcategory_name:inventory_item_id(subcategories(name)),
+      category_name:inventory_item_id(subcategories(categories(name)))
+    `)
     .eq('store_id', storeId)
-    .eq('hidden', false);
+    .eq('is_hidden', false);
+
+  if (itemsError) {
+    console.error('Error fetching store items:', itemsError);
+    return <div>Failed to load store items.</div>;
+  }
+
+  const items = itemsData?.map((item) => ({
+    id: item.store_item_id as string,
+    item: (item.item_name as any)?.name as string,
+    subcategory: (item.subcategory_name as any)?.subcategories?.name as string,
+    category:
+      (item.category_name as any)?.subcategories?.categories?.name as string,
+    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+  }));
 
   return (
-    // display store's name and street address
     <div>
       <h1>Store – {store.name}</h1>
       <h2>Street Address: {store.street_address}</h2>
 
       <h2 style={{ marginTop: '2rem' }}>Available Items</h2>
-    {/* iterates through store items */}
-      {storeItems && storeItems.length > 0 ? (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-          {storeItems.map((item) => {
-            const inv = item.inventory_items?.[0];
-            const subcat = inv?.subcategories?.[0];
-            const category = subcat?.categories?.[0];
 
-            return (
-              <a
-                key={item.store_item_id}
-                // clicking card routes to /request/[storeId]/[storeItemId]
-                href={`/request/${storeId}/${item.store_item_id}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                {/* pass each store item to a RequestItemCard component */}
-                <RequestStoreItemCard
-                  name={inv?.name}
-                  subcategoryName={subcat?.name}
-                  categoryName={category?.name}
-                /> 
-              </a>
-            );
-          })}
+      {items && items.length > 0 ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          {items.map((item) => (
+            <ItemCard
+              key={item.id}
+              id={item.id}
+              item={item.item}
+              subcategory={item.subcategory}
+              category={item.category}
+              photoUrl={item.photoUrl}
+            />
+          ))}
         </div>
       ) : (
         <h3>N/A. No items to display.</h3>
