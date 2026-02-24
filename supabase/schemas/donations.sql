@@ -21,6 +21,27 @@ create table donations (
 
 alter table donations enable row level security;
 
+alter table donations ADD CONSTRAINT ck_estimated_value 
+  CHECK(estimated_value >= 0);
+
+alter table "donations" ADD CONSTRAINT ck_donor_individual_name_presence
+  CHECK (
+    (donor_is_individual = true AND donor_individual_name IS NOT NULL) OR
+    (donor_is_individual = false AND donor_individual_name IS NULL)
+  );
+
+alter table "donations" ADD CONSTRAINT ck_donor_business_name_presence
+  CHECK (
+    (donor_is_individual = true AND donor_business_name IS NULL) OR
+    (donor_is_individual = false AND donor_business_name IS NOT NULL)
+  );
+   
+alter table "donations" ADD CONSTRAINT ck_donor_business_contact_name_presence
+  CHECK (
+    (donor_is_individual = true AND donor_business_contact_name IS NULL) OR
+    (donor_is_individual = false AND donor_business_contact_name IS NOT NULL)
+  );
+
 create policy "auth can read donations if >= admin" on public.donations for
 select
   to authenticated using (

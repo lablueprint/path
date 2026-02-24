@@ -1,11 +1,11 @@
 create table "categories" (
   category_id serial primary key,
-  name text not null,
-  /* additional constraints */
-  constraint uq_name unique (name)
+  name text not null
 );
 
 alter table public.categories enable row level security;
+alter table categories ADD CONSTRAINT uq_categories_name UNIQUE (name);
+
 
 create policy "auth can read categories if >= requestor" on public.categories for
 select

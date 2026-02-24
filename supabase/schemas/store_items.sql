@@ -10,6 +10,10 @@ create table store_items (
 
 alter table store_items enable row level security;
 
+alter table store_items ADD CONSTRAINT uq_inventory_item_id_store_id UNIQUE (inventory_item_id, store_id);
+alter table "store_items" ADD CONSTRAINT ck_quantity_available
+  CHECK (quantity_available >= 0);
+
 create policy "auth can read store_items if can_manage_store" on public.store_items for
 select
   to authenticated using (
