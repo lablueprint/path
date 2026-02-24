@@ -10,6 +10,7 @@ import {
   StoreItem,
   StoreItemInsert,
 } from '@/app/types/store';
+import { revalidatePath } from 'next/cache';
 
 // create store
 export const createStore = async (data: StoreInsert) => {
@@ -123,6 +124,7 @@ export const deleteStoreItem = async (storeItemId: string) => {
 };
 
 export const updateStoreItemQuantity = async (
+  storeId: string,
   storeItemId: string,
   newQuantity: number,
 ) => {
@@ -138,10 +140,17 @@ export const updateStoreItemQuantity = async (
     console.error('Error updating store item quantity:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/manage/${storeId}`);
+  revalidatePath(`/manage/${storeId}/${storeItemId}`);
+  revalidatePath(`/request/${storeId}`);
+  revalidatePath(`/request/${storeId}/${storeItemId}`);
+
   return { success: true, data: entry as StoreItem };
 };
 
 export const updateStoreItemIsHidden = async (
+  storeId: string,
   storeItemId: string,
   newIsHidden: boolean,
 ) => {
@@ -157,5 +166,11 @@ export const updateStoreItemIsHidden = async (
     console.error('Error updating store item visibility:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/manage/${storeId}`);
+  revalidatePath(`/manage/${storeId}/${storeItemId}`);
+  revalidatePath(`/request/${storeId}`);
+  revalidatePath(`/request/${storeId}/${storeItemId}`);
+
   return { success: true, data: entry as StoreItem };
 };
