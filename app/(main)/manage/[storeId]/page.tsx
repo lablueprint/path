@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import ManageStoreItemCard from '../components/ManageStoreItemCard';
+import ItemCard from '@/app/(main)/components/ItemCard';
 
 export default async function ManageStorePage({
   params,
@@ -10,17 +10,17 @@ export default async function ManageStorePage({
 
   // fetching data for store associated with storeId
   const supabase = await createClient();
-  const { data: store, error: id_error } = await supabase
+  const { data: store, error: storeError } = await supabase
     .from('stores')
     .select('*')
     .eq('store_id', storeId)
     .single();
-  if (id_error) {
-    console.error('Error fetching store:', id_error);
-    return <div>Failed to load store data.</div>;
+  if (storeError) {
+    console.error('Error fetching store:', storeError);
+    return <div>Failed to load store.</div>;
   }
 
-  const { data: items, error: items_error } = await supabase
+  const { data: itemsData, error: itemsError } = await supabase
     .from('store_items')
     .select(
       `
@@ -29,37 +29,46 @@ export default async function ManageStorePage({
         item_photo_url:inventory_item_id(photo_url),
         subcategory_name:inventory_items(subcategories(name)),
         category_name:inventory_items(subcategories(categories(name)))
-      `
+      `,
     )
     .eq('store_id', storeId);
-  if (items_error) {
-    console.error('Error fetching store items:', items_error);
+  if (itemsError) {
+    console.error('Error fetching store items:', itemsError);
     return <div>Failed to load store items.</div>;
   }
+
+  const items = itemsData?.map((item) => ({
+    id: item.store_item_id as string,
+    item: (item.item_name as any).name as string,
+    subcategory: (item.subcategory_name as any).subcategories.name as string,
+    category:
+      (item.category_name as any)?.subcategories.categories.name as string,
+    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+  }));
 
   return (
     <div>
       {/* store info */}
       <div>
-        <h1>Store Info</h1>
-        <h3>Store ID: {storeId}</h3>
-        <h3>Store Name: {store.name}</h3>
-        <h3>Store Address: {store.street_address}</h3>
+        <h1>{store.name}</h1>
+        <p>{store.street_address}</p>
       </div>
-
       {/* store items + info */}
       <div>
-        <h1>Store Items:</h1>
+        <h2>Items</h2>
         {items?.length ? (
           items.map((item) => (
-            <ManageStoreItemCard 
-              key={item.store_item_id} 
-              item={item} 
-              storeId={storeId}
+            <ItemCard
+              key={item.id}
+              id={item.id}
+              item={item.item}
+              photoUrl={item.photoUrl}
+              subcategory={item.subcategory}
+              category={item.category}
             />
           ))
         ) : (
-          <div>No items to display.</div>
+          <div>No items found.</div>
         )}
       </div>
     </div>

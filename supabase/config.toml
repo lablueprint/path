@@ -66,6 +66,7 @@ schema_paths = [
   "./schemas/store_items.sql",
   "./schemas/tickets.sql",
 <<<<<<< HEAD
+<<<<<<< HEAD
   "./schemas/categories.sql",
   "./schemas/subcategories.sql",
   "./schemas/*.sql"
@@ -73,6 +74,11 @@ schema_paths = [
   "./schemas/users.sql",
   "./schemas/*.sql",
 >>>>>>> 3cd7a6e3216294701d2f6d9926a042e2f6c7e68e
+=======
+  "./schemas/ticket_items.sql",
+  "./schemas/donations.sql",
+  "./schemas/*.sql"
+>>>>>>> 0ae8260a301fc28a4519f6e61c61e43bdc56f7d9
 ]
 
 [db.seed]
@@ -92,6 +98,7 @@ sql_paths = [
   "./seeds/store_items.sql",
   "./seeds/tickets.sql",
   "./seeds/ticket_items.sql",
+  "./seeds/donations.sql",
   "./seeds/*.sql"
 ]
 
