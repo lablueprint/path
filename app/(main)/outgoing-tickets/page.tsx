@@ -1,6 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import { Ticket } from '@/app/types/ticket';
-import OutgoingTicketsList from './components/OutgoingTicketsList';
+import OutgoingTicketsList from '@/app/(main)/outgoing-tickets/components/OutgoingTicketsList';
 
 export default async function OutgoingTicketsPage() {
   const supabase = await createClient();

@@ -1,9 +1,8 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 
-const supabase = await createClient();
-
 export default async function RequestPage() {
+  const supabase = await createClient();
   // get all stores from the stores table
   const { data: storesData, error: err } = await supabase
     .from('stores')
