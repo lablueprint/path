@@ -5,7 +5,7 @@ import { useFormContext } from
 import { createClient } from '@/app/lib/supabase/browser-client';
 
 export default function AddStoreItemSearch() {
-    const { register } = useFormContext()
+    const methods = useFormContext()
     const [results, setResults] = useState([])
     const [searchQuery, setSearchQuery] = useState("")
     const supabase = createClient()
@@ -13,7 +13,11 @@ export default function AddStoreItemSearch() {
     useEffect(() => {
         const fetch = async () => {
             const { data, error } = await supabase.from('inventory_items').select('name').ilike('name', `%${searchQuery}%`)
+            if (error) {
+                console.log(error)
+            }
         }
+        fetch();
     }, [])
 
     return <div>

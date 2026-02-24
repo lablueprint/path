@@ -5,7 +5,7 @@ import { AddStoreItemSearch } from './AddStoreItemSearch'
 
 export default function StoreItemsForm() {
     // get props from parents
-    const { register } = useFormContext()
+    const methods = useFormContext()
 
     return (<div>
         <AddStoreItemSearch />
