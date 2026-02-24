@@ -13,7 +13,7 @@ interface IncomingTicketsListProps {
 export default function IncomingTicketsList({
   tickets,
   status,
-  basePath,
+  basePath, // Added base path for relative path
 }: IncomingTicketsListProps) {
   // Filter tickets to only show tickets with the given status
   const filteredTickets = tickets.filter((ticket) => ticket.status === status);

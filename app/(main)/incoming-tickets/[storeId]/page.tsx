@@ -44,11 +44,15 @@ export default async function IncomingTicketsPage({
     return notFound();
   }
 
+  console.log(storeId);
+
   // Fetch all tickets from the tickets table where store_id matches the StoreId prop
   const { data: tickets, error: ticketsError } = await supabase
     .from('tickets')
     .select('*')
     .eq('store_id', storeId);
+
+  console.log(tickets);
 
   if (ticketsError) {
     console.error('Error fetching tickets:', ticketsError);
