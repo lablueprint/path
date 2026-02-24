@@ -1,4 +1,4 @@
-import ItemCard from '@/app/(main)/manage/components/ItemCard';
+import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 

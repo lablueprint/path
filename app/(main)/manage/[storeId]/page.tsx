@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import ItemCard from '@/app/(main)/manage/components/ItemCard';
+import ItemCard from '@/app/(main)/components/ItemCard';
 
 export default async function ManageStorePage({
   params,
