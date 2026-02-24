@@ -77,14 +77,23 @@ export default async function TicketDetails({
         street_address: string;
     };
 
-    let storeAdminList: any[] = [];
+    let storeAdminList: User[] = [];
     let requestor = null;
     if (outgoing) {
         const { data: StoreAdmins } = await supabase
             .from('store_admins')
-            .select()
+            .select(`
+                users(
+                    user_id,
+                    first_name,
+                    last_name,
+                    email,
+                    profile_photo_url
+                )
+            `)
             .eq('store_id', userTicket.store_id);
-        storeAdminList = StoreAdmins || [];
+        storeAdminList = (StoreAdmins || []).map((StoreAdmin) => StoreAdmin.users as unknown as User).filter(Boolean);
+        console.log('Store admins:', storeAdminList);
     } else {
         if (userTicket) {
             const { data: Requestor } = await supabase
@@ -100,6 +109,7 @@ export default async function TicketDetails({
         <div>
             {userTicket ? (
                 <div>
+                    <h1>{outgoing ? "Outgoing" : "Incoming"} Ticket Details</h1>
                     <h2>Ticket: {userTicket.ticket_id}</h2>
                     <h2>Date Submitted: {userTicket.date_submitted}</h2>
                     <h2>Status: {userTicket.status}</h2>
@@ -154,8 +164,8 @@ export default async function TicketDetails({
                     ) : null}
                     {outgoing ? (
                         <div>
-                            <h2>Contact Store Amdins</h2>
-                            ({storeAdminList.map(storeAdmin => <UserCard user={storeAdmin}></UserCard>)})
+                            <h2>Contact Store Admins</h2>
+                            {storeAdminList.map(storeAdmin => <UserCard user={storeAdmin} key={storeAdmin.user_id}></UserCard>)}
                         </div>
                     ) : (
                         <div>
