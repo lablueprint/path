@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import './globals.css';
+import '@/app/globals.css';
 import AuthListener from '@/app/components/AuthListener';
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthListener />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );
