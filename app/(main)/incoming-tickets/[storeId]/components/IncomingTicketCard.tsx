@@ -1,12 +1,13 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import { Ticket } from '@/app/types/ticket';
-import Link from 'next/link';
 
 interface IncomingTicketCardProps {
   ticket: Ticket;
 }
 
-export default async function IncomingTicketCard({ ticket }: IncomingTicketCardProps) {
+export default async function IncomingTicketCard({
+  ticket,
+}: IncomingTicketCardProps) {
   const supabase = await createClient();
 
   // Fetch the ticket requestor's name from the users table
@@ -25,9 +26,17 @@ export default async function IncomingTicketCard({ ticket }: IncomingTicketCardP
   return (
     <div style={{ border: '1px solid white', padding: '16px', margin: '8px' }}>
       <h3>Ticket #{ticket.ticket_id}</h3>
-      <p><strong>Requestor:</strong> {requestor?.first_name} {requestor?.last_name}</p>
-      <p><strong>Status:</strong> {ticket.status}</p>
-      <p><strong>Date Submitted:</strong> {new Date(ticket.date_submitted).toLocaleDateString()}</p>
+      <p>
+        <strong>Requestor:</strong> {requestor?.first_name}{' '}
+        {requestor?.last_name}
+      </p>
+      <p>
+        <strong>Status:</strong> {ticket.status}
+      </p>
+      <p>
+        <strong>Date Submitted:</strong>{' '}
+        {new Date(ticket.date_submitted).toLocaleDateString()}
+      </p>
     </div>
   );
 }

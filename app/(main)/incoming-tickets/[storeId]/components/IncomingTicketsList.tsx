@@ -7,25 +7,28 @@ type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 interface IncomingTicketsListProps {
   tickets: Ticket[];
   status: Status;
+  basePath: string;
 }
 
-export default function IncomingTicketsList({ tickets, status, basePath }: IncomingTicketsListProps) {
+export default function IncomingTicketsList({
+  tickets,
+  status,
+  basePath,
+}: IncomingTicketsListProps) {
   // Filter tickets to only show tickets with the given status
-  const filteredTickets = tickets.filter(
-    (ticket) => ticket.status === status,
-  );
+  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
 
   return (
     <div>
       {/* Display heading that indicates the status */}
       <h2>{status.toUpperCase()} TICKETS</h2>
-      
+
       {filteredTickets.length > 0 ? (
         <div>
           {/* Map the list of tickets to IncomingTicketCard components */}
           {filteredTickets.map((ticket) => (
             <Link
-              key={ticket.ticket_id} 
+              key={ticket.ticket_id}
               href={`${basePath}/${ticket.ticket_id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
