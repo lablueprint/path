@@ -10,7 +10,7 @@ export default async function IncomingTicketsStoresPage() {
     await supabase.auth.getClaims();
 
   if (claimsError) {
-    console.error('Error fetching claims data:', claimsError);
+    console.error('Error fetching claims:', claimsError);
   }
 
   const userRole = claimsData?.claims?.user_role;

@@ -29,8 +29,8 @@ export default function StoresTestComponent() {
   };
 
   const storeItemData: StoreItemInsert = {
-    inventory_item_id: 'f8434368-0c6a-409f-878a-03cfc7568579',
-    store_id: '5942ab5c-aad1-4f7e-acdc-07a3033b7c6c',
+    inventory_item_id: '367d00b7-5699-4502-8223-181abab2e1d7', //changed from f8434368-0c6a-409f-878a-03cfc7568579 -> 367d00b7-5699-4502-8223-181abab2e1d7 to make default case work w my specific db mods
+    store_id: '456e0fa0-a0d6-4775-a2ff-56ca12e4c519', // changed from 5942ab5c-aad1-4f7e-acdc-07a3033b7c6c -> 456e0fa0-a0d6-4775-a2ff-56ca12e4c519 to make default case work w my specific db mods
     quantity_available: 4,
     is_hidden: true,
   };
