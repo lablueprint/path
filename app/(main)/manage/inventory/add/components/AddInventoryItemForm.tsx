@@ -53,7 +53,7 @@ export default function AddInventoryItemForm() {
         .from('categories')
         .select('*');
       if (err) {
-        console.error('Error fetching Categories:', err);
+        console.error('Error fetching categories:', err);
       } else {
         setCategories(data);
       }

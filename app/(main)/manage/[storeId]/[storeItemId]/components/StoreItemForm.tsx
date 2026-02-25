@@ -62,10 +62,10 @@ export default function StoreItemForm({
           disabled={isSubmitting}
           {...register('quantityAvailable', {
             valueAsNumber: true,
-            required: 'Error: Please enter a numeric quantity (or cancel).', // for empty input
+            required: 'Please enter a numeric quantity.', // for empty input
             validate: (v) =>
               (Number.isInteger(v) && v >= 0) ||
-              'Error: Please enter a combination of digits only (0-9).',
+              'Please enter a combination of digits only (0-9).',
           })}
         />
 
