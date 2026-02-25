@@ -9,9 +9,11 @@ export default function StoreCard({ store }: { store: Store }) {
   const pathname = usePathname();
 
   return (
-    <Link className={styles["card-text"]} href={`${pathname}/${store.store_id}`}>
-      <div className={styles["card"]}
-      >
+    <Link
+      className={styles['card-text']}
+      href={`${pathname}/${store.store_id}`}
+    >
+      <div className={styles['card']}>
         <h2>{store.name}</h2>
         <p>{store.street_address}</p>
       </div>
