@@ -26,7 +26,7 @@ export default async function RequestStoreItemPage({
     .single();
 
   if (error || !storeItem) {
-    console.error(error);
+    console.error('Error fetching store item:', error);
     return <div>Failed to load data.</div>;
   }
 
