@@ -11,7 +11,8 @@ export default async function RequestStoreItemPage({
 
   const { data: storeItem, error } = await supabase
     .from('store_items')
-    .select(`
+    .select(
+      `
       store_item_id,
       quantity_available,
       item_name:inventory_item_id(name),
@@ -19,7 +20,8 @@ export default async function RequestStoreItemPage({
       item_photo_url:inventory_item_id(photo_url),
       subcategory_name:inventory_item_id(subcategories(name)),
       category_name:inventory_item_id(subcategories(categories(name)))
-    `)
+    `,
+    )
     .eq('store_item_id', storeItemId)
     .single();
 
@@ -32,55 +34,21 @@ export default async function RequestStoreItemPage({
   const description = (storeItem.item_description as any)?.description;
   const photoUrl = (storeItem.item_photo_url as any)?.photo_url;
 
-  const subcategory =
-    (storeItem.subcategory_name as any)?.subcategories?.name;
+  const subcategory = (storeItem.subcategory_name as any)?.subcategories?.name;
 
-  const category =
-    (storeItem.category_name as any)?.subcategories?.categories?.name;
+  const category = (storeItem.category_name as any)?.subcategories?.categories
+    ?.name;
 
   return (
-    <div
-      style={{
-        border: '1px solid #ccc',
-        padding: '1rem',
-        borderRadius: '8px',
-        width: '350px',
-      }}
-    >
-      <h1>Request Item Details</h1>
+    <div>
+      <h1>{name}</h1>
+      <p>Description: {description ?? 'None'}</p>
 
-      <h2>{name}</h2>
+      <p>Category: {category ?? 'None'}</p>
 
-      {photoUrl && (
-        <img
-          src={photoUrl}
-          alt={name}
-          width="200"
-          style={{ borderRadius: '6px', marginBottom: '1rem' }}
-        />
-      )}
+      <p>Subcategory: {subcategory ?? 'None'}</p>
 
-      <p>
-        <strong>Description:</strong>{' '}
-        {description ?? 'No description available'}
-      </p>
-
-      <p>
-        <strong>Category:</strong> {category ?? 'None'}
-      </p>
-
-      <p>
-        <strong>Subcategory:</strong> {subcategory ?? 'None'}
-      </p>
-
-      <p>
-        <strong>Quantity Available:</strong>{' '}
-        {storeItem.quantity_available ?? 'Unknown'}
-      </p>
-
-      <a href={`/request/${storeId}`}>
-        <button>--Back--</button>
-      </a>
+      <p>Quantity available: {storeItem.quantity_available ?? 'Unknown'}</p>
     </div>
   );
 }

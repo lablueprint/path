@@ -25,13 +25,15 @@ export default async function RequestStorePage({
   // Fetch non-hidden store items
   const { data: itemsData, error: itemsError } = await supabase
     .from('store_items')
-    .select(`
+    .select(
+      `
       store_item_id,
       item_name:inventory_item_id(name),
       item_photo_url:inventory_item_id(photo_url),
       subcategory_name:inventory_item_id(subcategories(name)),
       category_name:inventory_item_id(subcategories(categories(name)))
-    `)
+    `,
+    )
     .eq('store_id', storeId)
     .eq('is_hidden', false);
 
@@ -44,20 +46,22 @@ export default async function RequestStorePage({
     id: item.store_item_id as string,
     item: (item.item_name as any)?.name as string,
     subcategory: (item.subcategory_name as any)?.subcategories?.name as string,
-    category:
-      (item.category_name as any)?.subcategories?.categories?.name as string,
+    category: (item.category_name as any)?.subcategories?.categories
+      ?.name as string,
     photoUrl: (item.item_photo_url as any)?.photo_url as string,
   }));
 
   return (
     <div>
-      <h1>Store – {store.name}</h1>
-      <h2>Street Address: {store.street_address}</h2>
+      <div>
+        <h1>{store.name}</h1>
+        <p>{store.street_address}</p>
+      </div>
 
-      <h2 style={{ marginTop: '2rem' }}>Available Items</h2>
+      <h2>Available Items</h2>
 
       {items && items.length > 0 ? (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
           {items.map((item) => (
             <ItemCard
               key={item.id}
@@ -70,12 +74,8 @@ export default async function RequestStorePage({
           ))}
         </div>
       ) : (
-        <h3>N/A. No items to display.</h3>
+        <h3>No available items found.</h3>
       )}
-
-      <a href="./">
-        <button>--Back--</button>
-      </a>
     </div>
   );
 }

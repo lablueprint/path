@@ -15,7 +15,7 @@ export default async function ManageStorePage({
     .select('*')
     .eq('store_id', storeId)
     .single();
-  if (storeError) {
+  if (storeError || !store) {
     console.error('Error fetching store:', storeError);
     return <div>Failed to load store.</div>;
   }
@@ -41,8 +41,8 @@ export default async function ManageStorePage({
     id: item.store_item_id as string,
     item: (item.item_name as any).name as string,
     subcategory: (item.subcategory_name as any).subcategories.name as string,
-    category:
-      (item.category_name as any)?.subcategories.categories.name as string,
+    category: (item.category_name as any)?.subcategories.categories
+      .name as string,
     photoUrl: (item.item_photo_url as any)?.photo_url as string,
   }));
 
