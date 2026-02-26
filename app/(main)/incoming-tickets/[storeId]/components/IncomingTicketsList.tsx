@@ -4,16 +4,20 @@ import Link from 'next/link';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
-interface IncomingTicketsListProps {
-  tickets: Ticket[];
-  status: Status;
-  basePath: string;
-}
+type IncomingTicketsListProps = {
+  tickets: {
+    id: string;
+    requestorFirstName: string;
+    requestorLastName: string;
+    status: string;
+    date: string;
+  }[];
+  status: string;
+};
 
 export default function IncomingTicketsList({
   tickets,
   status,
-  basePath, // Added base path for relative path
 }: IncomingTicketsListProps) {
   // Filter tickets to only show tickets with the given status
   const filteredTickets = tickets.filter((ticket) => ticket.status === status);
@@ -27,13 +31,14 @@ export default function IncomingTicketsList({
         <div>
           {/* Map the list of tickets to IncomingTicketCard components */}
           {filteredTickets.map((ticket) => (
-            <Link
-              key={ticket.ticket_id}
-              href={`${basePath}/${ticket.ticket_id}`}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <IncomingTicketCard ticket={ticket} />
-            </Link>
+            <IncomingTicketCard
+              key={ticket.id}
+              id={ticket.id}
+              requestorFirstName={ticket.requestorFirstName}
+              requestorLastName={ticket.requestorLastName}
+              status={ticket.status}
+              date={ticket.date}
+            />
           ))}
         </div>
       ) : (

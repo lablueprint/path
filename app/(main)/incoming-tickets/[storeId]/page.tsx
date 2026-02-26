@@ -2,7 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import { notFound } from 'next/navigation';
 import IncomingTicketsList from './components/IncomingTicketsList';
 
-export default async function IncomingTicketsPage({
+export default async function IncomingTicketsStorePage({
   params,
 }: {
   params: Promise<{ storeId: string }>;
@@ -20,8 +20,10 @@ export default async function IncomingTicketsPage({
   }
 
   // Check if user can manage the store
-  const { data: canManage, error: canManageError } = await supabase
-    .rpc('can_manage_store', { store_to_manage_id: storeId });
+  const { data: canManage, error: canManageError } = await supabase.rpc(
+    'can_manage_store',
+    { store_to_manage_id: storeId },
+  );
 
   if (canManageError) {
     console.error('Error checking store access:', canManageError);
@@ -40,48 +42,36 @@ export default async function IncomingTicketsPage({
     .single();
 
   if (storeError || !store) {
-    console.error('Error fetching store: ', storeError);
+    console.error('Error fetching store:', storeError);
     return notFound();
   }
 
-  console.log(storeId);
-
-  // Fetch all tickets from the tickets table where store_id matches the StoreId prop
-  const { data: tickets, error: ticketsError } = await supabase
+  // Fetch all tickets from the tickets table where store_id matches the storeId prop
+  const { data: ticketsData, error: ticketsError } = await supabase
     .from('tickets')
-    .select('*')
+    .select('*, users(*)')
     .eq('store_id', storeId);
-
-  console.log(tickets);
 
   if (ticketsError) {
     console.error('Error fetching tickets:', ticketsError);
     return <div>Failed to load tickets.</div>;
   }
 
+  const tickets = ticketsData?.map((ticket) => ({
+    id: ticket.ticket_id as string,
+    requestorFirstName: ticket.users.first_name as string,
+    requestorLastName: ticket.users.last_name as string,
+    status: ticket.status as string,
+    date: ticket.date_submitted as string,
+  }));
+
   return (
     <div>
       <h1>Incoming Tickets</h1>
-      <IncomingTicketsList
-        tickets={tickets}
-        status="requested"
-        basePath={`/incoming-tickets/${storeId}`}
-      ></IncomingTicketsList>
-      <IncomingTicketsList
-        tickets={tickets}
-        status="ready"
-        basePath={`/incoming-tickets/${storeId}`}
-      ></IncomingTicketsList>
-      <IncomingTicketsList
-        tickets={tickets}
-        status="rejected"
-        basePath={`/incoming-tickets/${storeId}`}
-      ></IncomingTicketsList>
-      <IncomingTicketsList
-        tickets={tickets}
-        status="fulfilled"
-        basePath={`/incoming-tickets/${storeId}`}
-      ></IncomingTicketsList>
+      <IncomingTicketsList tickets={tickets} status="requested" />
+      <IncomingTicketsList tickets={tickets} status="ready" />
+      <IncomingTicketsList tickets={tickets} status="rejected" />
+      <IncomingTicketsList tickets={tickets} status="fulfilled" />
     </div>
   );
 }

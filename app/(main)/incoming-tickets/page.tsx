@@ -2,7 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import { Store } from '@/app/types/store';
 
-export default async function IncomingTicketsStoresPage() {
+export default async function IncomingTicketsPage() {
   const supabase = await createClient();
 
   // Get user's claims
