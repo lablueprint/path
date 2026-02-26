@@ -5,11 +5,50 @@ create table ticket_items (
   free_text_description text,
   quantity_requested int,
   is_in_stock_request boolean not null,
-  /*constraint fk_store_items
-  foreign key (store_item_id)
-  references store_items (store_item_id)
-  on update cascade,*/
+  constraint fk_store_items foreign key (store_item_id) references store_items (store_item_id) on update cascade,
   constraint fk_tickets foreign key (ticket_id) references tickets (ticket_id) on delete cascade on update cascade
+);
+
+alter table "ticket_items"
+add constraint uq_ticket_id_store_item_id unique (ticket_id, store_item_id);
+
+alter table "ticket_items"
+add constraint ck_quantity_requested check (quantity_requested >= 0);
+
+alter table "ticket_items"
+add constraint ck_free_text_description_presence check (
+  (
+    is_in_stock_request = true
+    and free_text_description is null
+  )
+  or (
+    is_in_stock_request = false
+    and free_text_description is not null
+  )
+);
+
+alter table "ticket_items"
+add constraint ck_quantity_requested_presence check (
+  (
+    is_in_stock_request = true
+    and quantity_requested is not null
+  )
+  or (
+    is_in_stock_request = false
+    and quantity_requested is null
+  )
+);
+
+alter table "ticket_items"
+add constraint ck_store_item_id_presence check (
+  (
+    is_in_stock_request = true
+    and store_item_id is not null
+  )
+  or (
+    is_in_stock_request = false
+    and store_item_id is null
+  )
 );
 
 alter table "ticket_items" enable row level security;

@@ -36,3 +36,38 @@ export async function deleteDonation(donationId: string) {
   }
   return { success: true, data: entry as Donation };
 }
+
+export async function exportDonations() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('donations').select().csv();
+  if (error) {
+    console.error('Error exporting donations:', error.message);
+    return { success: false, data: null, error: error.message };
+  }
+  if (data) {
+    return { success: true, data };
+  }
+}
+
+export async function exportDonationsInRange({
+  startDate,
+  endDate,
+}: {
+  startDate: string;
+  endDate: string;
+}) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('donations')
+    .select()
+    .gte('date_submitted', startDate)
+    .lte('date_submitted', endDate)
+    .csv();
+  if (error) {
+    console.error('Error exporting donations in range:', error.message);
+    return { success: false, data: null, error: error.message };
+  }
+  if (data) {
+    return { success: true, data };
+  }
+}

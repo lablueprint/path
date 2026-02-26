@@ -6,6 +6,9 @@ create table store_admins (
   constraint fk_stores foreign key (store_id) references stores (store_id) on delete cascade
 );
 
+alter table store_admins
+add constraint uq_user_store_id unique (user_id, store_id);
+
 alter table store_admins enable row level security;
 
 -- Auth user can read entries if "requestor", "admin", "superadmin", or "owner"
