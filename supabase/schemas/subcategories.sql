@@ -2,13 +2,13 @@ create table "subcategories" (
   subcategory_id serial primary key,
   category_id int not null,
   name text not null,
-  /* foreign key */
   constraint fk_categories foreign key (category_id) references categories (category_id) on delete cascade on update cascade
 );
 
 alter table subcategories enable row level security;
 
-alter table subcategories ADD CONSTRAINT uq_category_id_name UNIQUE (category_id, name);
+alter table subcategories
+add constraint uq_category_id_name unique (category_id, name);
 
 create policy "auth can read subcategories if >= requestor" on public.subcategories for
 select

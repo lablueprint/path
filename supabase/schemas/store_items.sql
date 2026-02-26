@@ -4,15 +4,17 @@ create table store_items (
   store_id uuid not null,
   quantity_available int not null,
   is_hidden boolean not null,
-  constraint fk_inventory_items foreign key (inventory_item_id) references inventory_items (inventory_item_id) on delete cascade,
-  constraint fk_stores foreign key (store_id) references stores (store_id) on delete cascade
+  constraint fk_inventory_items foreign key (inventory_item_id) references inventory_items (inventory_item_id) on update cascade,
+  constraint fk_stores foreign key (store_id) references stores (store_id)
 );
 
 alter table store_items enable row level security;
 
-alter table store_items ADD CONSTRAINT uq_inventory_item_id_store_id UNIQUE (inventory_item_id, store_id);
-alter table "store_items" ADD CONSTRAINT ck_quantity_available
-  CHECK (quantity_available >= 0);
+alter table store_items
+add constraint uq_inventory_item_id_store_id unique (inventory_item_id, store_id);
+
+alter table "store_items"
+add constraint ck_quantity_available check (quantity_available >= 0);
 
 create policy "auth can read store_items if can_manage_store" on public.store_items for
 select

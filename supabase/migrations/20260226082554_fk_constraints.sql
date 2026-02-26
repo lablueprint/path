@@ -1,6 +1,18 @@
 alter table "public"."categories" drop constraint "uq_name";
 
+alter table "public"."store_items" drop constraint "fk_inventory_items";
+
+alter table "public"."store_items" drop constraint "fk_stores";
+
+alter table "public"."users" drop constraint "fk_auth_users";
+
 drop index if exists "public"."uq_name";
+
+alter table "public"."users" alter column "email" set not null;
+
+alter table "public"."users" alter column "first_name" set not null;
+
+alter table "public"."users" alter column "last_name" set not null;
 
 CREATE UNIQUE INDEX uq_categories_name ON public.categories USING btree (name);
 
@@ -69,5 +81,17 @@ alter table "public"."ticket_items" add constraint "uq_ticket_id_store_item_id" 
 alter table "public"."tickets" add constraint "fk_users" FOREIGN KEY (requestor_user_id) REFERENCES public.users(user_id) not valid;
 
 alter table "public"."tickets" validate constraint "fk_users";
+
+alter table "public"."store_items" add constraint "fk_inventory_items" FOREIGN KEY (inventory_item_id) REFERENCES public.inventory_items(inventory_item_id) ON UPDATE CASCADE not valid;
+
+alter table "public"."store_items" validate constraint "fk_inventory_items";
+
+alter table "public"."store_items" add constraint "fk_stores" FOREIGN KEY (store_id) REFERENCES public.stores(store_id) not valid;
+
+alter table "public"."store_items" validate constraint "fk_stores";
+
+alter table "public"."users" add constraint "fk_auth_users" FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE not valid;
+
+alter table "public"."users" validate constraint "fk_auth_users";
 
 

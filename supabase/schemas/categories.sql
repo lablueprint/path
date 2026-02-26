@@ -4,8 +4,9 @@ create table "categories" (
 );
 
 alter table public.categories enable row level security;
-alter table categories ADD CONSTRAINT uq_categories_name UNIQUE (name);
 
+alter table categories
+add constraint uq_categories_name unique (name);
 
 create policy "auth can read categories if >= requestor" on public.categories for
 select

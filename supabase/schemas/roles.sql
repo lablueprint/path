@@ -2,7 +2,8 @@ create table roles (role_id serial primary key, name text not null);
 
 alter table "roles" enable row level security;
 
-alter table "roles" ADD CONSTRAINT uq_roles_name UNIQUE (name);
+alter table "roles"
+add constraint uq_roles_name unique (name);
 
 create policy "auth can read roles" on public.roles for
 select

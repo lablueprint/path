@@ -9,7 +9,9 @@ create table user_roles (
 );
 
 alter table user_roles enable row level security;
-alter table user_roles ADD CONSTRAINT uq_user_id UNIQUE (user_id);
+
+alter table user_roles
+add constraint uq_user_id unique (user_id);
 
 create policy "auth can read user_roles if >= requestor" on public.user_roles for
 select

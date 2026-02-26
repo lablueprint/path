@@ -1,10 +1,10 @@
 create table users (
   user_id uuid default uuid_generate_v4 () primary key,
-  first_name text,
-  last_name text,
-  email text,
+  first_name text not null,
+  last_name text not null,
+  email text not null,
   profile_photo_url text,
-  constraint fk_auth_users foreign key (user_id) references auth.users (id)
+  constraint fk_auth_users foreign key (user_id) references auth.users (id) on delete cascade
 );
 
 alter table "users" enable row level security;
