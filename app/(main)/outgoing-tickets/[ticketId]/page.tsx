@@ -1,4 +1,4 @@
-import TicketDetails from '../../components/TicketDetails';
+import TicketDetails from '@/app/(main)/components/TicketDetails';
 
 export default async function OutgoingTicketDetailsPage({
   params,
@@ -7,7 +7,5 @@ export default async function OutgoingTicketDetailsPage({
 }) {
   const { ticketId } = await params;
 
-  return (
-    <TicketDetails ticketId={ticketId} outgoing={true}></TicketDetails>
-  );
+  return <TicketDetails ticketId={ticketId} outgoing={true} />;
 }

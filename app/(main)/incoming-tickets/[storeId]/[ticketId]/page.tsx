@@ -1,13 +1,11 @@
-import TicketDetails from '../../../components/TicketDetails';
+import TicketDetails from '@/app/(main)/components/TicketDetails';
 
 export default async function IncomingTicketDetailsPage({
-    params,
+  params,
 }: {
-    params: Promise<{ ticketId: string }>;
+  params: Promise<{ ticketId: string }>;
 }) {
-    const { ticketId } = await params;
+  const { ticketId } = await params;
 
-    return (
-        <TicketDetails ticketId={ticketId} outgoing={false}></TicketDetails>
-    );
+  return <TicketDetails ticketId={ticketId} outgoing={false} />;
 }
