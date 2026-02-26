@@ -49,6 +49,7 @@ export default async function StoreAdminPage ( { params, }: {
         console.error('Error fetching store admins:', adminsError);
         return <div>Failed to load store admins.</div>;
     }
+    console.log('YOOOOOO', admins[0])
 
     return (
         <div>
@@ -60,16 +61,20 @@ export default async function StoreAdminPage ( { params, }: {
             {/* viewing store admins */}
             <div>
                 {admins?.length ? (
-                    admins.map((admin) => (
-                        <div key='user_id' style={{border: '2px solid black', borderRadius: '10px', padding: '10px', marginBottom: '10px'}}>
-                            <p>Admin: {admin.users.first_name} {admin.users.last_name}</p>
-                            <p>Contact: {admin.users.email}</p>
+                    admins.map((admin) => {
+                        const user = Array.isArray(admin.users) ? admin.users[0] : admin.users;
+
+                        return (
+                        <div key={admin.store_admin_id} style={{border: '2px solid black', borderRadius: '10px', padding: '10px', marginBottom: '10px'}}>
+                            <p>Admin: {user?.first_name} {user?.last_name}</p>
+                            <p>Contact: {user?.email}</p>
 
                             {canChangeAdmins && (
                                 <DeleteStoreAdminButton storeAdminId={admin.store_admin_id} />
                             )}
                         </div>
-                    ))
+                        );
+                    })
                 ) : (
                     <div>No admins found.</div>
                 )}
