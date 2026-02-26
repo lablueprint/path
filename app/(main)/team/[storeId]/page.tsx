@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import DeleteStoreAdminButton from './components/DeleteStoreAdminButton';
+import AddAdminSearch from './components/AddAdminSearch';
 
 export default async function StoreAdminPage ( { params, }: {
     params: Promise<{ storeId: string }>
@@ -16,7 +17,7 @@ export default async function StoreAdminPage ( { params, }: {
         .eq('store_id', storeId)
         .single()
     if (store_error) {
-        console.log('Error fetching store information:', store_error);
+        console.error('Error fetching store information:', store_error);
         return <div>Failed to load store data.</div>;
     }
 
@@ -58,6 +59,15 @@ export default async function StoreAdminPage ( { params, }: {
                 <p>Store Name: {store_data.name}</p>
                 <p>Store Address: {store_data.street_address}</p>
             </div>
+
+            {/* searching store admins (AddAdminSearch) if eligible role */}
+            {canChangeAdmins && (
+                <div style={{ border: '2px solid black', borderRadius: '10px', padding: '10px', marginBottom: '10px' }}>
+                    <p>Admin Search Page</p>
+                    <AddAdminSearch storeId={storeId} existingAdminUserIds={admins ?? []} />
+                </div>
+            )}
+
             {/* viewing store admins */}
             <div>
                 {admins?.length ? (
@@ -65,14 +75,15 @@ export default async function StoreAdminPage ( { params, }: {
                         const user = Array.isArray(admin.users) ? admin.users[0] : admin.users;
 
                         return (
-                        <div key={admin.store_admin_id} style={{border: '2px solid black', borderRadius: '10px', padding: '10px', marginBottom: '10px'}}>
-                            <p>Admin: {user?.first_name} {user?.last_name}</p>
-                            <p>Contact: {user?.email}</p>
+                            <div key={admin.store_admin_id} style={{ border: '2px solid black', borderRadius: '10px', padding: '10px', marginBottom: '10px' }}>
+                                <p>Admin: {user?.first_name} {user?.last_name}</p>
+                                <p>Contact: {user?.email}</p>
 
-                            {canChangeAdmins && (
-                                <DeleteStoreAdminButton storeAdminId={admin.store_admin_id} />
-                            )}
-                        </div>
+                                {/* removing store admins if eligible role */}
+                                {canChangeAdmins && (
+                                    <DeleteStoreAdminButton storeAdminId={admin.store_admin_id} />
+                                )}
+                            </div>
                         );
                     })
                 ) : (
