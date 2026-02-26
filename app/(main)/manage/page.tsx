@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import { Store } from '@/app/types/store';
+import Link from 'next/link';
 
 export default async function ManagePage() {
   const supabase = await createClient();
@@ -10,7 +11,7 @@ export default async function ManagePage() {
     await supabase.auth.getClaims();
 
   if (claimsError) {
-    console.error('Error fetching claims data:', claimsError);
+    console.error('Error fetching claims:', claimsError);
   }
 
   const userRole = claimsData?.claims?.user_role;
@@ -48,6 +49,7 @@ export default async function ManagePage() {
   return (
     <div>
       <h1>Manage Inventory</h1>
+      <Link href="/manage/inventory">Library</Link>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (

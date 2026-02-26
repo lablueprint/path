@@ -8,3 +8,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.ticket-card {
+  border: 0px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.ticket-card-text {
+  text-decoration: none;
+  color: black;
+}

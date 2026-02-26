@@ -54,20 +54,28 @@ enabled = true
 # Specifies an ordered list of schema files that describe your database.
 # Supports glob patterns relative to supabase directory: "./schemas/*.sql"
 schema_paths = [
-  "./schemas/functions/*.sql",
   "./schemas/roles.sql",
+  "./schemas/functions/can_assign_role.sql",
   "./schemas/users.sql",
   "./schemas/user_roles.sql",
+  "./schemas/functions/custom_access_token_hook.sql",
+  "./schemas/functions/handle_new_user.sql",
+  "./schemas/functions/handle_user_email_update.sql",
+  "./schemas/functions/handle_user_role_update.sql",
   "./schemas/categories.sql",
   "./schemas/subcategories.sql",
   "./schemas/inventory_items.sql",
   "./schemas/stores.sql",
+  "./schemas/functions/can_manage_store.sql",
+  "./schemas/functions/can_manage_store_public.sql",
   "./schemas/store_admins.sql",
+  "./schemas/functions/handle_new_store_admin.sql",
   "./schemas/store_items.sql",
   "./schemas/tickets.sql",
   "./schemas/ticket_items.sql",
   "./schemas/donations.sql",
-  "./schemas/*.sql"
+  "./schemas/*.sql",
+  "./schemas/functions/*.sql"
 ]
 
 [db.seed]
@@ -87,6 +95,7 @@ sql_paths = [
   "./seeds/store_items.sql",
   "./seeds/tickets.sql",
   "./seeds/ticket_items.sql",
+  "./seeds/donations.sql",
   "./seeds/*.sql"
 ]
 
