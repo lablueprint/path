@@ -9,6 +9,9 @@ create table "inventory_items" (
 
 alter table "inventory_items" enable row level security;
 
+alter table "inventory_items"
+add constraint uq_subcategory_id_name unique (subcategory_id, name);
+
 create policy "auth can read inventory_items if >= requestor" on public.inventory_items for
 select
   to authenticated using (

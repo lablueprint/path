@@ -8,6 +8,9 @@ create table store_admins (
 
 alter table store_admins enable row level security;
 
+alter table store_admins
+add constraint uq_user_store_id unique (user_id, store_id);
+
 -- Auth user can read entries if "requestor", "admin", "superadmin", or "owner"
 create policy "auth can read store_admins if >= requestor" on public.store_admins for
 select

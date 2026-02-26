@@ -6,6 +6,9 @@ create table "stores" (
 
 alter table "stores" enable row level security;
 
+alter table "stores"
+add constraint uq_stores_name unique (name);
+
 create policy "auth can read stores if >= requestor" on public.stores for
 select
   to authenticated using (
