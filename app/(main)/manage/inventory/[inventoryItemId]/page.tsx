@@ -15,7 +15,7 @@ export default async function InventoryItemPage({
     .eq('inventory_item_id', inventoryItemId)
     .single();
   if (error) {
-    console.error('Error fetching inventory items info: ', error.message);
+    console.error('Error fetching inventory item:', error.message);
   }
 
   const item = {
