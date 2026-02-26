@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import Sidebar from '@/app/(main)/components/Sidebar';
-import Breadcrumbs from './components/Breadcrumbs';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
