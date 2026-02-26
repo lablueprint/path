@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from '@/app/(main)/components/ItemCard.module.css'
+import styles from '@/app/(main)/components/ItemCard.module.css';
 
 type ItemCardProps = {
   id: string;
@@ -21,8 +21,8 @@ export default function ItemCard({
 }: ItemCardProps) {
   const pathname = usePathname();
   return (
-    <Link href={`${pathname}/${id}`}>
-      <div className={styles.card}>
+    <Link className={styles['card-text']} href={`${pathname}/${id}`}>
+      <div className={styles['card']}>
         <h3>{item}</h3>
         <p>Category: {category}</p>
         <p>Subcategory: {subcategory}</p>

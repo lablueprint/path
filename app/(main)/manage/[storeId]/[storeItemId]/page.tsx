@@ -1,7 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
 
-export default async function ManageStoreItempage({
+export default async function ManageStoreItemPage({
   params,
 }: {
   params: Promise<{ storeId: string; storeItemId: string }>;
@@ -25,8 +25,8 @@ export default async function ManageStoreItempage({
     )
     .eq('store_item_id', storeItemId)
     .single();
-  if (itemError) {
-    console.error('Error fetching store item info:', itemError);
+  if (itemError || !itemData) {
+    console.error('Error fetching store item:', itemError);
     return <div>Failed to load store item.</div>;
   }
 
