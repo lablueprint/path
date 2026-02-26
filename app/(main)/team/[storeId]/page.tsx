@@ -35,6 +35,7 @@ export default async function StoreAdminPage ( { params, }: {
         .select('')
         .eq('store_id', storeId)
         .eq('user_id', userId)
+        .maybeSingle()
     const canChangeAdmins = !!admin || userRole === 'superadmin' || userRole === 'owner';
 
     const { data: admins, error: adminsError } = await supabase
@@ -49,7 +50,6 @@ export default async function StoreAdminPage ( { params, }: {
         console.error('Error fetching store admins:', adminsError);
         return <div>Failed to load store admins.</div>;
     }
-    console.log('YOOOOOO', admins[0])
 
     return (
         <div>

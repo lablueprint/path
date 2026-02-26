@@ -89,6 +89,9 @@ export const deleteStoreAdmin = async (storeAdminId: string) => {
     console.error('Error deleting store admin:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/team/${storeAdminId}`)
+
   return { success: true, data: entry as StoreAdmin };
 };
 
