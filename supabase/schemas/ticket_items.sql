@@ -9,8 +9,6 @@ create table ticket_items (
   constraint fk_tickets foreign key (ticket_id) references tickets (ticket_id) on delete cascade on update cascade
 );
 
-alter table "ticket_items" enable row level security;
-
 alter table "ticket_items"
 add constraint uq_ticket_id_store_item_id unique (ticket_id, store_item_id);
 
@@ -52,6 +50,8 @@ add constraint ck_store_item_id_presence check (
     and store_item_id is null
   )
 );
+
+alter table "ticket_items" enable row level security;
 
 create policy "auth can read ticket_items if can read tickets" on public.ticket_items for
 select

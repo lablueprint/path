@@ -4,10 +4,10 @@ create table "stores" (
   street_address text not null
 );
 
-alter table "stores" enable row level security;
-
 alter table "stores"
 add constraint uq_stores_name unique (name);
+
+alter table "stores" enable row level security;
 
 create policy "auth can read stores if >= requestor" on public.stores for
 select

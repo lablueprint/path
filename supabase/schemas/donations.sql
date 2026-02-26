@@ -19,8 +19,6 @@ create table donations (
   store_street_address text -- optional, address of the store receiving the donation 
 );
 
-alter table donations enable row level security;
-
 alter table donations
 add constraint ck_estimated_value check (estimated_value >= 0);
 
@@ -59,6 +57,8 @@ add constraint ck_donor_business_contact_name_presence check (
     and donor_business_contact_name is not null
   )
 );
+
+alter table donations enable row level security;
 
 create policy "auth can read donations if >= admin" on public.donations for
 select

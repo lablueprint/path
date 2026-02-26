@@ -8,13 +8,13 @@ create table store_items (
   constraint fk_stores foreign key (store_id) references stores (store_id)
 );
 
-alter table store_items enable row level security;
-
 alter table store_items
 add constraint uq_inventory_item_id_store_id unique (inventory_item_id, store_id);
 
 alter table "store_items"
 add constraint ck_quantity_available check (quantity_available >= 0);
+
+alter table store_items enable row level security;
 
 create policy "auth can read store_items if can_manage_store" on public.store_items for
 select

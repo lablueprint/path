@@ -3,10 +3,10 @@ create table "categories" (
   name text not null
 );
 
-alter table public.categories enable row level security;
-
 alter table categories
 add constraint uq_categories_name unique (name);
+
+alter table public.categories enable row level security;
 
 create policy "auth can read categories if >= requestor" on public.categories for
 select

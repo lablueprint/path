@@ -78,10 +78,6 @@ alter table "public"."ticket_items" validate constraint "ck_store_item_id_presen
 
 alter table "public"."ticket_items" add constraint "uq_ticket_id_store_item_id" UNIQUE using index "uq_ticket_id_store_item_id";
 
-alter table "public"."tickets" add constraint "fk_users" FOREIGN KEY (requestor_user_id) REFERENCES public.users(user_id) not valid;
-
-alter table "public"."tickets" validate constraint "fk_users";
-
 alter table "public"."store_items" add constraint "fk_inventory_items" FOREIGN KEY (inventory_item_id) REFERENCES public.inventory_items(inventory_item_id) ON UPDATE CASCADE not valid;
 
 alter table "public"."store_items" validate constraint "fk_inventory_items";

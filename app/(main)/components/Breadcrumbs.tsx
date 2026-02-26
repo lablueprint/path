@@ -16,8 +16,6 @@ export default function Breadcrumbs() {
       .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
       .join(' ');
 
-
-
   // Determine if special case where the user is on the team > profile > [userId] page
   // If true, hide the "profile" segment later on
   const shouldHideTeamProfileSegment =
@@ -34,7 +32,11 @@ export default function Breadcrumbs() {
     // Filtering it out
     .filter(
       (crumb) =>
-        !(shouldHideTeamProfileSegment && crumb.segment === 'profile' && crumb.originalIndex === 1),
+        !(
+          shouldHideTeamProfileSegment &&
+          crumb.segment === 'profile' &&
+          crumb.originalIndex === 1
+        ),
     );
 
   // Show only when at least two crumbs are visible. Don't show breadcrumb at top level pages.

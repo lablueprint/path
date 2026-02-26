@@ -8,10 +8,10 @@ create table user_roles (
   constraint fk_roles foreign key (role_id) references roles (role_id) on delete cascade
 );
 
-alter table user_roles enable row level security;
-
 alter table user_roles
 add constraint uq_user_id unique (user_id);
+
+alter table user_roles enable row level security;
 
 create policy "auth can read user_roles if >= requestor" on public.user_roles for
 select
