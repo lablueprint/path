@@ -7,7 +7,6 @@ type OutgoingTicketCardProps = {
   storeName?: string;
   date: string | Date;
   status: string;
-  
 };
 
 export default function OutgoingTicketCard({
