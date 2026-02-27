@@ -1,48 +1,55 @@
-import { Ticket } from '@/app/types/ticket';
-import Link from 'next/link';
+import OutgoingTicketCard from './OutgoingTicketCard';
+import { createClient } from '@/app/lib/supabase/server-client';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
-interface outgoingTicketsListProps {
-  tickets: Ticket[];
-  status: Status;
-}
+export default async function OutgoingTicketsList({ status }: { status: Status }) {
 
-export default function OutgoingTicketsList(props: outgoingTicketsListProps) {
-  const filteredTickets = props.tickets.filter(
-    (ticket) => ticket.status === props.status,
-  );
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+  .from('tickets')
+  .select(`
+    ticket_id,
+    status,
+    date_submitted,
+    store_id,
+    stores (
+      name
+    )
+  `);
+
+  if (error) return <p>Error loading tickets.</p>;
+
+  const filteredTickets = data.filter((ticket) => ticket.status === status);
 
   return (
     <div>
-      <h2>{props.status.toUpperCase()} TICKETS</h2>
+      <h2>{status.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
         <table>
           <thead>
             <tr>
               <th>Ticket</th>
-              <th>Store ID</th>
+              <th>Store Name</th>
               <th>Status</th>
               <th>Date Submitted</th>
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) => (
-              <tr key={ticket.ticket_id}>
-                <td>
-                  <Link href={`/outgoing-tickets/${ticket.ticket_id}`}>
-                    View
-                  </Link>
-                </td>
-                <td>{ticket.store_id}</td>
-                <td>{ticket.status}</td>
-                <td>{ticket.date_submitted.toString()}</td>
-              </tr>
-            ))}
+            {filteredTickets.map((ticket) => 
+              <OutgoingTicketCard 
+                key={ticket.ticket_id}
+                ticketId={ticket.ticket_id}
+                date={ticket.date_submitted}
+                status={ticket.status}
+                storeName={(ticket.stores as unknown as { name: string } | null)?.name}
+              />
+            )}
           </tbody>
         </table>
       ) : (
-        <p>No ticket with status: {props.status}</p>
+        <p>No ticket with status: {status}</p>
       )}
     </div>
   );

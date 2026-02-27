@@ -39,7 +39,7 @@ export default function IncomingTicketsList({
                 {filteredTickets.map((ticket) => (
                 <IncomingTicketCard
                   key={ticket.id}
-                  id={ticket.id}
+                  ticketId={ticket.id}
                   requestorFirstName={ticket.requestorFirstName}
                   requestorLastName={ticket.requestorLastName}
                   status={ticket.status}
