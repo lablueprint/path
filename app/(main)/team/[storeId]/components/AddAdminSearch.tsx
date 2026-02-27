@@ -1,13 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { createStoreAdmin } from '@/app/actions/store';
 
 export default function AddAdminSearch({ storeId, existingAdminUserIds }: {
     storeId: string;
     existingAdminUserIds: any[];
 }) {
-    console.log("YOOOOO", existingAdminUserIds)
-
     const [search, setSearch] = useState('');
     const [searchData, setSearchData] = useState<any[]>([]);
 
@@ -23,18 +22,22 @@ export default function AddAdminSearch({ storeId, existingAdminUserIds }: {
 
             const { data , error } = await supabase
                 .from('users')
-                .select('first_name, last_name')
-                .or(`first_name.ilike.%${d}%, last_name.ilike.%${d}%`)
+                .select('user_id, first_name, last_name')
+                .ilike('full_name', `%${d}%`)
             if (error) {
                 console.error('Error searching for admins:', error);
                 return;
             }
 
-            setSearchData(data);
+            const filtered = (data ?? []).filter(
+                (u) => !existingAdminUserIds.some((a) => a.user_id === u.user_id)
+            );
+
+            setSearchData(filtered);
         }
 
         fetchSearchData();
-    }, [search, supabase]);
+    }, [search, supabase, existingAdminUserIds]);
 
     return (
         <div>
@@ -51,7 +54,12 @@ export default function AddAdminSearch({ storeId, existingAdminUserIds }: {
             <p>current search value: {search}</p>
             <ul>
                 {searchData.map((u) => (
-                    <li>{u.first_name} {u.last_name}</li>
+                    <li key={u.user_id}>
+                        {u.first_name} {u.last_name}
+                        <button type='button' onClick={() => createStoreAdmin({ user_id: u.user_id, store_id: storeId})}>
+                            Add as Store Admin
+                        </button>
+                    </li>
                 ))}
             </ul>
         </div>

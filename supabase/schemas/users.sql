@@ -2,6 +2,7 @@ create table users (
   user_id uuid default uuid_generate_v4 () primary key,
   first_name text,
   last_name text,
+  full_name text generated always as (btrim(coalesce(first_name, '') || ' ' || coalesce(last_name, ''))) stored,
   email text,
   profile_photo_url text,
   constraint fk_auth_users foreign key (user_id) references auth.users (id)
