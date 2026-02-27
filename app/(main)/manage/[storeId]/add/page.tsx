@@ -2,7 +2,7 @@
 import DonationForm from './components/DonationForm';
 import { createClient } from '@/app/lib/supabase/server-client';
 
-import { StoreItemsDonationForm } from './components/StoreItemsDonationForm'
+import { StoreItemsDonationForm } from './components/StoreItemsForm'
 
 export default async function AddStoreItemsPage({ params, }: { params: Promise<{ storeId: string }> }) {
   const { storeId } = await params
