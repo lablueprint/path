@@ -1,27 +1,18 @@
 import OutgoingTicketCard from './OutgoingTicketCard';
-import { createClient } from '@/app/lib/supabase/server-client';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
-export default async function OutgoingTicketsList({ status }: { status: Status }) {
+type Ticket = {
+  ticket_id: string;
+  status: string;
+  date_submitted: string;
+  store_id: string;
+  stores: { name: string }[] | null;
+};
 
-  const supabase = await createClient();
+export default async function OutgoingTicketsList({ tickets, status }: { tickets: Ticket[], status: Status }) {
 
-  const { data, error } = await supabase
-  .from('tickets')
-  .select(`
-    ticket_id,
-    status,
-    date_submitted,
-    store_id,
-    stores (
-      name
-    )
-  `);
-
-  if (error) return <p>Error loading tickets.</p>;
-
-  const filteredTickets = data.filter((ticket) => ticket.status === status);
+  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
 
   return (
     <div>
@@ -30,15 +21,15 @@ export default async function OutgoingTicketsList({ status }: { status: Status }
         <table>
           <thead>
             <tr>
-              <th>Ticket</th>
-              <th>Store Name</th>
+              <th>Ticket ID</th>
+              <th>Store</th>
               <th>Status</th>
               <th>Date Submitted</th>
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) => 
-              <OutgoingTicketCard 
+            {filteredTickets.map((ticket) =>
+              <OutgoingTicketCard
                 key={ticket.ticket_id}
                 ticketId={ticket.ticket_id}
                 date={ticket.date_submitted}
