@@ -19,6 +19,45 @@ create table donations (
   store_street_address text -- optional, address of the store receiving the donation 
 );
 
+alter table donations
+add constraint ck_estimated_value check (estimated_value >= 0);
+
+alter table "donations"
+add constraint ck_donor_individual_name_presence check (
+  (
+    donor_is_individual = true
+    and donor_individual_name is not null
+  )
+  or (
+    donor_is_individual = false
+    and donor_individual_name is null
+  )
+);
+
+alter table "donations"
+add constraint ck_donor_business_name_presence check (
+  (
+    donor_is_individual = true
+    and donor_business_name is null
+  )
+  or (
+    donor_is_individual = false
+    and donor_business_name is not null
+  )
+);
+
+alter table "donations"
+add constraint ck_donor_business_contact_name_presence check (
+  (
+    donor_is_individual = true
+    and donor_business_contact_name is null
+  )
+  or (
+    donor_is_individual = false
+    and donor_business_contact_name is not null
+  )
+);
+
 alter table donations enable row level security;
 
 create policy "auth can read donations if >= admin" on public.donations for

@@ -1,8 +1,4 @@
-import { Ticket } from '@/app/types/ticket';
-import IncomingTicketCard from './IncomingTicketCard';
-import Link from 'next/link';
-
-type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
+import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
 
 type IncomingTicketsListProps = {
   tickets: {

@@ -5,9 +5,11 @@ create table user_roles (
   user_id uuid not null,
   role_id int not null,
   constraint fk_users foreign key (user_id) references users (user_id) on delete cascade,
-  constraint fk_roles foreign key (role_id) references roles (role_id) on delete cascade,
-  constraint uq_user_id unique (user_id)
+  constraint fk_roles foreign key (role_id) references roles (role_id) on delete cascade
 );
+
+alter table user_roles
+add constraint uq_user_id unique (user_id);
 
 alter table user_roles enable row level security;
 
