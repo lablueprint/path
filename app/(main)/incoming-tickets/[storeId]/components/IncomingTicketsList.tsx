@@ -25,17 +25,30 @@ export default function IncomingTicketsList({
 
       {filteredTickets.length > 0 ? (
         <div>
-          {/* Map the list of tickets to IncomingTicketCard components */}
-          {filteredTickets.map((ticket) => (
-            <IncomingTicketCard
-              key={ticket.id}
-              id={ticket.id}
-              requestorFirstName={ticket.requestorFirstName}
-              requestorLastName={ticket.requestorLastName}
-              status={ticket.status}
-              date={ticket.date}
-            />
-          ))}
+          <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ width: '30%' }}>Ticket ID</th>
+                <th style={{ width: '20%' }}>Status</th>
+                <th style={{ width: '30%' }}>Requestor</th>
+                <th style={{ width: '20%' }}>Date Submitted</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Map the list of tickets to IncomingTicketCard components */}     
+                {filteredTickets.map((ticket) => (
+                <IncomingTicketCard
+                  key={ticket.id}
+                  id={ticket.id}
+                  requestorFirstName={ticket.requestorFirstName}
+                  requestorLastName={ticket.requestorLastName}
+                  status={ticket.status}
+                  date={ticket.date}
+                />
+              ))}
+            </tbody>
+          </table>
+          
         </div>
       ) : (
         <p>No tickets with status: {status}</p>
