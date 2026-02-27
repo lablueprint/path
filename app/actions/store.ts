@@ -73,6 +73,9 @@ export const createStoreAdmin = async (data: StoreAdminInsert) => {
     console.error('Error creating store admin:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/team/${data.store_id}`);
+  
   return { success: true, data: entry as StoreAdmin };
 };
 
@@ -89,6 +92,9 @@ export const deleteStoreAdmin = async (storeAdminId: string) => {
     console.error('Error deleting store admin:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/team/${storeAdminId}`);
+
   return { success: true, data: entry as StoreAdmin };
 };
 
