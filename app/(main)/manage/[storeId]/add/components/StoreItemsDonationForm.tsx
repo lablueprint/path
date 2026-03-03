@@ -6,9 +6,10 @@ import { useForm, FormProvider } from 'react-hook-form';
 import DonationForm from './DonationForm';
 import StoreItemsForm from './StoreItemsForm';
 import { DonationInsert } from '@/app/types/donation';
+import { StoreInsert } from '@/app/types/store';
 import { createDonation } from '@/app/actions/donation';
 
-type CombinedFormData = {
+export type CombinedFormData = {
   itemSettings?: string[];
   //Donation Form
   donor_type?: 'individual' | 'business';
@@ -39,14 +40,7 @@ export default function StoreItemsDonationForm({
   store: Store;
   user: User;
 }) {
-  const {
-    register,
-    watch,
-    handleSubmit,
-    clearErrors,
-    reset,
-    formState: { errors, isSubmitSuccessful },
-  } = useForm<CombinedFormData>({
+  const methods = useForm<CombinedFormData>({
     defaultValues: {
       itemSettings: [],
       donor_type: undefined,
@@ -55,7 +49,7 @@ export default function StoreItemsDonationForm({
     },
   });
 
-  const itemSettingsSelected = watch('itemSettings') || [];
+  const itemSettingsSelected = methods.watch('itemSettings') || [];
   const [sharedItems, setSharedItems] = useState({}); //sharedItems from donation form shared with store items form
   const [autoFillItems, setAutoFillItems] = useState({});
   useEffect(() => {
@@ -69,8 +63,6 @@ export default function StoreItemsDonationForm({
   useEffect(() => {
     console.log(itemSettingsSelected);
   }, [itemSettingsSelected]);
-
-  const donorType = watch('donor_type');
 
   const onSubmit = async (data: CombinedFormData) => {
     try {
@@ -104,13 +96,15 @@ export default function StoreItemsDonationForm({
           estimated_value: parseFloat(data.estimated_value),
           items_donated: data.items_donated,
 
-          receiver_first_name: 'FIRST-NAME',
-          receiver_last_name: 'LAST-NAME',
+          receiver_first_name: user?.first_name,
+          receiver_last_name: user?.last_name,
+          store_name: store?.name,
+          store_street_address: store?.street_address,
         };
         const result = await createDonation(donation);
 
         // Reset all fields to empty/default values
-        reset({
+        methods.reset({
           donor_type: undefined,
           individual_name: '',
           business_name: '',
@@ -125,9 +119,9 @@ export default function StoreItemsDonationForm({
           estimated_value: '',
           items_donated: '',
         });
-        clearErrors();
+        methods.clearErrors();
         if (data.itemSettings?.includes('giftInKind')) {
-          // add form data for giftinkind
+          //create new server action
         }
       }
     } catch (error) {
@@ -136,14 +130,14 @@ export default function StoreItemsDonationForm({
   };
   return (
     <>
-      <FormProvider>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
           <div>
             <label>
               <input
                 value="addInventoryItems"
                 type="checkbox"
-                {...register('itemSettings')}
+                {...methods.register('itemSettings')}
               />
               Add inventory items to store?
             </label>
@@ -151,7 +145,7 @@ export default function StoreItemsDonationForm({
               <input
                 type="checkbox"
                 value="giftInKind"
-                {...register('itemSettings')}
+                {...methods.register('itemSettings')}
               />
               Submit gift-in-kind donation?
             </label>
@@ -160,7 +154,7 @@ export default function StoreItemsDonationForm({
           {itemSettingsSelected?.includes('giftInKind') && (
             <DonationForm
               setItemsDonated={setSharedItems}
-              donorType={donorType}
+              donorType={methods.watch('donor_type')}
             />
           )}
           {itemSettingsSelected?.includes('addInventoryItems') && (
@@ -186,7 +180,7 @@ export default function StoreItemsDonationForm({
           )}
         </form>
       </FormProvider>
-      {isSubmitSuccessful && (
+      {methods.formState.isSubmitSuccessful && (
         <div
           style={{
             backgroundColor: '#d4edda',
