@@ -149,7 +149,7 @@ file_size_limit = "50MiB"
 public = true
 file_size_limit = "200KB"
 allowed_mime_types = ["image/png", "image/jpeg"]
-objects_path = "."
+# objects_path = "."
 
 [auth]
 enabled = true
