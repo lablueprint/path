@@ -95,14 +95,14 @@ export default function SignUpPage() {
       )}
       {errors.password?.type === 'minLength' && (
         <p role="alert">
-          Password must be at least 8 characters and include letters, numbers,
-          and special characters.
+          Password must be at least 8 characters and include an uppercase
+          letter, a lowercase letter, a number, and a symbol.
         </p>
       )}
       {errors.password?.type === 'pattern' && (
         <p role="alert">
-          Password must be at least 8 characters and include letters, numbers,
-          and special characters.
+          Password must be at least 8 characters and include an uppercase
+          letter, a lowercase letter, a number, and a symbol.
         </p>
       )}
       <br />
