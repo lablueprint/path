@@ -1,9 +1,9 @@
 'use client';
 
-import { DonationInsert } from '@/app/types/donation';
 import { useForm, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
-import { createDonation } from '@/app/actions/donation';
+
+import { SetStateAction } from 'react';
 
 type FormData = {
   donor_type?: 'individual' | 'business';
@@ -25,15 +25,14 @@ type FormData = {
   items_donated: string;
 };
 
-export default function DonationForm() {
+export default function DonationForm({ setItemsDonated, donorType }) {
   const {
     register,
     handleSubmit,
     watch,
     control,
     reset,
-    clearErrors,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
@@ -41,64 +40,6 @@ export default function DonationForm() {
       estimated_value: '',
     },
   });
-
-  const donorType = watch('donor_type');
-
-  const onSubmit = async (data: FormData) => {
-    const donation: DonationInsert = {
-      donor_is_individual: data.donor_type === 'individual',
-
-      donor_individual_name:
-        data.donor_type === 'individual'
-          ? (data.individual_name ?? null)
-          : null,
-
-      donor_business_name:
-        data.donor_type === 'business' ? (data.business_name ?? null) : null,
-
-      donor_business_contact_name:
-        data.donor_type === 'business'
-          ? (data.business_contact_name ?? null)
-          : null,
-
-      donor_email: data.email ?? null,
-      donor_phone: data.phone ?? null,
-      donor_street_address: data.address ?? null,
-
-      donor_receive_emails: data.receive_emails,
-      donor_receive_mailings: data.receive_mailings,
-      donor_remain_anonymous: data.remain_anonymous,
-
-      estimated_value: parseFloat(data.estimated_value),
-      items_donated: data.items_donated,
-
-      receiver_first_name: 'FIRST-NAME',
-      receiver_last_name: 'LAST-NAME',
-    };
-    try {
-      const result = await createDonation(donation);
-
-      // Reset all fields to empty/default values
-      reset({
-        donor_type: undefined,
-        individual_name: '',
-        business_name: '',
-        business_contact_name: '',
-        email: '',
-        phone: '',
-        address: '',
-        receiving_site: '',
-        receive_emails: false,
-        receive_mailings: false,
-        remain_anonymous: false,
-        estimated_value: '',
-        items_donated: '',
-      });
-      clearErrors();
-    } catch (error) {
-      console.error('Failed to create donation:', error);
-    }
-  };
 
   return (
     <div
@@ -123,11 +64,29 @@ export default function DonationForm() {
       >
         <h1 style={{ margin: 0 }}>Donation Form</h1>
       </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
-      >
-
+      <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        {/* Receiving Site */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+            Receiving site
+          </label>
+          <select
+            {...register('receiving_site')}
+            defaultValue=""
+            style={{
+              padding: '8px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
+          >
+            <option value="" disabled>
+              Select a receiving site
+            </option>
+            <option value="path-site-1">PATH site 1</option>
+            <option value="path-site-2">PATH site 2</option>
+            <option value="path-site-3">PATH site 3</option>
+          </select>
+        </div>
 
         {/* Donor Type */}
         <Controller
@@ -396,6 +355,7 @@ export default function DonationForm() {
               borderRadius: '4px',
               border: '1px solid #ccc',
             }}
+            onChange={(e) => setItemsDonated(e.target.value)}
           />
           {errors.items_donated && (
             <p style={{ color: 'red', marginTop: '5px' }}>
@@ -403,37 +363,6 @@ export default function DonationForm() {
             </p>
           )}
         </div>
-
-        <button
-          type="submit"
-          style={{
-            marginTop: '20px',
-            padding: '10px',
-            borderRadius: '5px',
-            border: 'none',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            fontWeight: 'bold',
-          }}
-        >
-          Submit
-        </button>
-
-        {isSubmitSuccessful && (
-          <div
-            style={{
-              backgroundColor: '#d4edda',
-              color: '#155724',
-              padding: '12px',
-              borderRadius: '5px',
-              marginBottom: '15px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}
-          >
-            Form submitted successfully! Thank you for your donation.
-          </div>
-        )}
       </form>
     </div>
   );
