@@ -58,7 +58,7 @@ export default function SignInPage() {
       <br />
       <button type="submit">Sign in</button>
       <br />
-      <Link href = "/forgot-password">Forgot password?</Link>
+      <Link href="/forgot-password">Forgot password?</Link>
       <br />
       <Link href="/sign-up">Sign up</Link>
     </form>

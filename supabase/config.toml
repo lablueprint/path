@@ -242,7 +242,7 @@ subject = "Confirm email change"
 content_path = "./supabase/templates/email-change.html"
 
 [auth.email.template.confirmation]
-subject = "Confirm sign up"
+subject = "Confirm sign-up"
 content_path = "./supabase/templates/sign-up.html"
 
 [auth.email.template.recovery]

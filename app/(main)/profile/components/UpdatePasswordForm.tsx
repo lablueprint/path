@@ -57,8 +57,8 @@ export function UpdatePasswordForm() {
       />
       {errors.newPassword && (
         <p role="alert">
-          Password must be at least 8 characters and include uppercase,
-          lowercase, a number, and a symbol.
+          Password must be at least 8 characters and include an uppercase
+          letter, a lowercase letter, a number, and a symbol.
         </p>
       )}
       <br />

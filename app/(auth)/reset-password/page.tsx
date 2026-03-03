@@ -1,7 +1,7 @@
-"use client";
-import { useForm } from "react-hook-form";
-import { createClient } from "../../lib/supabase/browser-client";
-import { useRouter } from "next/navigation";
+'use client';
+import { useForm } from 'react-hook-form';
+import { createClient } from '@/app/lib/supabase/browser-client';
+import { useRouter } from 'next/navigation';
 
 type ResetPasswordFormValues = {
   password: string;
@@ -18,11 +18,11 @@ export default function ResetPasswordPage() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormValues>({
-    defaultValues: { password: "", passwordConfirmation: "" },
-    mode: "onChange",
+    defaultValues: { password: '', passwordConfirmation: '' },
+    mode: 'onChange',
   });
 
-  const passwordValue = watch("password");
+  const passwordValue = watch('password');
 
   const onSubmit = async (values: ResetPasswordFormValues) => {
     const { error } = await supabase.auth.updateUser({
@@ -34,8 +34,8 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    alert("Your password has been updated.");
-    router.push("/home");
+    alert('Your password has been updated.');
+    router.push('/home');
   };
 
   return (
@@ -47,13 +47,13 @@ export default function ResetPasswordPage() {
         <input
           id="password"
           type="password"
-          {...register("password", {
-            required: "New password is required.",
+          {...register('password', {
+            required: 'New password is required.',
             pattern: {
               value:
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\+\-=\[\]{};':"\\|<>?,.\/`~]).{8,}$/,
               message:
-                "Password must be at least 8 characters and include uppercase, lowercase, a number, and a symbol.",
+                'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
             },
           })}
         />
@@ -65,10 +65,10 @@ export default function ResetPasswordPage() {
         <input
           id="passwordConfirmation"
           type="password"
-          {...register("passwordConfirmation", {
-            required: "Password confirmation is required.",
+          {...register('passwordConfirmation', {
+            required: 'Please confirm your new password.',
             validate: (value) =>
-              value === passwordValue || "Passwords do not match.",
+              value === passwordValue || 'Passwords do not match.',
           })}
         />
         {errors.passwordConfirmation?.message ? (
@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
         <br />
 
         <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : "Save"}
+          {isSubmitting ? 'Saving...' : 'Save'}
         </button>
       </form>
     </div>
