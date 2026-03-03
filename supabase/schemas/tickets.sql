@@ -1,4 +1,4 @@
-create type ticket_status as enum('requested', 'ready', 'rejected', 'fulfilled');
+create type ticket_status as enum('draft', 'requested', 'ready', 'rejected', 'fulfilled');
 
 create table tickets (
   ticket_id uuid default uuid_generate_v4 () primary key,
@@ -12,17 +12,13 @@ create table tickets (
 
 alter table tickets enable row level security;
 
-create policy "auth can read tickets if requestor_user_id or >= superadmin" on public.tickets for
-select
+create policy "auth can read tickets if requestor_user_id or can_manage_store" on public.tickets for select
   to authenticated using (
     (
       select
-        auth.jwt ()
-    ) ->> 'user_role' in ('superadmin', 'owner')
-    or (
-      select
         auth.uid ()
     ) = requestor_user_id
+    or private.can_manage_store(store_id)
   );
 
 create policy "auth can insert tickets if requestor_user_id and >= requestor" on public.tickets for insert to authenticated
@@ -36,30 +32,25 @@ with
       select
         auth.uid ()
     ) = requestor_user_id -- Supabase was doing this before this clause was added
+    and status = 'draft'
   );
 
-create policy "auth can update tickets if requestor_user_id" on public.tickets
+create policy "auth can update tickets if requestor_user_id or can_manage_store" on public.tickets
 for update
   to authenticated using (
     (
       select
-        auth.jwt ()
-    ) ->> 'user_role' in ('superadmin', 'owner')
-    or (
-      select
         auth.uid ()
     ) = requestor_user_id
+    or private.can_manage_store(store_id)
   )
 with
   check (
     (
       select
-        auth.jwt ()
-    ) ->> 'user_role' in ('superadmin', 'owner')
-    or (
-      select
         auth.uid ()
     ) = requestor_user_id
+    or private.can_manage_store(store_id)
   );
 
 create policy "auth can delete tickets if requestor_user_id or >= superadmin" on public.tickets for delete to authenticated using (
@@ -68,7 +59,10 @@ create policy "auth can delete tickets if requestor_user_id or >= superadmin" on
       auth.jwt ()
   ) ->> 'user_role' in ('superadmin', 'owner')
   or (
-    select
-      auth.uid ()
-  ) = requestor_user_id
+    (
+      select
+        auth.uid ()
+    ) = requestor_user_id
+    and status = 'requested'
+  )
 );
