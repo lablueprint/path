@@ -18,13 +18,13 @@ export default async function OutgoingTicketsList({ tickets, status }: { tickets
     <div>
       <h2>{status.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
-        <table>
+        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              <th>Ticket ID</th>
-              <th>Store</th>
-              <th>Status</th>
-              <th>Date Submitted</th>
+              <th style={{ width: '30%' }}>Ticket ID</th>
+              <th style={{ width: '20%' }}>Store Name</th>
+              <th style={{ width: '30%' }}>Status</th>
+              <th style={{ width: '20%' }}>Date Submitted</th>
             </tr>
           </thead>
           <tbody>
