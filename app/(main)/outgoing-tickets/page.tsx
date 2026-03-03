@@ -7,6 +7,7 @@ export default async function OutgoingTicketsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Fetch store information along with tickets in the same Supabase query
   const { data: userTickets, error } = await supabase
     .from('tickets')
     .select(`
