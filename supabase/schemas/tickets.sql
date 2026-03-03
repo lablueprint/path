@@ -1,4 +1,4 @@
-create type ticket_status as enum('requested', 'ready', 'rejected', 'fulfilled');
+create type ticket_status as enum('draft', 'requested', 'ready', 'rejected', 'fulfilled');
 
 create table tickets (
   ticket_id uuid default uuid_generate_v4 () primary key,
@@ -9,6 +9,10 @@ create table tickets (
   constraint fk_users foreign key (requestor_user_id) references users (user_id),
   constraint fk_stores foreign key (store_id) references stores (store_id)
 );
+
+create unique index unique_draft_ticket_per_user_store
+on tickets (requestor_user_id, store_id)
+where status = 'draft';
 
 alter table tickets enable row level security;
 
