@@ -1,10 +1,18 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 
+type SearchParams = {
+  query?: string;
+  category?: string;
+  subcategory?: string;
+}
+
 export default async function RequestStorePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ storeId: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const { storeId } = await params;
 
@@ -23,19 +31,32 @@ export default async function RequestStorePage({
   }
 
   // Fetch non-hidden store items
-  const { data: itemsData, error: itemsError } = await supabase
+  const { query, category, subcategory } = await searchParams;
+
+  let ticketsFiltered = supabase
     .from('store_items')
     .select(
       `
       store_item_id,
-      item_name:inventory_item_id(name),
-      item_photo_url:inventory_item_id(photo_url),
-      subcategory_name:inventory_item_id(subcategories(name)),
-      category_name:inventory_item_id(subcategories(categories(name)))
+      inventory_item_id!inner(
+        name,
+        photo_url,
+        subcategories!inner(
+          name,
+          categories!inner(
+            name
+          )
+        )
+      )
     `,
     )
     .eq('store_id', storeId)
     .eq('is_hidden', false);
+
+  if (query) { ticketsFiltered = ticketsFiltered.ilike('inventory_item_id.name', `%${query}%`); }
+  if (category) { ticketsFiltered = ticketsFiltered.ilike('inventory_item_id.subcategories.categories.name', category); }
+  if (subcategory) { ticketsFiltered = ticketsFiltered.ilike('inventory_item_id.subcategories.name', subcategory); }
+  const { data: itemsData, error: itemsError } = await ticketsFiltered;
 
   if (itemsError) {
     console.error('Error fetching store items:', itemsError);
@@ -44,11 +65,11 @@ export default async function RequestStorePage({
 
   const items = itemsData?.map((item) => ({
     id: item.store_item_id as string,
-    item: (item.item_name as any)?.name as string,
-    subcategory: (item.subcategory_name as any)?.subcategories?.name as string,
-    category: (item.category_name as any)?.subcategories?.categories
+    item: (item.inventory_item_id as any)?.name as string,
+    subcategory: (item.inventory_item_id as any)?.subcategories?.name as string,
+    category: (item.inventory_item_id as any)?.subcategories?.categories
       ?.name as string,
-    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+    photoUrl: (item.inventory_item_id as any)?.photo_url as string,
   }));
 
   return (
