@@ -127,28 +127,7 @@ export default function DonationForm() {
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
       >
-        {/* Receiving Site */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Receiving site
-          </label>
-          <select
-            {...register('receiving_site')}
-            defaultValue=""
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          >
-            <option value="" disabled>
-              Select a receiving site
-            </option>
-            <option value="path-site-1">PATH site 1</option>
-            <option value="path-site-2">PATH site 2</option>
-            <option value="path-site-3">PATH site 3</option>
-          </select>
-        </div>
+
 
         {/* Donor Type */}
         <Controller
