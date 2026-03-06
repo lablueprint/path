@@ -1,9 +1,10 @@
 'use client';
 import { useEffect, useState } from "react";
-import { FormProvider, useFormContext } from
+import { useFormContext } from
     "react-hook-form";
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { InventoryItem } from "@/app/types/inventory";
+import type { CombinedFormData } from './StoreItemsDonationForm';
 
 type ItemWithNames = InventoryItem & {
     category_name: string
@@ -12,7 +13,7 @@ type ItemWithNames = InventoryItem & {
 }
 
 export default function AddStoreItemSearch() {
-    const methods = useFormContext()
+    const methods = useFormContext<CombinedFormData>()
     const [results, setResults] = useState<ItemWithNames[]>([])
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([])
@@ -20,40 +21,31 @@ export default function AddStoreItemSearch() {
 
     useEffect(() => {
         const fetch = async () => {
-            const { data, error } = await supabase.from('inventory_items').select('*').ilike('name', `%${searchQuery}%`)
+            const { data, error } = await supabase.from('inventory_items').select(`*, subcategories (name, categories(name))`).ilike('name', `%${searchQuery}%`)
             if (error) {
                 console.log(error)
+                return
             }
             else {
                 const items: ItemWithNames[] = []
                 for (const item of data) {
-                    const { data: category, error: category_error } = await supabase.from('categories').select().eq('category_id', item.category_id).single()
-                    const { data: subcategory, error: subcategory_error } = await supabase.from('categories').select().eq('subcategorh_id', item.subcategory_id).single()
-                    if (category_error) {
-                        console.log(category_error)
-                    }
-                    else if (subcategory_error) {
-                        console.log(subcategory_error)
-                    }
-                    else {
-                        items.push(...item, category?.name, subcategory?.name)
-                    }
+                    items.push({ ...item, category_name: item.subcategories.categories?.name, subcategory_name: item.subcategories?.name })
                 }
                 setResults(items)
             }
         }
         fetch();
-    }, [])
+    }, [searchQuery, supabase])
 
     const select = (item: ItemWithNames) => {
-        setSelectedItems(prev => [...prev, item])
+        setSelectedItems(prev => prev.some(item => item.inventory_item_id === item.inventory_item_id) ? prev : [...prev, item]);
     }
 
     const handleRemove = (itemToRemove: ItemWithNames) => {
         setSelectedItems(prev => prev.filter(item => item.inventory_item_id != itemToRemove.inventory_item_id))
     }
     return (
-        <FormProvider {...methods}>
+        <div>
             <input
                 placeholder="Search item..."
                 value={searchQuery}
@@ -72,10 +64,10 @@ export default function AddStoreItemSearch() {
             <ul>
                 {selectedItems?.map((item) => (
                     <div key={item.name}>
-                        <li>{item.name}</li>
-                        <li>{item.category_name}</li>
-                        <li>{item.subcategory_name}</li>
-                        <li>{item.description}</li>
+                        <li>Item: {item.name}</li>
+                        <li>Category: {item.category_name}</li>
+                        <li>Subcategory: {item.subcategory_name}</li>
+                        <li>Description: {item.description}</li>
                         <input placeholder="Quantity to add" {...methods.register('quantity', { required: 'Quantity is required' })} />
                         {methods.formState.errors.quantity &&
                             (<p>{methods.formState.errors.quantity.message as string}</p>)
@@ -84,7 +76,6 @@ export default function AddStoreItemSearch() {
                     </div>
                 ))}
             </ul>
-
-        </FormProvider >
+        </div>
     )
 }
