@@ -21,6 +21,10 @@ export default function AddStoreItemSearch() {
 
     useEffect(() => {
         const fetch = async () => {
+            if (!searchQuery) {
+                setResults([])
+                return
+            }
             const { data, error } = await supabase.from('inventory_items').select(`*, subcategories (name, categories(name))`).ilike('name', `%${searchQuery}%`)
             if (error) {
                 console.log(error)
@@ -38,7 +42,9 @@ export default function AddStoreItemSearch() {
     }, [searchQuery, supabase])
 
     const select = (item: ItemWithNames) => {
-        setSelectedItems(prev => prev.some(item => item.inventory_item_id === item.inventory_item_id) ? prev : [...prev, item]);
+        setSelectedItems(prev =>
+            prev.some(i => i.name === item.name) ? prev : [...prev, item]
+        )
     }
 
     const handleRemove = (itemToRemove: ItemWithNames) => {
@@ -70,7 +76,7 @@ export default function AddStoreItemSearch() {
                         <li>Description: {item.description}</li>
                         <input placeholder="Quantity to add" {...methods.register('quantity', { required: 'Quantity is required' })} />
                         {methods.formState.errors.quantity &&
-                            (<p>{methods.formState.errors.quantity.message as string}</p>)
+                            (<p style={{ color: "red" }}> {methods.formState.errors.quantity.message as string}</p>)
                         }
                         <button onClick={() => handleRemove(item)}>Remove</button>
                     </div>
