@@ -150,12 +150,12 @@ export async function addToCart(
       .from('tickets')
       .upsert(
         {
-          requestor_id: user.id,
+          requestor_user_id: user.id,
           store_id: storeId,
           status: 'draft',
         },
         {
-          onConflict: 'requestor_id,store_id,status',
+          onConflict: 'requestor_user_id,store_id,status',
         }
       )
       .select()
