@@ -68,16 +68,17 @@ export default function AddStoreItemSearch() {
 
             <div>Selected Items</div>
             <ul>
-                {selectedItems?.map((item) => (
+                {selectedItems?.map((item, idx) => (
                     <div key={item.name}>
                         <li>Item: {item.name}</li>
                         <li>Category: {item.category_name}</li>
                         <li>Subcategory: {item.subcategory_name}</li>
                         <li>Description: {item.description}</li>
-                        <input placeholder="Quantity to add" {...methods.register('quantity', { required: 'Quantity is required' })} />
-                        {methods.formState.errors.quantity &&
-                            (<p style={{ color: "red" }}> {methods.formState.errors.quantity.message as string}</p>)
+                        <input type="number" placeholder="Quantity to add" {...methods.register(`items.${idx}.quantity`, { required: 'Quantity is required' })} />
+                        {methods.formState.errors.items?.[idx]?.quantity &&
+                            (<p style={{ color: "red" }}> {methods.formState.errors.items?.[idx]?.quantity?.message as string}</p>)
                         }
+                        <input type="hidden" value={item.inventory_item_id} {...methods.register(`items.${idx}.inventory_item_id`)} />
                         <button onClick={() => handleRemove(item)}>Remove</button>
                     </div>
                 ))}
