@@ -10,11 +10,16 @@ type ItemWithNames = InventoryItem & {
   subcategory_name: string;
 };
 
-export default function AddStoreItemSearch() {
+export default function AddStoreItemSearch({
+  setAutoFillItems,
+}: {
+  setAutoFillItems: any;
+}) {
   const methods = useFormContext<CombinedFormData>();
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -44,6 +49,9 @@ export default function AddStoreItemSearch() {
     };
     fetch();
   }, [searchQuery, supabase]);
+  useEffect(() => {
+    setAutoFillItems(selectedItems);
+  }, [selectedItems, setAutoFillItems]);
 
   const select = (item: ItemWithNames) => {
     setSelectedItems((prev) =>

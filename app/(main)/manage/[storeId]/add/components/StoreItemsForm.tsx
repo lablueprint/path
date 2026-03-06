@@ -3,12 +3,16 @@
 import { useFormContext } from 'react-hook-form';
 import AddStoreItemSearch from './AddStoreItemSearch';
 
-export default function StoreItemsForm() {
+export default function StoreItemsForm({
+  setAutoFillItems,
+}: {
+  setAutoFillItems: any;
+}) {
   // get props from parents
 
   return (
     <div>
-      <AddStoreItemSearch />
+      <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
     </div>
   );
 }

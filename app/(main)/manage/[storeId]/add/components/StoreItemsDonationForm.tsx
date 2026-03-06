@@ -34,7 +34,7 @@ export type CombinedFormData = {
   items: {
     inventory_item_id: string;
     quantity: number;
-  };
+  }[];
 };
 
 export default function StoreItemsDonationForm({
@@ -50,21 +50,22 @@ export default function StoreItemsDonationForm({
       donor_type: undefined,
       phone: '',
       estimated_value: '',
+      items: [],
     },
   });
 
   const itemSettingsSelected = methods.watch('itemSettings') || [];
-  const [sharedItems, setSharedItems] = useState({}); //sharedItems from donation form shared with store items form
-  const [autoFillItems, setAutoFillItems] = useState({});
+  const [autoFillItems, setAutoFillItems] = useState<any[]>([]);
   useEffect(() => {
-    if (
-      itemSettingsSelected?.includes('giftInKind') &&
-      itemSettingsSelected?.includes('addInventoryItems')
-    ) {
-      setAutoFillItems(sharedItems);
-    }
-  }, [itemSettingsSelected, sharedItems]);
+    const isGiftSelected = itemSettingsSelected.includes('giftInKind');
+    const isInventorySelected =
+      itemSettingsSelected.includes('addInventoryItems');
+    if (isGiftSelected && isInventorySelected && autoFillItems.length > 0) {
+      const itemsString = autoFillItems.map((item) => item.name).join(', ');
 
+      methods.setValue('items_donated', itemsString, { shouldValidate: true });
+    }
+  }, [itemSettingsSelected, autoFillItems, methods]);
   const onSubmit = async (data: CombinedFormData) => {
     try {
       if (data.itemSettings?.includes('addInventoryItems')) {
@@ -135,6 +136,7 @@ export default function StoreItemsDonationForm({
           quantity: 0,
         },
       });
+      setAutoFillItems([]);
       methods.clearErrors();
     } catch (error) {
       console.error('Failed to process form:', error);
@@ -164,13 +166,10 @@ export default function StoreItemsDonationForm({
           </div>
 
           {itemSettingsSelected?.includes('giftInKind') && (
-            <DonationForm
-              setItemsDonated={setSharedItems}
-              donorType={methods.watch('donor_type')}
-            />
+            <DonationForm donorType={methods.watch('donor_type')} />
           )}
           {itemSettingsSelected?.includes('addInventoryItems') && (
-            <StoreItemsForm autoFillItems={autoFillItems} />
+            <StoreItemsForm setAutoFillItems={setAutoFillItems} />
             // add autofillitems connection pass in prop to storeitemsform
           )}
           {(itemSettingsSelected?.includes('giftInKind') ||
