@@ -31,8 +31,10 @@ export type CombinedFormData = {
   estimated_value: string;
   items_donated: string;
   //Store Items Form
-  inventory_item_id: string;
-  quantity: number;
+  items: {
+    inventory_item_id: string;
+    quantity: number;
+  };
 };
 
 export default function StoreItemsDonationForm({
@@ -62,13 +64,20 @@ export default function StoreItemsDonationForm({
       setAutoFillItems(sharedItems);
     }
   }, [itemSettingsSelected, sharedItems]);
-  useEffect(() => {
-    console.log(itemSettingsSelected);
-  }, [itemSettingsSelected]);
 
   const onSubmit = async (data: CombinedFormData) => {
     try {
       if (data.itemSettings?.includes('addInventoryItems')) {
+        for (const item of data.items) {
+          await addUpdateStoreItemQuantity(
+            item.inventory_item_id,
+            item.quantity,
+            store.store_id,
+          );
+        }
+      }
+
+      if (data.itemSettings?.includes('giftInKind')) {
         const donation: DonationInsert = {
           donor_is_individual: data.donor_type === 'individual',
 
@@ -104,35 +113,29 @@ export default function StoreItemsDonationForm({
           store_street_address: store?.street_address,
         };
         const donationResult = await createDonation(donation);
-
-        if (data.itemSettings?.includes('giftInKind')) {
-          const storeResult = await addUpdateStoreItemQuantity(
-            data.inventory_item_id,
-            data.quantity,
-            store.store_id,
-          );
-        }
-        // Reset all fields to empty/default values
-        methods.reset({
-          itemSettings: [],
-          donor_type: undefined,
-          individual_name: '',
-          business_name: '',
-          business_contact_name: '',
-          email: '',
-          phone: '',
-          address: '',
-          receiving_site: '',
-          receive_emails: false,
-          receive_mailings: false,
-          remain_anonymous: false,
-          estimated_value: '',
-          items_donated: '',
+      }
+      // Reset all fields to empty/default values
+      methods.reset({
+        itemSettings: [],
+        donor_type: undefined,
+        individual_name: '',
+        business_name: '',
+        business_contact_name: '',
+        email: '',
+        phone: '',
+        address: '',
+        receiving_site: '',
+        receive_emails: false,
+        receive_mailings: false,
+        remain_anonymous: false,
+        estimated_value: '',
+        items_donated: '',
+        items: {
           inventory_item_id: '',
           quantity: 0,
-        });
-        methods.clearErrors();
-      }
+        },
+      });
+      methods.clearErrors();
     } catch (error) {
       console.error('Failed to process form:', error);
     }

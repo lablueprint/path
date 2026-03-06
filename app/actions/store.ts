@@ -167,18 +167,21 @@ export const addUpdateStoreItemQuantity = async (
   newQuantity: number,
   storeId: string,
 ) => {
+  console.log('inventory', inventoryItemId);
   const supabase = await createClient();
-  const { data: existingItem } = await supabase
+  const { data: existingItemQuantity } = await supabase
     .from('store_items')
-    .select('inventory_item_id')
+    .select('quantity_available')
     .eq('inventory_item_id', inventoryItemId)
     .single();
 
-  if (existingItem) {
+  if (existingItemQuantity) {
     // Update Quantity (item exists)
+    const updatedQuantity =
+      Number(existingItemQuantity?.quantity_available) + Number(newQuantity);
     const { data: entry, error: err } = await supabase
       .from('store_items')
-      .update({ quantity_available: newQuantity })
+      .update({ quantity_available: updatedQuantity })
       .eq('inventory_item_id', inventoryItemId)
       .select()
       .single();
