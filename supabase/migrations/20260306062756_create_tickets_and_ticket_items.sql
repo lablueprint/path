@@ -1,6 +1,8 @@
 -- Add 'draft' to ticket_status enum
 alter type ticket_status add value 'draft';
 
+commit;
+
 -- Unique index: one draft ticket per user per store
 create unique index unique_draft_ticket_per_user_store
 on tickets (requestor_user_id, store_id)
