@@ -1,9 +1,8 @@
 'use client';
 
-import { useForm, Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
-
-import { SetStateAction } from 'react';
+import { CombinedFormData } from './StoreItemsDonationForm';
 
 // type FormData = {
 //   donor_type?: 'individual' | 'business';
@@ -30,13 +29,7 @@ export default function DonationForm({ setItemsDonated, donorType }) {
     register,
     control,
     formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: {
-      donor_type: undefined,
-      phone: '',
-      estimated_value: '',
-    },
-  });
+  } = useFormContext<CombinedFormData>();
 
   return (
     <div
@@ -61,7 +54,7 @@ export default function DonationForm({ setItemsDonated, donorType }) {
       >
         <h1 style={{ margin: 0 }}>Donation Form</h1>
       </div>
-      <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
         {/* Donor Type */}
         <>
@@ -332,7 +325,7 @@ export default function DonationForm({ setItemsDonated, donorType }) {
             </p>
           )}
         </div>
-      </form>
+      </div>
     </div>
   );
 }
