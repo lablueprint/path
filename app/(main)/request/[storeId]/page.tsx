@@ -46,7 +46,7 @@ export default async function RequestStorePage({
   // Fetch non-hidden store items
   const { query, category, subcategory } = await searchParams;
 
-  let ticketsFiltered = supabase
+  let filteredItems = supabase
     .from('store_items')
     .select(
       `
@@ -66,11 +66,11 @@ export default async function RequestStorePage({
     .eq('store_id', storeId)
     .eq('is_hidden', false);
 
-  if (query) { ticketsFiltered = ticketsFiltered.ilike('inventory_item_id.name', `%${query}%`); }
-  if (category) { ticketsFiltered = ticketsFiltered.eq('inventory_item_id.subcategories.category_id', category); }
-  if (subcategory) { ticketsFiltered = ticketsFiltered.eq('inventory_item_id.subcategory_id', subcategory); }
+  if (query) { filteredItems = filteredItems.ilike('inventory_item_id.name', `%${query}%`); }
+  if (category) { filteredItems = filteredItems.eq('inventory_item_id.subcategories.category_id', category); }
+  if (subcategory) { filteredItems = filteredItems.eq('inventory_item_id.subcategory_id', subcategory); }
 
-  const { data: itemsData, error: itemsError } = await ticketsFiltered;
+  const { data: itemsData, error: itemsError } = await filteredItems;
 
   if (itemsError) {
     console.error('Error fetching store items:', itemsError);
