@@ -8,6 +8,7 @@ import StoreItemsForm from './StoreItemsForm';
 import { DonationInsert } from '@/app/types/donation';
 import { StoreInsert } from '@/app/types/store';
 import { createDonation } from '@/app/actions/donation';
+import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 
 export type CombinedFormData = {
   itemSettings?: string[];
@@ -30,7 +31,8 @@ export type CombinedFormData = {
   estimated_value: string;
   items_donated: string;
   //Store Items Form
-  // Fill out later
+  inventory_item_id: string;
+  quantity: number;
 };
 
 export default function StoreItemsDonationForm({
@@ -101,10 +103,18 @@ export default function StoreItemsDonationForm({
           store_name: store?.name,
           store_street_address: store?.street_address,
         };
-        const result = await createDonation(donation);
+        const donationResult = await createDonation(donation);
 
+        if (data.itemSettings?.includes('giftInKind')) {
+          const storeResult = await addUpdateStoreItemQuantity(
+            data.inventory_item_id,
+            data.quantity,
+            store.store_id,
+          );
+        }
         // Reset all fields to empty/default values
         methods.reset({
+          itemSettings: [],
           donor_type: undefined,
           individual_name: '',
           business_name: '',
@@ -118,14 +128,13 @@ export default function StoreItemsDonationForm({
           remain_anonymous: false,
           estimated_value: '',
           items_donated: '',
+          inventory_item_id: '',
+          quantity: 0,
         });
         methods.clearErrors();
-        if (data.itemSettings?.includes('giftInKind')) {
-          //create new server action
-        }
       }
     } catch (error) {
-      console.error('Failed to create donation:', error);
+      console.error('Failed to process form:', error);
     }
   };
   return (

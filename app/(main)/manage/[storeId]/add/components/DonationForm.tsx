@@ -3,6 +3,7 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import { CombinedFormData } from './StoreItemsDonationForm';
+import { SetStateAction } from 'react';
 
 // type FormData = {
 //   donor_type?: 'individual' | 'business';
@@ -55,7 +56,6 @@ export default function DonationForm({ setItemsDonated, donorType }) {
         <h1 style={{ margin: 0 }}>Donation Form</h1>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-
         {/* Donor Type */}
         <>
           <label>
