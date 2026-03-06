@@ -1,15 +1,38 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
+import ItemSearch from '../../components/ItemSearch';
+
+type SearchParams = {
+  query?: string;
+  category?: string;
+  subcategory?: string;
+};
 
 export default async function ManageStorePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ storeId: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const { storeId } = await params;
+  const { query, category, subcategory } = await searchParams;
 
   // fetching data for store associated with storeId
   const supabase = await createClient();
+
+  // Fetch categories
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('category_id, name')
+    .order('name');
+
+  // Fetch subcategories
+  const { data: subcategories } = await supabase
+    .from('subcategories')
+    .select('subcategory_id, name, category_id')
+    .order('name');
+
   const { data: store, error: storeError } = await supabase
     .from('stores')
     .select('*')
@@ -20,30 +43,51 @@ export default async function ManageStorePage({
     return <div>Failed to load store.</div>;
   }
 
-  const { data: itemsData, error: itemsError } = await supabase
+  let filteredItems = supabase
     .from('store_items')
     .select(
       `
         store_item_id,
-        item_name:inventory_item_id(name),
-        item_photo_url:inventory_item_id(photo_url),
-        subcategory_name:inventory_items(subcategories(name)),
-        category_name:inventory_items(subcategories(categories(name)))
+        inventory_items!inner(
+          name,
+          photo_url,
+          subcategories!inner(
+            name,
+            categories!inner(
+              name
+            )
+          )
+        )
       `,
     )
     .eq('store_id', storeId);
+
+  if (query) { filteredItems = filteredItems.ilike("inventory_items.name", `%${query}%`) }
+  if (category) { filteredItems = filteredItems.eq("inventory_items.subcategories.category_id", category) }
+  if (subcategory) { filteredItems = filteredItems.eq("inventory_items.subcategory_id", subcategory) }
+
+
+  const { data: itemsData, error: itemsError } = await filteredItems;
+
+  // Sort itemsData in JavaScript
+  const sortedItemsData = itemsData?.sort((a, b) => {
+    const nameA = (a.inventory_items as any)?.name?.toLowerCase() || '';
+    const nameB = (b.inventory_items as any)?.name?.toLowerCase() || '';
+    return nameA.localeCompare(nameB);
+  });
+
   if (itemsError) {
     console.error('Error fetching store items:', itemsError);
     return <div>Failed to load store items.</div>;
   }
 
-  const items = itemsData?.map((item) => ({
+  const items = sortedItemsData?.map((item) => ({
     id: item.store_item_id as string,
-    item: (item.item_name as any).name as string,
-    subcategory: (item.subcategory_name as any).subcategories.name as string,
-    category: (item.category_name as any)?.subcategories.categories
+    item: (item.inventory_items as any).name as string,
+    subcategory: (item.inventory_items as any).subcategories.name as string,
+    category: (item.inventory_items as any)?.subcategories.categories
       .name as string,
-    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+    photoUrl: (item.inventory_items as any)?.photo_url as string,
   }));
 
   return (
@@ -55,6 +99,10 @@ export default async function ManageStorePage({
       </div>
       {/* store items + info */}
       <div>
+        <ItemSearch
+          categories={categories?.map(cat => ({ id: cat.category_id, name: cat.name })) || []}
+          subcategories={subcategories?.map(sub => ({ id: sub.subcategory_id, name: sub.name, category_id: sub.category_id })) || []}
+        />
         <h2>Items</h2>
         {items?.length ? (
           items.map((item) => (
