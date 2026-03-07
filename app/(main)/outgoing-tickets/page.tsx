@@ -10,7 +10,8 @@ export default async function OutgoingTicketsPage() {
   // Fetch store information along with tickets in the same Supabase query
   const { data: userTickets, error } = await supabase
     .from('tickets')
-    .select(`
+    .select(
+      `
       ticket_id,
       status,
       date_submitted,
@@ -18,7 +19,8 @@ export default async function OutgoingTicketsPage() {
       stores (
         name
       )
-    `)
+    `,
+    )
     .eq('requestor_user_id', user?.id);
 
   if (error) return <div>Failed to load data.</div>;
@@ -27,7 +29,7 @@ export default async function OutgoingTicketsPage() {
     <div>
       <h1>Outgoing Tickets</h1>
       <OutgoingTicketsList
-        tickets={userTickets} 
+        tickets={userTickets}
         status="requested"
       ></OutgoingTicketsList>
       <OutgoingTicketsList

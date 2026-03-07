@@ -25,7 +25,13 @@ export default function IncomingTicketsList({
 
       {filteredTickets.length > 0 ? (
         <div>
-          <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+          <table
+            style={{
+              width: '100%',
+              tableLayout: 'fixed',
+              borderCollapse: 'collapse',
+            }}
+          >
             <thead>
               <tr>
                 <th style={{ width: '30%' }}>Ticket ID</th>
@@ -35,8 +41,8 @@ export default function IncomingTicketsList({
               </tr>
             </thead>
             <tbody>
-              {/* Map the list of tickets to IncomingTicketCard components */}     
-                {filteredTickets.map((ticket) => (
+              {/* Map the list of tickets to IncomingTicketCard components */}
+              {filteredTickets.map((ticket) => (
                 <IncomingTicketCard
                   key={ticket.id}
                   ticketId={ticket.id}
@@ -48,10 +54,9 @@ export default function IncomingTicketsList({
               ))}
             </tbody>
           </table>
-          
         </div>
       ) : (
-        <p>No tickets with status: {status}</p>
+        <p>No tickets found.</p>
       )}
     </div>
   );

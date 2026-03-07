@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-// import '@/app/globals.css';
 
 type IncomingTicketCardProps = {
   ticketId: string;
@@ -29,8 +28,12 @@ export default function IncomingTicketCard({
     >
       <td style={{ width: '30%', border: '1px solid #c5c5c5' }}>{ticketId}</td>
       <td style={{ width: '20%', border: '1px solid #c5c5c5' }}>{status}</td>
-      <td style={{ width: '35%', border: '1px solid #c5c5c5' }}>{requestorFirstName} {requestorLastName}</td>
-      <td style={{ width: '20%', border: '1px solid #c5c5c5' }}>{new Date(date).toLocaleString()}</td>
+      <td style={{ width: '35%', border: '1px solid #c5c5c5' }}>
+        {requestorFirstName} {requestorLastName}
+      </td>
+      <td style={{ width: '20%', border: '1px solid #c5c5c5' }}>
+        {new Date(date).toLocaleString()}
+      </td>
     </tr>
   );
 }
