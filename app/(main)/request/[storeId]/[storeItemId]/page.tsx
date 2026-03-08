@@ -1,4 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import AddInStockToCartForm from '@/app/(main)/components/AddInStockToCartForm';
 
 export default async function RequestStoreItemPage({
   params,
@@ -49,6 +50,7 @@ export default async function RequestStoreItemPage({
       <p>Subcategory: {subcategory ?? 'None'}</p>
 
       <p>Quantity available: {storeItem.quantity_available ?? 'Unknown'}</p>
+      <AddInStockToCartForm storeId={storeId} storeItemId={storeItemId} quantity={1} />
     </div>
   );
 }

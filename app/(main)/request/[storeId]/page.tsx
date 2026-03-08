@@ -1,5 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
+import Link from 'next/link';
+import AddOutOfStockToCartForm from '@/app/(main)/components/AddOutOfStockToCartForm';
 
 export default async function RequestStorePage({
   params,
@@ -76,6 +78,8 @@ export default async function RequestStorePage({
       ) : (
         <h3>No available items found.</h3>
       )}
+      <Link href="/cart">Home</Link>
+      <AddOutOfStockToCartForm storeId={storeId} />
     </div>
   );
 }

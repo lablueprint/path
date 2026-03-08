@@ -155,7 +155,7 @@ export async function addToCart(
           status: 'draft',
         },
         {
-          onConflict: 'requestor_user_id,store_id,status',
+          onConflict: 'requestor_user_id,store_id',
         }
       )
       .select()
