@@ -1,15 +1,21 @@
 import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
+import EditCategories from './add/components/EditCategories';
 
 export default async function InventoryPage() {
   const supabase = await createClient();
+
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const role = claimsData?.claims?.user_role;
+  const userId = claimsData?.claims?.sub;
 
   const { data: itemsData, error: itemError } = await supabase
     .from('inventory_items')
     .select(
       `inventory_item_id, name, photo_url, subcategories(name, categories(name))`,
     );
+
   if (itemError) {
     console.error(itemError);
     return <div>Failed to load inventory items.</div>;
@@ -20,6 +26,7 @@ export default async function InventoryPage() {
     .select(`category_id, name, subcategories(subcategory_id, name)`)
     .order('name', { ascending: true })
     .order('name', { referencedTable: 'subcategories', ascending: true });
+
   if (error) {
     console.error(error);
     return <div>Failed to load categories.</div>;
@@ -37,6 +44,7 @@ export default async function InventoryPage() {
     <div>
       <h1>Library</h1>
       <Link href="/manage/inventory/add">Add inventory item</Link>
+
       <h2>Items</h2>
       <div>
         {items?.map((item) => (
@@ -51,19 +59,27 @@ export default async function InventoryPage() {
           </div>
         ))}
       </div>
+
       <h2>Categories</h2>
-      <ul>
-        {categories?.map((cat) => (
-          <li key={cat.category_id}>
-            {cat.name}
-            <ul>
-              {cat.subcategories?.map((sub) => (
-                <li key={sub.subcategory_id}>{sub.name}</li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+
+      {role === 'admin' && (
+        <ul>
+          {categories?.map((cat) => (
+            <li key={cat.category_id}>
+              {cat.name}
+              <ul>
+                {cat.subcategories?.map((sub) => (
+                  <li key={sub.subcategory_id}>{sub.name}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {(role === 'superadmin' || role === 'owner') && (
+        <EditCategories categories={categories} />
+      )}
     </div>
   );
 }
