@@ -97,18 +97,20 @@ export default function ItemSearch({ categories, subcategories }: Props) {
                 ))}
             </select>
 
-            {/* Subcategory dropdown */}
-            <select
-                value={searchParams.get("subcategory") ?? ""}
-                onChange={(e) => handleSubcategoryChange(e.target.value)}
-            >
-                <option value="">All Subcategories</option>
-                {filteredSubcategories.map((subcategory) => (
-                    <option key={subcategory.id} value={subcategory.id}>
-                        {subcategory.name}
-                    </option>
-                ))}
-            </select>
+            {/* Subcategory dropdown - only show if category is selected */}
+            {selectedCategoryId && (
+                <select
+                    value={searchParams.get("subcategory") ?? ""}
+                    onChange={(e) => handleSubcategoryChange(e.target.value)}
+                >
+                    <option value="">All Subcategories</option>
+                    {filteredSubcategories.map((subcategory) => (
+                        <option key={subcategory.id} value={subcategory.id}>
+                            {subcategory.name}
+                        </option>
+                    ))}
+                </select>
+            )}
 
             {/* Clear button */}
             <button onClick={handleClearFilters}>
