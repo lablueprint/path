@@ -12,14 +12,14 @@ export default async function OutgoingTicketsPage() {
     .from('tickets')
     .select(
       `
-      ticket_id,
-      status,
-      date_submitted,
-      store_id,
-      stores (
-        name
-      )
-    `,
+        ticket_id,
+        status,
+        date_submitted,
+        store_id,
+        stores (
+          name
+        )
+      `,
     )
     .eq('requestor_user_id', user?.id);
 

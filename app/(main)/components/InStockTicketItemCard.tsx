@@ -7,7 +7,7 @@ interface InStockTicketItemCardProps {
   quantityRequested: number;
   quantityAvailable: number;
   itemName: string;
-  photoUrl: string;
+  photoUrl: string | null;
   subcategoryName: string;
   categoryName: string;
 }
@@ -36,6 +36,7 @@ export default function InStockTicketItemCard({
   return (
     <div>
       <h3>{itemName}</h3>
+      {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
       <p>Category: {categoryName}</p>
       <p>Subcategory: {subcategoryName}</p>
       <p>Quantity available: {quantityAvailable}</p>

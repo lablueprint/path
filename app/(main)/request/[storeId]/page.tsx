@@ -27,15 +27,28 @@ export default async function RequestStorePage({
     .from('store_items')
     .select(
       `
-      store_item_id,
-      item_name:inventory_item_id(name),
-      item_photo_url:inventory_item_id(photo_url),
-      subcategory_name:inventory_item_id(subcategories(name)),
-      category_name:inventory_item_id(subcategories(categories(name)))
-    `,
+        store_item_id,
+        inventory_items(name, photo_url, subcategories(name, categories(name)))
+      `,
     )
     .eq('store_id', storeId)
-    .eq('is_hidden', false);
+    .eq('is_hidden', false)
+    .overrideTypes<
+      {
+        store_item_id: string;
+        inventory_items: {
+          name: string;
+          photo_url: string;
+          subcategories: {
+            name: string;
+            categories: {
+              name: string;
+            };
+          };
+        };
+      }[],
+      { merge: false }
+    >();
 
   if (itemsError) {
     console.error('Error fetching store items:', itemsError);
@@ -43,12 +56,11 @@ export default async function RequestStorePage({
   }
 
   const items = itemsData?.map((item) => ({
-    id: item.store_item_id as string,
-    item: (item.item_name as any)?.name as string,
-    subcategory: (item.subcategory_name as any)?.subcategories?.name as string,
-    category: (item.category_name as any)?.subcategories?.categories
-      ?.name as string,
-    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+    id: item.store_item_id,
+    item: item.inventory_items.name,
+    subcategory: item.inventory_items.subcategories.name,
+    category: item.inventory_items.subcategories.categories.name,
+    photoUrl: item.inventory_items.photo_url,
   }));
 
   return (
