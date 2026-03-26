@@ -1,7 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
 
-export default async function ManageStoreItempage({
+export default async function ManageStoreItemPage({
   params,
 }: {
   params: Promise<{ storeId: string; storeItemId: string }>;
@@ -13,32 +13,48 @@ export default async function ManageStoreItempage({
     .from('store_items')
     .select(
       `
-            store_item_id,
-            quantity_available,
-            is_hidden,
-            inventory_items(name, description, photo_url,
-                subcategories(name,
-                    categories(name)
-                )
-            )
-        `,
+        store_item_id,
+        quantity_available,
+        is_hidden,
+        inventory_items(name, description, photo_url,
+          subcategories(name,
+              categories(name)
+          )
+        )
+      `,
     )
     .eq('store_item_id', storeItemId)
-    .single();
-  if (itemError) {
-    console.error('Error fetching store item info:', itemError);
+    .single()
+    .overrideTypes<
+      {
+        store_item_id: string;
+        quantity_available: number;
+        is_hidden: boolean;
+        inventory_items: {
+          name: string;
+          description: string;
+          photo_url: string;
+          subcategories: {
+            name: string;
+            categories: {
+              name: string;
+            };
+          };
+        };
+      },
+      { merge: false }
+    >();
+  if (itemError || !itemData) {
+    console.error('Error fetching store item:', itemError);
     return <div>Failed to load store item.</div>;
   }
 
   return (
     <div>
-      <h1>{(itemData.inventory_items as any).name}</h1>
-      <p>Description: {(itemData.inventory_items as any).description}</p>
-      <p>
-        Category:{' '}
-        {(itemData.inventory_items as any).subcategories.categories.name}
-      </p>
-      <p>Subcategory: {(itemData.inventory_items as any).subcategories.name}</p>
+      <h1>{itemData.inventory_items.name}</h1>
+      <p>Description: {itemData.inventory_items.description}</p>
+      <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
+      <p>Subcategory: {itemData.inventory_items.subcategories.name}</p>
       <StoreItemForm
         storeId={storeId}
         storeItemId={storeItemId}

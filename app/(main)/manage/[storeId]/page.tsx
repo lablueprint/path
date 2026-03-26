@@ -15,7 +15,7 @@ export default async function ManageStorePage({
     .select('*')
     .eq('store_id', storeId)
     .single();
-  if (storeError) {
+  if (storeError || !store) {
     console.error('Error fetching store:', storeError);
     return <div>Failed to load store.</div>;
   }
@@ -25,25 +25,37 @@ export default async function ManageStorePage({
     .select(
       `
         store_item_id,
-        item_name:inventory_item_id(name),
-        item_photo_url:inventory_item_id(photo_url),
-        subcategory_name:inventory_items(subcategories(name)),
-        category_name:inventory_items(subcategories(categories(name)))
+        inventory_items(name, photo_url, subcategories(name, categories(name)))
       `,
     )
-    .eq('store_id', storeId);
+    .eq('store_id', storeId)
+    .overrideTypes<
+      {
+        store_item_id: string;
+        inventory_items: {
+          name: string;
+          photo_url: string;
+          subcategories: {
+            name: string;
+            categories: {
+              name: string;
+            };
+          };
+        };
+      }[],
+      { merge: false }
+    >();
   if (itemsError) {
     console.error('Error fetching store items:', itemsError);
     return <div>Failed to load store items.</div>;
   }
 
   const items = itemsData?.map((item) => ({
-    id: item.store_item_id as string,
-    item: (item.item_name as any).name as string,
-    subcategory: (item.subcategory_name as any).subcategories.name as string,
-    category:
-      (item.category_name as any)?.subcategories.categories.name as string,
-    photoUrl: (item.item_photo_url as any)?.photo_url as string,
+    id: item.store_item_id,
+    item: item.inventory_items.name,
+    subcategory: item.inventory_items.subcategories.name,
+    category: item.inventory_items.subcategories.categories.name,
+    photoUrl: item.inventory_items.photo_url,
   }));
 
   return (
