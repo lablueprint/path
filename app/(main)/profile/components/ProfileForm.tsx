@@ -1,6 +1,6 @@
 'use client';
 
-import type { User } from '@/app/types/user';
+import type { User, UserUpdate } from '@/app/types/user';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { updateUser } from '@/app/actions/user';
@@ -18,8 +18,8 @@ type ProfileFormValues = {
 export default function ProfileForm({ user }: { user: User }) {
   const [isSaving, setIsSaving] = useState(false);
   // photoUrl represents what is currently in the DB
-  const [photoUrl, setPhotoUrl] = useState<string>(
-    user.profile_photo_url || defaultProfilePhoto.src,
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    user.profile_photo_url,
   );
   // previewUrl represents the locally selected file for the UI
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -68,7 +68,7 @@ export default function ProfileForm({ user }: { user: User }) {
     setPreviewUrl(null);
     setSelectedFile(null);
     setIsPendingDelete(false);
-    setPhotoUrl(user.profile_photo_url || defaultProfilePhoto.src);
+    setPhotoUrl(user.profile_photo_url);
     photoUploadRef.current?.resetFile();
     reset();
   };
@@ -77,7 +77,9 @@ export default function ProfileForm({ user }: { user: User }) {
     setIsSaving(true);
     try {
       let finalPhotoUrl = photoUrl;
-      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
 
       if (authUser) {
         // Handle deletion if flagged
@@ -85,14 +87,16 @@ export default function ProfileForm({ user }: { user: User }) {
           await supabase.storage
             .from('profile_photos')
             .remove([`${authUser.id}/profile.jpg`]);
-          finalPhotoUrl = '';
+          finalPhotoUrl = null;
         }
 
         // Handle upload if a new file is selected
         if (selectedFile) {
           const { error: uploadError } = await supabase.storage
             .from('profile_photos')
-            .upload(`${authUser.id}/profile.jpg`, selectedFile, { upsert: true });
+            .upload(`${authUser.id}/profile.jpg`, selectedFile, {
+              upsert: true,
+            });
 
           if (uploadError) {
             console.error('Upload error:', uploadError.message);
@@ -106,22 +110,33 @@ export default function ProfileForm({ user }: { user: User }) {
         }
       }
 
-      // Update all user fields
-      const result = await updateUser(user.user_id, {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        email: data.email,
-        profile_photo_url: finalPhotoUrl,
-      });
+      // Create a partial update object
+      const changes: UserUpdate = {};
+      if (data.firstName !== user.first_name)
+        changes.first_name = data.firstName;
+      if (data.lastName !== user.last_name) changes.last_name = data.lastName;
+      if (data.email !== user.email) changes.email = data.email;
+      if (selectedFile || isPendingDelete) {
+        changes.profile_photo_url = finalPhotoUrl;
+      }
+
+      const result = await updateUser(user.user_id, changes);
 
       if (result.success) {
-        setPhotoUrl(finalPhotoUrl || defaultProfilePhoto.src);
+        setPhotoUrl(finalPhotoUrl);
         if (previewUrl) URL.revokeObjectURL(previewUrl);
         setPreviewUrl(null);
         setSelectedFile(null);
         setIsPendingDelete(false);
-        reset(data);
         photoUploadRef.current?.resetFile();
+        reset({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: user.email,
+        });
+        if (data.email !== user.email) {
+          alert('Please check your new email address to verify the change.');
+        }
       }
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -133,7 +148,7 @@ export default function ProfileForm({ user }: { user: User }) {
   // Determine image to show the user
   const displayImage = isPendingDelete
     ? defaultProfilePhoto.src
-    : (previewUrl || photoUrl);
+    : previewUrl || photoUrl || defaultProfilePhoto.src;
 
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 

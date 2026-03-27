@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/app/lib/supabase/server-client';
-import { User, UserUpdate } from '@/app/types/user';
+import { UserUpdate } from '@/app/types/user';
 import { revalidatePath } from 'next/cache';
 import { UserRole } from '@/app/types/user';
 
@@ -24,36 +24,42 @@ export async function updateUserRole(userId: string, roleId: number) {
 
 export const updateUser = async (userId: string, data: UserUpdate) => {
   const supabase = await createClient();
-  const updateData = {
-    first_name: data.first_name,
-    last_name: data.last_name,
-    profile_photo_url: data.profile_photo_url,
-  };
-  const { error: authError } = await supabase.auth.updateUser({
-    email: data.email,
-    data: {
-      first_name: data.first_name,
-      last_name: data.last_name,
-    },
-  });
 
-  if (authError) {
-    console.error('Auth error:', authError);
-    return { success: false, data: null, error: authError.message };
+  const updateData: UserUpdate = {};
+  if (data.first_name !== undefined) updateData.first_name = data.first_name;
+  if (data.last_name !== undefined) updateData.last_name = data.last_name;
+  if (data.profile_photo_url !== undefined) {
+    updateData.profile_photo_url = data.profile_photo_url;
   }
 
-  const { data: updatedUser, error: err } = await supabase
-    .from('users')
-    .update(updateData)
-    .eq('user_id', userId)
-    .select()
-    .single();
-  if (err) {
-    console.error('Error updating user:', err);
-    return { success: false, data: null, error: err.message };
+  if (data.email || data.first_name || data.last_name) {
+    const { error: authError } = await supabase.auth.updateUser({
+      ...(data.email && { email: data.email }),
+      data: {
+        ...(data.first_name && { first_name: data.first_name }),
+        ...(data.last_name && { last_name: data.last_name }),
+      },
+    });
+
+    if (authError) {
+      console.error('Auth error:', authError);
+      return { success: false, data: null, error: authError.message };
+    }
+  }
+
+  if (updateData) {
+    const { error: err } = await supabase
+      .from('users')
+      .update(updateData)
+      .eq('user_id', userId);
+
+    if (err) {
+      console.error('Error updating user:', err);
+      return { success: false, data: null, error: err.message };
+    }
   }
 
   revalidatePath('/profile');
 
-  return { success: true, data: updatedUser as User };
+  return { success: true, data: null };
 };
