@@ -42,18 +42,29 @@ export default async function InventoryPage({ searchParams }: {
     .from('categories')
     .select(`category_id, name, subcategories(subcategory_id, name)`)
     .order('name', { ascending: true })
-    .order('name', { referencedTable: 'subcategories', ascending: true });
+    .order('name', { referencedTable: 'subcategories', ascending: true })
+    .overrideTypes<
+      {
+        category_id: string;
+        name: string;
+        subcategories: {
+          name: string;
+          subcategory_id: string;
+        }[];
+      }[],
+      { merge: false }
+    >();
   if (error) {
     console.error(error);
     return <div>Failed to load categories.</div>;
   }
 
   const items = itemsData?.map((item) => ({
-    id: item.inventory_item_id as string,
-    item: item.name as string,
-    photoUrl: item.photo_url as string,
-    subcategory: (item.subcategories as any).name as string,
-    category: (item.subcategories as any).categories.name as string,
+    id: item.inventory_item_id,
+    item: item.name,
+    photoUrl: item.photo_url,
+    subcategory: item.subcategories.name,
+    category: item.subcategories.categories.name,
   }));
 
   return (

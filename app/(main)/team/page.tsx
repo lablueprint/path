@@ -12,17 +12,20 @@ export default async function TeamPage() {
     console.error('Error fetching stores:', storesErr);
   }
 
-  const { data: usersData, error: usersErr } = await supabase.from('users')
-    .select(`
-    user_id,
-    first_name,
-    last_name,
-    user_roles!fk_users (
-      roles (
-        name
-      )
-    )
-  `);
+  const { data: usersData, error: usersErr } = await supabase
+    .from('users')
+    .select(
+      `
+        user_id,
+        first_name,
+        last_name,
+        user_roles!fk_users (
+          roles (
+            name
+          )
+        )
+      `,
+    );
   if (usersErr) {
     console.error('Error fetching users:', usersErr);
   }

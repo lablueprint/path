@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, useWatch, SubmitHandler } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -18,16 +18,19 @@ export default function SignUpPage() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<Inputs>();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
   const router = useRouter();
-  const password = watch('password');
+  const passwordValue = useWatch({
+    control,
+    name: 'password',
+  });
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
-    setLoading(true);
+    setIsLoading(true);
     const { error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
@@ -38,7 +41,7 @@ export default function SignUpPage() {
         },
       },
     });
-    setLoading(false);
+    setIsLoading(false);
     if (error) {
       console.error('Sign-up error:', error);
     }
@@ -109,7 +112,8 @@ export default function SignUpPage() {
       <input
         {...register('passwordConfirmation', {
           required: true,
-          validate: (value) => value === password || 'Passwords do not match.',
+          validate: (value) =>
+            value === passwordValue || 'Passwords do not match.',
         })}
         placeholder="Confirm password"
         type="password"
@@ -121,8 +125,8 @@ export default function SignUpPage() {
         <p role="alert">Passwords do not match.</p>
       )}
       <br />
-      <button type="submit" disabled={loading}>
-        {loading ? 'Creating account...' : 'Sign up'}
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Creating account...' : 'Sign up'}
       </button>
       <br />
       <Link href="/sign-in">Sign in</Link>

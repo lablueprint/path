@@ -1,7 +1,7 @@
 'use client';
 
 import { DonationInsert } from '@/app/types/donation';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, useWatch, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import { createDonation } from '@/app/actions/donation';
 
@@ -29,7 +29,6 @@ export default function DonationForm() {
   const {
     register,
     handleSubmit,
-    watch,
     control,
     reset,
     clearErrors,
@@ -42,7 +41,10 @@ export default function DonationForm() {
     },
   });
 
-  const donorType = watch('donor_type');
+  const donorType = useWatch({
+    control,
+    name: 'donor_type',
+  });
 
   const onSubmit = async (data: FormData) => {
     const donation: DonationInsert = {
@@ -75,10 +77,11 @@ export default function DonationForm() {
       receiver_first_name: 'FIRST-NAME',
       receiver_last_name: 'LAST-NAME',
     };
-    try {
-      const result = await createDonation(donation);
 
-      // Reset all fields to empty/default values
+    const result = await createDonation(donation);
+
+    // Reset all fields to empty/default values
+    if (result.success) {
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -95,8 +98,8 @@ export default function DonationForm() {
         items_donated: '',
       });
       clearErrors();
-    } catch (error) {
-      console.error('Failed to create donation:', error);
+    } else {
+      console.error('Failed to create donation:', result.error);
     }
   };
 

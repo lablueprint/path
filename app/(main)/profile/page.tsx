@@ -19,11 +19,8 @@ export default async function PersonalProfilePage() {
     .eq('user_id', user.id)
     .single();
 
-  if (err) {
+  if (err || !profile) {
     console.error('Error fetching profile:', err);
-  }
-
-  if (!profile) {
     return <div>User profile not found.</div>;
   }
 
