@@ -1,4 +1,6 @@
 'use client';
+
+import Link from 'next/link';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 
@@ -16,6 +18,9 @@ export default function HomePage() {
   return (
     <div>
       <h1>Home</h1>
+      <Link href="/home/donate">
+        <p>Gift-in-kind form</p>
+      </Link>
       <button onClick={signOut}>Sign out</button>
     </div>
   );
