@@ -122,7 +122,7 @@ export default async function ManageStorePage({
       {/* store info */}
       <h1>{store.name}</h1>
       <p>{store.street_address}</p>
-      <Link href="/manage/inventory/add">
+      <Link href={`/manage/${storeId}/add`}>
         <p>Add store items and/or submit gift-in-kind form</p>
       </Link>
       {/* store items + info */}

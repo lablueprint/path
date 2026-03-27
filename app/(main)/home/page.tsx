@@ -19,7 +19,7 @@ export default function HomePage() {
     <div>
       <h1>Home</h1>
       <Link href="/home/donate">
-        <p>Gift-in-kind form</p>
+        <p>Submit gift-in-kind form</p>
       </Link>
       <button onClick={signOut}>Sign out</button>
     </div>
