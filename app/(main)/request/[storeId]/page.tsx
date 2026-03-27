@@ -1,12 +1,12 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
-import ItemSearch from '../../components/ItemSearch';
+import ItemSearch from '@/app/(main)/components/ItemSearch';
 
 type SearchParams = {
   query?: string;
   category?: string;
   subcategory?: string;
-}
+};
 
 export default async function RequestStorePage({
   params,
@@ -51,7 +51,7 @@ export default async function RequestStorePage({
     .select(
       `
       store_item_id,
-      inventory_item_id!inner(
+      inventory_items!inner(
         name,
         photo_url,
         subcategories!inner(
@@ -66,11 +66,39 @@ export default async function RequestStorePage({
     .eq('store_id', storeId)
     .eq('is_hidden', false);
 
-  if (query) { filteredItems = filteredItems.ilike('inventory_item_id.name', `%${query}%`); }
-  if (category) { filteredItems = filteredItems.eq('inventory_item_id.subcategories.category_id', category); }
-  if (subcategory) { filteredItems = filteredItems.eq('inventory_item_id.subcategory_id', subcategory); }
+  if (query) {
+    filteredItems = filteredItems.ilike('inventory_items.name', `%${query}%`);
+  }
+  if (category) {
+    filteredItems = filteredItems.eq(
+      'inventory_items.subcategories.category_id',
+      category,
+    );
+  }
+  if (subcategory) {
+    filteredItems = filteredItems.eq(
+      'inventory_items.subcategory_id',
+      subcategory,
+    );
+  }
 
-  const { data: itemsData, error: itemsError } = await filteredItems;
+  const { data: itemsData, error: itemsError } =
+    await filteredItems.overrideTypes<
+      {
+        store_item_id: string;
+        inventory_items: {
+          name: string;
+          photo_url: string;
+          subcategories: {
+            name: string;
+            categories: {
+              name: string;
+            };
+          };
+        };
+      }[],
+      { merge: false }
+    >();
 
   if (itemsError) {
     console.error('Error fetching store items:', itemsError);
@@ -79,18 +107,17 @@ export default async function RequestStorePage({
 
   // Sort itemsData in JavaScript
   const sortedItemsData = itemsData?.sort((a, b) => {
-    const nameA = (a.inventory_item_id as any)?.name?.toLowerCase() || '';
-    const nameB = (b.inventory_item_id as any)?.name?.toLowerCase() || '';
+    const nameA = a.inventory_items.name.toLowerCase() || '';
+    const nameB = b.inventory_items.name.toLowerCase() || '';
     return nameA.localeCompare(nameB);
   });
 
   const items = sortedItemsData?.map((item) => ({
-    id: item.store_item_id as string,
-    item: (item.inventory_item_id as any)?.name as string,
-    subcategory: (item.inventory_item_id as any)?.subcategories?.name as string,
-    category: (item.inventory_item_id as any)?.subcategories?.categories
-      ?.name as string,
-    photoUrl: (item.inventory_item_id as any)?.photo_url as string,
+    id: item.store_item_id,
+    item: item.inventory_items.name,
+    subcategory: item.inventory_items.subcategories.name,
+    category: item.inventory_items.subcategories.categories.name,
+    photoUrl: item.inventory_items.photo_url,
   }));
 
   return (
@@ -101,8 +128,17 @@ export default async function RequestStorePage({
       </div>
 
       <ItemSearch
-        categories={categories?.map(cat => ({ id: cat.category_id, name: cat.name })) || []}
-        subcategories={subcategories?.map(sub => ({ id: sub.subcategory_id, name: sub.name, category_id: sub.category_id })) || []}
+        categories={
+          categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
+          []
+        }
+        subcategories={
+          subcategories?.map((sub) => ({
+            id: sub.subcategory_id,
+            name: sub.name,
+            category_id: sub.category_id,
+          })) || []
+        }
       />
 
       <h2>Available Items</h2>
@@ -121,7 +157,7 @@ export default async function RequestStorePage({
           ))}
         </div>
       ) : (
-        <h3>No available items found.</h3>
+        <p>No available items found.</p>
       )}
     </div>
   );
