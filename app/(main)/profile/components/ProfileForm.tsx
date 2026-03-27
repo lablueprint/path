@@ -16,12 +16,16 @@ type ProfileFormValues = {
 };
 
 export default function ProfileForm({ user }: { user: User }) {
-  const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string>(
     user.profile_photo_url || defaultProfilePhoto.src,
   );
+  // previewUrl represents the locally selected file for the UI
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // Track if the user has explicitly clicked "Remove" but hasn't saved yet
+  const [isPendingDelete, setIsPendingDelete] = useState(false);
 
   const supabase = createClient();
   const photoUploadRef = useRef<{ resetFile: () => void }>(null);
@@ -49,120 +53,112 @@ export default function ProfileForm({ user }: { user: User }) {
     const preview = URL.createObjectURL(file);
     setPreviewUrl(preview);
     setSelectedFile(file);
+    setIsPendingDelete(false);
   };
 
-  const handleSavePhoto = async () => {
-    if (!selectedFile) return;
-
-    setIsUploading(true);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (user) {
-      const { error } = await supabase.storage
-        .from('profile_photos')
-        .upload(`${user.id}/profile.jpg`, selectedFile, { upsert: true });
-
-      if (error) {
-        console.error('Upload error:', error.message);
-      } else {
-        const { data } = supabase.storage
-          .from('profile_photos')
-          .getPublicUrl(`${user.id}/profile.jpg`);
-
-        const freshUrl = `${data.publicUrl}?t=${Date.now()}`;
-
-        await updateUser(user.id, {
-          profile_photo_url: freshUrl,
-        });
-
-        setPhotoUrl(freshUrl);
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-        setPreviewUrl(null);
-        setSelectedFile(null);
-      }
-    }
-    setIsUploading(false);
-  };
-
-  const handleCancelPhoto = () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
+  const handleRemovePhoto = () => {
     setPreviewUrl(null);
     setSelectedFile(null);
+    setIsPendingDelete(true);
     photoUploadRef.current?.resetFile();
   };
 
-  const handleRemovePhoto = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (user) {
-      const { error } = await supabase.storage
-        .from('profile_photos')
-        .remove([`${user.id}/profile.jpg`]);
-
-      if (error) {
-        console.error('Remove error:', error.message);
-        return;
-      }
-
-      await updateUser(user.id, { profile_photo_url: '' });
-    }
-
-    setPhotoUrl(defaultProfilePhoto.src);
+  const onCancel = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setSelectedFile(null);
+    setIsPendingDelete(false);
+    setPhotoUrl(user.profile_photo_url || defaultProfilePhoto.src);
+    photoUploadRef.current?.resetFile();
+    reset();
   };
 
   const onSubmit = async (data: ProfileFormValues) => {
-    await updateUser(user.user_id, {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      email: data.email,
-      profile_photo_url: photoUrl,
-    });
-    reset(data);
+    setIsSaving(true);
+    try {
+      let finalPhotoUrl = photoUrl;
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+
+      if (authUser) {
+        // Handle deletion if flagged
+        if (isPendingDelete) {
+          await supabase.storage
+            .from('profile_photos')
+            .remove([`${authUser.id}/profile.jpg`]);
+          finalPhotoUrl = '';
+        }
+
+        // Handle upload if a new file is selected
+        if (selectedFile) {
+          const { error: uploadError } = await supabase.storage
+            .from('profile_photos')
+            .upload(`${authUser.id}/profile.jpg`, selectedFile, { upsert: true });
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError.message);
+          } else {
+            const { data: publicData } = supabase.storage
+              .from('profile_photos')
+              .getPublicUrl(`${authUser.id}/profile.jpg`);
+
+            finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+          }
+        }
+      }
+
+      // Update all user fields
+      const result = await updateUser(user.user_id, {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        profile_photo_url: finalPhotoUrl,
+      });
+
+      if (result.success) {
+        setPhotoUrl(finalPhotoUrl || defaultProfilePhoto.src);
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(null);
+        setSelectedFile(null);
+        setIsPendingDelete(false);
+        reset(data);
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
+
+  // Determine image to show the user
+  const displayImage = isPendingDelete
+    ? defaultProfilePhoto.src
+    : (previewUrl || photoUrl);
+
+  const hasDirtyTextOrImage = isDirty || !!selectedFile || (isPendingDelete && user.profile_photo_url);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        {/* Show preview if user picked a file; otherwise show the saved URL */}
         <Image
-          src={previewUrl || photoUrl}
+          src={displayImage}
           alt="Profile photo"
           width={64}
           height={64}
           style={{ objectFit: 'cover' }}
           unoptimized
         />
-        {previewUrl ? (
-          <>
-            <button
-              type="button"
-              onClick={handleSavePhoto}
-              disabled={isUploading}
-            >
-              Save
-            </button>
-            <button type="button" onClick={handleCancelPhoto}>
-              Cancel
-            </button>
-          </>
-        ) : (
-          photoUrl !== defaultProfilePhoto.src && (
-            <>
-              <button type="button" onClick={handleRemovePhoto}>
-                Remove
-              </button>
-            </>
-          )
+
+        {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
+        {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
+          <button type="button" onClick={handleRemovePhoto}>
+            Remove
+          </button>
         )}
+
         <br />
         <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
       </div>
+
       <label>First name</label>
       <input {...register('firstName', { required: true })} />
       {errors.firstName?.type === 'required' && (
@@ -181,10 +177,13 @@ export default function ProfileForm({ user }: { user: User }) {
         <p role="alert">Email is required.</p>
       )}
       <br />
-      {isDirty && (
+
+      {hasDirtyTextOrImage && (
         <>
-          <button type="submit">Save</button>
-          <button type="button" onClick={() => reset()}>
+          <button type="submit" disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+          <button type="button" onClick={onCancel} disabled={isSaving}>
             Cancel
           </button>
         </>
