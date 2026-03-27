@@ -1,5 +1,5 @@
 'use server';
-import DonationForm from './components/DonationForm';
+import DonationForm from '@/app/(main)/manage/[storeId]/add/components/DonationForm';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 import StoreItemsDonationForm from './components/StoreItemsDonationForm';

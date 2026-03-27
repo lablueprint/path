@@ -1,4 +1,3 @@
-'use server';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 export default async function InventoryItemPage({
@@ -11,24 +10,44 @@ export default async function InventoryItemPage({
   const { data, error } = await supabase
     .from('inventory_items')
     .select(
-      `inventory_item_id, name, description, photo_url, subcategories(name), categories(name)`,
+      `inventory_item_id, name, description, photo_url, subcategories(name, categories(name))`,
     )
     .eq('inventory_item_id', inventoryItemId)
-    .single();
+    .single()
+    .overrideTypes<
+      {
+        inventory_item_id: string;
+        name: string;
+        description: string;
+        photo_url: string;
+        subcategories: {
+          name: string;
+          categories: {
+            name: string;
+          };
+        };
+      },
+      { merge: false }
+    >();
   if (error) {
-    console.log('Error fetching inventory items info: ', error.message);
+    console.error('Error fetching inventory item:', error.message);
   }
-  if (data) {
-    console.log('sub, cat');
-    console.log(data.subcategories);
-    console.log(data.categories);
-  }
+
+  const item = {
+    inventory_item_id: data?.inventory_item_id,
+    item: data?.name,
+    description: data?.description,
+    photo_url: data?.photo_url,
+    subcategory: data?.subcategories.name,
+    category: data?.subcategories.categories.name,
+  };
+
   return (
     <div>
-      <p>{data?.name}</p>
-      <p>{data?.description}</p>
-      <p>{data?.subcategories?.name}</p>
-      <p>{data?.categories?.name}</p>
+      <h1>{item.item}</h1>
+      <p>Description: {item.description}</p>
+      <p>Category: {item.category}</p>
+      <p>Subcategory: {item.subcategory}</p>
     </div>
   );
 }

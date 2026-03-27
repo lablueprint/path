@@ -1,6 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import { Ticket } from '@/app/types/ticket';
-import OutgoingTicketsList from './components/OutgoingTicketsList';
+import OutgoingTicketsList from '@/app/(main)/outgoing-tickets/components/OutgoingTicketsList';
 
 export default async function OutgoingTicketsPage() {
   const supabase = await createClient();
@@ -8,15 +7,23 @@ export default async function OutgoingTicketsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: userTickets, error: err } = await supabase
+  // Fetch store information along with tickets in the same Supabase query
+  const { data: userTickets, error } = await supabase
     .from('tickets')
-    .select('*')
+    .select(
+      `
+        ticket_id,
+        status,
+        date_submitted,
+        store_id,
+        stores (
+          name
+        )
+      `,
+    )
     .eq('requestor_user_id', user?.id);
 
-  if (err) {
-    console.error('Error fetching tickets:', err);
-    return <div>Failed to load data.</div>;
-  }
+  if (error) return <div>Failed to load data.</div>;
 
   return (
     <div>

@@ -7,8 +7,6 @@ import {
   deleteStoreAdmin,
   createStoreItem,
   deleteStoreItem,
-  updateStoreItemIsHidden,
-  updateStoreItemQuantity,
   updateStore,
 } from '@/app/actions/store';
 import {
@@ -29,8 +27,8 @@ export default function StoresTestComponent() {
   };
 
   const storeItemData: StoreItemInsert = {
-    inventory_item_id: 'f8434368-0c6a-409f-878a-03cfc7568579',
-    store_id: '5942ab5c-aad1-4f7e-acdc-07a3033b7c6c',
+    inventory_item_id: '367d00b7-5699-4502-8223-181abab2e1d7', //changed from f8434368-0c6a-409f-878a-03cfc7568579 -> 367d00b7-5699-4502-8223-181abab2e1d7 to make default case work w my specific db mods
+    store_id: '456e0fa0-a0d6-4775-a2ff-56ca12e4c519', // changed from 5942ab5c-aad1-4f7e-acdc-07a3033b7c6c -> 456e0fa0-a0d6-4775-a2ff-56ca12e4c519 to make default case work w my specific db mods
     quantity_available: 4,
     is_hidden: true,
   };
@@ -59,17 +57,6 @@ export default function StoresTestComponent() {
     await deleteStoreItem('4518b9b5-3401-47ce-b1e4-f09171e0a805');
   };
 
-  const handleUpdateStoreItemQuantity = async () => {
-    await updateStoreItemQuantity('4518b9b5-3401-47ce-b1e4-f09171e0a805', 10);
-  };
-
-  const handleUpdateStoreItemIsHidden = async () => {
-    await updateStoreItemIsHidden(
-      '4518b9b5-3401-47ce-b1e4-f09171e0a805',
-      false,
-    );
-  };
-
   const handleUpdateStore = async () => {
     await updateStore('70427a92-803f-43aa-ab38-fa82376cf4cf', {
       name: 'new store',
@@ -84,12 +71,6 @@ export default function StoresTestComponent() {
       <button onClick={handleDeleteStoreAdminClick}>Delete store admin</button>
       <button onClick={handleAddStoreItemClick}>Add store item</button>
       <button onClick={handleDeleteStoreItemClick}>Delete store item</button>
-      <button onClick={handleUpdateStoreItemQuantity}>
-        Update store item quantity
-      </button>
-      <button onClick={handleUpdateStoreItemIsHidden}>
-        Update store item visibility
-      </button>
       <button onClick={handleUpdateStore}>Update store</button>
     </div>
   );

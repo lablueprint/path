@@ -7,6 +7,9 @@ create table "inventory_items" (
   constraint fk_subcategories foreign key (subcategory_id) references subcategories (subcategory_id) on update cascade
 );
 
+alter table "inventory_items"
+add constraint uq_subcategory_id_name unique (subcategory_id, name);
+
 alter table "inventory_items" enable row level security;
 
 create policy "auth can read inventory_items if >= requestor" on public.inventory_items for
