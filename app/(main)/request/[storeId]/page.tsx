@@ -1,10 +1,19 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
+import ItemSearch from '@/app/(main)/components/ItemSearch';
+
+type SearchParams = {
+  query?: string;
+  category?: string;
+  subcategory?: string;
+};
 
 export default async function RequestStorePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ storeId: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const { storeId } = await params;
 
@@ -22,18 +31,59 @@ export default async function RequestStorePage({
     return <div>Failed to load store.</div>;
   }
 
+  // Fetch categories
+  const { data: categories } = await supabase
+    .from('categories')
+    .select('category_id, name')
+    .order('name');
+
+  // Fetch subcategories
+  const { data: subcategories } = await supabase
+    .from('subcategories')
+    .select('subcategory_id, name, category_id')
+    .order('name');
+
   // Fetch non-hidden store items
-  const { data: itemsData, error: itemsError } = await supabase
+  const { query, category, subcategory } = await searchParams;
+
+  let filteredItems = supabase
     .from('store_items')
     .select(
       `
-        store_item_id,
-        inventory_items(name, photo_url, subcategories(name, categories(name)))
-      `,
+      store_item_id,
+      inventory_items!inner(
+        name,
+        photo_url,
+        subcategories!inner(
+          name,
+          categories!inner(
+            name
+          )
+        )
+      )
+    `,
     )
     .eq('store_id', storeId)
-    .eq('is_hidden', false)
-    .overrideTypes<
+    .eq('is_hidden', false);
+
+  if (query) {
+    filteredItems = filteredItems.ilike('inventory_items.name', `%${query}%`);
+  }
+  if (category) {
+    filteredItems = filteredItems.eq(
+      'inventory_items.subcategories.category_id',
+      category,
+    );
+  }
+  if (subcategory) {
+    filteredItems = filteredItems.eq(
+      'inventory_items.subcategory_id',
+      subcategory,
+    );
+  }
+
+  const { data: itemsData, error: itemsError } =
+    await filteredItems.overrideTypes<
       {
         store_item_id: string;
         inventory_items: {
@@ -55,7 +105,14 @@ export default async function RequestStorePage({
     return <div>Failed to load store items.</div>;
   }
 
-  const items = itemsData?.map((item) => ({
+  // Sort itemsData in JavaScript
+  const sortedItemsData = itemsData?.sort((a, b) => {
+    const nameA = a.inventory_items.name.toLowerCase() || '';
+    const nameB = b.inventory_items.name.toLowerCase() || '';
+    return nameA.localeCompare(nameB);
+  });
+
+  const items = sortedItemsData?.map((item) => ({
     id: item.store_item_id,
     item: item.inventory_items.name,
     subcategory: item.inventory_items.subcategories.name,
@@ -69,6 +126,20 @@ export default async function RequestStorePage({
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>
       </div>
+
+      <ItemSearch
+        categories={
+          categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
+          []
+        }
+        subcategories={
+          subcategories?.map((sub) => ({
+            id: sub.subcategory_id,
+            name: sub.name,
+            category_id: sub.category_id,
+          })) || []
+        }
+      />
 
       <h2>Available Items</h2>
 
@@ -86,7 +157,7 @@ export default async function RequestStorePage({
           ))}
         </div>
       ) : (
-        <h3>No available items found.</h3>
+        <p>No available items found.</p>
       )}
     </div>
   );
