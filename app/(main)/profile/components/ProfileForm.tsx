@@ -121,6 +121,7 @@ export default function ProfileForm({ user }: { user: User }) {
         setSelectedFile(null);
         setIsPendingDelete(false);
         reset(data);
+        photoUploadRef.current?.resetFile();
       }
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -134,7 +135,7 @@ export default function ProfileForm({ user }: { user: User }) {
     ? defaultProfilePhoto.src
     : (previewUrl || photoUrl);
 
-  const hasDirtyTextOrImage = isDirty || !!selectedFile || (isPendingDelete && user.profile_photo_url);
+  const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
