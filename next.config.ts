@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
     '127.0.0.1',
     'localhost',
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '54321',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

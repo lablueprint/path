@@ -1,5 +1,4 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-//import ProfileForm from '@/app/(main)/profile/components/ProfileForm_og';
 import ProfileForm from '@/app/(main)/profile/components/ProfileForm';
 import type { User } from '@/app/types/user';
 import { UpdatePasswordForm } from '@/app/(main)/profile/components/UpdatePasswordForm';
