@@ -11,4 +11,6 @@ export type User = {
   profile_photo_url: string;
 };
 
-export type UserUpdate = Omit<User, 'user_id'>;
+export type UserInsert = Omit<User, 'user_id'>;
+
+export type UserUpdate = Partial<UserInsert>;
