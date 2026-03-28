@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Link from 'next/link';
 
 type SearchParams = {
   query?: string;
@@ -119,10 +120,11 @@ export default async function ManageStorePage({
   return (
     <div>
       {/* store info */}
-      <div>
-        <h1>{store.name}</h1>
-        <p>{store.street_address}</p>
-      </div>
+      <h1>{store.name}</h1>
+      <p>{store.street_address}</p>
+      <Link href={`/manage/${storeId}/add`}>
+        <p>Add store items and/or submit gift-in-kind form</p>
+      </Link>
       {/* store items + info */}
       <div>
         <ItemSearch

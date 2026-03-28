@@ -180,3 +180,53 @@ export const updateStoreItemIsHidden = async (
 
   return { success: true, data: entry as StoreItem };
 };
+
+//add store item/ update quantity
+
+export const addUpdateStoreItemQuantity = async (
+  inventoryItemId: string,
+  newQuantity: number,
+  storeId: string,
+) => {
+  const supabase = await createClient();
+  const { data: existingItemQuantity } = await supabase
+    .from('store_items')
+    .select('quantity_available')
+    .eq('inventory_item_id', inventoryItemId)
+    .eq('store_id', storeId)
+    .single();
+
+  if (existingItemQuantity) {
+    // Update Quantity (item exists)
+    const updatedQuantity =
+      Number(existingItemQuantity?.quantity_available) + Number(newQuantity);
+    const { data: entry, error: err } = await supabase
+      .from('store_items')
+      .update({ quantity_available: updatedQuantity })
+      .eq('inventory_item_id', inventoryItemId)
+      .eq('store_id', storeId)
+      .select()
+      .single();
+    if (err) {
+      console.error('Error updating store item quantity:', err);
+      return { success: false, data: null, error: err.message };
+    }
+    return { success: true, data: entry as StoreItem };
+  } else {
+    const { data: entry, error: err } = await supabase
+      .from('store_items')
+      .insert({
+        inventory_item_id: inventoryItemId,
+        store_id: storeId,
+        quantity_available: newQuantity,
+        is_hidden: false,
+      })
+      .select()
+      .single();
+    if (err) {
+      console.error('Error adding store item and quantity:', err);
+      return { success: false, data: null, error: err.message };
+    }
+    return { success: true, data: entry as StoreItem };
+  }
+};
