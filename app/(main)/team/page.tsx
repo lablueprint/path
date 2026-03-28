@@ -7,7 +7,7 @@ export default async function TeamPage() {
 
   const { data: storesData, error: storesErr } = await supabase
     .from('stores')
-    .select('store_id, name, street_address');
+    .select('*');
   if (storesErr) {
     console.error('Error fetching stores:', storesErr);
   }
