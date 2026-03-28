@@ -1,8 +1,6 @@
-'use server';
-import DonationForm from '@/app/(main)/manage/[storeId]/add/components/DonationForm';
 import { createClient } from '@/app/lib/supabase/server-client';
-
-import StoreItemsDonationForm from './components/StoreItemsDonationForm';
+import StoreItemsDonationForm from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
+import { notFound } from 'next/navigation';
 
 export default async function AddStoreItemsPage({
   params,
@@ -12,7 +10,7 @@ export default async function AddStoreItemsPage({
   const { storeId } = await params;
   const supabase = await createClient();
   // fetch store's entry
-  const { data: storeData, error } = await supabase
+  const { data: storeData, error: storeError } = await supabase
     .from('stores')
     .select('*')
     .eq('store_id', storeId)
@@ -28,6 +26,8 @@ export default async function AddStoreItemsPage({
     .select('*')
     .eq('user_id', userId)
     .single();
+
+  if (userError || storeError) return notFound();
 
   return (
     <div>

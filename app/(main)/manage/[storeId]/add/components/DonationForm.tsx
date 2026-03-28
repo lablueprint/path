@@ -3,29 +3,14 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import { CombinedFormData } from './StoreItemsDonationForm';
-import { SetStateAction } from 'react';
 
-// type FormData = {
-//   donor_type?: 'individual' | 'business';
-
-//   individual_name?: string;
-//   business_name?: string;
-//   business_contact_name?: string;
-
-//   email: string;
-//   phone: string;
-//   address: string;
-//   receiving_site: string;
-
-//   receive_emails: boolean;
-//   receive_mailings: boolean;
-//   remain_anonymous: boolean;
-
-//   estimated_value: string;
-//   items_donated: string;
-// };
-
-export default function DonationForm({ setItemsDonated, donorType }) {
+export default function DonationForm({
+  setItemsDonated,
+  donorType,
+}: {
+  setItemsDonated: (value: string) => void;
+  donorType: 'individual' | 'business' | undefined;
+}) {
   const {
     register,
     control,

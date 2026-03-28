@@ -1,26 +1,31 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useFieldArray } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { InventoryItem } from '@/app/types/inventory';
-import type { CombinedFormData } from './StoreItemsDonationForm';
+import type { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
 };
 
+const supabase = createClient();
+
 export default function AddStoreItemSearch({
   setAutoFillItems,
 }: {
-  setAutoFillItems: any;
+  setAutoFillItems: (items: ItemWithNames[]) => void;
 }) {
   const methods = useFormContext<CombinedFormData>();
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: 'items',
+  });
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
-
-  const supabase = createClient();
 
   useEffect(() => {
     const fetch = async () => {
@@ -48,28 +53,38 @@ export default function AddStoreItemSearch({
       }
     };
     fetch();
-  }, [searchQuery, supabase]);
+  }, [searchQuery]);
   useEffect(() => {
     setAutoFillItems(selectedItems);
   }, [selectedItems, setAutoFillItems]);
 
-  const select = (item: ItemWithNames) => {
-    setSelectedItems((prev) =>
-      prev.some((i) => i.name === item.name) ? prev : [...prev, item],
-    );
+  const handleSelect = (item: ItemWithNames) => {
+    if (
+      !selectedItems.some((i) => i.inventory_item_id === item.inventory_item_id)
+    ) {
+      setSelectedItems((prev) => [...prev, item]);
+      append({
+        inventory_item_id: item.inventory_item_id,
+        quantity: 1,
+      });
+    }
   };
 
-  const handleRemove = (itemToRemove: ItemWithNames) => {
+  const handleRemove = (index: number) => {
+    const itemToRemove = selectedItems[index];
     setSelectedItems((prev) =>
       prev.filter(
         (item) => item.inventory_item_id != itemToRemove.inventory_item_id,
       ),
     );
+    remove(index);
   };
+
   return (
     <div>
+      <h2>Add Store Items</h2>
       <input
-        placeholder="Search item..."
+        placeholder="Search..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
@@ -77,26 +92,37 @@ export default function AddStoreItemSearch({
         {results?.map((item) => (
           <div key={item.name}>
             <li>{item.name}</li>
-            <button onClick={() => select(item)}>Select</button>
+            <button type="button" onClick={() => handleSelect(item)}>
+              Select
+            </button>
           </div>
         ))}
       </ul>
 
-      <div>Selected Items</div>
-      <ul>
-        {selectedItems?.map((item, idx) => (
-          <div key={item.name}>
-            <li>Item: {item.name}</li>
-            <li>Category: {item.category_name}</li>
-            <li>Subcategory: {item.subcategory_name}</li>
-            <li>Description: {item.description}</li>
-            <input
-              type="number"
-              placeholder="Quantity to add"
-              {...methods.register(`items.${idx}.quantity`, {
-                required: 'Quantity is required',
-              })}
-            />
+      <h3>Selected Items</h3>
+      {fields.length > 0 ? (
+        fields.map((field, idx) => (
+          <div key={field.id}>
+            <p>Item: {selectedItems[idx]?.name}</p>
+            <p>Category: {selectedItems[idx]?.category_name}</p>
+            <p>Subcategory: {selectedItems[idx]?.subcategory_name}</p>
+            <p>Description: {selectedItems[idx]?.description}</p>
+            <p>
+              Quantity:{' '}
+              <input
+                type="number"
+                min="1"
+                placeholder="Quantity to add"
+                {...methods.register(`items.${idx}.quantity`, {
+                  required: 'Quantity is required.',
+                  valueAsNumber: true,
+                  min: {
+                    value: 1,
+                    message: 'Quantity must be at least 1.',
+                  },
+                })}
+              />
+            </p>
             {methods.formState.errors.items?.[idx]?.quantity && (
               <p style={{ color: 'red' }}>
                 {' '}
@@ -108,13 +134,16 @@ export default function AddStoreItemSearch({
             )}
             <input
               type="hidden"
-              value={item.inventory_item_id}
               {...methods.register(`items.${idx}.inventory_item_id`)}
             />
-            <button onClick={() => handleRemove(item)}>Remove</button>
+            <button type="button" onClick={() => handleRemove(idx)}>
+              Remove
+            </button>
           </div>
-        ))}
-      </ul>
+        ))
+      ) : (
+        <p>No items selected.</p>
+      )}
     </div>
   );
 }
