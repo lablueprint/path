@@ -50,7 +50,7 @@ export default async function ManagePage() {
     <div>
       <h1>Manage Inventory</h1>
       <Link href="/manage/inventory">
-        <p>Library</p>
+        <p>Inventory Library</p>
       </Link>
       {stores.length > 0 ? (
         <StoresList stores={stores} />

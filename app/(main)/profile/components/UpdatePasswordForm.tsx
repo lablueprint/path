@@ -8,7 +8,7 @@ type FormValues = {
   newPasswordConfirmation: string;
 };
 
-export function UpdatePasswordForm() {
+export default function UpdatePasswordForm() {
   const {
     register,
     handleSubmit,

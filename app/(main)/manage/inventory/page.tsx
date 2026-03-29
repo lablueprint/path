@@ -91,7 +91,7 @@ export default async function InventoryPage({
 
   return (
     <div>
-      <h1>Library</h1>
+      <h1>Inventory Library</h1>
       <Link href="/manage/inventory/add">
         <p>Add inventory item</p>
       </Link>
