@@ -56,7 +56,7 @@ export default function UsersList({
           (filterRole === 'All' || user.role === filterRole) && (
             <Link
               key={user.user_id}
-              href={`/team/profile/${user.user_id}`} // Where to navigate
+              href={`/team/people/${user.user_id}`} // Where to navigate
             >
               <div>
                 Name: {user.first_name ?? 'FirstName'}{' '}

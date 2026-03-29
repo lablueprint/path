@@ -1,6 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import DeleteStoreAdminButton from '@/app/(main)/team/[storeId]/components/DeleteStoreAdminButton';
-import AddAdminSearch from '@/app/(main)/team/[storeId]/components/AddAdminSearch';
+import DeleteStoreAdminButton from '@/app/(main)/team/store-admins/[storeId]/components/DeleteStoreAdminButton';
+import AddAdminSearch from '@/app/(main)/team/store-admins/[storeId]/components/AddAdminSearch';
 
 export default async function StoreAdminPage({
   params,
@@ -97,10 +97,7 @@ export default async function StoreAdminPage({
         <h2>Current Admins</h2>
         {admins?.length ? (
           admins.map((admin) => {
-            const user = Array.isArray(admin.users)
-              ? admin.users[0]
-              : admin.users;
-
+            const user = admin.users;
             return (
               <div
                 key={admin.store_admin_id}
