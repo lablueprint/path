@@ -1,4 +1,4 @@
-import OutgoingTicketCard from './OutgoingTicketCard';
+import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 

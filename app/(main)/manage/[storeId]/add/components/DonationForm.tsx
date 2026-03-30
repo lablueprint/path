@@ -2,7 +2,7 @@
 
 import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
-import { CombinedFormData } from './StoreItemsDonationForm';
+import { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 
 export default function DonationForm({
   setItemsDonated,
