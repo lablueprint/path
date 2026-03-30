@@ -25,7 +25,7 @@ type FormData = {
   items_donated: string;
 };
 
-export default function DonationForm() {
+export default function LightweightDonationForm() {
   const {
     register,
     handleSubmit,
