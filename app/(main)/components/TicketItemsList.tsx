@@ -1,187 +1,124 @@
-// import { createClient } from '@/app/lib/supabase/server-client';
-// import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
-// import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
-// import UserCard from '@/app/(main)/components/UserCard';
-// import { User } from '@/app/types/user';
+import { createClient } from '@/app/lib/supabase/server-client';
+import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
+import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
+import { deleteTicketItem } from '@/app/actions/ticket';
+import React from 'react';
 
-// export default async function TicketItemsList({
-//   ticketId,
-//   outgoing,
-// }: {
-//   ticketId: string;
-//   outgoing: boolean;
-// }) {
-//   const supabase = await createClient();
+interface InStockTicketItem {
+    ticket_item_id: string;
+    ticket_id: string;
+    store_item_id: string;
+    quantity_requested: number;
+    free_text_description: string;
+    is_in_stock_request: boolean;
+    store_items?: {
+        quantity_available?: number;
+        inventory_items?: {
+            name?: string;
+            photo_url?: string;
+            subcategories?: {
+                name?: string;
+                categories?: {
+                    name?: string;
+                };
+            };
+        };
+    };
+}
 
-//   const { data: userTicket, error: err } = await supabase
-//     .from('tickets')
-//     .select(
-//       `store_id, ticket_id, requestor_user_id, status, date_submitted,
-//       stores (
-//         name,
-//         street_address
-//       )
-//     `,
-//     )
-//     .eq('ticket_id', ticketId)
-//     .single();
+interface OutOfStockTicketItem {
+    ticket_item_id: string;
+    free_text_description: string | null;
+}
 
-//   if (err) {
-//     console.error('Error fetching ticket:', err);
-//     return <div>Failed to load data.</div>;
-//   }
+export default async function TicketItemsList({ ticketId }: { ticketId: string }) {
+    const supabase = await createClient();
 
-//   let InStockTicketItems: any[] = [];
-//   let OutOfStockTicketItems: {
-//     ticket_item_id: string;
-//     free_text_description: string | null;
-//   }[] = [];
-//   if (userTicket) {
-//     const { data: items } = await supabase
-//       .from('ticket_items')
-//       .select(
-//         `*,
-//         store_items(
-//           quantity_available,
-//           inventory_items(
-//             name,
-//             photo_url,
-//             subcategories(
-//               name,
-//               categories(
-//                 name
-//               )
-//             )
-//           )
-//         )
-//       `,
-//       )
-//       .eq('ticket_id', ticketId)
-//       .eq('is_in_stock_request', true);
-//     InStockTicketItems = items || [];
+    let InStockTicketItems: InStockTicketItem[] = [];
+    let OutOfStockTicketItems: OutOfStockTicketItem[] = [];
 
-//     const { data: outOfStock } = await supabase
-//       .from('ticket_items')
-//       .select(
-//         `ticket_item_id,
-//         free_text_description
-//       `,
-//       )
-//       .eq('ticket_id', ticketId)
-//       .eq('is_in_stock_request', false);
-//     OutOfStockTicketItems = outOfStock || [];
-//   }
+    const { data: items } = await supabase
+        .from('ticket_items')
+        .select(
+            `*,
+			store_items(
+				quantity_available,
+				inventory_items(
+					name,
+					photo_url,
+					subcategories(
+						name,
+						categories(
+							name
+						)
+					)
+				)
+			)
+		`,
+        )
+        .eq('ticket_id', ticketId)
+        .eq('is_in_stock_request', true);
+    InStockTicketItems = items || [];
 
-//   const store = userTicket.stores as unknown as {
-//     name: string;
-//     street_address: string;
-//   };
+    const { data: outOfStock } = await supabase
+        .from('ticket_items')
+        .select(
+            `ticket_item_id,
+			free_text_description
+		`,
+        )
+        .eq('ticket_id', ticketId)
+        .eq('is_in_stock_request', false);
+    OutOfStockTicketItems = outOfStock || [];
 
-//   let storeAdminsList: User[] = [];
-//   let requestor = null;
-//   if (outgoing) {
-//     const { data: storeAdmins } = await supabase
-//       .from('store_admins')
-//       .select(
-//         `
-//                 users(
-//                     user_id,
-//                     first_name,
-//                     last_name,
-//                     email,
-//                     profile_photo_url
-//                 )
-//             `,
-//       )
-//       .eq('store_id', userTicket.store_id);
-//     storeAdminsList = (storeAdmins || [])
-//       .map((storeAdmin) => storeAdmin.users as unknown as User)
-//       .filter(Boolean);
-//   } else {
-//     if (userTicket) {
-//       const { data: requestorData } = await supabase
-//         .from('users')
-//         .select()
-//         .eq('user_id', userTicket.requestor_user_id)
-//         .single();
-//       requestor = requestorData;
-//     }
-//   }
+    async function handleRemove(ticketItemId: string) {
+        'use server';
+        await deleteTicketItem(ticketItemId);
+    }
 
-//   return (
-//     <div>
-//       {userTicket ? (
-//         <div>
-//           <h1>{outgoing ? 'Outgoing' : 'Incoming'} Ticket Details</h1>
-//           <p>Ticket ID: {userTicket.ticket_id}</p>
-//           <p>Date submitted: {userTicket.date_submitted}</p>
-//           <p>Store: {store.name} </p>
-//           <p>Store address: {store.street_address}</p>
-//           <p>Status: {userTicket.status}</p>
-//           {outgoing ? (
-//             <div>
-//               <h2>Contact Store Admins</h2>
-//               {storeAdminsList.map((storeAdmin) => (
-//                 <UserCard user={storeAdmin} key={storeAdmin.user_id}></UserCard>
-//               ))}
-//             </div>
-//           ) : (
-//             <div>
-//               <h2>Contact Requestor</h2>
-//               <UserCard user={requestor}></UserCard>
-//             </div>
-//           )}
-//           {InStockTicketItems.length > 0 ? (
-//             <div>
-//               <h2> In-Stock Requests</h2>
-//               <div>
-//                 {InStockTicketItems.map((item) => (
-//                   <InStockTicketItemCard
-//                     key={item.ticket_item_id}
-//                     ticketItemId={item.ticket_item_id}
-//                     quantityRequested={item.quantity_requested}
-//                     quantityAvailable={
-//                       item.store_items?.quantity_available || 0
-//                     }
-//                     itemName={
-//                       item.store_items?.inventory_items?.name || 'Unknown'
-//                     }
-//                     photoUrl={
-//                       item.store_items?.inventory_items?.photo_url || ''
-//                     }
-//                     subcategoryName={
-//                       item.store_items?.inventory_items?.subcategories?.name ||
-//                       'Unknown'
-//                     }
-//                     categoryName={
-//                       item.store_items?.inventory_items?.subcategories
-//                         ?.categories?.name || 'Unknown'
-//                     }
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//           ) : null}
-//           {OutOfStockTicketItems.length > 0 ? (
-//             <div>
-//               <h2>Out-of-Stock Requests</h2>
-//               <div>
-//                 {OutOfStockTicketItems.map((item) => (
-//                   <OutOfStockTicketItemCard
-//                     key={item.ticket_item_id}
-//                     ticketItemId={item.ticket_item_id}
-//                     freeTextDescription={
-//                       item.free_text_description || 'No description'
-//                     }
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//           ) : null}
-//         </div>
-//       ) : (
-//         <p>No ticket found.</p>
-//       )}
-//     </div>
-//   );
-// }
+    return (
+        <>
+            {InStockTicketItems.length > 0 && (
+                <div>
+                    <h2>In-Stock Requests</h2>
+                    <div>
+                        {InStockTicketItems.map((item) => (
+                            <div key={item.ticket_item_id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <InStockTicketItemCard
+                                    ticketItemId={item.ticket_item_id}
+                                    quantityRequested={item.quantity_requested}
+                                    quantityAvailable={item.store_items?.quantity_available || 0}
+                                    itemName={item.store_items?.inventory_items?.name || 'Unknown'}
+                                    photoUrl={item.store_items?.inventory_items?.photo_url || ''}
+                                    subcategoryName={item.store_items?.inventory_items?.subcategories?.name || 'Unknown'}
+                                    categoryName={item.store_items?.inventory_items?.subcategories?.categories?.name || 'Unknown'}
+                                />
+                                <form action={async () => { await handleRemove(item.ticket_item_id); }}>
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {OutOfStockTicketItems.length > 0 && (
+                <div>
+                    <h2>Out-of-Stock Requests</h2>
+                    <div>
+                        {OutOfStockTicketItems.map((item) => (
+                            <div key={item.ticket_item_id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <OutOfStockTicketItemCard
+                                    ticketItemId={item.ticket_item_id}
+                                    freeTextDescription={item.free_text_description || 'No description'}
+                                />
+                                <form action={async () => { await handleRemove(item.ticket_item_id); }}>
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </>
+    );
+}
