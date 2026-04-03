@@ -54,6 +54,9 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
     console.error('Error changing ticket status:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/request/${entry.store_id}/cart`);
+
   return { success: true, data: entry as Ticket };
 }
 
