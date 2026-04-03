@@ -4,17 +4,17 @@ import { useEffect } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useUserStore } from '@/app/lib/store/user-store';
 
-export default function AuthListener() {
-  const supabase = createClient();
+const supabase = createClient();
 
-  const { setId, setRole, setLoading, clearUserStore } = useUserStore();
+export default function AuthListener() {
+  const { setId, setRole, setIsLoading, clearUserStore } = useUserStore();
 
   useEffect(() => {
-    setLoading(true);
     // Listen for Supabase Auth events
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setIsLoading(true);
       console.log('Supabase Auth event:', event, session?.user);
       if (
         event === 'INITIAL_SESSION' ||
@@ -29,11 +29,11 @@ export default function AuthListener() {
       } else if (event === 'SIGNED_OUT') {
         clearUserStore();
       }
-      setLoading(false);
+      setIsLoading(false);
     });
     return () => {
       subscription.unsubscribe();
     };
-  }, [setId, setRole, setLoading, clearUserStore]);
+  }, [setId, setRole, setIsLoading, clearUserStore]);
   return null;
 }

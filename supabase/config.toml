@@ -153,6 +153,11 @@ file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
 # objects_path = "./images"
 
+[storage.buckets.profile_photos]
+public = true
+file_size_limit = "200KB"
+allowed_mime_types = ["image/png", "image/jpeg"]
+
 [auth]
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
@@ -240,6 +245,14 @@ otp_expiry = 3600
 [auth.email.template.email_change]
 subject = "Confirm email change"
 content_path = "./supabase/templates/email-change.html"
+
+[auth.email.template.confirmation]
+subject = "Confirm sign-up"
+content_path = "./supabase/templates/sign-up.html"
+
+[auth.email.template.recovery]
+subject = "Confirm password reset"
+content_path = "./supabase/templates/password-reset.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]

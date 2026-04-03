@@ -6,7 +6,7 @@ export default async function RequestPage() {
   // get all stores from the stores table
   const { data: storesData, error: err } = await supabase
     .from('stores')
-    .select('store_id, name, street_address');
+    .select('*');
 
   if (err) {
     console.error('Error fetching stores:', err);

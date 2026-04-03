@@ -9,7 +9,7 @@ export default async function HqPage() {
   const { data, error: err } = await supabase
     .from('donations')
     .select(
-      'donation_id, receiver_first_name, receiver_last_name, store_name, items_donated',
+      'donation_id, receiver_first_name, receiver_last_name, store_name, items_donated, date_submitted',
     )
     .limit(10);
 
@@ -37,19 +37,21 @@ export default async function HqPage() {
       <table>
         <thead>
           <tr>
-            <th>Receiver First Name</th>
-            <th>Receiver Last Name</th>
+            <th>Receiver</th>
             <th>Store</th>
             <th>Items Donated</th>
+            <th>Date Submitted</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item.donation_id}>
-              <td>{item.receiver_first_name}</td>
-              <td>{item.receiver_last_name}</td>
+              <td>
+                {item.receiver_first_name} {item.receiver_last_name}
+              </td>
               <td>{item.store_name}</td>
               <td>{item.items_donated}</td>
+              <td>{new Date(item.date_submitted).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

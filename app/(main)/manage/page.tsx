@@ -49,7 +49,9 @@ export default async function ManagePage() {
   return (
     <div>
       <h1>Manage Inventory</h1>
-      <Link href="/manage/inventory">Library</Link>
+      <Link href="/manage/inventory">
+        <p>Inventory Library</p>
+      </Link>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (
