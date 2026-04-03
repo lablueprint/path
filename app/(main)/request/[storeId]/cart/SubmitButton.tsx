@@ -12,7 +12,7 @@ export default function SubmitButton({ ticketId }: { ticketId: string }) {
   const handleSubmit = async () => {
     setError(null);
     startTransition(async () => {
-      const result = await updateTicketStatus(ticketId, 'requested');
+      const result = await updateTicketStatus('requested',ticketId);
       if (result?.success) {
         setSuccess(true);
         setOutgoingTicketId(ticketId);
