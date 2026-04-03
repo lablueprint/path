@@ -109,9 +109,7 @@ export default async function TicketItemsList({
                   }
                 />
                 <form
-                  action={async () => {
-                    await handleRemove(item.ticket_item_id);
-                  }}
+                  action={handleRemove.bind(null, item.ticket_item_id)}
                 >
                   <button type="submit">Remove</button>
                 </form>
@@ -136,9 +134,7 @@ export default async function TicketItemsList({
                   }
                 />
                 <form
-                  action={async () => {
-                    await handleRemove(item.ticket_item_id);
-                  }}
+                  action={handleRemove.bind(null, item.ticket_item_id)}
                 >
                   <button type="submit">Remove</button>
                 </form>

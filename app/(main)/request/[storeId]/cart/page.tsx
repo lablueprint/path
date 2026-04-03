@@ -5,9 +5,9 @@ import SubmitButton from './SubmitButton';
 export default async function CartPage({
   params,
 }: {
-  params: { storeId: string };
+  params: Promise<{ storeId: string }>;
 }) {
-  const { storeId } = params;
+  const { storeId } = await params;
   const supabase = await createClient();
 
   // Get the current user
@@ -37,7 +37,6 @@ export default async function CartPage({
     .from('ticket_items')
     .select('ticket_item_id')
     .eq('ticket_id', ticket.ticket_id);
-
   if (itemsError) {
     console.error('Error fetching ticket items:', itemsError);
     return <div>Failed to load cart items.</div>;
