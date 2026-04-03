@@ -1,13 +1,18 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitButton from './SubmitButton';
+import Link from 'next/link';
 
 export default async function CartPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ storeId: string }>;
+  searchParams: Promise<{ submitted?: string; ticketId?: string }>;
 }) {
   const { storeId } = await params;
+  const { submitted, ticketId } = await searchParams;
+  const showSuccess = submitted === '1' && !!ticketId;
   const supabase = await createClient();
 
   // Get the current user
@@ -29,7 +34,18 @@ export default async function CartPage({
     .single();
 
   if (ticketError || !ticket) {
-    return <div>No items found in cart.</div>;
+    return (
+      <div>
+        <h1>Cart</h1>
+        {showSuccess && (
+          <div>
+            <p>Ticket submitted successfully!</p>
+            <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
+          </div>
+        )}
+        <div>No items found in cart.</div>
+      </div>
+    );
   }
 
   // Query for ticket items
@@ -47,6 +63,12 @@ export default async function CartPage({
   return (
     <div>
       <h1>Cart</h1>
+      {showSuccess && (
+        <div>
+          <p>Ticket submitted successfully!</p>
+          <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
+        </div>
+      )}
       {hasItems ? (
         <>
           <TicketItemsList ticketId={ticket.ticket_id} />
