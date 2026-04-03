@@ -1,10 +1,8 @@
 'use client';
 
-
 import { useForm } from "react-hook-form";
 import type { Store } from "../../../types/store";
-import { updateStore } from "../../../actions/store";
-
+import { updateStore } from "@/app/actions/store";
 
 type FormValues = {
   name: string;

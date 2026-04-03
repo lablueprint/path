@@ -1,46 +1,35 @@
-import { createClient } from "../../../lib/supabase/server-client";
-import type { Store } from "../../../types/store";
-import { EditStoreForm } from '../components/EditStoreForm';
+import { createClient } from '@/app/lib/supabase/server-client';
+import type { Store } from '@/app/types/store';
+import { EditStoreForm } from './components/EditStoreForm';
 import { RemoveStoreButton } from './components/RemoveStoreButton';
 
+export default async function StoreDetailsPage({
+  params,
+}: {
+  params: Promise<{ storeId: string }>;
+}) {
+  const { storeId } = await params;
 
-type StoreDetailsPageProps = {
-    params: { storeId: string };
-};
+  const supabase = await createClient();
+  const { data: storeData, error: storeError } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', storeId)
+    .single();
 
+  if (storeError || !storeData) {
+    console.error('Error fetching store:', storeError);
+    return <div>Failed to load store.</div>;
+  }
 
-export default async function StoreDetailsPage({ params }: StoreDetailsPageProps) {
-    const { storeId } = params;
-    const supabase = await createClient();
+  const store = storeData as Store;
 
-
-    const { data: storeData, error: err } = await supabase
-        .from('stores')
-        .select('store_id, name, street_address')
-        .eq('store_id', storeId)
-        .single();
-
-
-    if (err) {
-        console.error('Error fetching store:', err);
-    }
-
-
-    const store = storeData as Store;
-
-
-    return (
-        <div>
-            {store ? (
-                <>
-                    <EditStoreForm store={store} />
-                    <RemoveStoreButton storeId={store.store_id} />
-                </>
-            ) : (
-                <p>Store not found.</p>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      <h1>{store.name}</h1>
+      <p>Address: {store.street_address}</p>
+      <EditStoreForm store={store} />
+      <RemoveStoreButton storeId={store.store_id} />
+    </div>
+  );
 }
-
-
