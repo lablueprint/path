@@ -50,7 +50,11 @@ export default async function RequestStoreItemPage({
       <p>Subcategory: {subcategory ?? 'None'}</p>
 
       <p>Quantity available: {storeItem.quantity_available ?? 'Unknown'}</p>
-      <AddInStockToCartForm storeId={storeId} storeItemId={storeItemId} quantity={1} />
+      <AddInStockToCartForm
+        storeId={storeId}
+        storeItemId={storeItemId}
+        quantity={1}
+      />
     </div>
   );
 }

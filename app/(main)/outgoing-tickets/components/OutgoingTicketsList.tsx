@@ -10,15 +10,26 @@ type Ticket = {
   stores: { name: string }[] | null;
 };
 
-export default async function OutgoingTicketsList({ tickets, status }: { tickets: Ticket[], status: Status }) {
-
+export default async function OutgoingTicketsList({
+  tickets,
+  status,
+}: {
+  tickets: Ticket[];
+  status: Status;
+}) {
   const filteredTickets = tickets.filter((ticket) => ticket.status === status);
 
   return (
     <div>
       <h2>{status.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
-        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+        <table
+          style={{
+            width: '100%',
+            tableLayout: 'fixed',
+            borderCollapse: 'collapse',
+          }}
+        >
           <thead>
             <tr>
               <th style={{ width: '30%' }}>Ticket ID</th>
@@ -28,15 +39,17 @@ export default async function OutgoingTicketsList({ tickets, status }: { tickets
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) =>
+            {filteredTickets.map((ticket) => (
               <OutgoingTicketCard
                 key={ticket.ticket_id}
                 ticketId={ticket.ticket_id}
                 date={ticket.date_submitted}
                 status={ticket.status}
-                storeName={(ticket.stores as unknown as { name: string } | null)?.name}
+                storeName={
+                  (ticket.stores as unknown as { name: string } | null)?.name
+                }
               />
-            )}
+            ))}
           </tbody>
         </table>
       ) : (

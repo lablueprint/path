@@ -10,29 +10,32 @@ interface AddInStockToCartFormProps {
 }
 
 export default function AddInStockToCartForm({
-  storeId, 
-  storeItemId, 
-  quantity
+  storeId,
+  storeItemId,
+  quantity,
 }: AddInStockToCartFormProps) {
-
   const handleSubmit = async (formData: FormData) => {
     const description = formData.get('quantity') as string;
-    const { data: cartItem, error: err } = await addToCart(storeId, storeItemId, quantity, description);
+    const { data: cartItem, error: err } = await addToCart(
+      storeId,
+      storeItemId,
+      quantity,
+      description,
+    );
     if (err) {
       console.error('Error fetching ticket:', err);
     }
     console.log(cartItem);
-  }
+  };
 
   return (
-    <Form action={handleSubmit} >
-      <input
-        name="quantity"
-        type="integer"
-        placeholder="Type a quantity..."
-      />
-      
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+    <Form action={handleSubmit}>
+      <input name="quantity" type="integer" placeholder="Type a quantity..." />
+
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
         Add to Cart
       </button>
     </Form>

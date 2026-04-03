@@ -127,104 +127,124 @@ export async function deleteTicketItem(ticketItemId: string) {
 }
 
 export async function addToCart(
-  storeId: string, 
-  storeItemId?: string, 
-  quantity?: number, 
-  description?: string
+  storeId: string,
+  storeItemId?: string,
+  quantity?: number,
+  description?: string,
 ) {
   const supabase = await createClient();
 
-    // Get the current user
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+  // Get the current user
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
-    if (userError || !user) {
-      console.error('Error fetching user:', userError);
-      return { success: false, data: null, error: userError?.message || 'No user found' };
+  if (userError || !user) {
+    console.error('Error fetching user:', userError);
+    return {
+      success: false,
+      data: null,
+      error: userError?.message || 'No user found',
+    };
+  }
+
+  // Get or create draft ticket for current user (manual upsert)
+
+  // Try to find existing draft ticket
+  const { data: existingTicket, error: fetchError } = await supabase
+    .from('tickets')
+    .select('*')
+    .eq('requestor_user_id', user.id)
+    .eq('store_id', storeId)
+    .eq('status', 'draft')
+    .maybeSingle();
+
+  if (fetchError) {
+    return { success: false, data: null, error: fetchError.message };
+  }
+
+  // If it exists → use existing ticket
+  let ticket = existingTicket;
+
+  if (!ticket) {
+    // Otherwise, create a ticket
+    const { data: newTicket, error: insertError } = await supabase
+      .from('tickets')
+      .insert({
+        requestor_user_id: user.id,
+        store_id: storeId,
+        status: 'draft',
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      return { success: false, data: null, error: insertError.message };
     }
 
-    // Get or create draft ticket for current user with upsert (update/insert)
-    const { data: ticket, error: ticketError } = await supabase
-      .from('tickets')
+    ticket = newTicket;
+  }
+
+  // If storeItemId and quantity are provided
+  if (storeItemId && quantity) {
+    // Check if there is ticket item with appropriate ticket_id and store_item_id
+    // Select the ticket_id and quantity_requested if so
+    const { data: existingItem } = await supabase
+      .from('ticket_items')
+      .select('ticket_id, quantity_requested')
+      .eq('ticket_id', ticket.ticket_id)
+      .eq('store_item_id', storeItemId)
+      .maybeSingle();
+
+    // If ticket item already exists, incremented by quantity, if does not exist, set to quantity
+    const newQuantity = existingItem
+      ? existingItem.quantity_requested + quantity
+      : quantity;
+
+    // Get or create a ticket item in ticket_items table
+    const { data: ticketItem, error: itemError } = await supabase
+      .from('ticket_items')
       .upsert(
         {
-          requestor_user_id: user.id,
-          store_id: storeId,
-          status: 'draft',
+          ticket_id: ticket.ticket_id,
+          store_item_id: storeItemId,
+          quantity_requested: newQuantity,
+          is_in_stock_request: true,
         },
         {
-          onConflict: 'requestor_user_id,store_id',
-        }
+          onConflict: 'ticket_id,store_item_id',
+        },
       )
       .select()
       .single();
 
-    if (ticketError || !ticket) {
-      return { success: false, data: null, error: ticketError?.message };
+    if (itemError) {
+      return { success: false, data: null, error: itemError.message };
     }
 
-    // If storeItemId and quantity are provided
-    if (storeItemId && quantity) {
-      // Check if there is ticket item with appropriate ticket_id and store_item_id
-      // Select the ticket_id and quantity_requested if so
-      const { data: existingItem } = await supabase
-        .from('ticket_items')
-        .select('ticket_id, quantity_requested')
-        .eq('ticket_id', ticket.ticket_id)
-        .eq('store_item_id', storeItemId)
-        .maybeSingle();
+    return { success: true, data: ticketItem };
+  }
 
-      // If ticket item already exists, incremented by quantity, if does not exist, set to quantity
-      const newQuantity = existingItem 
-        ? existingItem.quantity_requested + quantity
-        : quantity;
+  // If description is provided
+  if (description) {
+    // Create a ticket item in ticket_items
+    const { data: ticketItem, error: itemError } = await supabase
+      .from('ticket_items')
+      .insert({
+        ticket_id: ticket.ticket_id,
+        free_text_description: description,
+        is_in_stock_request: false,
+      })
+      .select()
+      .single();
 
-      // Get or create a ticket item in ticket_items table
-      const { data: ticketItem, error: itemError } = await supabase
-        .from('ticket_items')
-        .upsert(
-          {
-            ticket_id: ticket.ticket_id,
-            store_item_id: storeItemId,
-            quantity_requested: newQuantity,
-            is_in_stock_request: true,
-          },
-          {
-            onConflict: 'ticket_id,store_item_id',
-          }
-        )
-        .select()
-        .single();
-
-      if (itemError) {
-        return { success: false, data: null, error: itemError.message };
-      }
-
-      return { success: true, data: ticketItem };
+    if (itemError) {
+      return { success: false, data: null, error: itemError.message };
     }
 
-    // If description is provided
-    if (description) {
-      // Create a ticket item in ticket_items
-      const { data: ticketItem, error: itemError } = await supabase
-        .from('ticket_items')
-        .insert({
-          ticket_id: ticket.ticket_id,
-          free_text_description: description,
-          is_in_stock_request: false,
-        })
-        .select()
-        .single();
-
-      if (itemError) {
-        return { success: false, data: null, error: itemError.message };
-      }
-
-      return { success: true, data: ticketItem };
-    }
+    return { success: true, data: ticketItem };
+  }
 
   return { success: true, data: ticket };
 }
-

@@ -29,7 +29,6 @@ export default async function TicketDetails({
     console.error('Error fetching ticket:', err);
     return <div>Failed to load data.</div>;
   }
-  
 
   const store = userTicket.stores as unknown as {
     name: string;
