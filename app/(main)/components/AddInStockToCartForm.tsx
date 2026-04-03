@@ -2,6 +2,7 @@
 
 import Form from 'next/form';
 import { addToCart } from '@/app/actions/ticket';
+import { useState } from 'react';
 
 interface AddInStockToCartFormProps {
   storeId: string;
@@ -12,15 +13,13 @@ interface AddInStockToCartFormProps {
 export default function AddInStockToCartForm({
   storeId,
   storeItemId,
-  quantity,
 }: AddInStockToCartFormProps) {
   const handleSubmit = async (formData: FormData) => {
-    const description = formData.get('quantity') as string;
+    const actualQuantity = Number(formData.get('quantity'));
     const { data: cartItem, error: err } = await addToCart(
       storeId,
       storeItemId,
-      quantity,
-      description,
+      actualQuantity,
     );
     if (err) {
       console.error('Error fetching ticket:', err);
@@ -32,7 +31,7 @@ export default function AddInStockToCartForm({
     <div>
     <h3>InStockToCartForm</h3>
     <Form action={handleSubmit}>
-      <input name="quantity" type="integer" placeholder="Type a quantity..." />
+      <input name="quantity" type="number" placeholder="Type a quantity..." required/>
 
       <button
         type="submit"

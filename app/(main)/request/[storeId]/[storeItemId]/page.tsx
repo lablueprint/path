@@ -53,7 +53,6 @@ export default async function RequestStoreItemPage({
       <AddInStockToCartForm
         storeId={storeId}
         storeItemId={storeItemId}
-        quantity={1}
       />
     </div>
   );
