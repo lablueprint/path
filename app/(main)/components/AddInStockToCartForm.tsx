@@ -29,6 +29,8 @@ export default function AddInStockToCartForm({
   };
 
   return (
+    <div>
+    <h3>InStockToCartForm</h3>
     <Form action={handleSubmit}>
       <input name="quantity" type="integer" placeholder="Type a quantity..." />
 
@@ -39,5 +41,6 @@ export default function AddInStockToCartForm({
         Add to Cart
       </button>
     </Form>
+    </div>
   );
 }
