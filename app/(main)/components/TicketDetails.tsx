@@ -16,12 +16,13 @@ export default async function TicketDetails({
   const { data: userTicket, error: err } = await supabase
     .from('tickets')
     .select(
-      `store_id, ticket_id, requestor_user_id, status, date_submitted,
-      stores (
-        name,
-        street_address
-      )
-    `,
+      `
+        store_id, ticket_id, requestor_user_id, status, date_submitted,
+        stores (
+          name,
+          street_address
+        )
+      `,
     )
     .eq('ticket_id', ticketId)
     .single();
@@ -31,45 +32,47 @@ export default async function TicketDetails({
     return <div>Failed to load data.</div>;
   }
 
-  let InStockTicketItems: any[] = [];
+  let InStockTicketItems = [];
   let OutOfStockTicketItems: {
     ticket_item_id: string;
     free_text_description: string | null;
   }[] = [];
   if (userTicket) {
-    const { data: items } = await supabase
+    const { data: inStockItemsData } = await supabase
       .from('ticket_items')
       .select(
-        `*,
-        store_items(
-          quantity_available,
-          inventory_items(
-            name,
-            photo_url,
-            subcategories(
+        `
+          *,
+          store_items(
+            quantity_available,
+            inventory_items(
               name,
-              categories(
-                name
+              photo_url,
+              subcategories(
+                name,
+                categories(
+                  name
+                )
               )
             )
           )
-        )
-      `,
+        `,
       )
       .eq('ticket_id', ticketId)
       .eq('is_in_stock_request', true);
-    InStockTicketItems = items || [];
+    InStockTicketItems = inStockItemsData || [];
 
-    const { data: outOfStock } = await supabase
+    const { data: outOfStockItemsData } = await supabase
       .from('ticket_items')
       .select(
-        `ticket_item_id,
-        free_text_description
-      `,
+        `
+          ticket_item_id,
+          free_text_description
+        `,
       )
       .eq('ticket_id', ticketId)
       .eq('is_in_stock_request', false);
-    OutOfStockTicketItems = outOfStock || [];
+    OutOfStockTicketItems = outOfStockItemsData || [];
   }
 
   const store = userTicket.stores as unknown as {
@@ -80,21 +83,21 @@ export default async function TicketDetails({
   let storeAdminsList: User[] = [];
   let requestor = null;
   if (outgoing) {
-    const { data: storeAdmins } = await supabase
+    const { data: storeAdminsData } = await supabase
       .from('store_admins')
       .select(
         `
-                users(
-                    user_id,
-                    first_name,
-                    last_name,
-                    email,
-                    profile_photo_url
-                )
-            `,
+          users(
+            user_id,
+            first_name,
+            last_name,
+            email,
+            profile_photo_url
+          )
+        `,
       )
       .eq('store_id', userTicket.store_id);
-    storeAdminsList = (storeAdmins || [])
+    storeAdminsList = (storeAdminsData || [])
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
   } else {
@@ -133,29 +136,24 @@ export default async function TicketDetails({
           )}
           {InStockTicketItems.length > 0 ? (
             <div>
-              <h2> In-Stock Requests</h2>
+              <h2>In-Stock Requests</h2>
               <div>
                 {InStockTicketItems.map((item) => (
                   <InStockTicketItemCard
                     key={item.ticket_item_id}
                     ticketItemId={item.ticket_item_id}
                     quantityRequested={item.quantity_requested}
-                    quantityAvailable={
-                      item.store_items?.quantity_available || 0
-                    }
-                    itemName={
-                      item.store_items?.inventory_items?.name || 'Unknown'
-                    }
+                    quantityAvailable={item.store_items.quantity_available}
+                    itemName={item.store_items.inventory_items.name}
                     photoUrl={
-                      item.store_items?.inventory_items?.photo_url || ''
+                      item.store_items.inventory_items.photo_url || null
                     }
                     subcategoryName={
-                      item.store_items?.inventory_items?.subcategories?.name ||
-                      'Unknown'
+                      item.store_items?.inventory_items?.subcategories?.name
                     }
                     categoryName={
                       item.store_items?.inventory_items?.subcategories
-                        ?.categories?.name || 'Unknown'
+                        ?.categories?.name
                     }
                   />
                 ))}

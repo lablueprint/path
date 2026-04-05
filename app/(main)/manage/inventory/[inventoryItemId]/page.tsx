@@ -13,18 +13,33 @@ export default async function InventoryItemPage({
       `inventory_item_id, name, description, photo_url, subcategories(name, categories(name))`,
     )
     .eq('inventory_item_id', inventoryItemId)
-    .single();
+    .single()
+    .overrideTypes<
+      {
+        inventory_item_id: string;
+        name: string;
+        description: string;
+        photo_url: string;
+        subcategories: {
+          name: string;
+          categories: {
+            name: string;
+          };
+        };
+      },
+      { merge: false }
+    >();
   if (error) {
     console.error('Error fetching inventory item:', error.message);
   }
 
   const item = {
-    inventory_item_id: data?.inventory_item_id as string,
-    item: data?.name as string,
-    description: data?.description as string,
-    photo_url: data?.photo_url as string,
-    subcategory: (data?.subcategories as any).name as string,
-    category: (data?.subcategories as any).categories.name as string,
+    inventory_item_id: data?.inventory_item_id,
+    item: data?.name,
+    description: data?.description,
+    photo_url: data?.photo_url,
+    subcategory: data?.subcategories.name,
+    category: data?.subcategories.categories.name,
   };
 
   return (

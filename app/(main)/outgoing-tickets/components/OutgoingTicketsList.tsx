@@ -1,48 +1,57 @@
-import { Ticket } from '@/app/types/ticket';
-import Link from 'next/link';
+import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
-interface outgoingTicketsListProps {
+type Ticket = {
+  ticket_id: string;
+  status: string;
+  date_submitted: string;
+  store_id: string;
+  stores: { name: string }[] | null;
+};
+
+export default async function OutgoingTicketsList({
+  tickets,
+  status,
+}: {
   tickets: Ticket[];
   status: Status;
-}
-
-export default function OutgoingTicketsList(props: outgoingTicketsListProps) {
-  const filteredTickets = props.tickets.filter(
-    (ticket) => ticket.status === props.status,
-  );
+}) {
+  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
 
   return (
     <div>
-      <h2>{props.status.toUpperCase()} TICKETS</h2>
+      <h2>{status.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
-        <table>
+        <table
+          style={{
+            width: '100%',
+            tableLayout: 'fixed',
+            borderCollapse: 'collapse',
+          }}
+        >
           <thead>
             <tr>
-              <th>Ticket</th>
-              <th>Store ID</th>
-              <th>Status</th>
-              <th>Date Submitted</th>
+              <th style={{ width: '30%' }}>Ticket ID</th>
+              <th style={{ width: '20%' }}>Store Name</th>
+              <th style={{ width: '30%' }}>Status</th>
+              <th style={{ width: '20%' }}>Date Submitted</th>
             </tr>
           </thead>
           <tbody>
             {filteredTickets.map((ticket) => (
-              <tr key={ticket.ticket_id}>
-                <td>
-                  <Link href={`/outgoing-tickets/${ticket.ticket_id}`}>
-                    View
-                  </Link>
-                </td>
-                <td>{ticket.store_id}</td>
-                <td>{ticket.status}</td>
-                <td>{ticket.date_submitted.toString()}</td>
-              </tr>
+              <OutgoingTicketCard
+                key={ticket.ticket_id}
+                ticketId={ticket.ticket_id}
+                date={ticket.date_submitted}
+                status={ticket.status}
+                storeName={(ticket.stores as unknown as { name: string }).name}
+              />
             ))}
           </tbody>
         </table>
       ) : (
-        <p>No ticket with status: {props.status}</p>
+        <p>No tickets found.</p>
       )}
     </div>
   );

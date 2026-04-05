@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 
 type FormValues = {
@@ -8,11 +8,11 @@ type FormValues = {
   newPasswordConfirmation: string;
 };
 
-export function UpdatePasswordForm() {
+export default function UpdatePasswordForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     reset,
     formState: { errors },
   } = useForm<FormValues>({
@@ -24,8 +24,15 @@ export function UpdatePasswordForm() {
 
   const supabase = createClient();
 
-  const newPassword = watch('newPassword');
-  const newPasswordConfirmation = watch('newPasswordConfirmation');
+  const newPassword = useWatch({
+    control,
+    name: 'newPassword',
+  });
+
+  const newPasswordConfirmation = useWatch({
+    control,
+    name: 'newPasswordConfirmation',
+  });
 
   const passwordsMatch =
     newPassword.length > 0 &&

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   updateStoreItemQuantity,
@@ -18,8 +17,6 @@ export default function StoreItemForm({
   quantity: number;
   visibility: boolean;
 }) {
-  const [saveError, setSaveError] = useState<string>('');
-
   const {
     register,
     handleSubmit,
@@ -36,19 +33,29 @@ export default function StoreItemForm({
     quantityAvailable: number;
     isHidden: boolean;
   }) => {
-    setSaveError('');
+    const qtyRes = await updateStoreItemQuantity(
+      storeId,
+      storeItemId,
+      values.quantityAvailable,
+    );
 
-    try {
-      await updateStoreItemQuantity(
-        storeId,
-        storeItemId,
-        values.quantityAvailable,
-      );
-      await updateStoreItemIsHidden(storeId, storeItemId, values.isHidden);
-      reset(values);
-    } catch (e: any) {
-      setSaveError(e?.message ?? 'Failed to save changes.');
+    if (!qtyRes.success) {
+      alert(qtyRes.error ?? 'Failed to update quantity.');
+      return;
     }
+
+    const hiddenRes = await updateStoreItemIsHidden(
+      storeId,
+      storeItemId,
+      values.isHidden,
+    );
+
+    if (!hiddenRes.success) {
+      alert(hiddenRes.error ?? 'Failed to update visibility.');
+      return;
+    }
+
+    reset(values);
   };
 
   return (
@@ -62,7 +69,7 @@ export default function StoreItemForm({
           disabled={isSubmitting}
           {...register('quantityAvailable', {
             valueAsNumber: true,
-            required: 'Please enter a numeric quantity.', // for empty input
+            required: 'Please enter a numeric quantity.',
             validate: (v) =>
               (Number.isInteger(v) && v >= 0) ||
               'Please enter a combination of digits only (0-9).',

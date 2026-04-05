@@ -1,7 +1,8 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ProfileForm from '@/app/(main)/profile/components/ProfileForm';
 import type { User } from '@/app/types/user';
-import { UpdatePasswordForm } from '@/app/(main)/profile/components/UpdatePasswordForm';
+import UpdatePasswordForm from '@/app/(main)/profile/components/UpdatePasswordForm';
+import SignOutButton from '@/app/(main)/profile/components/SignOutButton';
 
 export default async function PersonalProfilePage() {
   const supabase = await createClient();
@@ -19,11 +20,8 @@ export default async function PersonalProfilePage() {
     .eq('user_id', user.id)
     .single();
 
-  if (err) {
+  if (err || !profile) {
     console.error('Error fetching profile:', err);
-  }
-
-  if (!profile) {
     return <div>User profile not found.</div>;
   }
 
@@ -34,6 +32,7 @@ export default async function PersonalProfilePage() {
       <ProfileForm user={profile as User} />
       <h2>Authentication</h2>
       <UpdatePasswordForm />
+      <SignOutButton />
     </div>
   );
 }
