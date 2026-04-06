@@ -46,10 +46,9 @@ export default function TicketStatusDropdown ({
                 <div>
                     <button type="button" onClick={handleSave}>Save</button>
                     <button type="button" onClick={handleCancel}>Cancel</button>
+                    {error && <div>{error}</div>}
                 </div>
             )}
-
-            {error && <div>{error}</div>}
         </div>
     );
 }
