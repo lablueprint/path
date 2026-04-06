@@ -3,6 +3,7 @@ import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketIt
 import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
+import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 
 export default async function TicketDetails({
   ticketId,
@@ -121,6 +122,13 @@ export default async function TicketDetails({
           <p>Store: {store.name} </p>
           <p>Store address: {store.street_address}</p>
           <p>Status: {userTicket.status}</p>
+          <div>
+            <TicketStatusDropdown 
+              ticketId={userTicket.ticket_id} 
+              currentStatus={userTicket.status} 
+              statusOptions={['draft', 'requested', 'ready', 'rejected', 'fulfilled']} 
+            />
+          </div>
           {outgoing ? (
             <div>
               <h2>Contact Store Admins</h2>
