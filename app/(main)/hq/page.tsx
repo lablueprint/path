@@ -31,7 +31,6 @@ export default async function HqPage() {
   return (
     <div>
       <h1>HQ</h1>
-
       <h2>Donations</h2>
       <h3>Recent Donations</h3>
       <table>
@@ -60,12 +59,15 @@ export default async function HqPage() {
       <h3>Export Donations</h3>
       <DonationsExportForm />
 
-      <h2>Edit Stores</h2>
-      <h3>Edit Store Details</h3>
-      {stores.length > 0 ? <StoresList stores={stores} /> : <p>No stores found.</p>}
-
-      <h2>Add Store</h2>
+      <h2>Stores</h2>
+      <h3>Add Store</h3>
       <AddStoreForm />
+      <h3>Edit Stores</h3>
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
     </div>
   );
 }

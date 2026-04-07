@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import type { Store } from '@/app/types/store';
 import { EditStoreForm } from './components/EditStoreForm';
 import { RemoveStoreButton } from './components/RemoveStoreButton';
+import { notFound } from 'next/navigation';
 
 export default async function StoreDetailsPage({
   params,
@@ -17,7 +18,11 @@ export default async function StoreDetailsPage({
     .eq('store_id', storeId)
     .single();
 
-  if (storeError || !storeData) {
+  if (!storeData) {
+    notFound();
+  }
+
+  if (storeError) {
     console.error('Error fetching store:', storeError);
     return <div>Failed to load store.</div>;
   }
@@ -27,7 +32,6 @@ export default async function StoreDetailsPage({
   return (
     <div>
       <h1>{store.name}</h1>
-      <p>Address: {store.street_address}</p>
       <EditStoreForm store={store} />
       <RemoveStoreButton storeId={store.store_id} />
     </div>

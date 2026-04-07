@@ -1,34 +1,27 @@
-"use client";
+'use client';
 
-
-import { useRouter } from "next/navigation"
-import { deleteStore } from "../../../../actions/store";
-
-
-
+import { useRouter } from 'next/navigation';
+import { deleteStore } from '../../../../actions/store';
 
 type RemoveStoreButtonProp = {
-    storeId: string;
+  storeId: string;
 };
 
-
 export function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
-    const router = useRouter();
-
-
-    const handleDeletion = async() => {
-        try {
-            await deleteStore(storeId);
-            router.push("/hq");
-        } catch (error) {
-            alert("Failed to remove store.");
-        }
+  const router = useRouter();
+  const handleDeletion = async () => {
+    const { success, error } = await deleteStore(storeId);
+    if (!success) {
+      alert('Failed to remove store.');
+      console.error(error);
+    } else {
+      router.push('/hq');
     }
+  };
 
-
-    return (
-        <button type = "button" onClick = {handleDeletion}>
-            Remove Store
-        </button>
-    );
+  return (
+    <button type="button" onClick={handleDeletion}>
+      Remove store
+    </button>
+  );
 }
