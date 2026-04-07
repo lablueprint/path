@@ -1,4 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import UsersList from '@/app/(main)/team/people/components/UsersList';
 
 export default async function UsersPage() {
@@ -18,6 +19,7 @@ export default async function UsersPage() {
         )
       `,
     );
+
   if (usersErr) {
     console.error('Error fetching users:', usersErr);
   }
@@ -34,6 +36,13 @@ export default async function UsersPage() {
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          team: 'Team',
+          people: 'People',
+        }}
+      />
+
       <h1>People</h1>
       {users.length > 0 ? <UsersList users={users} /> : <p>No users found.</p>}
     </div>

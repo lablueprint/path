@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import IncomingTicketsList from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketsList';
 
 export default async function IncomingTicketsStorePage({
@@ -67,6 +68,12 @@ export default async function IncomingTicketsStorePage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          'incoming-tickets': 'Incoming Tickets',
+          [storeId]: store.name,
+        }}
+      />
       <h1>Incoming Tickets</h1>
       <IncomingTicketsList tickets={tickets} status="requested" />
       <IncomingTicketsList tickets={tickets} status="ready" />

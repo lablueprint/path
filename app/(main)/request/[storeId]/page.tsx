@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -122,6 +123,7 @@ export default async function RequestStorePage({
 
   return (
     <div>
+      <Breadcrumbs labelMap={{ [storeId]: store.name }} />
       <div>
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>

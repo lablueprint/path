@@ -1,4 +1,6 @@
 import TicketDetails from '@/app/(main)/components/TicketDetails';
+// 1. Import the Breadcrumbs component
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function OutgoingTicketDetailsPage({
   params,
@@ -7,5 +9,17 @@ export default async function OutgoingTicketDetailsPage({
 }) {
   const { ticketId } = await params;
 
-  return <TicketDetails ticketId={ticketId} outgoing={true} />;
+  return (
+    <div>
+      {/* 2. Add Breadcrumbs with hyphenated static labels */}
+      <Breadcrumbs
+        labelMap={{
+          'outgoing-tickets': 'Outgoing-Tickets',
+          [ticketId]: ticketId, // Keeping the ID as is per your request
+        }}
+      />
+
+      <TicketDetails ticketId={ticketId} outgoing={true} />
+    </div>
+  );
 }

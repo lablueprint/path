@@ -9,7 +9,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <Sidebar />
       <main>
-        <Breadcrumbs />
         {/* Main page content */}
         {children}
       </main>
