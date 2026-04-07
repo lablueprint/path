@@ -15,7 +15,7 @@ export default async function HqPage() {
 
   const { data: storesData, error: storesErr } = await supabase
     .from('stores')
-    .select('store_id, name, street_address');
+    .select('store_id, name, street_address, photo_url');
 
   if (err) {
     console.error('Error fetching donations:', err);
