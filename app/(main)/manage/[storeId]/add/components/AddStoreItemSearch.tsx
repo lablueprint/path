@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext, useFieldArray, FormProvider, useForm } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { InventoryItem } from '@/app/types/inventory';
 import type { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
+import AddInventoryItemForm, { Inputs } from '@/app/(main)/manage/components/AddInventoryItemForm';
+import { createItem } from '@/app/actions/inventory';
+import ItemCard from '@/app/(main)/components/ItemCard';
 
 type ItemWithNames = InventoryItem & {
   category_name: string;
@@ -26,9 +29,13 @@ export default function AddStoreItemSearch({
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
+  
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const createItemMethods = useForm<Inputs>();
 
+  // Debounce search (300ms)
   useEffect(() => {
-    const fetch = async () => {
+    const timeout = setTimeout(async () => {
       if (!searchQuery) {
         setResults([]);
         return;
@@ -40,20 +47,17 @@ export default function AddStoreItemSearch({
       if (error) {
         console.log(error);
         return;
-      } else {
-        const items: ItemWithNames[] = [];
-        for (const item of data) {
-          items.push({
-            ...item,
-            category_name: item.subcategories.categories?.name,
-            subcategory_name: item.subcategories?.name,
-          });
-        }
-        setResults(items);
       }
-    };
-    fetch();
+      const items: ItemWithNames[] = data.map((item) => ({
+        ...item,
+        category_name: item.subcategories.categories?.name,
+        subcategory_name: item.subcategories?.name,
+      }));
+      setResults(items);
+    }, 300);
+    return () => clearTimeout(timeout);
   }, [searchQuery]);
+
   useEffect(() => {
     setAutoFillItems(selectedItems);
   }, [selectedItems, setAutoFillItems]);
@@ -80,6 +84,44 @@ export default function AddStoreItemSearch({
     remove(index);
   };
 
+  const handleCreateAndSelect = async (formData: Inputs) => {
+    try {
+      const result = await createItem({
+        name: formData.name,
+        description: formData.description,
+        subcategory_id: formData.selectedSubcategory
+          ? Number(formData.selectedSubcategory)
+          : null,
+      });
+
+      if (result.success && result.data) {
+        // Fetch the full item with category/subcategory names to add to selected
+        const { data, error } = await supabase
+          .from('inventory_items')
+          .select(`*, subcategories (name, categories(name))`)
+          .eq('inventory_item_id', result.data.inventory_item_id)
+          .single();
+
+        if (!error && data) {
+          const newItem: ItemWithNames = {
+            ...data,
+            category_name: data.subcategories.categories?.name,
+            subcategory_name: data.subcategories?.name,
+          };
+          handleSelect(newItem);
+        }
+
+        // Clear and hide the create form
+        createItemMethods.reset();
+        setShowCreateForm(false);
+      } else {
+        console.error('Failed to create item:', result.error);
+      }
+    } catch (error) {
+      console.error('Error creating item:', error);
+    }
+  };
+
   return (
     <div>
       <h2>Add Store Items</h2>
@@ -88,6 +130,9 @@ export default function AddStoreItemSearch({
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      <button type="button" onClick={() => setShowCreateForm((prev) => !prev)}>
+        {showCreateForm ? 'Cancel' : 'Create new item'}
+      </button>
       <ul>
         {results?.map((item) => (
           <div key={item.name}>
@@ -99,13 +144,30 @@ export default function AddStoreItemSearch({
         ))}
       </ul>
 
+      {/* Create new item button with AddInventoryItemForm */}
+       {showCreateForm && (
+        <FormProvider {...createItemMethods}>
+          <AddInventoryItemForm />
+          <button
+            type="button"
+            onClick={createItemMethods.handleSubmit(handleCreateAndSelect)}
+          >
+            Create new item
+          </button>
+        </FormProvider>
+      )}
+
       <h3>Selected Items</h3>
       {fields.length > 0 ? (
         fields.map((field, idx) => (
           <div key={field.id}>
-            <p>Item: {selectedItems[idx]?.name}</p>
-            <p>Category: {selectedItems[idx]?.category_name}</p>
-            <p>Subcategory: {selectedItems[idx]?.subcategory_name}</p>
+            <ItemCard
+              id={selectedItems[idx]?.inventory_item_id}
+              photoUrl={null}
+              item={selectedItems[idx]?.name}
+              subcategory={selectedItems[idx]?.subcategory_name}
+              category={selectedItems[idx]?.category_name}
+            />
             <p>Description: {selectedItems[idx]?.description}</p>
             <p>
               Quantity:{' '}
