@@ -152,7 +152,7 @@ export default function AddStoreItemSearch({
             type="button"
             onClick={createItemMethods.handleSubmit(handleCreateAndSelect)}
           >
-            Create new item
+            Create and select
           </button>
         </FormProvider>
       )}
@@ -175,6 +175,7 @@ export default function AddStoreItemSearch({
                 type="number"
                 min="1"
                 placeholder="Quantity to add"
+                defaultValue={1}
                 {...methods.register(`items.${idx}.quantity`, {
                   required: 'Quantity is required.',
                   valueAsNumber: true,
