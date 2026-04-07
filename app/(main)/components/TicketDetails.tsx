@@ -158,6 +158,7 @@ export default async function TicketDetails({
           <div>
             <p>Status: </p>
             <TicketStatusDropdown
+              storeId={userTicket.store_id}
               ticketId={userTicket.ticket_id}
               currentStatus={userTicket.status as TicketStatus}
               statusOptions={statusOptions}
