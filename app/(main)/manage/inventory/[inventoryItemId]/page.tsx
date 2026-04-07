@@ -1,4 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function InventoryItemPage({
   params,
@@ -44,6 +45,13 @@ export default async function InventoryItemPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage',
+          inventory: 'Inventory',
+          [inventoryItemId]: item.item ?? 'Item',
+        }}
+      />
       <h1>{item.item}</h1>
       <p>Description: {item.description}</p>
       <p>Category: {item.category}</p>

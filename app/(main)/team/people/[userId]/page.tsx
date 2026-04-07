@@ -1,4 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Dropdown from '@/app/(main)/team/people/[userId]/components/Dropdown';
 
 export default async function TeamProfilePage({
@@ -33,6 +34,14 @@ export default async function TeamProfilePage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          team: 'Team',
+          people: 'People',
+          [userId]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
+        }}
+      />
+
       <p>
         Name: {user.first_name || 'FirstName'} {user.last_name || 'LastName'}
       </p>
