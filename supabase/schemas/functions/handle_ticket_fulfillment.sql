@@ -1,10 +1,8 @@
 create schema if not exists private;
 
-create or replace function private.handle_ticket_fulfillment()
-returns trigger
-language plpgsql
-security definer set search_path = ''
-as $$
+create or replace function private.handle_ticket_fulfillment () returns trigger language plpgsql security definer
+set
+  search_path = '' as $$
 begin
 	-- Logic
     if old.status is distinct from 'fulfilled' 
@@ -27,6 +25,6 @@ end;
 $$;
 
 create trigger "after update tickets status"
-after update of status on public.tickets
-for each row
-execute function private.handle_ticket_fulfillment();
+after
+update of status on public.tickets for each row
+execute function private.handle_ticket_fulfillment ();

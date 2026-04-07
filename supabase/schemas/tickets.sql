@@ -1,4 +1,10 @@
-create type ticket_status as enum('draft', 'requested', 'ready', 'rejected', 'fulfilled');
+create type ticket_status as enum(
+  'draft',
+  'requested',
+  'ready',
+  'rejected',
+  'fulfilled'
+);
 
 create table tickets (
   ticket_id uuid default uuid_generate_v4 () primary key,
@@ -12,13 +18,14 @@ create table tickets (
 
 alter table tickets enable row level security;
 
-create policy "auth can read tickets if requestor_user_id or can_manage_store" on public.tickets for select
+create policy "auth can read tickets if requestor_user_id or can_manage_store" on public.tickets for
+select
   to authenticated using (
     (
       select
         auth.uid ()
     ) = requestor_user_id
-    or private.can_manage_store(store_id)
+    or private.can_manage_store (store_id)
   );
 
 create policy "auth can insert tickets if requestor_user_id and >= requestor" on public.tickets for insert to authenticated
@@ -42,7 +49,7 @@ for update
       select
         auth.uid ()
     ) = requestor_user_id
-    or private.can_manage_store(store_id)
+    or private.can_manage_store (store_id)
   )
 with
   check (
@@ -50,7 +57,7 @@ with
       select
         auth.uid ()
     ) = requestor_user_id
-    or private.can_manage_store(store_id)
+    or private.can_manage_store (store_id)
   );
 
 create policy "auth can delete tickets if requestor_user_id or >= superadmin" on public.tickets for delete to authenticated using (
