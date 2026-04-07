@@ -25,6 +25,13 @@ export const createStore = async (data: StoreInsert) => {
     console.error('Error creating store:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/hq`);
+  revalidatePath(`/request`);
+  revalidatePath(`/manage`);
+  revalidatePath(`/incoming-tickets`);
+  revalidatePath(`/team/store-admins`);
+
   return { success: true, data: entry as Store };
 };
 
@@ -41,6 +48,13 @@ export const updateStore = async (storeId: string, data: StoreUpdate) => {
     console.error('Error updating store:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/hq`);
+  revalidatePath(`/request`);
+  revalidatePath(`/manage`);
+  revalidatePath(`/incoming-tickets`);
+  revalidatePath(`/team/store-admins`);
+
   return { success: true, data: entry as Store };
 };
 
@@ -58,6 +72,13 @@ export const deleteStore = async (storeId: string) => {
     console.error('Error deleting store:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/hq`);
+  revalidatePath(`/request`);
+  revalidatePath(`/manage`);
+  revalidatePath(`/incoming-tickets`);
+  revalidatePath(`/team/store-admins`);
+
   return { success: true, data: entry as Store };
 };
 
