@@ -33,7 +33,7 @@ export default async function ManageStoreItemPage({
         inventory_items: {
           name: string;
           description: string;
-          photo_url: string;
+          photo_url: string | null;
           subcategories: {
             name: string;
             categories: {

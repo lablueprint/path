@@ -31,7 +31,7 @@ export default async function RequestStoreItemPage({
         inventory_items: {
           name: string;
           description: string;
-          photo_url: string;
+          photo_url: string | null;
           subcategories: {
             name: string;
             categories: {
