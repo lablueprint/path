@@ -14,6 +14,7 @@ export default function DeleteInventoryItemButton({
     const result = await deleteItem(inventoryItemId);
 
     if (!result.success) {
+      alert('Failed to remove item.');
       console.error('Failed to delete inventory item:', result.error);
       return;
     }

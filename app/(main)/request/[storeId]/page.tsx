@@ -88,7 +88,7 @@ export default async function RequestStorePage({
         store_item_id: string;
         inventory_items: {
           name: string;
-          photo_url: string;
+          photo_url: string | null;
           subcategories: {
             name: string;
             categories: {

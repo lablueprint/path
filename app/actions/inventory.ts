@@ -76,7 +76,6 @@ export const deleteItem = async (inventoryItemId: string) => {
   return { success: true, data: entry as InventoryItem };
 };
 
-
 export const createSubcategory = async (data: SubcategoryInsert) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
@@ -159,7 +158,7 @@ export const updateCategory = async (
     return { success: false, data: null, error: err.message };
   }
   return { success: true, data: entry as Category };
-};git
+};
 
 export const deleteCategory = async (categoryId: number) => {
   const supabase = await createClient();
