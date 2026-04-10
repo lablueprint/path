@@ -12,6 +12,7 @@ import {
   SubcategoryUpdate,
 } from '@/app/types/inventory';
 import { createClient } from '@/app/lib/supabase/server-client';
+import { revalidatePath } from 'next/cache';
 
 export const createItem = async (data: InventoryItemInsert) => {
   const supabase = await createClient();
@@ -25,6 +26,10 @@ export const createItem = async (data: InventoryItemInsert) => {
     console.error('Error creating inventory item:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/inventory/[inventoryItemId]', 'page');
+
   return { success: true, data: entry as InventoryItem };
 };
 
@@ -44,6 +49,10 @@ export const updateItem = async (
     console.error('Error updating inventory item:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/inventory/[inventoryItemId]', 'page');
+
   return { success: true, data: entry as InventoryItem };
 };
 
@@ -60,6 +69,10 @@ export const deleteItem = async (inventoryItemId: string) => {
     console.error('Error deleting inventory item:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/inventory/[inventoryItemId]', 'page');
+
   return { success: true, data: entry as InventoryItem };
 };
 
