@@ -1,8 +1,17 @@
 'use client';
 
+import { forwardRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
+import { Form, Container, Card } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
 import { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
+import styles from '@/app/(main)/components/DonationForm.module.css';
+
+const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
+  (props, ref) => <Form.Control {...props} ref={ref} />
+);
+BootstrapInput.displayName = 'BootstrapInput';
 
 export default function DonationForm({
   setItemsDonated,
@@ -18,299 +27,238 @@ export default function DonationForm({
   } = useFormContext<CombinedFormData>();
 
   return (
-    <div
-      style={{
-        maxWidth: '600px',
-        margin: '0 auto',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        fontFamily: 'Arial, sans-serif',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
-          marginTop: '20px',
-          marginBottom: '20px',
-          justifyContent: 'center',
-        }}
-      >
-        <h1 style={{ margin: 0 }}>Donation Form</h1>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        {/* Donor Type */}
-        <>
-          <label>
-            <input
-              type="radio"
-              value="individual"
-              {...register('donor_type', {
-                required: 'Please select a donor type',
-              })}
-            />{' '}
-            Individual
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="business"
-              {...register('donor_type', {
-                required: 'Please select a donor type',
-              })}
-            />{' '}
-            Business
-          </label>
-          {errors.donor_type && (
-            <p style={{ color: 'red' }}>{errors.donor_type.message}</p>
-          )}
-        </>
-        {/* Conditional Name Field: Individual */}
-        {donorType === 'individual' && (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-              Individual Name
-            </label>
-
-            <input
-              {...register('individual_name', {
-                required: 'Individual name is required',
-              })}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ccc',
-              }}
-            />
-
-            {errors.individual_name && (
-              <p style={{ color: 'red', marginTop: '5px' }}>
-                {errors.individual_name.message}
-              </p>
-            )}
-          </div>
-        )}
-        {/* Conditional Name Field: Business */}
-        {donorType === 'business' && (
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-                Business Name
-              </label>
-
-              <input
-                {...register('business_name', {
-                  required: 'Business name is required',
+    <Container className={styles.formContainer}>
+      <Card className={styles.formCard}>
+        <Card.Body>
+          <h1 className={styles.formTitle}>Donor Information</h1>
+          <div className={styles.formBody}>
+            {/* Donor Type */}
+            <Form.Group>
+              <Form.Check
+                type="radio"
+                label="Individual"
+                value="individual"
+                id="donor-individual"
+                {...register('donor_type', {
+                  required: 'Please select a donor type',
                 })}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
               />
-
-              {errors.business_name && (
-                <p style={{ color: 'red', marginTop: '5px' }}>
-                  {errors.business_name.message}
-                </p>
-              )}
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-                Business Contact Name
-              </label>
-
-              <input
-                {...register('business_contact_name', {
-                  required: 'Business contact name is required',
+              <Form.Check
+                type="radio"
+                label="Business"
+                value="business"
+                id="donor-business"
+                {...register('donor_type', {
+                  required: 'Please select a donor type',
                 })}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
               />
-
-              {errors.business_contact_name && (
-                <p style={{ color: 'red', marginTop: '5px' }}>
-                  {errors.business_contact_name.message}
-                </p>
+              {errors.donor_type && (
+                <Form.Text className={styles.errorText}>
+                  {errors.donor_type.message}
+                </Form.Text>
               )}
-            </div>
-          </div>
-        )}
+            </Form.Group>
 
-        {/* Email */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Donor Email
-          </label>
-          <input
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Please enter a valid email address',
-              },
-            })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-          {errors.email && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.email.message}
-            </p>
-          )}
-        </div>
-
-        {/* Phone */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Donor Phone Number (Optional)
-          </label>
-          <Controller
-            name="phone"
-            control={control}
-            rules={{
-              validate: (value) => {
-                const digits = value?.replace(/\D/g, '');
-                return (
-                  !digits ||
-                  digits.length === 10 ||
-                  'Phone number must be 10 digits'
-                );
-              },
-            }}
-            render={({ field }) => (
-              <PatternFormat
-                {...field}
-                format="(###) ###-####"
-                mask="_"
-                placeholder="(415) 555-1234"
-                allowEmptyFormatting
-                onValueChange={(values) => {
-                  // store digits only: "4155551234"
-                  field.onChange(values.value);
-                }}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
-              />
+            {/* Conditional Name Field: Individual */}
+            {donorType === 'individual' && (
+              <Form.Group controlId="individual_name">
+                <Form.Label className={styles.fieldLabel}>
+                  Individual Name
+                </Form.Label>
+                <Form.Control
+                  {...register('individual_name', {
+                    required: 'Individual name is required',
+                  })}
+                  isInvalid={!!errors.individual_name}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.individual_name?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
             )}
-          />
-          {errors.phone && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.phone.message}
-            </p>
-          )}
-        </div>
 
-        {/* Street Address */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Donor Street Address
-          </label>
-          <input
-            {...register('address', { required: 'Street address is required' })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-          {errors.address && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.address.message}
-            </p>
-          )}
-        </div>
+            {/* Conditional Name Field: Business */}
+            {donorType === 'business' && (
+              <div className={styles.businessFields}>
+                <Form.Group controlId="business_name">
+                  <Form.Label className={styles.fieldLabel}>
+                    Business Name
+                  </Form.Label>
+                  <Form.Control
+                    {...register('business_name', {
+                      required: 'Business name is required',
+                    })}
+                    isInvalid={!!errors.business_name}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.business_name?.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
 
-        {/* Checkboxes */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-          <label>
-            <input type="checkbox" {...register('receive_emails')} /> Donor
-            receive emails?
-          </label>
-          <label>
-            <input type="checkbox" {...register('receive_mailings')} /> Donor
-            receive mailings?
-          </label>
-          <label>
-            <input type="checkbox" {...register('remain_anonymous')} /> Donor
-            remain anonymous?
-          </label>
-        </div>
+                <Form.Group controlId="business_contact_name">
+                  <Form.Label className={styles.fieldLabel}>
+                    Business Contact Name
+                  </Form.Label>
+                  <Form.Control
+                    {...register('business_contact_name', {
+                      required: 'Business contact name is required',
+                    })}
+                    isInvalid={!!errors.business_contact_name}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.business_contact_name?.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+            )}
 
-        {/* Estimated Value */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Estimated value (USD)
-          </label>
+            {/* Email */}
+            <Form.Group controlId="email">
+              <Form.Label className={styles.fieldLabel}>Donor Email</Form.Label>
+              <Form.Control
+                type="email"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: 'Please enter a valid email address',
+                  },
+                })}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <input
-            type="text"
-            placeholder="1,234.00"
-            {...register('estimated_value', {
-              required: 'Estimated donation value is required',
-              pattern: {
-                value: /^\d+(\.\d{1,2})?$/,
-                message:
-                  'Please enter a valid dollar amount in the form 1234.56',
-              },
-            })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
+            {/* Phone */}
+            <Form.Group controlId="phone">
+              <Form.Label className={styles.fieldLabel}>
+                Donor Phone Number (Optional)
+              </Form.Label>
+              <Controller
+                name="phone"
+                control={control}
+                rules={{
+                  validate: (value) => {
+                    const digits = value?.replace(/\D/g, '');
+                    return (
+                      !digits ||
+                      digits.length === 10 ||
+                      'Phone number must be 10 digits'
+                    );
+                  },
+                }}
+                render={({ field }) => (
+                  <PatternFormat
+                    {...field}
+                    format="(###) ###-####"
+                    mask="_"
+                    placeholder="(415) 555-1234"
+                    allowEmptyFormatting
+                    onValueChange={(values) => {
+                      field.onChange(values.value);
+                    }}
+                    customInput={BootstrapInput}
+                    isInvalid={!!errors.phone}
+                  />
+                )}
+              />
+              {errors.phone && (
+                <Form.Text className={styles.errorText}>
+                  {errors.phone.message}
+                </Form.Text>
+              )}
+            </Form.Group>
 
-          {errors.estimated_value && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.estimated_value.message}
-            </p>
-          )}
-        </div>
+            {/* Street Address */}
+            <Form.Group controlId="address">
+              <Form.Label className={styles.fieldLabel}>
+                Donor Street Address
+              </Form.Label>
+              <Form.Control
+                {...register('address', {
+                  required: 'Street address is required',
+                })}
+                isInvalid={!!errors.address}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.address?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-        {/* Items Donated */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Items donated
-          </label>
-          <input
-            type="text"
-            placeholder="Describe the items you are donating"
-            {...register('items_donated', {
-              required: 'Please enter the items you are donating',
-              maxLength: {
-                value: 500,
-                message: 'Items description cannot exceed 500 characters',
-              },
-              onChange: (e) => setItemsDonated(e.target.value),
-            })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-          {errors.items_donated && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.items_donated.message}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+            {/* Checkboxes */}
+            <Form.Group className={styles.checkboxGroup}>
+              <Form.Check
+                type="checkbox"
+                label="Donor receive emails?"
+                id="receive_emails"
+                {...register('receive_emails')}
+              />
+              <Form.Check
+                type="checkbox"
+                label="Donor receive mailings?"
+                id="receive_mailings"
+                {...register('receive_mailings')}
+              />
+              <Form.Check
+                type="checkbox"
+                label="Donor remain anonymous?"
+                id="remain_anonymous"
+                {...register('remain_anonymous')}
+              />
+            </Form.Group>
+
+            <h1 className={styles.formTitle}>Donation Information</h1>
+
+            {/* Estimated Value */}
+            <Form.Group controlId="estimated_value">
+              <Form.Label className={styles.fieldLabel}>
+                Estimated value (USD)
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="1234.56"
+                {...register('estimated_value', {
+                  required: 'Estimated donation value is required',
+                  pattern: {
+                    value: /^\d+(\.\d{1,2})?$/,
+                    message:
+                      'Please enter a valid dollar amount in the form 1234.56',
+                  },
+                })}
+                isInvalid={!!errors.estimated_value}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.estimated_value?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            {/* Items Donated */}
+            <Form.Group controlId="items_donated">
+              <Form.Label className={styles.fieldLabel}>
+                Items donated
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Describe the items you are donating"
+                {...register('items_donated', {
+                  required: 'Please enter the items you are donating',
+                  maxLength: {
+                    value: 500,
+                    message: 'Items description cannot exceed 500 characters',
+                  },
+                  onChange: (e) => setItemsDonated(e.target.value),
+                })}
+                isInvalid={!!errors.items_donated}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.items_donated?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }

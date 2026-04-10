@@ -1,0 +1,45 @@
+.formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+  font-family: Arial, sans-serif;
+}
+
+.formCard {
+  /* border: 10px solid #ff0000; */
+  border-radius: 8px;
+}
+
+.formTitle {
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fieldLabel {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.businessFields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.errorText {
+  color: red;
+  margin-top: 5px;
+  display: block;
+}
