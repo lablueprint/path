@@ -1,4 +1,6 @@
+'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
+import { useState } from 'react';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -7,21 +9,40 @@ type IncomingTicketsListProps = {
     requestorLastName: string;
     status: string;
     date: string;
-  }[];
-  status: string;
+  } [];
 };
 
 export default function IncomingTicketsList({
   tickets,
-  status,
 }: IncomingTicketsListProps) {
-  // Filter tickets to only show tickets with the given status
-  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
+  const [selectedStatus, setSelectedStatus] = useState<string>('All');
+  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
+
+  // Filter tickets to only show tickets with the selected status
+  const filteredTickets = selectedStatus === 'All'
+    ? tickets
+    : tickets.filter((ticket) => ticket.status === selectedStatus.toLowerCase());
+  
+  console.log("selected status:", selectedStatus);
+  console.log("tickets:", tickets);
+  console.log("filtered tickets:", filteredTickets);
 
   return (
     <div>
+      {/* Dropdown menu with status options */}
+      <div>
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+        >
+          {statusOptions.map((statusOption) => (
+            <option key={statusOption} value={statusOption}>{statusOption}</option>
+          ))}
+        </select>
+      </div>
+
       {/* Display heading that indicates the status */}
-      <h2>{status.toUpperCase()} TICKETS</h2>
+      <h2>{selectedStatus.toUpperCase()} TICKETS</h2>
 
       {filteredTickets.length > 0 ? (
         <div>
