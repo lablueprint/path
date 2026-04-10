@@ -1,9 +1,10 @@
 .formContainer {
-  max-width: 600px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 20px clamp(16px, 5vw, 48px);
+  box-sizing: border-box;
 }
-
 .formContainer :global(.form-control),
 .formContainer :global(.form-check-label),
 .formContainer :global(.form-label) {
@@ -11,13 +12,15 @@
 }
 
 .formCard {
-  /* border: 10px solid #ff0000; */
   border-radius: 8px;
+  padding: 20px;
 }
 
 .formTitle {
   margin: 0 0 20px;
-  text-align: center;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
 }
 
 .formBody {
@@ -26,8 +29,27 @@
   gap: 15px;
 }
 
+.radioRow {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.twoColRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  .twoColRow {
+    grid-template-columns: 1fr;
+  }
+}
+
 .fieldLabel {
-  font-weight: bold;
   margin-bottom: 5px;
 }
 

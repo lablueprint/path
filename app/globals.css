@@ -15,6 +15,13 @@ body {
   display: flex;
 }
 
+/* Let the app content column use the rest of the viewport next to the sidebar.
+   Without flex: 1, the inner <main> only sizes to its content (e.g. a narrow form). */
+.main > main {
+  flex: 1;
+  min-width: 0;
+}
+
 .ticket-card {
   border: 0px;
   padding: 24px;
