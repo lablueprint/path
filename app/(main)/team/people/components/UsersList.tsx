@@ -32,7 +32,7 @@ export default function UsersList({
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr style={{ border: '1px solid #d1d5db' }}>
+            <tr key={user.user_id} style={{ border: '1px solid #d1d5db' }}>
               <td>
                 <Image
                   src={user.profile_photo_url || '/default-profile-picture.png'}
