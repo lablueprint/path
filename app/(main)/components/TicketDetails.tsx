@@ -144,7 +144,9 @@ export default async function TicketDetails({
     }
   };
 
-  const statusOptions = outgoing ? getOutgoingStatusOptions(userTicket.status as TicketStatus) : getIncomingStatusOptions(userTicket.status as TicketStatus);
+  const statusOptions = outgoing
+    ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
+    : getIncomingStatusOptions(userTicket.status as TicketStatus);
 
   return (
     <div>
