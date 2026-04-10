@@ -7,6 +7,7 @@ import {
   TicketItemInsert,
 } from '@/app/types/ticket';
 import { createClient } from '@/app/lib/supabase/server-client';
+import { revalidatePath } from 'next/cache';
 
 export async function createTicket(data: TicketInsert) {
   const supabase = await createClient();
@@ -40,7 +41,11 @@ export async function deleteTicket(ticketId: string) {
   return { success: true, data: entry as Ticket };
 }
 
-export async function updateTicketStatus(newStatus: string, ticketId: string) {
+export async function updateTicketStatus(
+  newStatus: string,
+  ticketId: string,
+  storeId: string,
+) {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('tickets')
@@ -53,6 +58,12 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
     console.error('Error changing ticket status:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/outgoing-tickets');
+  revalidatePath(`/outgoing-tickets/${ticketId}`);
+  revalidatePath(`/incoming-tickets/${storeId}`);
+  revalidatePath(`/incoming-tickets/${storeId}/${ticketId}`);
+
   return { success: true, data: entry as Ticket };
 }
 
