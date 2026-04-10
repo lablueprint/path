@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
 import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
+import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 
@@ -121,6 +122,7 @@ export default async function TicketDetails({
           <p>Store: {store.name} </p>
           <p>Store address: {store.street_address}</p>
           <p>Status: {userTicket.status}</p>
+          <DeleteTicketButton ticketId={userTicket.ticket_id} />
           {outgoing ? (
             <div>
               <h2>Contact Store Admins</h2>

@@ -22,15 +22,31 @@ export default function InStockTicketItemCard({
   categoryName,
 }: InStockTicketItemCardProps) {
   const [quantity, setQuantity] = useState(quantityRequested);
-  const [savedQuantity, setSavedQuantity] = useState(quantityRequested); // NEW
+  const [savedQuantity, setSavedQuantity] = useState(quantityRequested);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const hasChanged = quantity !== savedQuantity;
 
   const handleSave = async () => {
-    await updateTicketItemQuantity(ticketItemId, quantity);
+    if (quantity < 1) {
+      setErrorMessage('Please input a number greater than 0.');
+      return;
+    }
+
+    const result = await updateTicketItemQuantity(ticketItemId, quantity);
+
+    if (!result.success) {
+      console.error('Error changing ticket item quantity:', result.error);
+      return;
+    }
+
     setSavedQuantity(quantity);
+    setErrorMessage('');
   };
+
   const handleCancel = () => {
     setQuantity(savedQuantity);
+    setErrorMessage('');
   };
 
   return (
@@ -44,10 +60,15 @@ export default function InStockTicketItemCard({
         Quantity requested:{' '}
         <input
           type="number"
+          min={1}
           value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          onChange={(e) => {
+            setQuantity(Number(e.target.value));
+            setErrorMessage('');
+          }}
         />
       </label>
+      {errorMessage && <p role="alert">{errorMessage}</p>}
       {hasChanged && (
         <>
           <button onClick={handleSave}>Save</button>
