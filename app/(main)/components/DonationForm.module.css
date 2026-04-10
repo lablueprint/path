@@ -2,7 +2,12 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px 0;
-  font-family: Arial, sans-serif;
+}
+
+.formContainer :global(.form-control),
+.formContainer :global(.form-check-label),
+.formContainer :global(.form-label) {
+  font-family: inherit;
 }
 
 .formCard {

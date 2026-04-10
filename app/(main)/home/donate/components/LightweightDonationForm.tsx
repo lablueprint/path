@@ -111,7 +111,6 @@ export default function LightweightDonationForm() {
         padding: '20px',
         border: '1px solid #ccc',
         borderRadius: '8px',
-        fontFamily: 'Arial, sans-serif',
       }}
     >
       <div

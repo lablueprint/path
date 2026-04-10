@@ -1,7 +1,8 @@
 :root {
-  --background: #ffffff;
+  --background: #f5f7fa;
   --foreground: #000000;
-  --font-montserrat: 'Montserrat', sans-serif;
+  
+  /* --font-montserrat: 'Montserrat', sans-serif; */
 }
 
 body {
