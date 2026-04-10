@@ -1,6 +1,6 @@
+'use client';
 import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
-
-type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
+import { useState } from 'react';
 
 type Ticket = {
   ticket_id: string;
@@ -10,18 +10,32 @@ type Ticket = {
   stores: { name: string }[] | null;
 };
 
-export default async function OutgoingTicketsList({
+export default function OutgoingTicketsList({
   tickets,
-  status,
 }: {
   tickets: Ticket[];
-  status: Status;
 }) {
-  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
+  const [selectedStatus, setSelectedStatus] = useState<string>('All');
+  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
+  const filteredTickets = selectedStatus === 'All'
+    ? tickets
+    : tickets.filter((ticket) => ticket.status === selectedStatus.toLowerCase());
 
   return (
     <div>
-      <h2>{status.toUpperCase()} TICKETS</h2>
+      {/* Dropdown menu with status options */}
+      <div>
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+        >
+          {statusOptions.map((statusOption) => (
+            <option key={statusOption} value={statusOption}>{statusOption}</option>
+          ))}
+        </select>
+      </div>
+
+      <h2>{selectedStatus.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
         <table
           style={{
