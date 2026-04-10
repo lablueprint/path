@@ -1,6 +1,5 @@
-'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import Image from 'next/image';
 
 export default function UsersList({
   users,
@@ -10,61 +9,54 @@ export default function UsersList({
     first_name: string;
     last_name: string;
     role: string;
+    email: string;
+    profile_photo_url: string | null;
   }[];
 }) {
-  const roleOptions = [
-    {
-      id: 0,
-      roleName: 'All',
-    },
-    {
-      id: 1,
-      roleName: 'default',
-    },
-    {
-      id: 2,
-      roleName: 'requestor',
-    },
-    {
-      id: 3,
-      roleName: 'admin',
-    },
-    {
-      id: 4,
-      roleName: 'superadmin',
-    },
-    {
-      id: 5,
-      roleName: 'owner',
-    },
-  ];
-  const [filterRole, setFilterRole] = useState('All');
   return (
     <div>
-      <select
-        value={filterRole}
-        onChange={(e) => {
-          setFilterRole(e.target.value);
+      <table
+        style={{
+          width: '100%',
+          tableLayout: 'fixed',
+          borderCollapse: 'collapse',
+          border: '1px solid #d1d5db',
         }}
       >
-        {roleOptions.map((o) => (
-          <option key={o.id}>{o.roleName}</option>
-        ))}
-      </select>
-      {users.map(
-        (user) =>
-          (filterRole === 'All' || user.role === filterRole) && (
-            <Link
-              key={user.user_id}
-              href={`/team/people/${user.user_id}`} // Where to navigate
-            >
-              <div>
-                Name: {user.first_name ?? 'FirstName'}{' '}
-                {user.last_name ?? 'LastName'} — Role: {user.role}
-              </div>
-            </Link>
-          ),
-      )}
+        <thead>
+          <tr>
+            <th style={{ width: '30%' }}>Name</th>
+            <th style={{ width: '20%' }}>Email</th>
+            <th style={{ width: '30%' }}>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr style={{ border: '1px solid #d1d5db' }}>
+              <td>
+                <Image
+                  src={user.profile_photo_url || '/default-profile-picture.png'}
+                  alt={`Profile picture for ${user.first_name}`}
+                  height={32}
+                  width={32}
+                  style={{ marginRight: '10px' }}
+                  unoptimized
+                />
+                <Link
+                  key={user.user_id}
+                  href={`/team/people/${user.user_id}`} // Where to navigate
+                >
+                  {user.first_name + ' ' + user.last_name}
+                </Link>
+              </td>
+              <td>
+                <a href={`mailto:${user.email}`}>{user.email}</a>
+              </td>
+              <td>{user.role}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

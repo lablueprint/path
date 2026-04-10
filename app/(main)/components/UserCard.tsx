@@ -2,10 +2,26 @@ import { User } from '@/app/types/user';
 import styles from '@/app/(main)/components/UserCard.module.css';
 import Image from 'next/image';
 
-export default function UserCard({ user }: { user: User }) {
+export default function UserCard({
+  user,
+  noBottomMargin = false,
+}: {
+  user: User;
+  noBottomMargin?: boolean;
+}) {
+  const cardClassName = noBottomMargin
+    ? `${styles['card']} ${styles['noBottomMargin']}`
+    : styles['card'];
+
   return (
-    <div className={styles['card']}>
-      <Image src={user.profile_photo_url ? user.profile_photo_url : '/default-profile-picture.png'} alt={`Profile picture for ${user.first_name}`} height={100} width={100} />
+    <div className={cardClassName}>
+      <Image
+        src={user.profile_photo_url || '/default-profile-picture.png'}
+        alt={`Profile picture for ${user.first_name}`}
+        height={64}
+        width={64}
+        unoptimized
+      />
       <h3>
         {user.first_name} {user.last_name}
       </h3>
