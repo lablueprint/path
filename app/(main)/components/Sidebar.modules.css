@@ -1,0 +1,78 @@
+nav{
+    display:flex;
+    flex-direction:column;
+    gap: 1rem;
+    height: 100vh;
+    width: 300px;
+    padding: 37px 60px;
+}
+.path-home-link {
+    position: relative; 
+    display: block;     
+    width: 100%;
+    height: 86px; 
+    margin-bottom: 70px; 
+}
+.path-home-image {
+    object-fit: contain;    
+    object-position: center; 
+}
+ul{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    list-style-type:none;
+    padding:0;
+}
+
+h3{
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+li {
+    padding: 0; 
+}
+
+li a.nav-link {
+    display: block; 
+    padding: 10px 0px 10px 10px;
+    text-decoration: none;
+    color: #333; 
+    transition: 0.5s; 
+    font-weight:200;
+}
+
+li a.nav-link:hover,
+li a.nav-link:focus {
+    color: #0089FF; 
+    background-color: #E5F3FF;
+}
+
+.profile {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    padding: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.profile .pfp-container{
+    width:40px;
+    height:40px;
+    margin:0 5px;
+}
+
+.profile .pfp-container .pfp{
+    border-radius:50%;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    /* Temporarily set as black change later */
+    background-color:black
+}
+
