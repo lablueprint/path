@@ -58,6 +58,7 @@ schema_paths = [
   "./schemas/functions/can_assign_role.sql",
   "./schemas/users.sql",
   "./schemas/user_roles.sql",
+  "./schemas/functions/get_auth_user_role_name.sql",
   "./schemas/functions/custom_access_token_hook.sql",
   "./schemas/functions/handle_new_user.sql",
   "./schemas/functions/handle_user_email_update.sql",
@@ -154,6 +155,11 @@ file_size_limit = "50MiB"
 # objects_path = "./images"
 
 [storage.buckets.profile_photos]
+public = true
+file_size_limit = "200KB"
+allowed_mime_types = ["image/png", "image/jpeg"]
+
+[storage.buckets.inventory_item_photos]
 public = true
 file_size_limit = "200KB"
 allowed_mime_types = ["image/png", "image/jpeg"]

@@ -1,4 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/default-profile-picture.png';
 
 export default async function InventoryItemPage({
   params,
@@ -44,6 +46,14 @@ export default async function InventoryItemPage({
 
   return (
     <div>
+      <Image
+        src={item.photo_url || defaultItemPhoto}
+        alt={item.item ?? ''}
+        width={64}
+        height={64}
+        style={{ objectFit: 'cover' }}
+        unoptimized
+      />
       <h1>{item.item}</h1>
       <p>Description: {item.description}</p>
       <p>Category: {item.category}</p>

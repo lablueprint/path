@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { updateTicketItemQuantity } from '@/app/actions/ticket';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/default-profile-picture.png';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -35,8 +37,15 @@ export default function InStockTicketItemCard({
 
   return (
     <div>
+      <Image
+        src={photoUrl || defaultItemPhoto}
+        alt={itemName}
+        width={64}
+        height={64}
+        style={{ objectFit: 'cover' }}
+        unoptimized
+      />
       <h3>{itemName}</h3>
-      {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
       <p>Category: {categoryName}</p>
       <p>Subcategory: {subcategoryName}</p>
       <p>Quantity available: {quantityAvailable}</p>

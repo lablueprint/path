@@ -1,4 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/default-profile-picture.png';
 
 export default async function RequestStoreItemPage({
   params,
@@ -50,6 +52,14 @@ export default async function RequestStoreItemPage({
 
   return (
     <div>
+      <Image
+        src={itemData.inventory_items.photo_url || defaultItemPhoto}
+        alt={itemData.inventory_items.name}
+        width={64}
+        height={64}
+        style={{ objectFit: 'cover' }}
+        unoptimized
+      />
       <h1>{itemData.inventory_items.name}</h1>
       <p>Description: {itemData.inventory_items.description}</p>
       <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
