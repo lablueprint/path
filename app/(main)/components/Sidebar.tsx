@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import './Sidebar.modules.css';
+import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
@@ -12,11 +13,11 @@ type SidebarLink = {
 
 export default async function Sidebar() {
   const supabase = await createClient();
+  
   // Get the authenticated user  
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
 
   // Get user claims (JWT)
   const { data } = await supabase.auth.getClaims();
@@ -25,9 +26,10 @@ export default async function Sidebar() {
   // Not logged in or not authenticated user → no sidebar
   if (!user || !role) return null;
 
+  // Fetch profile to get names
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name') // Update these column names if your DB uses different names
+    .select('first_name, last_name')
     .eq('user_id', user.id)
     .single();
 
@@ -35,21 +37,7 @@ export default async function Sidebar() {
   const lastName = profile?.last_name || '';
   const displayName = `${firstName} ${lastName}`.trim() || 'Profile';
 
- const sidebarGroups = [
-    /*{
-      links: [
-        {
-          label: 'Home',
-          href: '/home',
-          allowedRoles: ['default', 'requestor', 'admin', 'superadmin', 'owner'],
-        },
-        {
-          label: 'Profile',
-          href: '/profile',
-          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
-        },
-      ],
-    },*/
+  const sidebarGroups = [
     {
       heading: 'Requesting',
       links: [
@@ -95,12 +83,24 @@ export default async function Sidebar() {
   return (
     <aside>
       <nav>
-        <div className = "path-home"></div>
+        <Link href="/home" className="path-home-link">
+          <Image 
+            src="/path.png" 
+            alt="Path Home Logo" 
+            fill
+            className="path-home-image"
+          />
+        </Link>
+        
         {sidebarGroups.map((group, index) => {
+          // Filters the links based on the user's role
           const visibleLinks = group.links.filter((link) =>
             link.allowedRoles.includes(role)
           );
+          
+          // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
           if (visibleLinks.length === 0) return null;
+          
           return (
             <div key={index}>
               {group.heading && (
@@ -108,16 +108,20 @@ export default async function Sidebar() {
                   {group.heading}
                 </h3>
               )}
-              <ul>
+              {/* Bootstrap ul classes */}
+              <ul className="nav flex-column">
                 {visibleLinks.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>{link.label}</Link>
+                  <li key={link.href} className="nav-item">
+                    <Link href={link.href} className="nav-link">
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           );
         })}
+        
         <Link href="/profile" className="profile">
           <div className="pfp-container">
             <div className="pfp"></div>

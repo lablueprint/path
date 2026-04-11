@@ -6,14 +6,16 @@ nav{
     width: 300px;
     padding: 37px 60px;
 }
-.path-home{
-    width:100%;
-    background-image: url('/path.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    height:86px;
-    margin-bottom:70px;
+.path-home-link {
+    position: relative; 
+    display: block;     
+    width: 100%;
+    height: 86px; 
+    margin-bottom: 70px; 
+}
+.path-home-image {
+    object-fit: contain;    
+    object-position: center; 
 }
 ul{
     display:flex;
@@ -34,7 +36,7 @@ li {
     padding: 0; 
 }
 
-li a {
+li a.nav-link {
     display: block; 
     padding: 10px 0px 10px 10px;
     text-decoration: none;
@@ -43,7 +45,8 @@ li a {
     font-weight:200;
 }
 
-li a:hover {
+li a.nav-link:hover,
+li a.nav-link:focus {
     color: #0089FF; 
     background-color: #E5F3FF;
 }
