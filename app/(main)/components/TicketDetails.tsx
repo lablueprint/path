@@ -3,6 +3,9 @@ import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketIt
 import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
+import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
+
+type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
 export default async function TicketDetails({
   ticketId,
@@ -111,6 +114,40 @@ export default async function TicketDetails({
     }
   }
 
+  const getOutgoingStatusOptions = (status: TicketStatus): TicketStatus[] => {
+    switch (status) {
+      case 'requested':
+        return ['requested'];
+      case 'ready':
+        return ['ready', 'fulfilled'];
+      case 'rejected':
+        return ['rejected'];
+      case 'fulfilled':
+        return ['fulfilled'];
+      default:
+        return [status];
+    }
+  };
+
+  const getIncomingStatusOptions = (status: TicketStatus): TicketStatus[] => {
+    switch (status) {
+      case 'requested':
+        return ['requested', 'ready', 'rejected'];
+      case 'ready':
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
+      case 'rejected':
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
+      case 'fulfilled':
+        return ['fulfilled'];
+      default:
+        return [status];
+    }
+  };
+
+  const statusOptions = outgoing
+    ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
+    : getIncomingStatusOptions(userTicket.status as TicketStatus);
+
   return (
     <div>
       {userTicket ? (
@@ -120,7 +157,16 @@ export default async function TicketDetails({
           <p>Date submitted: {userTicket.date_submitted}</p>
           <p>Store: {store.name} </p>
           <p>Store address: {store.street_address}</p>
-          <p>Status: {userTicket.status}</p>
+          <div>
+            <p>Status: </p>
+            <TicketStatusDropdown
+              storeId={userTicket.store_id}
+              ticketId={userTicket.ticket_id}
+              currentStatus={userTicket.status as TicketStatus}
+              statusOptions={statusOptions}
+            />
+          </div>
+
           {outgoing ? (
             <div>
               <h2>Contact Store Admins</h2>
