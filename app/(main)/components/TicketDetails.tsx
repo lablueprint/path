@@ -134,9 +134,9 @@ export default async function TicketDetails({
       case 'requested':
         return ['requested', 'ready', 'rejected'];
       case 'ready':
-        return ['ready', 'fulfilled'];
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
       case 'rejected':
-        return ['rejected'];
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
       case 'fulfilled':
         return ['fulfilled'];
       default:
