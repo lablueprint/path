@@ -9,6 +9,8 @@ import { useState, useEffect } from 'react';
 import { Ticket, TicketInsert } from '@/app/types/ticket';
 import { createClient } from '@/app/lib/supabase/browser-client';
 
+const supabase = createClient();
+
 export default function TicketsTestComponent() {
   const [ticketToDelete, setDelete] = useState('');
   const [ticketToUpdate, setUpdateTicket] = useState('');
@@ -23,7 +25,6 @@ export default function TicketsTestComponent() {
   };
 
   const [tickets, setTickets] = useState<Ticket[] | null>(null);
-  const supabase = createClient();
 
   useEffect(() => {
     const getData = async () => {
@@ -45,7 +46,7 @@ export default function TicketsTestComponent() {
   };
 
   const updateTicket = async () => {
-    await updateTicketStatus(updateStatus, ticketToUpdate);
+    await updateTicketStatus(updateStatus, ticketToUpdate, ticketData.store_id);
   };
 
   return (

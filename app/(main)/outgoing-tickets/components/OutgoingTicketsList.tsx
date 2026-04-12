@@ -1,4 +1,4 @@
-import OutgoingTicketCard from './OutgoingTicketCard';
+import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
 
 type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -45,15 +45,13 @@ export default async function OutgoingTicketsList({
                 ticketId={ticket.ticket_id}
                 date={ticket.date_submitted}
                 status={ticket.status}
-                storeName={
-                  (ticket.stores as unknown as { name: string } | null)?.name
-                }
+                storeName={(ticket.stores as unknown as { name: string }).name}
               />
             ))}
           </tbody>
         </table>
       ) : (
-        <p>No ticket with status: {status}</p>
+        <p>No tickets found.</p>
       )}
     </div>
   );

@@ -74,6 +74,7 @@ schema_paths = [
   "./schemas/tickets.sql",
   "./schemas/ticket_items.sql",
   "./schemas/donations.sql",
+  "./schemas/functions/handle_ticket_fulfillment.sql",
   "./schemas/*.sql",
   "./schemas/functions/*.sql"
 ]
@@ -152,6 +153,11 @@ file_size_limit = "50MiB"
 # file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
 # objects_path = "./images"
+
+[storage.buckets.profile_photos]
+public = true
+file_size_limit = "200KB"
+allowed_mime_types = ["image/png", "image/jpeg"]
 
 [auth]
 enabled = true

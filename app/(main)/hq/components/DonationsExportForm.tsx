@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import {
   exportDonations,
   exportDonationsInRange,
@@ -15,7 +15,7 @@ type FormValues = {
 export default function Donations() {
   const {
     register,
-    watch,
+    control,
     getValues,
     handleSubmit,
     formState: { errors },
@@ -25,9 +25,12 @@ export default function Donations() {
     },
   });
 
-  const dateMode = watch('dateMode');
+  const dateMode = useWatch({
+    control,
+    name: 'dateMode',
+  });
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = () => {
     handleExport();
   };
 

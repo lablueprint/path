@@ -56,7 +56,7 @@ export default function IncomingTicketsList({
           </table>
         </div>
       ) : (
-        <p>No tickets with status: {status}</p>
+        <p>No tickets found.</p>
       )}
     </div>
   );

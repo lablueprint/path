@@ -56,6 +56,10 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
   }
 
   revalidatePath(`/request/${entry.store_id}/cart`);
+  revalidatePath('/outgoing-tickets');
+  revalidatePath(`/outgoing-tickets/${ticketId}`);
+  revalidatePath(`/incoming-tickets/${entry.store_id}`);
+  revalidatePath(`/incoming-tickets/${entry.store_id}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };
 }

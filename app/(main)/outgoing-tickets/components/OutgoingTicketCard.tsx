@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 type OutgoingTicketCardProps = {
   ticketId: string;
-  storeName?: string;
+  storeName: string;
   date: string | Date;
   status: string;
 };

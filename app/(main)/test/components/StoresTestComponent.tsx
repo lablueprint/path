@@ -7,8 +7,6 @@ import {
   deleteStoreAdmin,
   createStoreItem,
   deleteStoreItem,
-  updateStoreItemIsHidden,
-  updateStoreItemQuantity,
   updateStore,
 } from '@/app/actions/store';
 import {
@@ -59,17 +57,6 @@ export default function StoresTestComponent() {
     await deleteStoreItem('4518b9b5-3401-47ce-b1e4-f09171e0a805');
   };
 
-  const handleUpdateStoreItemQuantity = async () => {
-    await updateStoreItemQuantity('4518b9b5-3401-47ce-b1e4-f09171e0a805', 10);
-  };
-
-  const handleUpdateStoreItemIsHidden = async () => {
-    await updateStoreItemIsHidden(
-      '4518b9b5-3401-47ce-b1e4-f09171e0a805',
-      false,
-    );
-  };
-
   const handleUpdateStore = async () => {
     await updateStore('70427a92-803f-43aa-ab38-fa82376cf4cf', {
       name: 'new store',
@@ -84,12 +71,6 @@ export default function StoresTestComponent() {
       <button onClick={handleDeleteStoreAdminClick}>Delete store admin</button>
       <button onClick={handleAddStoreItemClick}>Add store item</button>
       <button onClick={handleDeleteStoreItemClick}>Delete store item</button>
-      <button onClick={handleUpdateStoreItemQuantity}>
-        Update store item quantity
-      </button>
-      <button onClick={handleUpdateStoreItemIsHidden}>
-        Update store item visibility
-      </button>
       <button onClick={handleUpdateStore}>Update store</button>
     </div>
   );
