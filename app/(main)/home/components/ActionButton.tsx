@@ -8,8 +8,8 @@ type ActionButtonProps = {
 
 export default function ActionButton({ text, url }: ActionButtonProps) {
   return (
-    <Link className={styles['button-text']} href={url}>
-      <div className={styles['button']}>{text}</div>
+    <Link className={styles.buttonText} href={url}>
+      <div className={styles.button}>{text}</div>
     </Link>
   );
 }

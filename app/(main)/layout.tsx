@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import '@/app/globals.css';
 import Sidebar from '@/app/(main)/components/Sidebar';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
