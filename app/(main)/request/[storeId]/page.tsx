@@ -2,7 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
-import AddOutOfStockToCartForm from '@/app/(main)/request/[storeId]/components/AddOutOfStockToCartForm';
+import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
 type SearchParams = {
   query?: string;
@@ -128,10 +128,7 @@ export default async function RequestStorePage({
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>
       </div>
-
       <Link href={`/request/${storeId}/cart`}>Cart</Link>
-      <AddOutOfStockToCartForm storeId={storeId} />
-
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
@@ -145,8 +142,9 @@ export default async function RequestStorePage({
           })) || []
         }
       />
-
-      <h2>Available Items</h2>
+      <h2>Out-of-Stock Request</h2>
+      <AddOutOfStockToCartForm storeId={storeId} />
+      <h2>In-Stock Items</h2>
 
       {items && items.length > 0 ? (
         <div>

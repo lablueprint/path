@@ -26,12 +26,11 @@ export default function AddOutOfStockToCartForm({
 
   return (
     <div>
-      <h3>OutofStockToCartForm</h3>
       <Form action={handleSubmit}>
         <input
           name="description"
           type="text"
-          placeholder="Description for items..."
+          placeholder="Description of item..."
         />
         <button
           type="submit"
