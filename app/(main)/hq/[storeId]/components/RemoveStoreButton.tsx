@@ -1,13 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { deleteStore } from '../../../../actions/store';
+import { deleteStore } from '@/app/actions/store';
 
 type RemoveStoreButtonProp = {
   storeId: string;
 };
 
-export function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
+export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   const router = useRouter();
   const handleDeletion = async () => {
     const { success, error } = await deleteStore(storeId);
