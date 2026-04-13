@@ -74,6 +74,7 @@ schema_paths = [
   "./schemas/tickets.sql",
   "./schemas/ticket_items.sql",
   "./schemas/donations.sql",
+  "./schemas/functions/handle_ticket_fulfillment.sql",
   "./schemas/*.sql",
   "./schemas/functions/*.sql"
 ]

@@ -1,8 +1,10 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
-import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
+import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
+import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
+
+type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
 export default async function TicketDetails({
   ticketId,
@@ -30,49 +32,6 @@ export default async function TicketDetails({
   if (err) {
     console.error('Error fetching ticket:', err);
     return <div>Failed to load data.</div>;
-  }
-
-  let InStockTicketItems = [];
-  let OutOfStockTicketItems: {
-    ticket_item_id: string;
-    free_text_description: string | null;
-  }[] = [];
-  if (userTicket) {
-    const { data: inStockItemsData } = await supabase
-      .from('ticket_items')
-      .select(
-        `
-          *,
-          store_items(
-            quantity_available,
-            inventory_items(
-              name,
-              photo_url,
-              subcategories(
-                name,
-                categories(
-                  name
-                )
-              )
-            )
-          )
-        `,
-      )
-      .eq('ticket_id', ticketId)
-      .eq('is_in_stock_request', true);
-    InStockTicketItems = inStockItemsData || [];
-
-    const { data: outOfStockItemsData } = await supabase
-      .from('ticket_items')
-      .select(
-        `
-          ticket_item_id,
-          free_text_description
-        `,
-      )
-      .eq('ticket_id', ticketId)
-      .eq('is_in_stock_request', false);
-    OutOfStockTicketItems = outOfStockItemsData || [];
   }
 
   const store = userTicket.stores as unknown as {
@@ -111,6 +70,40 @@ export default async function TicketDetails({
     }
   }
 
+  const getOutgoingStatusOptions = (status: TicketStatus): TicketStatus[] => {
+    switch (status) {
+      case 'requested':
+        return ['requested'];
+      case 'ready':
+        return ['ready', 'fulfilled'];
+      case 'rejected':
+        return ['rejected'];
+      case 'fulfilled':
+        return ['fulfilled'];
+      default:
+        return [status];
+    }
+  };
+
+  const getIncomingStatusOptions = (status: TicketStatus): TicketStatus[] => {
+    switch (status) {
+      case 'requested':
+        return ['requested', 'ready', 'rejected'];
+      case 'ready':
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
+      case 'rejected':
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
+      case 'fulfilled':
+        return ['fulfilled'];
+      default:
+        return [status];
+    }
+  };
+
+  const statusOptions = outgoing
+    ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
+    : getIncomingStatusOptions(userTicket.status as TicketStatus);
+
   return (
     <div>
       {userTicket ? (
@@ -120,7 +113,15 @@ export default async function TicketDetails({
           <p>Date submitted: {userTicket.date_submitted}</p>
           <p>Store: {store.name} </p>
           <p>Store address: {store.street_address}</p>
-          <p>Status: {userTicket.status}</p>
+          <div>
+            <p>Status: </p>
+            <TicketStatusDropdown
+              ticketId={userTicket.ticket_id}
+              currentStatus={userTicket.status as TicketStatus}
+              statusOptions={statusOptions}
+            />
+          </div>
+
           {outgoing ? (
             <div>
               <h2>Contact Store Admins</h2>
@@ -134,48 +135,7 @@ export default async function TicketDetails({
               <UserCard user={requestor}></UserCard>
             </div>
           )}
-          {InStockTicketItems.length > 0 ? (
-            <div>
-              <h2>In-Stock Requests</h2>
-              <div>
-                {InStockTicketItems.map((item) => (
-                  <InStockTicketItemCard
-                    key={item.ticket_item_id}
-                    ticketItemId={item.ticket_item_id}
-                    quantityRequested={item.quantity_requested}
-                    quantityAvailable={item.store_items.quantity_available}
-                    itemName={item.store_items.inventory_items.name}
-                    photoUrl={
-                      item.store_items.inventory_items.photo_url || null
-                    }
-                    subcategoryName={
-                      item.store_items?.inventory_items?.subcategories?.name
-                    }
-                    categoryName={
-                      item.store_items?.inventory_items?.subcategories
-                        ?.categories?.name
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null}
-          {OutOfStockTicketItems.length > 0 ? (
-            <div>
-              <h2>Out-of-Stock Requests</h2>
-              <div>
-                {OutOfStockTicketItems.map((item) => (
-                  <OutOfStockTicketItemCard
-                    key={item.ticket_item_id}
-                    ticketItemId={item.ticket_item_id}
-                    freeTextDescription={
-                      item.free_text_description || 'No description'
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null}
+          <TicketItemsList ticketId={userTicket.ticket_id} />
         </div>
       ) : (
         <p>No ticket found.</p>
