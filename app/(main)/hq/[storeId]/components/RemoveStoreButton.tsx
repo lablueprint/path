@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { deleteStore } from '../../../../actions/store';
+import { deleteStore } from '@/app/actions/store';
 
 type RemoveStoreButtonProp = {
   storeId: string;
