@@ -12,7 +12,7 @@ export default function AddOutOfStockToCartForm({
 }: AddOutOfStockToCartFormProps) {
   const handleSubmit = async (formData: FormData) => {
     const description = formData.get('description') as string;
-    const { data: cartItem, error: err } = await addToCart(
+    const { error: err } = await addToCart(
       storeId,
       undefined,
       undefined,
@@ -21,7 +21,6 @@ export default function AddOutOfStockToCartForm({
     if (err) {
       console.error('Error fetching ticket:', err);
     }
-    console.log(cartItem);
   };
 
   return (

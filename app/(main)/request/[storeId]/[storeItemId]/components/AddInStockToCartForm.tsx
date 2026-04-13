@@ -14,7 +14,7 @@ export default function AddInStockToCartForm({
 }: AddInStockToCartFormProps) {
   const handleSubmit = async (formData: FormData) => {
     const actualQuantity = Number(formData.get('quantity'));
-    const { data: cartItem, error: err } = await addToCart(
+    const { error: err } = await addToCart(
       storeId,
       storeItemId,
       actualQuantity,
@@ -22,7 +22,6 @@ export default function AddInStockToCartForm({
     if (err) {
       console.error('Error fetching ticket:', err);
     }
-    console.log(cartItem);
   };
 
   return (
