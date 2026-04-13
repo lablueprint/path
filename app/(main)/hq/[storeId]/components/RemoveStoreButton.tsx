@@ -7,7 +7,7 @@ type RemoveStoreButtonProp = {
   storeId: string;
 };
 
-export function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
+export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   const router = useRouter();
   const handleDeletion = async () => {
     const { success, error } = await deleteStore(storeId);

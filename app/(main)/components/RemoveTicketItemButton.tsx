@@ -6,7 +6,7 @@ type RemoveTicketItemButtonProps = {
   ticketItemId: string;
 };
 
-export default function RemoveStoreButton({
+export default function RemoveTicketItemButton({
   ticketItemId,
 }: RemoveTicketItemButtonProps) {
   const handleDelete = async () => {
