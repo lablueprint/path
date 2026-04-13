@@ -58,8 +58,9 @@ export default function UpdatePasswordForm() {
       <input
         type="password"
         {...register('newPassword', {
+          minLength: 8,
           pattern:
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};'"\\:|<>?,./`~]).{8,}$/,
+            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
         })}
       />
       {errors.newPassword && (

@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
+import Link from 'next/link';
 
 export default async function RequestPage() {
   const supabase = await createClient();
@@ -17,6 +18,9 @@ export default async function RequestPage() {
   return (
     <div>
       <h1>Request Inventory</h1>
+      <Link href="/request/all">
+        <p>All Stores</p>
+      </Link>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (
