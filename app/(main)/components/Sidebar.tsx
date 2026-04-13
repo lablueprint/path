@@ -81,8 +81,10 @@ export default async function Sidebar() {
           <Image
             src="/path.png"
             alt="Path Home Logo"
-            fill
+            width={160}
+            height={76}
             className={styles.pathHomeImage}
+            priority
           />
         </Link>
 
