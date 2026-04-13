@@ -1,20 +1,14 @@
 import Link from 'next/link';
-import './Sidebar.modules.css';
+import styles from '@/app/(main)/components/Sidebar.module.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
-type SidebarLink = {
-  label: string;
-  href: string;
-  allowedRoles: Role[];
-};
-
 export default async function Sidebar() {
   const supabase = await createClient();
-  
-  // Get the authenticated user  
+
+  // Get the authenticated user
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -82,37 +76,38 @@ export default async function Sidebar() {
 
   return (
     <aside>
-      <nav>
-        <Link href="/home" className="path-home-link">
-          <Image 
-            src="/path.png" 
-            alt="Path Home Logo" 
+      <nav className={styles.navContainer}>
+        <Link href="/home" className={styles.pathHomeLink}>
+          <Image
+            src="/path.png"
+            alt="Path Home Logo"
             fill
-            className="path-home-image"
+            className={styles.pathHomeImage}
           />
         </Link>
-        
+
         {sidebarGroups.map((group, index) => {
           // Filters the links based on the user's role
           const visibleLinks = group.links.filter((link) =>
-            link.allowedRoles.includes(role)
+            link.allowedRoles.includes(role),
           );
-          
+
           // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
           if (visibleLinks.length === 0) return null;
-          
+
           return (
             <div key={index}>
               {group.heading && (
-                <h3>
-                  {group.heading}
-                </h3>
+                <h3 className={styles.groupHeading}>{group.heading}</h3>
               )}
               {/* Bootstrap ul classes */}
-              <ul className="nav flex-column">
+              <ul className={`nav flex-column ${styles.linkList}`}>
                 {visibleLinks.map((link) => (
-                  <li key={link.href} className="nav-item">
-                    <Link href={link.href} className="nav-link">
+                  <li key={link.href} className={`nav-item ${styles.linkItem}`}>
+                    <Link
+                      href={link.href}
+                      className={`nav-link ${styles.navLink}`}
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -121,10 +116,10 @@ export default async function Sidebar() {
             </div>
           );
         })}
-        
-        <Link href="/profile" className="profile">
-          <div className="pfp-container">
-            <div className="pfp"></div>
+
+        <Link href="/profile" className={styles.profile}>
+          <div className={styles.pfpContainer}>
+            <div className={styles.pfp}></div>
           </div>
           <div>{displayName}</div>
         </Link>
