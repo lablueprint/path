@@ -53,20 +53,20 @@ export default async function RequestAllStoresPage({
     .from('store_items')
     .select(
       `
-            store_item_id,
-            store_id,
-            inventory_items!inner(
-                name,
-                photo_url,
-                subcategories!inner(
-                    name,
-                    category_id,
-                    categories!inner(
-                        name
-                    )
-                )
+        store_item_id,
+        store_id,
+        inventory_items!inner(
+          name,
+          photo_url,
+          subcategories!inner(
+            name,
+            category_id,
+            categories!inner(
+              name
             )
-        `,
+          )
+        )
+      `,
     )
     .eq('is_hidden', false);
 

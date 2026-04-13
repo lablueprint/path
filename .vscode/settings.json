@@ -1,5 +1,4 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "codeQL.githubDatabase.download": "never"
+  "editor.formatOnSave": true
 }
