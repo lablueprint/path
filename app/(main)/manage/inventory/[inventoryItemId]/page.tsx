@@ -18,40 +18,36 @@ export default async function InventoryItemPage({
   }
 
   const userRole = claimsData?.claims?.user_role;
-  const userId = claimsData?.claims?.sub;
-
-  if (!userRole || !userId) {
-    return <div>You do not have permission to view this page.</div>;
-  }
-
-  if (
-    userRole !== 'admin' &&
-    userRole !== 'superadmin' &&
-    userRole !== 'owner'
-  ) {
-    return <div>You do not have permission to view this page.</div>;
-  }
 
   const { data, error } = await supabase
     .from('inventory_items')
     .select(
-      `inventory_item_id, subcategory_id, name, description, photo_url, subcategories(name, categories(name))`,
+      `
+        inventory_item_id,
+        subcategory_id,
+        name,
+        description,
+        photo_url,
+        subcategories(name, 
+        category_id, categories(name))
+      `,
     )
     .eq('inventory_item_id', inventoryItemId)
     .single()
     .overrideTypes<
       {
         inventory_item_id: string;
-        subcategory_id: number | null;
+        subcategory_id: number;
         name: string;
         description: string;
         photo_url: string | null;
         subcategories: {
           name: string;
+          category_id: string;
           categories: {
             name: string;
-          } | null;
-        } | null;
+          };
+        };
       },
       { merge: false }
     >();
@@ -61,18 +57,27 @@ export default async function InventoryItemPage({
     return <div>Failed to load inventory item.</div>;
   }
 
+  const [categoriesRes, subcategoriesRes] = await Promise.all([
+    supabase.from('categories').select('*'),
+    supabase
+      .from('subcategories')
+      .select('*')
+      .eq('category_id', data.subcategories?.category_id),
+  ]);
+
   const item = {
     inventory_item_id: data.inventory_item_id,
     subcategory_id: data.subcategory_id,
     name: data.name,
     description: data.description,
     photo_url: data.photo_url,
+    category_id: data.subcategories?.category_id,
   };
 
   const categoryName = data.subcategories?.categories?.name ?? 'None';
   const subcategoryName = data.subcategories?.name ?? 'None';
 
-  if (userRole === 'admin') {
+  if (userRole !== 'superadmin' && userRole !== 'owner') {
     return (
       <div>
         <h1>{item.name}</h1>
@@ -86,12 +91,11 @@ export default async function InventoryItemPage({
   return (
     <div>
       <h1>{item.name}</h1>
-      {item.photo_url ? (
-        <img src={item.photo_url} alt={item.name} width={200} height={200} />
-      ) : (
-        <p>No photo available.</p>
-      )}
-      <EditInventoryItemForm item={item} />
+      <EditInventoryItemForm
+        item={item}
+        initialCategories={categoriesRes.data || []}
+        initialSubcategories={subcategoriesRes.data || []}
+      />
       <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
     </div>
   );

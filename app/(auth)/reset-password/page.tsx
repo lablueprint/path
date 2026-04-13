@@ -53,9 +53,10 @@ export default function ResetPasswordPage() {
           type="password"
           {...register('password', {
             required: 'New password is required.',
+            minLength: 8,
             pattern: {
               value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\+\-=\[\]{};':"\\|<>?,.\/`~]).{8,}$/,
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
               message:
                 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
             },
