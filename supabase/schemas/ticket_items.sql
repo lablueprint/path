@@ -17,7 +17,7 @@ where
   store_item_id is not null;
 
 alter table "ticket_items"
-add constraint ck_quantity_requested check (quantity_requested >= 0);
+add constraint ck_quantity_requested check (quantity_requested >= 1);
 
 alter table "ticket_items"
 add constraint ck_free_text_description_presence check (
