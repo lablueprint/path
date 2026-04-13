@@ -2,12 +2,10 @@
 
 import Form from 'next/form';
 import { addToCart } from '@/app/actions/ticket';
-import { useState } from 'react';
 
 interface AddInStockToCartFormProps {
   storeId: string;
-  storeItemId?: string;
-  quantity?: number;
+  storeItemId: string;
 }
 
 export default function AddInStockToCartForm({
@@ -29,17 +27,21 @@ export default function AddInStockToCartForm({
 
   return (
     <div>
-    <h3>InStockToCartForm</h3>
-    <Form action={handleSubmit}>
-      <input name="quantity" type="number" placeholder="Type a quantity..." required/>
+      <Form action={handleSubmit}>
+        <input
+          name="quantity"
+          type="number"
+          placeholder="Type a quantity..."
+          required
+        />
 
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Add to Cart
-      </button>
-    </Form>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add to Cart
+        </button>
+      </Form>
     </div>
   );
 }

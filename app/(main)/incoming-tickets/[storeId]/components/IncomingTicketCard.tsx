@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-// import '@/app/globals.css';
 
 type IncomingTicketCardProps = {
   ticketId: string;

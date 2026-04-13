@@ -1,6 +1,8 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Link from 'next/link';
+import AddOutOfStockToCartForm from '@/app/(main)/request/[storeId]/components/AddOutOfStockToCartForm';
 
 type SearchParams = {
   query?: string;
@@ -126,6 +128,9 @@ export default async function RequestStorePage({
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>
       </div>
+
+      <Link href={`/request/${storeId}/cart`}>Cart</Link>
+      <AddOutOfStockToCartForm storeId={storeId} />
 
       <ItemSearch
         categories={

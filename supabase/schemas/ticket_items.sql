@@ -9,6 +9,9 @@ create table ticket_items (
   constraint fk_tickets foreign key (ticket_id) references tickets (ticket_id) on delete cascade on update cascade
 );
 
+alter table "ticket_items"
+add constraint uq_ticket_id_store_item_id unique (ticket_id, store_item_id);
+
 create unique index uq_ticket_id_store_item_id_not_null on public.ticket_items (ticket_id, store_item_id)
 where
   store_item_id is not null;

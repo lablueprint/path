@@ -184,7 +184,6 @@ export async function addToCart(
     return { success: false, data: null, error: fetchError.message };
   }
 
-  // If it exists → use existing ticket
   let ticket = existingTicket;
 
   if (!ticket) {

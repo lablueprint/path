@@ -5,21 +5,17 @@ import { addToCart } from '@/app/actions/ticket';
 
 interface AddOutOfStockToCartFormProps {
   storeId: string;
-  storeItemId?: string;
-  quantity?: number;
 }
 
 export default function AddOutOfStockToCartForm({
   storeId,
-  storeItemId,
-  quantity,
 }: AddOutOfStockToCartFormProps) {
   const handleSubmit = async (formData: FormData) => {
     const description = formData.get('description') as string;
     const { data: cartItem, error: err } = await addToCart(
       storeId,
-      storeItemId,
-      quantity,
+      undefined,
+      undefined,
       description,
     );
     if (err) {
@@ -30,20 +26,20 @@ export default function AddOutOfStockToCartForm({
 
   return (
     <div>
-    <h3>OutofStockToCartForm</h3>
-    <Form action={handleSubmit}>
-      <input
-        name="description"
-        type="text"
-        placeholder="Description for items..."
-      />
-      <button
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Add to Cart
-      </button>
-    </Form>
+      <h3>OutofStockToCartForm</h3>
+      <Form action={handleSubmit}>
+        <input
+          name="description"
+          type="text"
+          placeholder="Description for items..."
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add to Cart
+        </button>
+      </Form>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
-import SubmitButton from './SubmitButton';
+import SubmitTicketButton from '@/app/(main)/request/[storeId]/cart/components/SubmitTicketButton';
 import Link from 'next/link';
 
 export default async function CartPage({
@@ -72,7 +72,7 @@ export default async function CartPage({
       {hasItems ? (
         <>
           <TicketItemsList ticketId={ticket.ticket_id} />
-          <SubmitButton ticketId={ticket.ticket_id} />
+          <SubmitTicketButton ticketId={ticket.ticket_id} />
         </>
       ) : (
         <div>No items found in cart.</div>
