@@ -144,32 +144,32 @@ export default async function ManageStorePage({
           }
         />
         <h2>Items</h2>
-{items && items.length > 0 ? (
-  items.map((item) => (
-    <div
-      key={item.id}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        marginBottom: '24px',
-      }}
-    >
-      <ItemCard
-        id={item.id}
-        item={item.item}
-        photoUrl={item.photoUrl}
-        subcategory={item.subcategory}
-        category={item.category}
-      />
-      <div style={{ marginTop: '-12px' }}>
-        <DeleteStoreItemButton storeItemId={item.id} />
-      </div>
-    </div>
-  ))
-) : (
-  <p>No items found.</p>
-)}
+        {items && items.length > 0 ? (
+          items.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                marginBottom: '24px',
+              }}
+            >
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                photoUrl={item.photoUrl}
+                subcategory={item.subcategory}
+                category={item.category}
+              />
+              <div style={{ marginTop: '-12px' }}>
+                <DeleteStoreItemButton storeItemId={item.id} />
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No items found.</p>
+        )}
       </div>
     </div>
   );

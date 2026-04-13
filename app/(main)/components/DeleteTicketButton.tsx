@@ -3,11 +3,7 @@
 import { deleteTicket } from '@/app/actions/ticket';
 import { usePathname, useRouter } from 'next/navigation';
 
-export default function DeleteTicketButton({
-  ticketId,
-}: {
-  ticketId: string;
-}) {
+export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
   const pathname = usePathname();
   const router = useRouter();
 
