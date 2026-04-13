@@ -60,8 +60,6 @@ export default async function UsersPage({
     console.error('Error fetching users:', usersErr);
   }
 
-  console.log(usersData);
-
   const users = (usersData ?? []).map((u) => {
     const user_roles = u.user_roles as unknown as { roles: { name: string } };
     return {

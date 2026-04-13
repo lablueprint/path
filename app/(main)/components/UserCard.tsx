@@ -10,7 +10,7 @@ export default function UserCard({
   noBottomMargin?: boolean;
 }) {
   const cardClassName = noBottomMargin
-    ? `${styles['card']} ${styles['noBottomMargin']}`
+    ? `${styles['card']} ${styles['no-bottom-margin']}`
     : styles['card'];
 
   return (
