@@ -19,7 +19,7 @@ export default function DeleteStoreItemButton({
       return;
     }
 
-    const targetPath = pathname.split('/').slice(0, 3).join('/');
+    const targetPath = pathname.split('/').slice(0, -1).join('/') || '/';
 
     if (pathname === targetPath) {
       router.refresh();
