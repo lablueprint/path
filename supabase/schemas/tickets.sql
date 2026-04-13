@@ -16,6 +16,10 @@ create table tickets (
   constraint fk_stores foreign key (store_id) references stores (store_id)
 );
 
+create unique index uq_requestor_user_id_store_id_draft on tickets (requestor_user_id, store_id)
+where
+  status = 'draft';
+
 alter table tickets enable row level security;
 
 create policy "auth can read tickets if requestor_user_id or can_manage_store" on public.tickets for
