@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import ActionButton from '@/app/(main)/home/components/ActionButton';
 import { createClient } from '@/app/lib/supabase/server-client';
 
@@ -18,20 +16,14 @@ export default async function HomePage() {
   return (
     <>
       <h1>Home</h1>
-
-      <ActionButton
-        text="Submit gift-in-kind form"
-        url="/home/donate"
-      />
+      <ActionButton text="Donate" url="/home/donate" />
 
       {['requestor', 'admin', 'superadmin', 'owner'].includes(
         userRole ?? '',
-      ) && (
-        <ActionButton text="Request inventory" url="/request" />
-      )}
+      ) && <ActionButton text="Request Inventory" url="/request" />}
 
       {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
-        <ActionButton text="Manage inventory" url="/manage" />
+        <ActionButton text="Manage Inventory" url="/manage" />
       )}
 
       {['superadmin', 'owner'].includes(userRole ?? '') && (
@@ -40,4 +32,3 @@ export default async function HomePage() {
     </>
   );
 }
-

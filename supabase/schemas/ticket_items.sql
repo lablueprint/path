@@ -12,6 +12,10 @@ create table ticket_items (
 alter table "ticket_items"
 add constraint uq_ticket_id_store_item_id unique (ticket_id, store_item_id);
 
+create unique index uq_ticket_id_store_item_id_not_null on public.ticket_items (ticket_id, store_item_id)
+where
+  store_item_id is not null;
+
 alter table "ticket_items"
 add constraint ck_quantity_requested check (quantity_requested >= 1);
 

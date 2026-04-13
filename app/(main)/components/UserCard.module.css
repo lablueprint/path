@@ -8,3 +8,7 @@
   box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
   background-color: gray;
 }
+
+.no-bottom-margin {
+  margin-bottom: 0;
+}
