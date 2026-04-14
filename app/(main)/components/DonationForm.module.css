@@ -24,21 +24,15 @@
 }
 
 .formTitle {
-  margin-top: 20px;
   font-size: 1.5rem;
   line-height: 1.2;
   font-weight: 600;
 }
 
-.sectionTitle {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
 .formBody {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .radioRow {
