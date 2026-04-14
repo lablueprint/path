@@ -8,7 +8,7 @@ type RemoveStoreButtonProp = {
   storeId: string;
 };
 
-export function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
+export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   const router = useRouter();
   const supabase = createClient();
 

@@ -44,7 +44,6 @@ export default function AddInventoryItemForm() {
       if (result.success) {
         // Reset form fields after successful submission
         reset();
-        console.log('Item created successfully:', result.data);
       } else {
         console.error('Failed to create item:', result.error);
       }
