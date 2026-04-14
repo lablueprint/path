@@ -5,6 +5,9 @@ import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
+import { Card } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Image from 'next/image';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -106,6 +109,15 @@ export default async function TicketDetails({
     ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
     : getIncomingStatusOptions(userTicket.status as TicketStatus);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${month}-${day}-${year}`;
+  };
+
   return (
     <div>
       {userTicket ? (
@@ -115,6 +127,24 @@ export default async function TicketDetails({
           <p>Date submitted: {userTicket.date_submitted}</p>
           <p>Store: {store.name} </p>
           <p>Store address: {store.street_address}</p>
+          <Card className={styles.headerCard}>
+            <Image
+              src={
+                requestor.profile_photo_url || '/default-profile-picture.png'
+              }
+              alt={`Profile picture for ${requestor.first_name}`}
+              className={styles.profilePicture}
+              width={95}
+              height={95}
+              unoptimized
+            ></Image>
+            <div className={styles.headerCardText}>
+              <h1>{`${requestor.first_name + ' ' + requestor.last_name}'s Ticket`}</h1>
+              <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
+              <h2>Ticket #{userTicket.ticket_id}</h2>
+            </div>
+            <Button className={styles.contactButton}>Contact</Button>
+          </Card>
           <div>
             <p>Status: </p>
             <TicketStatusDropdown

@@ -1,7 +1,52 @@
+.contactStoreAdmins {
+  background: rgb(53, 130, 198);
+  border-radius: 15px;
+  /*background: #FFF; replace blue with this*/
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
 
-.contactStoreAdmins{
-    background: rgb(53, 130, 198);
-    border-radius: 15px;
-    /*background: #FFF; replace blue with this*/ 
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+.profilePicture {
+  width: 5.9375rem;
+  height: 5.9375rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.headerCard {
+  width: 57.8125rem;
+  height: 8.625rem;
+  border-radius: 0.9375rem;
+  background: #fff;
+  padding: 1.31rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headerCard h1 {
+  color: #1a202c;
+  font-family: Montserrat;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.81rem;
+  max-height: 1.81rem;
+  margin: 0;
+}
+
+.headerCard h2 {
+  color: #4a5568;
+  font-family: Montserrat;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5rem;
+  max-height: 1.5rem;
+  margin: 0;
+}
+
+.headerCardText {
+  height: 5rem;
 }
