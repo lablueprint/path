@@ -2,7 +2,7 @@ export type Store = {
   store_id: string;
   name: string;
   street_address: string;
-  photo_url?: string;
+  photo_url?: string | null;
 };
 
 export type StoreInsert = Omit<Store, 'store_id'>;

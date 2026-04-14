@@ -14,7 +14,7 @@ export default async function StoreDetailsPage({
   const supabase = await createClient();
   const { data: storeData, error: storeError } = await supabase
     .from('stores')
-    .select('store_id, name, street_address')
+    .select('store_id, name, street_address, photo_url')
     .eq('store_id', storeId)
     .single();
 

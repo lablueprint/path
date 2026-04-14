@@ -97,7 +97,8 @@ export default function AddStoreForm() {
       // reset all fields
       reset({ storeName: '', storeStreetAddress: '' });
       setSelectedFile(null);
-      setPreviewUrl(defaultStorePhoto.src);
+      setPreviewUrl(null);
+      photoUploadRef.current?.resetFile();
     } catch (error) {
       console.error('Error saving store profile:', error);
     } finally {
