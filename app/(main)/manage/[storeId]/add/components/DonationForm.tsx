@@ -16,9 +16,11 @@ BootstrapInput.displayName = 'BootstrapInput';
 export default function DonationForm({
   setItemsDonated,
   donorType,
+  showSubmitButton,
 }: {
   setItemsDonated: (value: string) => void;
   donorType: 'individual' | 'business' | undefined;
+  showSubmitButton: boolean;
 }) {
   const {
     register,
@@ -227,7 +229,9 @@ export default function DonationForm({
               />
             </Form.Group>
 
-            <h1 className={styles.formTitle}>Donation Information</h1>
+            <h1 className={`${styles.formTitle} ${styles.sectionTitle}`}>
+              Donation Information
+            </h1>
 
             {/* Estimated Value */}
             <Form.Group controlId="estimated_value">
@@ -274,6 +278,14 @@ export default function DonationForm({
                 {errors.items_donated?.message}
               </Form.Control.Feedback>
             </Form.Group>
+
+            {showSubmitButton && (
+              <div className={styles.submitButtonRow}>
+                <button type="submit" className={styles.submitButton}>
+                  Submit
+                </button>
+              </div>
+            )}
           </div>
         </Card.Body>
       </Card>

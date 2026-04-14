@@ -13,7 +13,8 @@
 }
 
 .formCard {
-  border-radius: 8px;
+  border: none;
+  border-radius: 5px;
   padding: 0;
 }
 
@@ -26,6 +27,11 @@
   font-size: 1.5rem;
   line-height: 1.2;
   font-weight: 600;
+}
+
+.sectionTitle {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .formBody {
@@ -74,4 +80,24 @@
   color: red;
   margin-top: 5px;
   display: block;
+}
+
+.submitButtonRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.submitButton {
+  display: inline-flex;
+  padding: 8px 40px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #2d3748;
+  color: #fff;
+  font-weight: 400;
+  cursor: pointer;
 }

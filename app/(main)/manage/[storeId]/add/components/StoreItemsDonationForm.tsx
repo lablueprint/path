@@ -188,14 +188,14 @@ export default function StoreItemsDonationForm({
           <DonationForm
             donorType={donorType}
             setItemsDonated={setItemsDonated}
+            showSubmitButton={!itemSettingsSelected?.includes('addInventoryItems')}
           />
         )}
         {itemSettingsSelected?.includes('addInventoryItems') && (
           <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
           // add autofillitems connection pass in prop to storeitemsform
         )}
-        {(itemSettingsSelected?.includes('giftInKind') ||
-          itemSettingsSelected?.includes('addInventoryItems')) && (
+        {itemSettingsSelected?.includes('addInventoryItems') && (
           <button
             type="submit"
             style={{
