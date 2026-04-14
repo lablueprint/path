@@ -14,7 +14,7 @@ type FormValues = {
   street_address: string;
 };
 
-export function EditStoreForm({ store }: { store: Store }) {
+export default function EditStoreForm({ store }: { store: Store }) {
   const [isSaving, setIsSaving] = useState(false);
 
   // photoUrl represents what is currently in the DB
