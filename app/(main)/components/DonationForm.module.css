@@ -1,8 +1,9 @@
-.formContainer {
+.formContainer:global(.container) {
   width: 100%;
   max-width: none;
-  margin: 0 auto;
-  padding: 20px clamp(16px, 5vw, 48px);
+  margin: 0;
+  --bs-gutter-x: 0;
+  padding-block: 20px;
   box-sizing: border-box;
 }
 .formContainer :global(.form-control),
@@ -13,7 +14,11 @@
 
 .formCard {
   border-radius: 8px;
-  padding: 20px;
+  padding: 0;
+}
+
+.formCard :global(.card-body) {
+  padding: 40px;
 }
 
 .formTitle {

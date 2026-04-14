@@ -1,8 +1,6 @@
 :root {
   --background: #f5f7fa;
   --foreground: #000000;
-  
-  /* --font-montserrat: 'Montserrat', sans-serif; */
 }
 
 body {
@@ -44,13 +42,6 @@ p {
 
 .main {
   display: flex;
-}
-
-/* Let the app content column use the rest of the viewport next to the sidebar.
-   Without flex: 1, the inner <main> only sizes to its content (e.g. a narrow form). */
-.main > main {
-  flex: 1;
-  min-width: 0;
 }
 
 .ticket-card {
