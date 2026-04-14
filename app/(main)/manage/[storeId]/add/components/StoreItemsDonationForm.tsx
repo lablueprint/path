@@ -82,17 +82,8 @@ export default function StoreItemsDonationForm({
       let donationErrorOccurred = false;
 
       if (data.itemSettings?.includes('addInventoryItems')) {
-<<<<<<< Updated upstream
         for (const item of data.items) {
           const { error } = await addUpdateStoreItemQuantity(
-=======
-        const items = Array.isArray(data.items)
-          ? data.items
-          : Object.values(data.items ?? {}) as CombinedFormData['items'];
-
-        for (const item of items) {
-          await addUpdateStoreItemQuantity(
->>>>>>> Stashed changes
             item.inventory_item_id,
             item.quantity,
             store.store_id,
