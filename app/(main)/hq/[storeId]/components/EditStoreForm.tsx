@@ -9,7 +9,7 @@ type FormValues = {
   street_address: string;
 };
 
-export function EditStoreForm({ store }: { store: Store }) {
+export default function EditStoreForm({ store }: { store: Store }) {
   const { register, handleSubmit, formState, reset } = useForm<FormValues>({
     defaultValues: {
       name: store.name,

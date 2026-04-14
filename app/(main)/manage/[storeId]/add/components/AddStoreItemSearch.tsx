@@ -38,7 +38,7 @@ export default function AddStoreItemSearch({
         .select(`*, subcategories (name, categories(name))`)
         .ilike('name', `%${searchQuery}%`);
       if (error) {
-        console.log(error);
+        console.error(error);
         return;
       } else {
         const items: ItemWithNames[] = [];

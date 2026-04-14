@@ -1,20 +1,15 @@
 import Link from 'next/link';
-import './Sidebar.modules.css';
+import styles from '@/app/(main)/components/Sidebar.module.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
 import SidebarNavLink from './SidebarNavLink';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
-type SidebarLink = {
-  label: string;
-  href: string;
-  allowedRoles: Role[];
-};
-
 export default async function Sidebar() {
   const supabase = await createClient();
 
+  // Get the authenticated user
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -80,30 +75,41 @@ export default async function Sidebar() {
 
   return (
     <aside>
-      <nav>
-        <Link href="/home" className="path-home-link">
+      <nav className={styles.navContainer}>
+        <Link href="/home" className={styles.pathHomeLink}>
           <Image
             src="/path.png"
             alt="Path Home Logo"
-            fill
-            className="path-home-image"
+            width={160}
+            height={76}
+            className={styles.pathHomeImage}
+            priority
           />
         </Link>
 
         {sidebarGroups.map((group, index) => {
           const visibleLinks = group.links.filter((link) =>
-            link.allowedRoles.includes(role)
+            link.allowedRoles.includes(role),
           );
 
+          // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
           if (visibleLinks.length === 0) return null;
 
           return (
             <div key={index}>
-              {group.heading && <h3>{group.heading}</h3>}
-
-              <ul className="nav flex-column">
+              {group.heading && (
+                <h3 className={styles.groupHeading}>{group.heading}</h3>
+              )}
+              {/* Bootstrap ul classes */}
+              <ul className={`nav flex-column ${styles.linkList}`}>
                 {visibleLinks.map((link) => (
-                  <li key={link.href} className="nav-item">
+                  <li key={link.href} className={`nav-item ${styles.linkItem}`}>
+                    {/*<Link
+                      href={link.href}
+                      className={`nav-link ${styles.navLink}`}
+                    >
+                      {link.label}
+                    </Link>*/}
                     <SidebarNavLink
                       href={link.href}
                       label={link.label}
@@ -115,22 +121,18 @@ export default async function Sidebar() {
           );
         })}
 
-        <Link href="/profile" className="profile">
-          <div className="pfp-container">
-            {profilePhotoUrl ? (
+        <Link href="/profile" className={styles.profile}>
+          <div className={styles.pfpContainer}>
             <Image
-              src={profilePhotoUrl}
+              src={profilePhotoUrl || '/default-profile-picture.png'}
               alt={`${displayName} profile photo`}
               width={40}
               height={40}
-              className="pfp"
+              className={styles.pfp}
             />
-          ) : (
-            <div className="pfp"></div>
-          )}
         </div>
-        <div>{displayName}</div>
-      </Link>
+          <div>{displayName}</div>
+        </Link>
       </nav>
     </aside>
   );

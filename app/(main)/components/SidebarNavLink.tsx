@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import styles from './Sidebar.module.css';
+
 
 type SidebarNavLinkProps = {
   href: string;
@@ -12,7 +14,7 @@ type SidebarNavLinkProps = {
 export default function SidebarNavLink({
   href,
   label,
-  className = 'nav-link',
+  className = 'styles.navLink',
 }: SidebarNavLinkProps) {
   const pathname = usePathname();
 
@@ -22,7 +24,7 @@ export default function SidebarNavLink({
   return (
     <Link
       href={href}
-      className={`${className} ${isActive ? 'active-nav-link' : ''}`.trim()}
+      className={`${styles.navLink} ${isActive ? styles.activeNavLink : ''}`.trim()}
       aria-current={isActive ? 'page' : undefined}
     >
       {label}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm, useWatch } from 'react-hook-form';
-import { createStore } from '../../../actions/store';
+import { createStore } from '@/app/actions/store';
 
 type FormValues = {
   storeName: string;
