@@ -1,14 +1,13 @@
 import type { Metadata } from 'next';
 import AuthListener from '@/app/components/AuthListener';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '@/app/globals.css';
 import { Montserrat } from 'next/font/google';
+import '@/app/globals.css';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-montserrat', 
-  weight: ['300', '400', '500', '600', '700'], 
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-montserrat',
 });
 
 export const metadata: Metadata = {
@@ -22,8 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${montserrat.className} antialiased`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={montserrat.className}
+    >
+      <body>
         <AuthListener />
         <main>{children}</main>
       </body>

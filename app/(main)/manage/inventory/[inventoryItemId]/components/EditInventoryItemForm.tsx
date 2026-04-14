@@ -31,7 +31,7 @@ function getDefaultValues(
   };
 }
 
-export function EditInventoryItemForm({
+export default function EditInventoryItemForm({
   item,
   initialCategories,
   initialSubcategories,
@@ -215,5 +215,3 @@ export function EditInventoryItemForm({
     </div>
   );
 }
-
-export default EditInventoryItemForm;

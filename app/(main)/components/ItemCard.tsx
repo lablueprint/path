@@ -21,8 +21,8 @@ export default function ItemCard({
 }: ItemCardProps) {
   const pathname = usePathname();
   return (
-    <Link className={styles['card-text']} href={`${pathname}/${id}`}>
-      <div className={styles['card']}>
+    <Link className={styles.cardText} href={`${pathname}/${id}`}>
+      <div className={styles.card}>
         <h3>{item}</h3>
         {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
         <p>Category: {category}</p>
