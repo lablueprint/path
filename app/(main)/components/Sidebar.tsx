@@ -2,6 +2,7 @@ import Link from 'next/link';
 import styles from '@/app/(main)/components/Sidebar.module.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
+import SidebarNavLink from './SidebarNavLink';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
@@ -13,22 +14,20 @@ export default async function Sidebar() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Get user claims (JWT)
   const { data } = await supabase.auth.getClaims();
   const role = data?.claims?.user_role as Role | undefined;
 
-  // Not logged in or not authenticated user → no sidebar
   if (!user || !role) return null;
 
-  // Fetch profile to get names
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name')
+    .select('first_name, last_name, profile_photo_url')
     .eq('user_id', user.id)
     .single();
 
   const firstName = profile?.first_name || '';
   const lastName = profile?.last_name || '';
+  const profilePhotoUrl = profile?.profile_photo_url || '';
   const displayName = `${firstName} ${lastName}`.trim() || 'Profile';
 
   const sidebarGroups = [
@@ -89,7 +88,6 @@ export default async function Sidebar() {
         </Link>
 
         {sidebarGroups.map((group, index) => {
-          // Filters the links based on the user's role
           const visibleLinks = group.links.filter((link) =>
             link.allowedRoles.includes(role),
           );
@@ -106,12 +104,16 @@ export default async function Sidebar() {
               <ul className={`nav flex-column ${styles.linkList}`}>
                 {visibleLinks.map((link) => (
                   <li key={link.href} className={`nav-item ${styles.linkItem}`}>
-                    <Link
+                    {/*<Link
                       href={link.href}
                       className={`nav-link ${styles.navLink}`}
                     >
                       {link.label}
-                    </Link>
+                    </Link>*/}
+                    <SidebarNavLink
+                      href={link.href}
+                      label={link.label}
+                    />
                   </li>
                 ))}
               </ul>
@@ -121,8 +123,14 @@ export default async function Sidebar() {
 
         <Link href="/profile" className={styles.profile}>
           <div className={styles.pfpContainer}>
-            <div className={styles.pfp}></div>
-          </div>
+            <Image
+              src={profilePhotoUrl || '/default-profile-picture.png'}
+              alt={`${displayName} profile photo`}
+              width={40}
+              height={40}
+              className={styles.pfp}
+            />
+        </div>
           <div>{displayName}</div>
         </Link>
       </nav>
