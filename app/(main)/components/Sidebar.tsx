@@ -2,6 +2,7 @@ import Link from 'next/link';
 import './Sidebar.modules.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
+import SidebarNavLink from './SidebarNavLink';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
@@ -13,28 +14,25 @@ type SidebarLink = {
 
 export default async function Sidebar() {
   const supabase = await createClient();
-  
-  // Get the authenticated user  
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Get user claims (JWT)
   const { data } = await supabase.auth.getClaims();
   const role = data?.claims?.user_role as Role | undefined;
 
-  // Not logged in or not authenticated user → no sidebar
   if (!user || !role) return null;
 
-  // Fetch profile to get names
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name')
+    .select('first_name, last_name, profile_photo_url')
     .eq('user_id', user.id)
     .single();
 
   const firstName = profile?.first_name || '';
   const lastName = profile?.last_name || '';
+  const profilePhotoUrl = profile?.profile_photo_url || '';
   const displayName = `${firstName} ${lastName}`.trim() || 'Profile';
 
   const sidebarGroups = [
@@ -84,50 +82,55 @@ export default async function Sidebar() {
     <aside>
       <nav>
         <Link href="/home" className="path-home-link">
-          <Image 
-            src="/path.png" 
-            alt="Path Home Logo" 
+          <Image
+            src="/path.png"
+            alt="Path Home Logo"
             fill
             className="path-home-image"
           />
         </Link>
-        
+
         {sidebarGroups.map((group, index) => {
-          // Filters the links based on the user's role
           const visibleLinks = group.links.filter((link) =>
             link.allowedRoles.includes(role)
           );
-          
-          // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
+
           if (visibleLinks.length === 0) return null;
-          
+
           return (
             <div key={index}>
-              {group.heading && (
-                <h3>
-                  {group.heading}
-                </h3>
-              )}
-              {/* Bootstrap ul classes */}
+              {group.heading && <h3>{group.heading}</h3>}
+
               <ul className="nav flex-column">
                 {visibleLinks.map((link) => (
                   <li key={link.href} className="nav-item">
-                    <Link href={link.href} className="nav-link">
-                      {link.label}
-                    </Link>
+                    <SidebarNavLink
+                      href={link.href}
+                      label={link.label}
+                    />
                   </li>
                 ))}
               </ul>
             </div>
           );
         })}
-        
+
         <Link href="/profile" className="profile">
           <div className="pfp-container">
+            {profilePhotoUrl ? (
+            <Image
+              src={profilePhotoUrl}
+              alt={`${displayName} profile photo`}
+              width={40}
+              height={40}
+              className="pfp"
+            />
+          ) : (
             <div className="pfp"></div>
-          </div>
-          <div>{displayName}</div>
-        </Link>
+          )}
+        </div>
+        <div>{displayName}</div>
+      </Link>
       </nav>
     </aside>
   );
