@@ -45,7 +45,7 @@ export default async function InventoryPage({
       {
         inventory_item_id: string;
         name: string;
-        photo_url: string;
+        photo_url: string | null;
         subcategories: {
           name: string;
           categories: {

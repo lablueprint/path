@@ -82,5 +82,3 @@ with check ((((( SELECT auth.jwt() AS jwt) ->> 'user_role'::text) = ANY (ARRAY['
 
 
 CREATE TRIGGER "after update tickets status" AFTER UPDATE OF status ON public.tickets FOR EACH ROW EXECUTE FUNCTION private.handle_ticket_fulfillment();
-
-

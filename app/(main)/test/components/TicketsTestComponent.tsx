@@ -46,7 +46,7 @@ export default function TicketsTestComponent() {
   };
 
   const updateTicket = async () => {
-    await updateTicketStatus(updateStatus, ticketToUpdate, ticketData.store_id);
+    await updateTicketStatus(updateStatus, ticketToUpdate);
   };
 
   return (
