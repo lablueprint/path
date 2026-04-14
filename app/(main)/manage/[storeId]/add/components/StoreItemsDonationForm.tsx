@@ -163,7 +163,6 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-<<<<<<< Updated upstream
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <div>
@@ -183,69 +182,6 @@ export default function StoreItemsDonationForm({
             />
             Submit gift-in-kind donation?
           </label>
-=======
-    <>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <div>
-            <label>
-              <input
-                value="addInventoryItems"
-                type="checkbox"
-                {...methods.register('itemSettings')}
-              />
-              Add inventory items to store?
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="giftInKind"
-                {...methods.register('itemSettings')}
-              />
-              Submit gift-in-kind donation?
-            </label>
-          </div>
-
-          {itemSettingsSelected?.includes('giftInKind') && (
-            <DonationForm donorType={methods.watch('donor_type')} />
-          )}
-          {itemSettingsSelected?.includes('addInventoryItems') && (
-            <StoreItemsForm setAutoFillItems={setAutoFillItems} />
-            // add autofillitems connection pass in prop to storeitemsform
-          )}
-          {(itemSettingsSelected?.includes('giftInKind') ||
-            itemSettingsSelected?.includes('addInventoryItems')) && (
-              <button
-                type="submit"
-                style={{
-                  marginTop: '20px',
-                  padding: '10px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  backgroundColor: '#007bff',
-                  color: '#fff',
-                  fontWeight: 'bold',
-                }}
-              >
-                Submit
-              </button>
-            )}
-        </form>
-      </FormProvider>
-      {methods.formState.isSubmitSuccessful && (
-        <div
-          style={{
-            backgroundColor: '#d4edda',
-            color: '#155724',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          Form submitted successfully! Thank you for your donation.
->>>>>>> Stashed changes
         </div>
 
         {itemSettingsSelected?.includes('giftInKind') && (
