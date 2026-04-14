@@ -188,7 +188,9 @@ export default function StoreItemsDonationForm({
           <DonationForm
             donorType={donorType}
             setItemsDonated={setItemsDonated}
-            showSubmitButton={!itemSettingsSelected?.includes('addInventoryItems')}
+            showSubmitButton={
+              !itemSettingsSelected?.includes('addInventoryItems')
+            }
           />
         )}
         {itemSettingsSelected?.includes('addInventoryItems') && (

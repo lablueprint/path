@@ -7,6 +7,7 @@
   box-sizing: border-box;
 }
 .formContainer :global(.form-control),
+.formContainer :global(.form-select),
 .formContainer :global(.form-check-label),
 .formContainer :global(.form-label) {
   font-family: inherit;
@@ -23,7 +24,7 @@
 }
 
 .formTitle {
-  margin: 0 0 20px;
+  margin-top: 20px;
   font-size: 1.5rem;
   line-height: 1.2;
   font-weight: 600;
@@ -85,7 +86,7 @@
 .submitButtonRow {
   display: flex;
   justify-content: flex-end;
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 .submitButton {
@@ -100,4 +101,8 @@
   color: #fff;
   font-weight: 400;
   cursor: pointer;
+}
+
+.receivingSiteGroup {
+  margin-bottom: 20px;
 }
