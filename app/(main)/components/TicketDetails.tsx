@@ -130,20 +130,20 @@ export default async function TicketDetails({
           <Card className={styles.headerCard}>
             <Image
               src={
-                requestor.profile_photo_url || '/default-profile-picture.png'
+                requestor?.profile_photo_url || '/default-profile-picture.png'
               }
-              alt={`Profile picture for ${requestor.first_name}`}
+              alt={`Profile picture for ${requestor?.first_name}`}
               className={styles.profilePicture}
               width={95}
               height={95}
               unoptimized
             ></Image>
             <div className={styles.headerCardText}>
-              <h1>{`${requestor.first_name + ' ' + requestor.last_name}'s Ticket`}</h1>
+              <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
               <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
               <h2>Ticket #{userTicket.ticket_id}</h2>
             </div>
-            <Button className={styles.contactButton}>Contact</Button>
+            {outgoing ? <Button className={styles.contactButton}>Contact</Button> : "Working on this..."}
           </Card>
           <div>
             <p>Status: </p>
