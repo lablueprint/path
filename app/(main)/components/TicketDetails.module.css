@@ -1,0 +1,7 @@
+
+.contactStoreAdmins{
+    background: rgb(53, 130, 198);
+    border-radius: 15px;
+    /*background: #FFF; replace blue with this*/ 
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}

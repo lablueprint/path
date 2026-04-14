@@ -4,6 +4,7 @@ import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
+import styles from '@/app/(main)/components/TicketDetails.module.css';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -125,7 +126,7 @@ export default async function TicketDetails({
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
           {outgoing ? (
-            <div>
+            <div className={styles.contactStoreAdmins}>
               <h2>Contact Store Admins</h2>
               {storeAdminsList.map((storeAdmin) => (
                 <UserCard user={storeAdmin} key={storeAdmin.user_id}></UserCard>
