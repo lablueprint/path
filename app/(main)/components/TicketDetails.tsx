@@ -126,16 +126,16 @@ export default async function TicketDetails({
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
           {outgoing ? (
-            <div className={styles.contactStoreAdmins}>
-              <h2>Contact Store Admins</h2>
+            <div className={styles.adminCard}>
+              <h2>CONTACT STORE ADMINS</h2>
               {storeAdminsList.map((storeAdmin) => (
-                <UserCard user={storeAdmin} key={storeAdmin.user_id}></UserCard>
+                <UserCard className={styles.userCard} noBottomMargin user={storeAdmin} key={storeAdmin.user_id}></UserCard>
               ))}
             </div>
           ) : (
             <div>
               <h2>Contact Requestor</h2>
-              <UserCard user={requestor}></UserCard>
+              <UserCard noBottomMargin user={requestor}></UserCard>
             </div>
           )}
           <TicketItemsList ticketId={userTicket.ticket_id} />

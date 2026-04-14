@@ -1,7 +1,20 @@
 
-.contactStoreAdmins{
-    background: rgb(53, 130, 198);
-    border-radius: 15px;
-    /*background: #FFF; replace blue with this*/ 
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+.adminCard{
+    border-radius: 0.9375rem;
+    background: #FFF;
+    box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.05);
+    width: 20.75rem;
+    height: 13.5625rem;
 }
+
+.adminCard h2{
+    color: #4A5568;
+    font-family: Montserrat;
+    font-size: 1.1875rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding: 1rem 1.5rem;
+    margin: 0;
+}
+
