@@ -4,7 +4,7 @@ import type { InventoryItem, InventoryItemUpdate } from '@/app/types/inventory';
 import type { Category, Subcategory } from '@/app/types/inventory';
 import Image from 'next/image';
 import { useForm, useWatch } from 'react-hook-form';
-import { updateItem, deleteItem } from '@/app/actions/inventory';
+import { deleteItem } from '@/app/actions/inventory';
 import { useState, useRef, useEffect } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
@@ -18,8 +18,6 @@ type FormValues = {
   selectedSubcategory: string;
 };
 
-const supabase = createClient();
-
 export default function EditInventoryItemForm({
   item,
   initialCategory,
@@ -28,15 +26,13 @@ export default function EditInventoryItemForm({
   initialCategory: string;
 }) {
   const router = useRouter();
+  const supabase = createClient();
   const [isSaving, setIsSaving] = useState(false);
-  // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string | null>(
     item.photo_url ?? null,
   );
-  // previewUrl represents the locally selected file for the UI
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // Track if the user has explicitly clicked "Remove" but hasn't saved yet
   const [isPendingDelete, setIsPendingDelete] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -119,29 +115,57 @@ export default function EditInventoryItemForm({
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
+      await supabase.auth.getUser();
       let finalPhotoUrl = photoUrl;
 
+      const getOldPath = (url: string) => {
+        try {
+          const urlObj = new URL(url);
+          const parts = urlObj.pathname.split('/inventory_item_photos/');
+          return parts.length === 2 ? parts[1] : null;
+        } catch {
+          return null;
+        }
+      };
+
       if (isPendingDelete) {
-        await supabase.storage
-          .from('inventory_item_photos')
-          .remove([`${item.inventory_item_id}/photo.jpg`]);
+        const oldPath = photoUrl ? getOldPath(photoUrl) : null;
+        if (oldPath) {
+          await supabase.storage
+            .from('inventory_item_photos')
+            .remove([oldPath]);
+        }
         finalPhotoUrl = null;
       }
 
       if (selectedFile) {
-        const filePath = `${item.inventory_item_id}/photo.jpg`;
+        const oldPath = photoUrl ? getOldPath(photoUrl) : null;
+        if (oldPath) {
+          await supabase.storage
+            .from('inventory_item_photos')
+            .remove([oldPath]);
+        }
+
+        const uniqueFileName = `${Date.now()}-${selectedFile.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+        const newFilePath = `${item.inventory_item_id}/${uniqueFileName}`;
+
         const { error: uploadError } = await supabase.storage
           .from('inventory_item_photos')
-          .upload(filePath, selectedFile, { upsert: true });
+          .upload(newFilePath, selectedFile, {
+            upsert: false,
+            contentType: selectedFile.type,
+          });
 
         if (uploadError) {
           console.error('Upload error:', uploadError.message);
-        } else {
-          const { data: publicData } = supabase.storage
-            .from('inventory_item_photos')
-            .getPublicUrl(filePath);
-          finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+          setIsSaving(false);
+          return;
         }
+
+        const { data: publicData } = supabase.storage
+          .from('inventory_item_photos')
+          .getPublicUrl(newFilePath);
+        finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
       }
 
       const changes: InventoryItemUpdate = {};
@@ -156,9 +180,14 @@ export default function EditInventoryItemForm({
         changes.photo_url = finalPhotoUrl;
       }
 
-      const result = await updateItem(item.inventory_item_id, changes);
+      const { error: updateError } = await supabase
+        .from('inventory_items')
+        .update(changes)
+        .eq('inventory_item_id', item.inventory_item_id);
 
-      if (result.success) {
+      if (updateError) {
+        console.error('Update error:', updateError.message);
+      } else {
         setPhotoUrl(finalPhotoUrl);
         if (previewUrl) URL.revokeObjectURL(previewUrl);
         setPreviewUrl(null);
@@ -182,11 +211,19 @@ export default function EditInventoryItemForm({
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to remove this inventory item?')) return;
 
-    // Remove photo from storage if one exists
-    if (photoUrl || selectedFile) {
-      await supabase.storage
-        .from('inventory_item_photos')
-        .remove([`${item.inventory_item_id}/photo.jpg`]);
+    if (photoUrl) {
+      try {
+        const urlObj = new URL(photoUrl);
+        const parts = urlObj.pathname.split('/inventory_item_photos/');
+        const oldPath = parts.length === 2 ? parts[1] : null;
+        if (oldPath) {
+          await supabase.storage
+            .from('inventory_item_photos')
+            .remove([oldPath]);
+        }
+      } catch (e) {
+        console.error('Failed to parse photo URL for deletion', e);
+      }
     }
 
     const result = await deleteItem(item.inventory_item_id);
