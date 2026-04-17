@@ -121,25 +121,28 @@ export default function LightweightDonationForm() {
       <Card className={styles.formCard}>
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.formBody}>
-            <h1 className={styles.formTitle}>Store Information</h1>
-            <Form.Group
-              controlId="receiving_site"
-              className={styles.receivingSiteGroup}
-            >
-              <Form.Label className={styles.fieldLabel}>
-                Receiving site
-              </Form.Label>
-              <Form.Select {...register('receiving_site')} defaultValue="">
-                <option value="" disabled>
-                  Select a receiving site
-                </option>
-                <option value="path-site-1">PATH site 1</option>
-                <option value="path-site-2">PATH site 2</option>
-                <option value="path-site-3">PATH site 3</option>
-              </Form.Select>
-            </Form.Group>
+            
+            <div className={styles.formSection}>
+              <h1 className={styles.formTitle1}>Store Information</h1>
+              <Form.Group
+                controlId="receiving_site"
+                className={styles.receivingSiteGroup}
+              >
+                <Form.Label className={styles.fieldLabel}>
+                  Receiving site
+                </Form.Label>
+                <Form.Select {...register('receiving_site')} defaultValue="">
+                  <option value="" disabled>
+                    Select a receiving site
+                  </option>
+                  <option value="path-site-1">PATH site 1</option>
+                  <option value="path-site-2">PATH site 2</option>
+                  <option value="path-site-3">PATH site 3</option>
+                </Form.Select>
+              </Form.Group>
+            </div>
 
-            <h1 className={styles.formTitle}>Donor Information</h1>
+            <h1 className={styles.formTitle2}>Donor Information</h1>
 
             <Form.Group>
               <div className={styles.radioRow}>
@@ -331,7 +334,7 @@ export default function LightweightDonationForm() {
               </>
             )}
 
-            <h1 className={styles.formTitle}>Donation Information</h1>
+            <h1 className={styles.formTitle2}>Donation Information</h1>
 
             <Form.Group controlId="estimated_value">
               <Form.Label className={styles.fieldLabel}>

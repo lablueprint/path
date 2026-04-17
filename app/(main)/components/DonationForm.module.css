@@ -62,9 +62,13 @@
   align-items: start;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1020px) {
   .twoColRow {
     grid-template-columns: 1fr;
+  }
+
+  .formCard :global(.card-body) {
+    padding: 24px 20px;  
   }
 }
 
@@ -120,5 +124,5 @@
 }
 
 .receivingSiteGroup {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
