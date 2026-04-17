@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Store } from '@/app/types/store';
 import styles from '@/app/(main)/components/StoreCard.module.css';
 
