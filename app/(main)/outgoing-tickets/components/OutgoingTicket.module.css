@@ -61,3 +61,7 @@
     padding: 8.91px 22.28px;
     border-radius: 4.46px;
 }
+
+.cursor {
+    cursor: pointer;
+}

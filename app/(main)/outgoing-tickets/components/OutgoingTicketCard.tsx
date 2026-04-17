@@ -22,7 +22,7 @@ export default function OutgoingTicketCard({
   return (
     <tr
       onClick={() => router.push(`${pathname}/${ticketId}`)}
-      style={{ cursor: 'pointer' }}
+      className={styles.cursor}
     >
       <td>{ticketId}</td>
       <td>{storeName}</td>
