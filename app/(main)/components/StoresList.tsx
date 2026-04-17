@@ -20,7 +20,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
       {view === 'grid' ? (
         <Row>
           {stores?.map((store) => (
-            <Col xs={12} sm={6} md={4} key={store.store_id}>
+            <Col xs={12} sm={6} md={3} key={store.store_id}>
               <StoreCard store={store} />
             </Col>
           ))}
