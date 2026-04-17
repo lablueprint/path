@@ -1,6 +1,7 @@
 'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
 import { useState } from 'react';
+import styles from '@/app/(main)/components/Ticket.module.css';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -41,24 +42,21 @@ export default function IncomingTicketsList({
         </select>
       </div>
 
-      {/* Display heading that indicates the status */}
-      <h2>{selectedStatus.toUpperCase()} TICKETS</h2>
-
       {filteredTickets.length > 0 ? (
         <div>
-          <table
-            style={{
-              width: '100%',
-              tableLayout: 'fixed',
-              borderCollapse: 'collapse',
-            }}
-          >
+          <table className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}>
+            <colgroup>
+              <col className={styles.idCol} />
+              <col className={styles.requestorCol} />
+              <col className={styles.statusCol} />
+              <col className={styles.dateCol} />
+            </colgroup>
             <thead>
               <tr>
-                <th style={{ width: '30%' }}>Ticket ID</th>
-                <th style={{ width: '20%' }}>Status</th>
-                <th style={{ width: '30%' }}>Requestor</th>
-                <th style={{ width: '20%' }}>Date Submitted</th>
+                <th>ID</th>
+                <th>REQUESTOR</th>
+                <th>STATUS</th>
+                <th>DATE SUBMITTED</th>
               </tr>
             </thead>
             <tbody>
