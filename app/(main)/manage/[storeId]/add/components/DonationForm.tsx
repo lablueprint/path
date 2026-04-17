@@ -32,7 +32,7 @@ export default function DonationForm({
     <Container className={styles.formContainer}>
       <Card className={styles.formCard}>
         <Card.Body>
-          <h1 className={styles.formTitle}>Donor Information</h1>
+          <h1 className={styles.formTitle1}>Donor Information</h1>
           <div className={styles.formBody}>
             {/* Donor Type */}
             <Form.Group>
@@ -233,7 +233,7 @@ export default function DonationForm({
               </>
             )}
 
-            <h1 className={`${styles.formTitle} ${styles.sectionTitle}`}>
+            <h1 className={`${styles.formTitle2} ${styles.sectionTitle}`}>
               Donation Information
             </h1>
 
