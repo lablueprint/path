@@ -1,6 +1,7 @@
 'use client';
 import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
 import { useState } from 'react';
+import styles from '@/app/(main)/outgoing-tickets/components/OutgoingTicket.module.css';
 
 type Ticket = {
   ticket_id: string;
@@ -35,21 +36,20 @@ export default function OutgoingTicketsList({
         </select>
       </div>
 
-      <h2>{selectedStatus.toUpperCase()} TICKETS</h2>
       {filteredTickets.length > 0 ? (
-        <table
-          style={{
-            width: '100%',
-            tableLayout: 'fixed',
-            borderCollapse: 'collapse',
-          }}
-        >
+        <table className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}>
+          <colgroup>
+              <col className={styles.idCol} />
+              <col className={styles.storeCol} />
+              <col className={styles.statusCol} />
+              <col className={styles.dateCol} />
+            </colgroup>
           <thead>
             <tr>
-              <th style={{ width: '30%' }}>Ticket ID</th>
-              <th style={{ width: '20%' }}>Store Name</th>
-              <th style={{ width: '30%' }}>Status</th>
-              <th style={{ width: '20%' }}>Date Submitted</th>
+              <th>ID</th>
+              <th>STORE NAME</th>
+              <th>STATUS</th>
+              <th>DATE SUBMITTED</th>
             </tr>
           </thead>
           <tbody>

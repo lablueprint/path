@@ -30,7 +30,7 @@ export default function IncomingTicketCard({
       <td>{ticketId}</td>
       <td>{requestorFirstName} {requestorLastName}</td>
 
-      <td className=''>
+      <td>
         <span className={styles.statusBubble}>{status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}</span>
       </td>
 
