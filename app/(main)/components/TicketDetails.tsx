@@ -128,6 +128,8 @@ export default async function TicketDetails({
           <p>Date submitted: {userTicket.date_submitted}</p>
           <p>Store: {store.name} </p>
           <p>Store address: {store.street_address}</p>
+
+          {/*Header Card*/}
           <Card className={styles.headerCard}>
             <Image
               src={
@@ -176,7 +178,9 @@ export default async function TicketDetails({
           </div>
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
-          {outgoing ? (
+
+          {/*Admin Card*/}
+          {outgoing && (
             <div className={styles.adminCard}>
               <h2>CONTACT STORE ADMINS</h2>
               {storeAdminsList.map((storeAdmin) => (
@@ -187,11 +191,6 @@ export default async function TicketDetails({
                   key={storeAdmin.user_id}
                 ></UserCard>
               ))}
-            </div>
-          ) : (
-            <div>
-              <h2>Contact Requestor</h2>
-              <UserCard noBottomMargin user={requestor}></UserCard>
             </div>
           )}
           <TicketItemsList ticketId={userTicket.ticket_id} />
