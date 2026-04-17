@@ -7,6 +7,7 @@ import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
 import { Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Image from 'next/image';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
@@ -64,15 +65,15 @@ export default async function TicketDetails({
     storeAdminsList = (storeAdminsData || [])
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
-  } else {
-    if (userTicket) {
-      const { data: requestorData } = await supabase
-        .from('users')
-        .select()
-        .eq('user_id', userTicket.requestor_user_id)
-        .single();
-      requestor = requestorData;
-    }
+  }
+
+  if (userTicket) {
+    const { data: requestorData } = await supabase
+      .from('users')
+      .select()
+      .eq('user_id', userTicket.requestor_user_id)
+      .single();
+    requestor = requestorData;
   }
 
   const getOutgoingStatusOptions = (status: TicketStatus): TicketStatus[] => {
@@ -143,8 +144,28 @@ export default async function TicketDetails({
               <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
               <h2>Ticket #{userTicket.ticket_id}</h2>
             </div>
-            {outgoing ? <Button className={styles.contactButton}>Contact</Button> : "Working on this..."}
+            {!outgoing ? (
+              <Button
+                as="a"
+                className={styles.contactButton}
+                href={
+                  requestor?.email ? `mailto:${requestor.email}` : undefined
+                }
+                disabled={!requestor?.email}
+              >
+                Contact
+              </Button>
+            ) : (
+              <div className={styles.contactStoreAdmins}>
+                <TicketStatusDropdown
+                  ticketId={userTicket.ticket_id}
+                  currentStatus={userTicket.status as TicketStatus}
+                  statusOptions={statusOptions}
+                />
+              </div>
+            )}
           </Card>
+
           <div>
             <p>Status: </p>
             <TicketStatusDropdown
@@ -159,7 +180,12 @@ export default async function TicketDetails({
             <div className={styles.adminCard}>
               <h2>CONTACT STORE ADMINS</h2>
               {storeAdminsList.map((storeAdmin) => (
-                <UserCard className={styles.userCard} noBottomMargin user={storeAdmin} key={storeAdmin.user_id}></UserCard>
+                <UserCard
+                  className={styles.userCard}
+                  noBottomMargin
+                  user={storeAdmin}
+                  key={storeAdmin.user_id}
+                ></UserCard>
               ))}
             </div>
           ) : (
