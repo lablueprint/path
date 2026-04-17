@@ -1,0 +1,15 @@
+.button {
+  min-height: 2.75rem;
+  padding: 0.7rem 1.2rem;
+  border: 1px solid #d0dbe7 !important;
+  border-radius: 999px;
+  background: #ffffff !important;
+  color: #7b2632 !important;
+  font-weight: 600;
+}
+
+.button:hover,
+.button:focus {
+  border-color: #d78a96 !important;
+  background: #fff5f6 !important;
+}

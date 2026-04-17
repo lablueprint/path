@@ -2,6 +2,8 @@
 
 import { deleteStoreItem } from '@/app/actions/store';
 import { usePathname, useRouter } from 'next/navigation';
+import Button from 'react-bootstrap/Button';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton.module.css';
 
 export default function DeleteStoreItemButton({
   storeItemId,
@@ -30,8 +32,8 @@ export default function DeleteStoreItemButton({
   }
 
   return (
-    <button type="button" onClick={handleDelete}>
+    <Button type="button" onClick={handleDelete} className={styles.button}>
       Remove item
-    </button>
+    </Button>
   );
 }

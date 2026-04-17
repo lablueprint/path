@@ -1,10 +1,18 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import {
   updateStoreItemQuantity,
   updateStoreItemIsHidden,
 } from '@/app/actions/store';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm.module.css';
+
+type FormValues = {
+  quantityAvailable: number;
+  isHidden: boolean;
+};
 
 export default function StoreItemForm({
   storeId,
@@ -22,21 +30,18 @@ export default function StoreItemForm({
     handleSubmit,
     reset,
     formState: { isDirty, errors, isSubmitting },
-  } = useForm({
+  } = useForm<FormValues>({
     defaultValues: {
       quantityAvailable: quantity,
       isHidden: visibility,
     },
   });
 
-  const onSubmit = async (values: {
-    quantityAvailable: number;
-    isHidden: boolean;
-  }) => {
+  const onSubmit = async ({ quantityAvailable, isHidden }: FormValues) => {
     const qtyRes = await updateStoreItemQuantity(
       storeId,
       storeItemId,
-      values.quantityAvailable,
+      quantityAvailable,
     );
 
     if (!qtyRes.success) {
@@ -47,7 +52,7 @@ export default function StoreItemForm({
     const hiddenRes = await updateStoreItemIsHidden(
       storeId,
       storeItemId,
-      values.isHidden,
+      isHidden,
     );
 
     if (!hiddenRes.success) {
@@ -55,49 +60,70 @@ export default function StoreItemForm({
       return;
     }
 
-    reset(values);
+    reset({ quantityAvailable, isHidden });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label>Quantity available: </label>
-        <input
-          type="number"
-          min={0}
-          step={1}
-          disabled={isSubmitting}
-          {...register('quantityAvailable', {
-            valueAsNumber: true,
-            required: 'Please enter a numeric quantity.',
-            validate: (v) =>
-              (Number.isInteger(v) && v >= 0) ||
-              'Please enter a combination of digits only (0-9).',
-          })}
-        />
+    <form
+      className={`d-flex flex-column gap-3 ${styles.form}`}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="row g-4">
+        <div className="col-12 col-md-6">
+          <Form.Group className={styles.field} controlId="quantityAvailable">
+            <Form.Label className={styles.label}>Quantity</Form.Label>
+            <Form.Control
+              className={styles.input}
+              type="number"
+              min={0}
+              step={1}
+              disabled={isSubmitting}
+              {...register('quantityAvailable', {
+                valueAsNumber: true,
+                required: 'Please enter a numeric quantity.',
+                validate: (value) =>
+                  (Number.isInteger(value) && value >= 0) ||
+                  'Please enter a combination of digits only (0-9).',
+              })}
+            />
 
-        {errors.quantityAvailable && (
-          <div style={{ color: 'red' }}>{errors.quantityAvailable.message}</div>
-        )}
-      </div>
+            {errors.quantityAvailable?.message ? (
+              <p className={styles.error}>{errors.quantityAvailable.message}</p>
+            ) : null}
+          </Form.Group>
+        </div>
 
-      <div>
-        <label>Hidden? </label>
-        <input
-          type="checkbox"
-          disabled={isSubmitting}
-          {...register('isHidden')}
-        />
+        <div className="col-12 col-md-6">
+          <label htmlFor="isHidden" className={styles.checkboxRow}>
+            <input
+              id="isHidden"
+              className={styles.checkbox}
+              type="checkbox"
+              disabled={isSubmitting}
+              {...register('isHidden')}
+            />
+            <span>Is hidden?</span>
+          </label>
+        </div>
       </div>
 
       {isDirty && (
-        <div>
-          <button type="submit" disabled={isSubmitting}>
+        <div className={`d-flex flex-wrap gap-3 ${styles.actions}`}>
+          <Button
+            className={styles.primaryButton}
+            type="submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" disabled={isSubmitting} onClick={() => reset()}>
+          </Button>
+          <Button
+            className={styles.secondaryButton}
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => reset()}
+          >
             Cancel
-          </button>
+          </Button>
         </div>
       )}
     </form>

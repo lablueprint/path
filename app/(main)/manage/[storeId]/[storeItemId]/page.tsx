@@ -1,6 +1,11 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
 import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
+import StoreItemDetailPanel, {
+  StoreItemDetailField,
+  StoreItemDetailGrid,
+} from '@/app/(main)/components/StoreItemDetailPanel';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/ManageStoreItemPage.module.css';
 
 export default async function ManageStoreItemPage({
   params,
@@ -24,6 +29,7 @@ export default async function ManageStoreItemPage({
         )
       `,
     )
+    .eq('store_id', storeId)
     .eq('store_item_id', storeItemId)
     .single()
     .overrideTypes<
@@ -50,19 +56,37 @@ export default async function ManageStoreItemPage({
     return <div>Failed to load store item.</div>;
   }
 
+  const item = itemData.inventory_items;
+
   return (
-    <div>
-      <h1>{itemData.inventory_items.name}</h1>
-      <p>Description: {itemData.inventory_items.description}</p>
-      <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
-      <p>Subcategory: {itemData.inventory_items.subcategories.name}</p>
-      <StoreItemForm
-        storeId={storeId}
-        storeItemId={storeItemId}
-        quantity={itemData.quantity_available ?? 0}
-        visibility={itemData.is_hidden ?? false}
-      />
-      <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Edit</h1>
+      </header>
+
+      <StoreItemDetailPanel itemName={item.name} photoUrl={item.photo_url}>
+        <StoreItemDetailGrid>
+          <StoreItemDetailField label="Name">{item.name}</StoreItemDetailField>
+          <StoreItemDetailField label="Category">
+            {item.subcategories.categories.name}
+          </StoreItemDetailField>
+          <StoreItemDetailField label="Subcategory">
+            {item.subcategories.name}
+          </StoreItemDetailField>
+          <StoreItemDetailField label="Description" fullWidth>
+            {item.description || 'No description provided.'}
+          </StoreItemDetailField>
+        </StoreItemDetailGrid>
+
+        <StoreItemForm
+          storeId={storeId}
+          storeItemId={storeItemId}
+          quantity={itemData.quantity_available ?? 0}
+          visibility={itemData.is_hidden ?? false}
+        />
+
+        <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
+      </StoreItemDetailPanel>
     </div>
   );
 }

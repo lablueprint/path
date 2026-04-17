@@ -2,34 +2,53 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import styles from '@/app/(main)/components/Breadcrumbs.module.css';
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export default function Breadcrumbs() {
   const pathname = usePathname();
-  const segments = pathname.split('/').filter(Boolean); // e.g. ["manage", "123", "add"]
-  // .filter(Boolean) removes empty strings and other falsy values
+  const segments = pathname.split('/').filter(Boolean);
+  const shouldHideTeamProfileSegment =
+    segments[0] === 'team' && segments[1] === 'profile';
 
-  // Helper function to format each label to be more readable
-  const formatLabel = (segment: string) =>
-    decodeURIComponent(segment)
+  const formatLabel = (segment: string, index: number) => {
+    if (UUID_PATTERN.test(segment)) {
+      const topLevel = segments[0];
+
+      if (topLevel === 'request' || topLevel === 'manage') {
+        return index === 1 ? 'Location' : 'Item';
+      }
+
+      if (topLevel === 'incoming-tickets') {
+        return index === 1 ? 'Location' : 'Ticket';
+      }
+
+      if (topLevel === 'outgoing-tickets') {
+        return 'Ticket';
+      }
+
+      if (topLevel === 'team' && segments[1] === 'people') {
+        return 'Person';
+      }
+
+      return 'Details';
+    }
+
+    return decodeURIComponent(segment)
       .replace(/-/g, ' ')
       .split(' ')
       .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
       .join(' ');
+  };
 
-  // Determine if special case where the user is on the team > profile > [userId] page
-  // If true, hide the "profile" segment later on
-  const shouldHideTeamProfileSegment =
-    segments[0] === 'team' && segments[1] === 'profile';
-
-  // Crumbs to display with href links
   const visibleCrumbs = segments
     .map((segment, index) => ({
       segment,
       href: `/${segments.slice(0, index + 1).join('/')}`,
-      originalIndex: index, // Used for filtering out the "profile" segment in the special case
+      originalIndex: index,
     }))
-    // Special case: Hide the "profile" segment if the user is on the team > profile > [userId] page
-    // Filtering it out
     .filter(
       (crumb) =>
         !(
@@ -39,21 +58,29 @@ export default function Breadcrumbs() {
         ),
     );
 
-  // Show only when at least two crumbs are visible. Don't show breadcrumb at top level pages.
   if (visibleCrumbs.length < 2) return null;
 
   const crumbs = visibleCrumbs.map((crumb, index) => {
     const isLast = index === visibleCrumbs.length - 1;
-    const label = formatLabel(crumb.segment);
+    const label = formatLabel(crumb.segment, crumb.originalIndex);
 
     return (
       <span key={crumb.href}>
-        {index > 0 ? ' / ' : null}
-        {/* Last crumb is displayed as plain text, other crumbs are links */}
-        {isLast ? <span>{label}</span> : <Link href={crumb.href}>{label}</Link>}
+        {index > 0 ? <span className={styles.separator}>/</span> : null}
+        {isLast ? (
+          <span className={styles.current}>{label}</span>
+        ) : (
+          <Link href={crumb.href} className={styles.link}>
+            {label}
+          </Link>
+        )}
       </span>
     );
   });
 
-  return <nav aria-label="Breadcrumb">{crumbs}</nav>;
+  return (
+    <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
+      {crumbs}
+    </nav>
+  );
 }
