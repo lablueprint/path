@@ -41,7 +41,11 @@ export async function deleteTicket(ticketId: string) {
   return { success: true, data: entry as Ticket };
 }
 
-export async function updateTicketStatus(newStatus: string, ticketId: string) {
+export async function updateTicketStatus(
+  newStatus: string,
+  ticketId: string,
+  storeId: string,
+) {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('tickets')
@@ -58,8 +62,8 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
   revalidatePath(`/request/${entry.store_id}/cart`);
   revalidatePath('/outgoing-tickets');
   revalidatePath(`/outgoing-tickets/${ticketId}`);
-  revalidatePath(`/incoming-tickets/${entry.store_id}`);
-  revalidatePath(`/incoming-tickets/${entry.store_id}/${ticketId}`);
+  revalidatePath(`/incoming-tickets/${storeId}`);
+  revalidatePath(`/incoming-tickets/${storeId}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };
 }

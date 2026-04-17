@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import styles from '@/app/(main)/outgoing-tickets/components/OutgoingTicket.module.css';
 
 type OutgoingTicketCardProps = {
   ticketId: string;
@@ -21,30 +22,14 @@ export default function OutgoingTicketCard({
   return (
     <tr
       onClick={() => router.push(`${pathname}/${ticketId}`)}
-      style={{ cursor: 'pointer' }}
+      className={styles.cursor}
     >
-      <td
-        style={{
-          width: '30%',
-          border: '1px solid #c5c5c5',
-          wordBreak: 'break-word',
-        }}
-      >
-        {ticketId}
+      <td>{ticketId}</td>
+      <td>{storeName}</td>
+      <td>
+        <span className={styles.statusBubble}>{status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}</span>
       </td>
-      <td
-        style={{
-          width: '20%',
-          border: '1px solid #c5c5c5',
-          wordBreak: 'break-word',
-        }}
-      >
-        {storeName}
-      </td>
-      <td style={{ width: '30%', border: '1px solid #c5c5c5' }}>{status}</td>
-      <td style={{ width: '20%', border: '1px solid #c5c5c5' }}>
-        {new Date(date).toLocaleString()}
-      </td>
+      <td>{new Date(date).toLocaleString()}</td>
     </tr>
   );
 }

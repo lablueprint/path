@@ -1,4 +1,7 @@
+'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
+import { useState } from 'react';
+import styles from '@/app/(main)/components/Ticket.module.css';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -7,37 +10,53 @@ type IncomingTicketsListProps = {
     requestorLastName: string;
     status: string;
     date: string;
-  }[];
-  status: string;
+  } [];
 };
 
 export default function IncomingTicketsList({
   tickets,
-  status,
 }: IncomingTicketsListProps) {
-  // Filter tickets to only show tickets with the given status
-  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
+  const [selectedStatus, setSelectedStatus] = useState<string>('All');
+  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
+
+  // Filter tickets to only show tickets with the selected status
+  const filteredTickets = selectedStatus === 'All'
+    ? tickets
+    : tickets.filter((ticket) => ticket.status === selectedStatus.toLowerCase());
+  
+  console.log("selected status:", selectedStatus);
+  console.log("tickets:", tickets);
+  console.log("filtered tickets:", filteredTickets);
 
   return (
     <div>
-      {/* Display heading that indicates the status */}
-      <h2>{status.toUpperCase()} TICKETS</h2>
+      {/* Dropdown menu with status options */}
+      <div>
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+        >
+          {statusOptions.map((statusOption) => (
+            <option key={statusOption} value={statusOption}>{statusOption}</option>
+          ))}
+        </select>
+      </div>
 
       {filteredTickets.length > 0 ? (
         <div>
-          <table
-            style={{
-              width: '100%',
-              tableLayout: 'fixed',
-              borderCollapse: 'collapse',
-            }}
-          >
+          <table className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}>
+            <colgroup>
+              <col className={styles.idCol} />
+              <col className={styles.requestorCol} />
+              <col className={styles.statusCol} />
+              <col className={styles.dateCol} />
+            </colgroup>
             <thead>
               <tr>
-                <th style={{ width: '30%' }}>Ticket ID</th>
-                <th style={{ width: '20%' }}>Status</th>
-                <th style={{ width: '30%' }}>Requestor</th>
-                <th style={{ width: '20%' }}>Date Submitted</th>
+                <th>ID</th>
+                <th>REQUESTOR</th>
+                <th>STATUS</th>
+                <th>DATE SUBMITTED</th>
               </tr>
             </thead>
             <tbody>

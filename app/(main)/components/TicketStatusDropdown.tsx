@@ -5,10 +5,12 @@ import { updateTicketStatus } from '@/app/actions/ticket';
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
 export default function TicketStatusDropdown({
+  storeId,
   ticketId,
   currentStatus,
   statusOptions,
 }: {
+  storeId: string;
   ticketId: string;
   currentStatus: TicketStatus;
   statusOptions: TicketStatus[];
@@ -27,7 +29,7 @@ export default function TicketStatusDropdown({
   const handleSave = async () => {
     setError(null);
 
-    const result = await updateTicketStatus(selectedStatus, ticketId);
+    const result = await updateTicketStatus(selectedStatus, ticketId, storeId);
     if (result.success) {
       setOriginalStatus(selectedStatus);
     } else {
