@@ -18,27 +18,19 @@ export default function UserCard({
   ]
     .filter(Boolean)
     .join(' ');
-
-  const hasProfilePhoto = Boolean(user.profile_photo_url);
+  const profilePhotoSrc =
+    user.profile_photo_url?.trim() || '/default-profile-picture.png';
 
   return (
     <div className={cardClassName}>
-      {hasProfilePhoto ? (
-        <Image
-          className={styles.profilePicture}
-          src={user.profile_photo_url as string}
-          alt={`Profile picture for ${user.first_name}`}
-          height={55}
-          width={55}
-          unoptimized
-        />
-      ) : (
-        <div
-          className={styles.profilePicturePlaceholder}
-          role="img"
-          aria-label={`Profile picture placeholder for ${user.first_name}`}
-        />
-      )}
+      <Image
+        className={styles.profilePicture}
+        src={profilePhotoSrc}
+        alt={`Profile picture for ${user.first_name}`}
+        height={55}
+        width={55}
+        unoptimized
+      />
       <div className={styles.userText}>
         <h3 className={styles.userName}>
           {user.first_name} {user.last_name}
