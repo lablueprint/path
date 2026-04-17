@@ -15,7 +15,7 @@
 
 .formContainer :global(.form-control::placeholder) {
   color: #a2a2a2;
-  opacity: 1;         
+  opacity: 1;
 }
 
 .formCard {
@@ -38,8 +38,8 @@
 .formTitle2 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-top: 12px; 
-  margin-bottom: 0;  
+  margin-top: 12px;
+  margin-bottom: 0;
 }
 
 .formBody {
@@ -58,7 +58,7 @@
 .twoColRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;       
+  gap: 20px;
   align-items: start;
 }
 
@@ -68,7 +68,7 @@
   }
 
   .formCard :global(.card-body) {
-    padding: 24px 20px;  
+    padding: 24px 20px;
   }
 }
 
@@ -79,13 +79,13 @@
 .businessFields {
   display: flex;
   flex-direction: column;
-  gap: 20px;    
+  gap: 20px;
 }
 
 .checkboxGroup {
   display: flex;
   flex-direction: column;
-  gap: 5px;        
+  gap: 5px;
 }
 
 .errorText {
@@ -125,4 +125,8 @@
 
 .receivingSiteGroup {
   margin-bottom: 10px;
+}
+
+.estimatedValueField {
+  max-width: 200px;
 }

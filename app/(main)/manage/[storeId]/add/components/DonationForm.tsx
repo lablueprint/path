@@ -2,7 +2,7 @@
 
 import { forwardRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { PatternFormat } from 'react-number-format';
+import { PatternFormat, NumericFormat } from 'react-number-format';
 import { Form, Container, Card } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
@@ -238,22 +238,47 @@ export default function DonationForm({
             </h1>
 
             {/* Estimated Value */}
-            <Form.Group controlId="estimated_value">
+            <Form.Group
+              controlId="estimated_value"
+              className={styles.estimatedValueField}
+            >
               <Form.Label className={styles.fieldLabel}>
                 Estimated value (USD)
               </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="1234.56"
-                {...register('estimated_value', {
+              <Controller
+                name="estimated_value"
+                control={control}
+                rules={{
                   required: 'Estimated donation value is required',
-                  pattern: {
-                    value: /^\d+(\.\d{1,2})?$/,
-                    message:
-                      'Please enter a valid dollar amount in the form 1234.56',
+                  validate: (value) => {
+                    if (!value) return true;
+
+                    // 1. Remove everything that isn't a digit or a decimal point
+                    const cleanValue = String(value).replace(/[^0-9.]/g, '');
+
+                    // 2. Now parse the clean string
+                    const num = parseFloat(cleanValue);
+
+                    return num > 0 || 'Please enter a valid donation amount';
                   },
-                })}
-                isInvalid={!!errors.estimated_value}
+                }}
+                render={({ field }) => (
+                  <NumericFormat
+                    {...field}
+                    onChange={() => {}}
+                    prefix="$"
+                    thousandSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale
+                    allowNegative={false}
+                    placeholder="$1,234.56"
+                    onValueChange={(values) => {
+                      field.onChange(values.value); // stores raw "1234.56", not "$1,234.56"
+                    }}
+                    customInput={BootstrapInput}
+                    isInvalid={!!errors.estimated_value}
+                  />
+                )}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.estimated_value?.message}

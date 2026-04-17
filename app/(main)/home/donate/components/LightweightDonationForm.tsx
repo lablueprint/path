@@ -121,7 +121,6 @@ export default function LightweightDonationForm() {
       <Card className={styles.formCard}>
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.formBody}>
-            
             <div className={styles.formSection}>
               <h1 className={styles.formTitle1}>Store Information</h1>
               <Form.Group
