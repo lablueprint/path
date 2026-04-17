@@ -1,22 +1,38 @@
-.button {
-  background: none;
-  border: none;
-  padding: 0;
-  box-shadow: none;
-  width: 76px;
-  height: 40px;
-}
-
-.button:hover,
-.button:focus,
-.button:active {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.imageWrapper {
+/* ViewToggle.module.css */
+.container {
   position: relative;
-  width: 76px;
-  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  background: #2d3748;
+  border-radius: 7px;
+  padding: 4px;
+  gap: 2px;
+}
+.slide {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 36px;
+  border-radius: 5px;
+  background: white;
+  transform: translateX(0);
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+.list {
+  transform: translateX(38px);
+}
+
+.button {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
