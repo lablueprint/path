@@ -123,12 +123,6 @@ export default async function TicketDetails({
     <div>
       {userTicket ? (
         <div>
-          <h1>{outgoing ? 'Outgoing' : 'Incoming'} Ticket Details</h1>
-          <p>Ticket ID: {userTicket.ticket_id}</p>
-          <p>Date submitted: {userTicket.date_submitted}</p>
-          <p>Store: {store.name} </p>
-          <p>Store address: {store.street_address}</p>
-
           {/*Header Card*/}
           <Card className={styles.headerCard}>
             <Image
@@ -157,9 +151,7 @@ export default async function TicketDetails({
               >
                 Contact
               </Button>
-            ) : (
-              null
-            )}
+            ) : null}
           </Card>
 
           <div>
@@ -173,21 +165,39 @@ export default async function TicketDetails({
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
 
-          {/*Admin Card*/}
-          {outgoing && (
-            <div className={styles.adminCard}>
-              <h2>CONTACT STORE ADMINS</h2>
-              {storeAdminsList.map((storeAdmin) => (
-                <UserCard
-                  className={styles.userCard}
-                  noBottomMargin
-                  user={storeAdmin}
-                  key={storeAdmin.user_id}
-                ></UserCard>
-              ))}
+          <div className={styles.ticketContentLayout}>
+            <div className={styles.ticketContentLeft}>
+              <TicketItemsList ticketId={userTicket.ticket_id} />
             </div>
-          )}
-          <TicketItemsList ticketId={userTicket.ticket_id} />
+
+            <div className={styles.ticketContentRight}>
+              {outgoing && (
+                <div className={styles.adminCard}>
+                  <h2>CONTACT STORE ADMINS</h2>
+                  {storeAdminsList.map((storeAdmin) => (
+                    <UserCard
+                      className={styles.userCard}
+                      noBottomMargin
+                      user={storeAdmin}
+                      key={storeAdmin.user_id}
+                    ></UserCard>
+                  ))}
+                </div>
+              )}
+
+              <div className={styles.adminCard}>
+                <h2>TICKET LOCATION</h2>
+                <div className={styles.locationCardContent}>
+                  <p>
+                    <strong>Store:</strong> {store.name}
+                  </p>
+                  <p>
+                    <strong>Store Address:</strong> {store.street_address}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <p>No ticket found.</p>

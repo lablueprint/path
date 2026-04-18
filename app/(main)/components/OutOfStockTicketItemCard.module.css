@@ -1,0 +1,24 @@
+.cardContainer {
+  width: 100%;
+  margin-top: 1.31rem;
+  margin-bottom: 0;
+}
+
+.descriptionInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.56rem 0.75rem;
+  color: #4a5568;
+  font-family: Montserrat;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border: 0.6px solid #718096;
+}
+
+.actionsRow {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
