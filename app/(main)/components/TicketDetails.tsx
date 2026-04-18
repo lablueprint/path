@@ -158,13 +158,7 @@ export default async function TicketDetails({
                 Contact
               </Button>
             ) : (
-              <div className={styles.contactStoreAdmins}>
-                <TicketStatusDropdown
-                  ticketId={userTicket.ticket_id}
-                  currentStatus={userTicket.status as TicketStatus}
-                  statusOptions={statusOptions}
-                />
-              </div>
+              null
             )}
           </Card>
 
