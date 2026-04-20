@@ -25,8 +25,9 @@ export default function OutgoingTicketsList({
   return (
     <div>
       {/* Dropdown menu with status options */}
-      <div>
+      <div className='d-flex justify-content-end'>
         <select
+          className={`form-select w-auto ${styles.dropdown}`}
           value={selectedStatus}
           onChange={(e) => setSelectedStatus(e.target.value)}
         >
