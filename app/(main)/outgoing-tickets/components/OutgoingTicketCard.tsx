@@ -27,7 +27,9 @@ export default function OutgoingTicketCard({
       <td>{ticketId}</td>
       <td>{storeName}</td>
       <td>
-        <span className={styles.statusBubble}>{status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}</span>
+        <span className={styles.statusBubble}>
+          {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+        </span>
       </td>
       <td>{new Date(date).toLocaleString()}</td>
     </tr>

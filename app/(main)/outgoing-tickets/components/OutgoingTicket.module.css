@@ -1,81 +1,81 @@
 .tableWrapper {
-    border-radius: 12px;
-    overflow: hidden;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-    margin-top: 28px;
-    overflow-wrap: anywhere;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-top: 28px;
+  overflow-wrap: anywhere;
 }
 
 .table th {
-    padding: 22.28px 44.56px;
-    color: #4A5568;
-    background-color: #E5F3FF;
-    font-weight: 600;
-    font-size: 16.93px;
-    line-height: 100%;
+  padding: 22.28px 44.56px;
+  color: #4a5568;
+  background-color: #e5f3ff;
+  font-weight: 600;
+  font-size: 16.93px;
+  line-height: 100%;
 }
 
 .table td {
-    padding: 22.28px 26.74px;
-    color: #718096;
-    border-bottom: 0.45px solid #E5F3FF;
+  padding: 22.28px 26.74px;
+  color: #718096;
+  border-bottom: 0.45px solid #e5f3ff;
 }
 
 .table tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .table td:nth-child(1) {
-    font-weight: 600;
-    font-size: 16.93px;
-    line-height: 100%;
+  font-weight: 600;
+  font-size: 16.93px;
+  line-height: 100%;
 }
 
 .idCol {
-    width: 32.69%;
+  width: 32.69%;
 }
 
 .storeCol {
-    width: 20.70%;
+  width: 20.7%;
 }
 
 .statusCol {
-    width: 23.44%;
+  width: 23.44%;
 }
 
 .dateCol {
-    width: 23.17%;
+  width: 23.17%;
 }
 
 .statusBubble {
-    background-color: #3182CE;
-    color: #FFFFFF;
-    font-weight: 600;
-    font-size: 16.93px;
-    line-height: 100%;
-    padding: 8.91px 22.28px;
-    border-radius: 4.46px;
+  background-color: #3182ce;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 16.93px;
+  line-height: 100%;
+  padding: 8.91px 22.28px;
+  border-radius: 4.46px;
 }
 
 .cursor {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .dropdown {
-    padding: 8px 16px;
-    width: auto;
-    border: 0.5px solid #CBD5E0;
-    border-radius: 5px;
-    
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1;
+  padding: 8px 16px;
+  width: auto;
+  border: 0.5px solid #cbd5e0;
+  border-radius: 5px;
 
-    color: #000000;
-    cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+
+  color: #000000;
+  cursor: pointer;
 }

@@ -58,13 +58,14 @@ export default async function IncomingTicketsStorePage({
     return <div>Failed to load tickets.</div>;
   }
 
-  const tickets = ticketsData?.map((ticket) => ({
-    id: ticket.ticket_id as string,
-    requestorFirstName: ticket.users.first_name as string,
-    requestorLastName: ticket.users.last_name as string,
-    status: ticket.status as string,
-    date: ticket.date_submitted as string,
-  })) ?? [];
+  const tickets =
+    ticketsData?.map((ticket) => ({
+      id: ticket.ticket_id as string,
+      requestorFirstName: ticket.users.first_name as string,
+      requestorLastName: ticket.users.last_name as string,
+      status: ticket.status as string,
+      date: ticket.date_submitted as string,
+    })) ?? [];
 
   return (
     <div>

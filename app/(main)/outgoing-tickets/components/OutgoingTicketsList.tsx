@@ -18,33 +18,40 @@ export default function OutgoingTicketsList({
 }) {
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
   const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
-  const filteredTickets = selectedStatus === 'All'
-    ? tickets
-    : tickets.filter((ticket) => ticket.status === selectedStatus.toLowerCase());
+  const filteredTickets =
+    selectedStatus === 'All'
+      ? tickets
+      : tickets.filter(
+          (ticket) => ticket.status === selectedStatus.toLowerCase(),
+        );
 
   return (
     <div>
       {/* Dropdown menu with status options */}
-      <div className='d-flex justify-content-end'>
+      <div className="d-flex justify-content-end">
         <select
           className={`form-select w-auto ${styles.dropdown}`}
           value={selectedStatus}
           onChange={(e) => setSelectedStatus(e.target.value)}
         >
           {statusOptions.map((statusOption) => (
-            <option key={statusOption} value={statusOption}>{statusOption}</option>
+            <option key={statusOption} value={statusOption}>
+              {statusOption}
+            </option>
           ))}
         </select>
       </div>
 
       {filteredTickets.length > 0 ? (
-        <table className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}>
+        <table
+          className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}
+        >
           <colgroup>
-              <col className={styles.idCol} />
-              <col className={styles.storeCol} />
-              <col className={styles.statusCol} />
-              <col className={styles.dateCol} />
-            </colgroup>
+            <col className={styles.idCol} />
+            <col className={styles.storeCol} />
+            <col className={styles.statusCol} />
+            <col className={styles.dateCol} />
+          </colgroup>
           <thead>
             <tr>
               <th>ID</th>

@@ -10,7 +10,7 @@ type IncomingTicketsListProps = {
     requestorLastName: string;
     status: string;
     date: string;
-  } [];
+  }[];
 };
 
 export default function IncomingTicketsList({
@@ -20,13 +20,16 @@ export default function IncomingTicketsList({
   const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
 
   // Filter tickets to only show tickets with the selected status
-  const filteredTickets = selectedStatus === 'All'
-    ? tickets
-    : tickets.filter((ticket) => ticket.status === selectedStatus.toLowerCase());
-  
-  console.log("selected status:", selectedStatus);
-  console.log("tickets:", tickets);
-  console.log("filtered tickets:", filteredTickets);
+  const filteredTickets =
+    selectedStatus === 'All'
+      ? tickets
+      : tickets.filter(
+          (ticket) => ticket.status === selectedStatus.toLowerCase(),
+        );
+
+  console.log('selected status:', selectedStatus);
+  console.log('tickets:', tickets);
+  console.log('filtered tickets:', filteredTickets);
 
   return (
     <div>
@@ -37,14 +40,18 @@ export default function IncomingTicketsList({
           onChange={(e) => setSelectedStatus(e.target.value)}
         >
           {statusOptions.map((statusOption) => (
-            <option key={statusOption} value={statusOption}>{statusOption}</option>
+            <option key={statusOption} value={statusOption}>
+              {statusOption}
+            </option>
           ))}
         </select>
       </div>
 
       {filteredTickets.length > 0 ? (
         <div>
-          <table className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}>
+          <table
+            className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}
+          >
             <colgroup>
               <col className={styles.idCol} />
               <col className={styles.requestorCol} />

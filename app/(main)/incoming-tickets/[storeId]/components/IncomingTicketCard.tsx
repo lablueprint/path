@@ -28,10 +28,14 @@ export default function IncomingTicketCard({
       style={{ cursor: 'pointer' }}
     >
       <td>{ticketId}</td>
-      <td>{requestorFirstName} {requestorLastName}</td>
+      <td>
+        {requestorFirstName} {requestorLastName}
+      </td>
 
       <td>
-        <span className={styles.statusBubble}>{status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}</span>
+        <span className={styles.statusBubble}>
+          {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+        </span>
       </td>
 
       <td>{new Date(date).toLocaleString()}</td>
