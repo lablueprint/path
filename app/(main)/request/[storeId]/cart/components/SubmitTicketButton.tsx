@@ -3,7 +3,10 @@ import { useState, useTransition } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export default function SubmitTicketButton({ ticketId, storeId }: { 
+export default function SubmitTicketButton({
+  ticketId,
+  storeId,
+}: {
   ticketId: string;
   storeId: string;
 }) {
