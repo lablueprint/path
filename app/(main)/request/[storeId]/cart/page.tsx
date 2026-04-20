@@ -72,7 +72,7 @@ export default async function CartPage({
       {hasItems ? (
         <>
           <TicketItemsList ticketId={ticket.ticket_id} />
-          <SubmitTicketButton ticketId={ticket.ticket_id} />
+          <SubmitTicketButton ticketId={ticket.ticket_id} storeId={ticket.storeId} />
         </>
       ) : (
         <div>No items found in cart.</div>

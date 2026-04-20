@@ -3,7 +3,10 @@ import { useState, useTransition } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export default function SubmitTicketButton({ ticketId }: { ticketId: string }) {
+export default function SubmitTicketButton({ ticketId, storeId }: { 
+  ticketId: string;
+  storeId: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -13,7 +16,7 @@ export default function SubmitTicketButton({ ticketId }: { ticketId: string }) {
   const handleSubmit = async () => {
     setError(null);
     startTransition(async () => {
-      const result = await updateTicketStatus('requested', ticketId);
+      const result = await updateTicketStatus('requested', ticketId, storeId);
       if (result.success) {
         const params = new URLSearchParams(searchParams?.toString() || '');
         params.set('submitted', '1');
