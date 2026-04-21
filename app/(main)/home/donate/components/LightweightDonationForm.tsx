@@ -85,7 +85,8 @@ export default function LightweightDonationForm() {
       donor_receive_mailings: data.receive_mailings,
       donor_remain_anonymous: data.remain_anonymous,
 
-      estimated_value: parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) || 0,
+      estimated_value:
+        parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) || 0,
       items_donated: data.items_donated,
 
       receiver_first_name: 'FIRST-NAME',
@@ -96,7 +97,7 @@ export default function LightweightDonationForm() {
 
     if (result.success) {
       setShowSuccess(true);
-      setResetKey(k => k + 1);
+      setResetKey((k) => k + 1);
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -336,28 +337,6 @@ export default function LightweightDonationForm() {
             )}
 
             <h1 className={styles.formTitle2}>Donation Information</h1>
-
-            {/* <Form.Group controlId="estimated_value">
-              <Form.Label className={styles.fieldLabel}>
-                Estimated value (USD)
-              </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="1234.56"
-                {...register('estimated_value', {
-                  required: 'Estimated donation value is required',
-                  pattern: {
-                    value: /^\d+(\.\d{1,2})?$/,
-                    message:
-                      'Please enter a valid dollar amount in the form 1234.56',
-                  },
-                })}
-                isInvalid={!!errors.estimated_value}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.estimated_value?.message}
-              </Form.Control.Feedback>
-            </Form.Group> */}
 
             <Form.Group controlId="estimated_value">
               <Form.Label className={styles.fieldLabel}>
