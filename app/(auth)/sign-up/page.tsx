@@ -43,7 +43,8 @@ export default function SignUpPage() {
     });
     setIsLoading(false);
     if (error) {
-      console.error('Sign-up error:', error);
+      alert(error.message);
+      return;
     }
     router.push('/home');
   };
