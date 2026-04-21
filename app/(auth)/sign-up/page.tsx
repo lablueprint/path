@@ -5,6 +5,8 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import styles from '@/app/(auth)/(auth).module.css';
+import Image from 'next/image';
 
 type Inputs = {
   firstName: string;
@@ -49,87 +51,91 @@ export default function SignUpPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        {...register('firstName', { required: true })}
-        placeholder="First name"
-        type="text"
-      />
-      {errors.firstName?.type === 'required' && (
-        <p role="alert">First name is required.</p>
-      )}
-      <br />
-      <input
-        {...register('lastName', { required: true })}
-        placeholder="Last name"
-        type="text"
-      />
-      {errors.lastName?.type === 'required' && (
-        <p role="alert">Last name is required.</p>
-      )}
-      <br />
-      <input
-        {...register('email', {
-          required: true,
-          pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        })}
-        placeholder="Email"
-      />
-      {errors.email?.type === 'required' && (
-        <p role="alert">Email is required.</p>
-      )}
-      {errors.email?.type === 'pattern' && (
-        <p role="alert">Enter a valid email.</p>
-      )}
-      <br />
-      <input
-        {...register('password', {
-          required: true,
-          minLength: 8,
-          pattern:
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        })}
-        placeholder="Password"
-        // Minimum eight characters, at least one letter, one number and one special character
-        type="password"
-      />
-      {errors.password?.type === 'required' && (
-        <p role="alert">Password is required.</p>
-      )}
-      {errors.password?.type === 'minLength' && (
-        <p role="alert">
-          Password must be at least 8 characters and include an uppercase
-          letter, a lowercase letter, a number, and a symbol.
-        </p>
-      )}
-      {errors.password?.type === 'pattern' && (
-        <p role="alert">
-          Password must be at least 8 characters and include an uppercase
-          letter, a lowercase letter, a number, and a symbol.
-        </p>
-      )}
-      <br />
-      <input
-        {...register('passwordConfirmation', {
-          required: true,
-          validate: (value) =>
-            value === passwordValue || 'Passwords do not match.',
-        })}
-        placeholder="Confirm password"
-        type="password"
-      />
-      {errors.passwordConfirmation?.type === 'required' && (
-        <p role="alert">Please confirm your password.</p>
-      )}
-      {errors.passwordConfirmation?.type === 'validate' && (
-        <p role="alert">Passwords do not match.</p>
-      )}
-      <br />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Creating account...' : 'Sign up'}
-      </button>
-      <br />
-      <Link href="/sign-in">Sign in</Link>
-    </form>
+    <div className={styles.page}>
+      <div></div>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <Image alt="path logo" src="/path.png" width={99} height={47} />
+        <input
+          {...register('firstName', { required: true })}
+          placeholder="First name"
+          type="text"
+        />
+        {errors.firstName?.type === 'required' && (
+          <p role="alert">First name is required.</p>
+        )}
+        <br />
+        <input
+          {...register('lastName', { required: true })}
+          placeholder="Last name"
+          type="text"
+        />
+        {errors.lastName?.type === 'required' && (
+          <p role="alert">Last name is required.</p>
+        )}
+        <br />
+        <input
+          {...register('email', {
+            required: true,
+            pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+          })}
+          placeholder="Email"
+        />
+        {errors.email?.type === 'required' && (
+          <p role="alert">Email is required.</p>
+        )}
+        {errors.email?.type === 'pattern' && (
+          <p role="alert">Enter a valid email.</p>
+        )}
+        <br />
+        <input
+          {...register('password', {
+            required: true,
+            minLength: 8,
+            pattern:
+              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+          })}
+          placeholder="Password"
+          // Minimum eight characters, at least one letter, one number and one special character
+          type="password"
+        />
+        {errors.password?.type === 'required' && (
+          <p role="alert">Password is required.</p>
+        )}
+        {errors.password?.type === 'minLength' && (
+          <p role="alert">
+            Password must be at least 8 characters and include an uppercase
+            letter, a lowercase letter, a number, and a symbol.
+          </p>
+        )}
+        {errors.password?.type === 'pattern' && (
+          <p role="alert">
+            Password must be at least 8 characters and include an uppercase
+            letter, a lowercase letter, a number, and a symbol.
+          </p>
+        )}
+        <br />
+        <input
+          {...register('passwordConfirmation', {
+            required: true,
+            validate: (value) =>
+              value === passwordValue || 'Passwords do not match.',
+          })}
+          placeholder="Confirm password"
+          type="password"
+        />
+        {errors.passwordConfirmation?.type === 'required' && (
+          <p role="alert">Please confirm your password.</p>
+        )}
+        {errors.passwordConfirmation?.type === 'validate' && (
+          <p role="alert">Passwords do not match.</p>
+        )}
+        <br />
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Creating account...' : 'Sign up'}
+        </button>
+        <br />
+        <Link href="/sign-in">Sign in</Link>
+      </form>
+    </div>
   );
 }
