@@ -130,9 +130,7 @@ export default function LightweightDonationForm() {
                 controlId="receiving_site"
                 className={styles.receivingSiteGroup}
               >
-                <Form.Label className="field-label">
-                  Receiving site
-                </Form.Label>
+                <Form.Label className="field-label">Receiving site</Form.Label>
                 <Form.Select {...register('receiving_site')} defaultValue="">
                   <option value="" disabled>
                     Select a receiving site
@@ -379,9 +377,7 @@ export default function LightweightDonationForm() {
             </Form.Group>
 
             <Form.Group controlId="items_donated">
-              <Form.Label className="field-label">
-                Items donated
-              </Form.Label>
+              <Form.Label className="field-label">Items donated</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Describe the items you are donating"

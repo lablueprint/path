@@ -233,9 +233,7 @@ export default function DonationForm({
               </>
             )}
 
-            <h1 className="form-title-2">
-              Donation Information
-            </h1>
+            <h1 className="form-title-2">Donation Information</h1>
 
             {/* Estimated Value */}
             <Form.Group

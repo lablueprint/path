@@ -2,6 +2,7 @@
 
 import { useForm, useWatch } from 'react-hook-form';
 import { createStore } from '@/app/actions/store';
+import { Form, Card, Container } from 'react-bootstrap';
 
 type FormValues = {
   storeName: string;
@@ -38,28 +39,74 @@ export default function AddStoreForm() {
     reset({ storeName: '', storeStreetAddress: '' });
   };
 
+  // return (
+  //   <form onSubmit={handleSubmit(onSubmit)}>
+  //     <div>
+  //       <label>Store name</label>
+  //       <input {...register('storeName')} />
+  //     </div>
+
+  //     <div>
+  //       <label>Store street address</label>
+  //       <input {...register('storeStreetAddress')} />
+  //     </div>
+
+  //     {bothFilled && <button type="submit">Save</button>}
+
+  //     {eitherFilled && (
+  //       <button
+  //         type="button"
+  //         onClick={() => reset({ storeName: '', storeStreetAddress: '' })}
+  //       >
+  //         Cancel
+  //       </button>
+  //     )}
+  //   </form>
+  // );
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label>Store name</label>
-        <input {...register('storeName')} />
-      </div>
-
-      <div>
-        <label>Store street address</label>
-        <input {...register('storeStreetAddress')} />
-      </div>
-
-      {bothFilled && <button type="submit">Save</button>}
-
-      {eitherFilled && (
-        <button
-          type="button"
-          onClick={() => reset({ storeName: '', storeStreetAddress: '' })}
-        >
-          Cancel
-        </button>
-      )}
-    </form>
+    <Container className="form-card-container">
+      {' '}
+      {/* or whatever wrapper fits the /hq layout */}
+      <Card className="form-card">
+        <Card.Body>
+          <h2 className="form-title-1">Add Store</h2>
+          <div className="form-body">
+            {' '}
+            {/* add this to globals if not already there */}
+            <Form.Group controlId="storeName">
+              <Form.Label className="field-label">Store name</Form.Label>
+              <Form.Control {...register('storeName')} />
+            </Form.Group>
+            <Form.Group controlId="storeStreetAddress">
+              <Form.Label className="field-label">
+                Store street address
+              </Form.Label>
+              <Form.Control {...register('storeStreetAddress')} />
+            </Form.Group>
+            <div className="submit-button-row">
+              {' '}
+              {/* add to globals */}
+              {eitherFilled && (
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={() =>
+                    reset({ storeName: '', storeStreetAddress: '' })
+                  }
+                >
+                  Cancel
+                </button>
+              )}
+              {bothFilled && (
+                <button type="submit" className="btn-submit">
+                  Save
+                </button>
+              )}
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
