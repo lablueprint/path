@@ -3,6 +3,7 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
+import styles from './page.module.css';
 
 type SearchParams = {
   query?: string;
@@ -124,11 +125,21 @@ export default async function RequestStorePage({
 
   return (
     <div>
-      <div>
-        <h1>{store.name}</h1>
-        <p>{store.street_address}</p>
+      <div className={styles.pageHeader}>
+        <h1>
+          <span className={styles.requestingFrom}>Requesting from </span>
+          {store.name}
+          {' '}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className={styles.pinIcon}
+          >
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+          </svg>
+        </h1>
       </div>
-      <Link href={`/request/${storeId}/cart`}>Cart</Link>
+
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
@@ -142,26 +153,40 @@ export default async function RequestStorePage({
           })) || []
         }
       />
+
       <h2>Out-of-Stock Request</h2>
       <AddOutOfStockToCartForm storeId={storeId} />
-      <h2>In-Stock Items</h2>
 
+      <h2>In-Stock Items</h2>
       {items && items.length > 0 ? (
-        <div>
+        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
           {items.map((item) => (
-            <ItemCard
-              key={item.id}
-              id={item.id}
-              item={item.item}
-              subcategory={item.subcategory}
-              category={item.category}
-              photoUrl={item.photoUrl}
-            />
+            <div key={item.id} className="col">
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                subcategory={item.subcategory}
+                category={item.category}
+                photoUrl={item.photoUrl}
+              />
+            </div>
           ))}
         </div>
       ) : (
         <p>No available items found.</p>
       )}
+
+      <Link href={`/request/${storeId}/cart`} className={styles.cartButton}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          className={styles.cartIcon}
+        >
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+        </svg>
+      </Link>
     </div>
   );
 }

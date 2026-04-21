@@ -1,0 +1,47 @@
+.pageHeader {
+  margin-bottom: 1.5rem;
+}
+
+.requestingFrom {
+  font-weight: 400;
+}
+
+.cartButton {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #333;
+  z-index: 100;
+  transition: box-shadow 0.2s;
+}
+
+.cartButton:hover {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+  color: #333;
+}
+
+.pinIcon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  vertical-align: middle;
+}
+
+.cartIcon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
