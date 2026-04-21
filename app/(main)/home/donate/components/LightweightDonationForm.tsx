@@ -121,16 +121,16 @@ export default function LightweightDonationForm() {
 
   return (
     <Container className={styles.formContainer}>
-      <Card className={styles.formCard}>
+      <Card className="form-card">
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.formBody}>
             <div className={styles.formSection}>
-              <h1 className={styles.formTitle1}>Store Information</h1>
+              <h1 className="form-title-1">Store Information</h1>
               <Form.Group
                 controlId="receiving_site"
                 className={styles.receivingSiteGroup}
               >
-                <Form.Label className={styles.fieldLabel}>
+                <Form.Label className="field-label">
                   Receiving site
                 </Form.Label>
                 <Form.Select {...register('receiving_site')} defaultValue="">
@@ -144,7 +144,7 @@ export default function LightweightDonationForm() {
               </Form.Group>
             </div>
 
-            <h1 className={styles.formTitle2}>Donor Information</h1>
+            <h1 className="form-title-2">Donor Information</h1>
 
             <Form.Group>
               <div className={styles.radioRow}>
@@ -180,7 +180,7 @@ export default function LightweightDonationForm() {
                   <div>
                     {donorType === 'individual' && (
                       <Form.Group controlId="individual_name">
-                        <Form.Label className={styles.fieldLabel}>
+                        <Form.Label className="field-label">
                           Individual Name
                         </Form.Label>
                         <Form.Control
@@ -198,7 +198,7 @@ export default function LightweightDonationForm() {
                     {donorType === 'business' && (
                       <div className={styles.businessFields}>
                         <Form.Group controlId="business_name">
-                          <Form.Label className={styles.fieldLabel}>
+                          <Form.Label className="field-label">
                             Business Name
                           </Form.Label>
                           <Form.Control
@@ -213,7 +213,7 @@ export default function LightweightDonationForm() {
                         </Form.Group>
 
                         <Form.Group controlId="business_contact_name">
-                          <Form.Label className={styles.fieldLabel}>
+                          <Form.Label className="field-label">
                             Business Contact Name
                           </Form.Label>
                           <Form.Control
@@ -232,7 +232,7 @@ export default function LightweightDonationForm() {
 
                   <div>
                     <Form.Group controlId="address">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Street Address
                       </Form.Label>
                       <Form.Control
@@ -251,7 +251,7 @@ export default function LightweightDonationForm() {
                 <div className={styles.twoColRow}>
                   <div>
                     <Form.Group controlId="email">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Email
                       </Form.Label>
                       <Form.Control
@@ -273,7 +273,7 @@ export default function LightweightDonationForm() {
 
                   <div>
                     <Form.Group controlId="phone">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Phone Number (Optional)
                       </Form.Label>
                       <Controller
@@ -336,10 +336,10 @@ export default function LightweightDonationForm() {
               </>
             )}
 
-            <h1 className={styles.formTitle2}>Donation Information</h1>
+            <h1 className="form-title-2">Donation Information</h1>
 
             <Form.Group controlId="estimated_value">
-              <Form.Label className={styles.fieldLabel}>
+              <Form.Label className="field-label">
                 Estimated value (USD)
               </Form.Label>
               <Controller
@@ -379,7 +379,7 @@ export default function LightweightDonationForm() {
             </Form.Group>
 
             <Form.Group controlId="items_donated">
-              <Form.Label className={styles.fieldLabel}>
+              <Form.Label className="field-label">
                 Items donated
               </Form.Label>
               <Form.Control
@@ -400,7 +400,7 @@ export default function LightweightDonationForm() {
             </Form.Group>
 
             <div className={styles.submitButtonRow}>
-              <button type="submit" className={styles.submitButton}>
+              <button type="submit" className="btn-submit">
                 Submit
               </button>
             </div>

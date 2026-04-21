@@ -1,4 +1,4 @@
-.formContainer:global(.container) {
+/* .formContainer:global(.container) {
   width: 100%;
   max-width: none;
   margin: 0;
@@ -129,4 +129,75 @@
 
 .estimatedValueField {
   max-width: 200px;
+} */
+
+/* ── container reset (donation-specific) ── */
+.formContainer:global(.container) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  --bs-gutter-x: 0;
+  padding-block: 20px;
+  box-sizing: border-box;
+}
+
+/* ── layout: body & rows ── */
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.radioRow {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.twoColRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1020px) {
+  .twoColRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── donation-specific field groups ── */
+.businessFields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.receivingSiteGroup {
+  margin-bottom: 10px;
+}
+
+.estimatedValueField {
+  max-width: 200px;
+}
+
+/* ── error & submit row ── */
+.errorText {
+  color: red;
+  margin-top: 5px;
+  display: block;
+}
+
+.submitButtonRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
