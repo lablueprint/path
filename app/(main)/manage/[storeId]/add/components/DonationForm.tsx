@@ -30,9 +30,9 @@ export default function DonationForm({
 
   return (
     <Container className={styles.formContainer}>
-      <Card className={styles.formCard}>
+      <Card className="form-card">
         <Card.Body>
-          <h1 className={styles.formTitle1}>Donor Information</h1>
+          <h1 className="form-title-1">Donor Information</h1>
           <div className={styles.formBody}>
             {/* Donor Type */}
             <Form.Group>
@@ -233,7 +233,7 @@ export default function DonationForm({
               </>
             )}
 
-            <h1 className={`${styles.formTitle2} ${styles.sectionTitle}`}>
+            <h1 className="form-title-2">
               Donation Information
             </h1>
 
@@ -310,7 +310,7 @@ export default function DonationForm({
 
             {showSubmitButton && (
               <div className={styles.submitButtonRow}>
-                <button type="submit" className={styles.submitButton}>
+                <button type="submit" className="btn-submit">
                   Submit
                 </button>
               </div>
