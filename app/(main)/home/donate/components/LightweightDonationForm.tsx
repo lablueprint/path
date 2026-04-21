@@ -3,7 +3,7 @@
 import { forwardRef, useState } from 'react';
 import { DonationInsert } from '@/app/types/donation';
 import { useForm, useWatch, Controller } from 'react-hook-form';
-import { PatternFormat } from 'react-number-format';
+import { PatternFormat, NumericFormat } from 'react-number-format';
 import { Form, Container, Card, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
@@ -36,6 +36,7 @@ type FormData = {
 
 export default function LightweightDonationForm() {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [resetKey, setResetKey] = useState(0); // For resetting estimated value
 
   const {
     register,
@@ -84,7 +85,7 @@ export default function LightweightDonationForm() {
       donor_receive_mailings: data.receive_mailings,
       donor_remain_anonymous: data.remain_anonymous,
 
-      estimated_value: parseFloat(data.estimated_value),
+      estimated_value: parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) || 0,
       items_donated: data.items_donated,
 
       receiver_first_name: 'FIRST-NAME',
@@ -95,6 +96,7 @@ export default function LightweightDonationForm() {
 
     if (result.success) {
       setShowSuccess(true);
+      setResetKey(k => k + 1);
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -335,7 +337,7 @@ export default function LightweightDonationForm() {
 
             <h1 className={styles.formTitle2}>Donation Information</h1>
 
-            <Form.Group controlId="estimated_value">
+            {/* <Form.Group controlId="estimated_value">
               <Form.Label className={styles.fieldLabel}>
                 Estimated value (USD)
               </Form.Label>
@@ -351,6 +353,46 @@ export default function LightweightDonationForm() {
                   },
                 })}
                 isInvalid={!!errors.estimated_value}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.estimated_value?.message}
+              </Form.Control.Feedback>
+            </Form.Group> */}
+
+            <Form.Group controlId="estimated_value">
+              <Form.Label className={styles.fieldLabel}>
+                Estimated value (USD)
+              </Form.Label>
+              <Controller
+                key={resetKey}
+                name="estimated_value"
+                control={control}
+                rules={{
+                  required: 'Estimated donation value is required',
+                  validate: (value) => {
+                    if (!value) return true;
+                    const cleanValue = String(value).replace(/[^0-9.]/g, '');
+                    const num = parseFloat(cleanValue);
+                    return num > 0 || 'Please enter a valid donation amount';
+                  },
+                }}
+                render={({ field }) => (
+                  <NumericFormat
+                    {...field}
+                    onChange={() => {}}
+                    prefix="$"
+                    thousandSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale
+                    allowNegative={false}
+                    placeholder="$1,234.56"
+                    onValueChange={(values) => {
+                      field.onChange(values.value);
+                    }}
+                    customInput={BootstrapInput}
+                    isInvalid={!!errors.estimated_value}
+                  />
+                )}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.estimated_value?.message}

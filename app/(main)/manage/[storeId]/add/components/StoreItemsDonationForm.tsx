@@ -119,7 +119,9 @@ export default function StoreItemsDonationForm({
           donor_receive_mailings: data.receive_mailings,
           donor_remain_anonymous: data.remain_anonymous,
 
-          estimated_value: parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) || 0,
+          estimated_value:
+            parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) ||
+            0,
           items_donated: data.items_donated,
 
           receiver_first_name: user?.first_name,
@@ -137,6 +139,7 @@ export default function StoreItemsDonationForm({
       } else if (donationErrorOccurred) {
         alert('Donation submission failed.');
       } else {
+        alert('Donation submitted successfully!');
         // Reset all fields to empty/default values
         methods.reset({
           itemSettings: [],
