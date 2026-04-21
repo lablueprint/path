@@ -31,7 +31,6 @@ export default function StoresList({ stores }: { stores: Store[] }) {
             <tr>
               <th>NAME</th>
               <th>ADDRESS</th>
-              {/* whatever columns you need */}
             </tr>
           </thead>
           <tbody>
@@ -46,6 +45,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
                     }}
                   >
                     <Image
+                      // src={store.photo_url}
                       src={'/default-store-photo.png'}
                       alt={`${store.name} photo`}
                       width={32}
