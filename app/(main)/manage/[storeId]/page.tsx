@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
+import styles from './page.module.css';
 
 type SearchParams = {
   query?: string;
@@ -19,7 +20,6 @@ export default async function ManageStorePage({
   const { storeId } = await params;
   const { query, category, subcategory } = await searchParams;
 
-  // fetching data for store associated with storeId
   const supabase = await createClient();
 
   // Fetch categories
@@ -39,6 +39,7 @@ export default async function ManageStorePage({
     .select('*')
     .eq('store_id', storeId)
     .single();
+
   if (storeError || !store) {
     console.error('Error fetching store:', storeError);
     return <div>Failed to load store.</div>;
@@ -97,17 +98,17 @@ export default async function ManageStorePage({
       { merge: false }
     >();
 
+  if (itemsError) {
+    console.error('Error fetching store items:', itemsError);
+    return <div>Failed to load store items.</div>;
+  }
+
   // Sort itemsData in JavaScript
   const sortedItemsData = itemsData?.sort((a, b) => {
     const nameA = a.inventory_items.name.toLowerCase() || '';
     const nameB = b.inventory_items.name.toLowerCase() || '';
     return nameA.localeCompare(nameB);
   });
-
-  if (itemsError) {
-    console.error('Error fetching store items:', itemsError);
-    return <div>Failed to load store items.</div>;
-  }
 
   const items = sortedItemsData?.map((item) => ({
     id: item.store_item_id,
@@ -119,45 +120,58 @@ export default async function ManageStorePage({
 
   return (
     <div>
-      {/* store info */}
-      <h1>{store.name}</h1>
-      <p>{store.street_address}</p>
-      <Link href={`/manage/${storeId}/add`}>
-        <p>Add store items and/or submit gift-in-kind form</p>
-      </Link>
-      {/* store items + info */}
-      <div>
-        <ItemSearch
-          categories={
-            categories?.map((cat) => ({
-              id: cat.category_id,
-              name: cat.name,
-            })) || []
-          }
-          subcategories={
-            subcategories?.map((sub) => ({
-              id: sub.subcategory_id,
-              name: sub.name,
-              category_id: sub.category_id,
-            })) || []
-          }
-        />
-        <h2>Items</h2>
-        {items && items.length > 0 ? (
-          items.map((item) => (
-            <ItemCard
-              key={item.id}
-              id={item.id}
-              item={item.item}
-              photoUrl={item.photoUrl}
-              subcategory={item.subcategory}
-              category={item.category}
-            />
-          ))
-        ) : (
-          <p>No items found.</p>
-        )}
+      <div className={styles.pageHeader}>
+        <h1>
+          <span className={styles.managingFrom}>Managing </span>
+          {store.name}
+          {' '}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className={styles.pinIcon}
+          >
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+          </svg>
+        </h1>
+        <Link href={`/manage/${storeId}/add`} className={styles.addLink}>
+          + Add store items / gift-in-kind form
+        </Link>
       </div>
+
+      <ItemSearch
+        categories={
+          categories?.map((cat) => ({
+            id: cat.category_id,
+            name: cat.name,
+          })) || []
+        }
+        subcategories={
+          subcategories?.map((sub) => ({
+            id: sub.subcategory_id,
+            name: sub.name,
+            category_id: sub.category_id,
+          })) || []
+        }
+      />
+
+      <h2>Items</h2>
+      {items && items.length > 0 ? (
+        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+          {items.map((item) => (
+            <div key={item.id} className="col">
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                photoUrl={item.photoUrl}
+                subcategory={item.subcategory}
+                category={item.category}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No items found.</p>
+      )}
     </div>
   );
 }

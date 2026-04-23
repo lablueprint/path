@@ -14,19 +14,24 @@ type ItemCardProps = {
 
 export default function ItemCard({
   id,
-  photoUrl,
+  photoUrl: _photoUrl,
   item,
   subcategory,
   category,
 }: ItemCardProps) {
   const pathname = usePathname();
+
   return (
-    <Link className={styles.cardText} href={`${pathname}/${id}`}>
+    <Link className={styles.cardLink} href={`${pathname}/${id}`}>
       <div className={styles.card}>
-        <h3>{item}</h3>
-        {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
-        <p>Category: {category}</p>
-        <p>Subcategory: {subcategory}</p>
+        <div className={styles.imageContainer}>
+          <div className={styles.imagePlaceholder} />
+        </div>
+        <div className={styles.cardBody}>
+          <p className={styles.itemName}>{item}</p>
+          <p className={styles.categoryText}>{category}</p>
+          <p className={styles.subcategoryText}>↳ {subcategory}</p>
+        </div>
       </div>
     </Link>
   );

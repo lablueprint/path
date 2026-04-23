@@ -1,0 +1,32 @@
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.managingFrom {
+  font-weight: 400;
+}
+
+.pinIcon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  vertical-align: middle;
+}
+
+.addLink {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0089ff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.addLink:hover {
+  text-decoration: underline;
+  color: #0073d6;
+}
