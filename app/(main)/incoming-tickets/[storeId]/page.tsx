@@ -50,28 +50,27 @@ export default async function IncomingTicketsStorePage({
   const { data: ticketsData, error: ticketsError } = await supabase
     .from('tickets')
     .select('*, users(*)')
-    .eq('store_id', storeId);
+    .eq('store_id', storeId)
+    .in('status', ['requested', 'ready', 'rejected', 'fulfilled']);
 
   if (ticketsError) {
     console.error('Error fetching tickets:', ticketsError);
     return <div>Failed to load tickets.</div>;
   }
 
-  const tickets = ticketsData?.map((ticket) => ({
-    id: ticket.ticket_id as string,
-    requestorFirstName: ticket.users.first_name as string,
-    requestorLastName: ticket.users.last_name as string,
-    status: ticket.status as string,
-    date: ticket.date_submitted as string,
-  }));
+  const tickets =
+    ticketsData?.map((ticket) => ({
+      id: ticket.ticket_id as string,
+      requestorFirstName: ticket.users.first_name as string,
+      requestorLastName: ticket.users.last_name as string,
+      status: ticket.status as string,
+      date: ticket.date_submitted as string,
+    })) ?? [];
 
   return (
     <div>
       <h1>Incoming Tickets</h1>
-      <IncomingTicketsList tickets={tickets} status="requested" />
-      <IncomingTicketsList tickets={tickets} status="ready" />
-      <IncomingTicketsList tickets={tickets} status="rejected" />
-      <IncomingTicketsList tickets={tickets} status="fulfilled" />
+      <IncomingTicketsList tickets={tickets} />
     </div>
   );
 }
