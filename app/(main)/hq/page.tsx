@@ -2,6 +2,7 @@ import DonationsExportForm from '@/app/(main)/hq/components/DonationsExportForm'
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import AddStoreForm from '@/app/(main)/hq/components/AddStoreForm';
+import { Table } from 'react-bootstrap';
 
 export default async function HqPage() {
   const supabase = await createClient();
@@ -33,13 +34,13 @@ export default async function HqPage() {
       <h1>HQ</h1>
       <h2>Donations</h2>
       <h3>Recent Donations</h3>
-      <table>
+      <Table borderless>
         <thead>
           <tr>
-            <th>Receiver</th>
-            <th>Store</th>
-            <th>Items Donated</th>
-            <th>Date Submitted</th>
+            <th className={`w-20`}>Receiver</th>
+            <th className={`w-20`}>Store</th>
+            <th className={`w-30`}>Items Donated</th>
+            <th className={`w-30`}>Date Submitted</th>
           </tr>
         </thead>
         <tbody>
@@ -54,7 +55,7 @@ export default async function HqPage() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
 
       <h3>Export Donations</h3>
       <DonationsExportForm />
