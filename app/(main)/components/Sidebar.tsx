@@ -104,16 +104,7 @@ export default async function Sidebar() {
               <ul className={`nav flex-column ${styles.linkList}`}>
                 {visibleLinks.map((link) => (
                   <li key={link.href} className={`nav-item ${styles.linkItem}`}>
-                    {/*<Link
-                      href={link.href}
-                      className={`nav-link ${styles.navLink}`}
-                    >
-                      {link.label}
-                    </Link>*/}
-                    <SidebarNavLink
-                      href={link.href}
-                      label={link.label}
-                    />
+                    <SidebarNavLink href={link.href} label={link.label} />
                   </li>
                 ))}
               </ul>
@@ -129,8 +120,9 @@ export default async function Sidebar() {
               width={40}
               height={40}
               className={styles.pfp}
+              unoptimized
             />
-        </div>
+          </div>
           <div>{displayName}</div>
         </Link>
       </nav>

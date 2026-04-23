@@ -4,22 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './Sidebar.module.css';
 
-
 type SidebarNavLinkProps = {
   href: string;
   label: string;
-  className?: string;
 };
 
-export default function SidebarNavLink({
-  href,
-  label,
-  className = 'styles.navLink',
-}: SidebarNavLinkProps) {
+export default function SidebarNavLink({ href, label }: SidebarNavLinkProps) {
   const pathname = usePathname();
 
-  const isActive =
-    pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link
