@@ -1,7 +1,7 @@
 'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
 import { useState } from 'react';
-import styles from '@/app/(main)/components/Ticket.module.css';
+import styles from '@/app/(main)/incoming-tickets/[storeId]/components/Ticket.module.css';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -26,10 +26,6 @@ export default function IncomingTicketsList({
       : tickets.filter(
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
-
-  console.log('selected status:', selectedStatus);
-  console.log('tickets:', tickets);
-  console.log('filtered tickets:', filteredTickets);
 
   return (
     <div>
