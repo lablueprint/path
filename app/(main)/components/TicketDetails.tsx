@@ -7,7 +7,6 @@ import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
 import { Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Image from 'next/image';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
@@ -147,6 +146,8 @@ export default async function TicketDetails({
                 href={
                   requestor?.email ? `mailto:${requestor.email}` : undefined
                 }
+                target="_blank"
+                rel="noopener noreferrer"
                 disabled={!requestor?.email}
               >
                 Contact
