@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { deleteStore } from '@/app/actions/store';
+import { createClient } from '@/app/lib/supabase/browser-client';
 
 type RemoveStoreButtonProp = {
   storeId: string;
@@ -9,9 +10,15 @@ type RemoveStoreButtonProp = {
 
 export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   const router = useRouter();
+  const supabase = createClient();
+
   const handleDeletion = async () => {
+    // Remove photo from bucket first
+    const { error: storageError } = await supabase.storage
+      .from('store_photos')
+      .remove([`${storeId}/store.jpg`]);
     const { success, error } = await deleteStore(storeId);
-    if (!success) {
+    if (storageError || !success) {
       alert('Failed to remove store.');
       console.error(error);
     } else {
