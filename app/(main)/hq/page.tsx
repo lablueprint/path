@@ -3,7 +3,6 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import AddStoreForm from '@/app/(main)/hq/components/AddStoreForm';
 import { Table } from 'react-bootstrap';
-import styles from '@/app/(main)/hq/page.module.css';
 
 export default async function HqPage() {
   const supabase = await createClient();
@@ -39,7 +38,7 @@ export default async function HqPage() {
         <thead>
           <tr>
             <th className={`w-20`}>Receiver</th>
-            <th className={`w-20 `}>Store</th>
+            <th className={`w-20`}>Store</th>
             <th className={`w-30`}>Items Donated</th>
             <th className={`w-30`}>Date Submitted</th>
           </tr>

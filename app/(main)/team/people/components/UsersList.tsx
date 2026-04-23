@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from './UserList.module.css';
+import styles from '@/app/(main)/team/people/components/UsersList.module.css';
 import { Table } from 'react-bootstrap';
 
 export default function UsersList({
