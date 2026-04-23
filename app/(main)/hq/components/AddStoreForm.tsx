@@ -2,9 +2,8 @@
 
 import { useForm, useWatch } from 'react-hook-form';
 import { useState, useRef } from 'react';
-import { createStore, updateStore } from '../../../actions/store';
+import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
-
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import Image from 'next/image';
 import defaultStorePhoto from '@/public/default-store-photo.png';
@@ -69,7 +68,6 @@ export default function AddStoreForm() {
       const store = await createStore({
         name: data.storeName,
         street_address: data.storeStreetAddress,
-        photo_url: defaultStorePhoto.src,
       });
 
       if (!store.success || !store.data) return;
@@ -81,14 +79,14 @@ export default function AddStoreForm() {
       if (selectedFile) {
         const { error: uploadError } = await supabase.storage
           .from('store_photos')
-          .upload(`${store_id}/profile.jpg`, selectedFile, { upsert: true });
+          .upload(`${store_id}/store.jpg`, selectedFile, { upsert: true });
 
         if (uploadError) {
           console.error('Upload error:', uploadError.message);
         } else {
           const { data: publicData } = supabase.storage
             .from('store_photos')
-            .getPublicUrl(`${store_id}/profile.jpg`);
+            .getPublicUrl(`${store_id}/store.jpg`);
 
           finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
           await updateStore(store_id, { photo_url: finalPhotoUrl });

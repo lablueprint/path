@@ -81,7 +81,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
       if (isPendingDelete) {
         await supabase.storage
           .from('store_photos')
-          .remove([`${store.store_id}/profile.jpg`]);
+          .remove([`${store.store_id}/store.jpg`]);
         finalPhotoUrl = null;
       }
 
@@ -89,7 +89,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
       if (selectedFile) {
         const { error: uploadError } = await supabase.storage
           .from('store_photos')
-          .upload(`${store.store_id}/profile.jpg`, selectedFile, {
+          .upload(`${store.store_id}/store.jpg`, selectedFile, {
             upsert: true,
           });
 
@@ -98,7 +98,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
         } else {
           const { data: publicData } = supabase.storage
             .from('store_photos')
-            .getPublicUrl(`${store.store_id}/profile.jpg`);
+            .getPublicUrl(`${store.store_id}/store.jpg`);
 
           finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
         }
@@ -147,11 +147,13 @@ export default function EditStoreForm({ store }: { store: Store }) {
           style={{ objectFit: 'cover' }}
           unoptimized
         />
+
         {!isPendingDelete && displayImage !== defaultStorePhoto.src && (
           <button type="button" onClick={handleRemovePhoto}>
             Remove
           </button>
         )}
+        <br />
         <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
       </div>
       <div>

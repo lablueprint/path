@@ -33,7 +33,8 @@ using (((bucket_id = 'store_photos'::text) AND ((auth.jwt() ->> 'user_role'::tex
   as permissive
   for update
   to authenticated
-using (((bucket_id = 'store_photos'::text) AND ((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text]))));
+using (((bucket_id = 'store_photos'::text) AND ((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text]))))
+with check (((bucket_id = 'store_photos'::text) AND ((auth.jwt() ->> 'user_role'::text) = ANY (ARRAY['superadmin'::text, 'owner'::text]))));
 
 
 

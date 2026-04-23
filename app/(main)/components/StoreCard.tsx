@@ -10,16 +10,13 @@ import defaultStorePhoto from '@/public/default-store-photo.png';
 export default function StoreCard({ store }: { store: Store }) {
   const pathname = usePathname();
 
-  const displayImage = store?.photo_url;
+  const displayImage = store.photo_url;
   return (
-    <Link
-      className={styles['card-text']}
-      href={`${pathname}/${store.store_id}`}
-    >
-      <div className={styles['card']}>
+    <Link className={styles.cardText} href={`${pathname}/${store.store_id}`}>
+      <div className={styles.card}>
         <Image
           src={displayImage ?? defaultStorePhoto.src}
-          alt="Profile photo"
+          alt="Store photo"
           width={64}
           height={64}
           style={{ objectFit: 'cover' }}

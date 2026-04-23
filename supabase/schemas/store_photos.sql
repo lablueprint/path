@@ -17,6 +17,11 @@ for update
   to authenticated using (
     bucket_id = 'store_photos'
     and (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
+  )
+with
+  check (
+    bucket_id = 'store_photos'
+    and (auth.jwt () ->> 'user_role') in ('superadmin', 'owner')
   );
 
 create policy "auth can delete store_photos if >= superadmin" on storage.objects for delete to authenticated using (
