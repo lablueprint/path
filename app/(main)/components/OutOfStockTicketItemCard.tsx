@@ -1,6 +1,7 @@
 'use client';
 import { updateTicketItemDescription } from '@/app/actions/ticket';
 import { useState } from 'react';
+import styles from '@/app/(main)/components/OutOfStockTicketItemCard.module.css';
 
 interface OutOfStockTicketItemCardProps {
   ticketItemId: string;
@@ -28,10 +29,15 @@ export default function OutOfStockTicketItemCard({
     setIsChanged(false);
   };
   return (
-    <div>
-      <textarea value={description} onChange={handleChange} rows={4} />
+    <div className={styles.cardContainer}>
+      <textarea
+        className={styles.descriptionInput}
+        value={description}
+        onChange={handleChange}
+        rows={4}
+      />
       {isChanged && (
-        <div>
+        <div className={styles.actionsRow}>
           <button onClick={handleSave}>Save</button>
           <button onClick={handleCancel}>Cancel</button>
         </div>

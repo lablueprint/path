@@ -1,0 +1,63 @@
+.tableWrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-top: 28px;
+  overflow-wrap: anywhere;
+}
+
+.table th {
+  padding: 22.28px 44.56px;
+  color: #4a5568;
+  background-color: #e5f3ff;
+  font-weight: 600;
+  font-size: 16.93px;
+  line-height: 100%;
+}
+
+.table td {
+  padding: 22.28px 26.74px;
+  color: #718096;
+  border-bottom: 0.45px solid #e5f3ff;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table td:nth-child(1) {
+  font-weight: 600;
+  font-size: 16.93px;
+  line-height: 100%;
+}
+
+.idCol {
+  width: 32.69%;
+}
+
+.requestorCol {
+  width: 22.14%;
+}
+
+.statusCol {
+  width: 23.44%;
+}
+
+.dateCol {
+  width: 21.74%;
+}
+
+.statusBubble {
+  background-color: #3182ce;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 16.93px;
+  line-height: 100%;
+  padding: 8.91px 22.28px;
+  border-radius: 4.46px;
+}
