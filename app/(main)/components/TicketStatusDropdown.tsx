@@ -30,8 +30,9 @@ export default function TicketStatusDropdown({
     const result = await updateTicketStatus(selectedStatus, ticketId);
     if (result.success) {
       setOriginalStatus(selectedStatus);
+      return;
     } else {
-      setError('Error updating status. No changes were saved.');
+      setError('Error updating status. No changes were saved.' + result.error);
     }
   };
 
