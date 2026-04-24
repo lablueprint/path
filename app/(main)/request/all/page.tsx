@@ -3,6 +3,10 @@ import ItemSearch from '@/app/(main)/components/ItemSearch';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
+import Accordion from 'react-bootstrap/Accordion';
+import AccordionBody from 'react-bootstrap/AccordionBody';
+import AccordionHeader from 'react-bootstrap/AccordionHeader';
+import AccordionItem from 'react-bootstrap/AccordionItem';
 
 type SearchParams = {
   query?: string;
@@ -152,35 +156,39 @@ export default async function RequestAllStoresPage({
         }
       />
 
-      {sortedStores.map((store) => {
-        const storeItems = itemsByStore.get(store.store_id) || [];
-        return (
-          <div key={store.store_id}>
-            <h2>{store.name}</h2>
-            <h3>Out-of-Stock Request</h3>
-            <AddOutOfStockToCartForm storeId={store.store_id} />
-            {storeItems.length > 0 ? (
-              <div>
-                <h3>In-Stock Items</h3>
-                {storeItems.map((item) => (
-                  <ItemCard
-                    key={item.store_item_id}
-                    id={item.store_item_id}
-                    item={item.inventory_items.name}
-                    subcategory={item.inventory_items.subcategories.name}
-                    category={
-                      item.inventory_items.subcategories.categories.name
-                    }
-                    photoUrl={item.inventory_items.photo_url}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p>No available items in this store.</p>
-            )}
-          </div>
-        );
-      })}
+      <Accordion defaultActiveKey="0">
+        {sortedStores.map((store) => {
+          const storeItems = itemsByStore.get(store.store_id) || [];
+          return (
+            <AccordionItem eventKey={store.store_id} key={store.store_id}>
+              <AccordionHeader>{store.name}</AccordionHeader>
+              <AccordionBody>
+                <h3>Out-of-Stock Request</h3>
+                <AddOutOfStockToCartForm storeId={store.store_id} />
+                {storeItems.length > 0 ? (
+                  <div>
+                    <h3>In-Stock Items</h3>
+                    {storeItems.map((item) => (
+                      <ItemCard
+                        key={item.store_item_id}
+                        id={item.store_item_id}
+                        item={item.inventory_items.name}
+                        subcategory={item.inventory_items.subcategories.name}
+                        category={
+                          item.inventory_items.subcategories.categories.name
+                        }
+                        photoUrl={item.inventory_items.photo_url}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p>No available items in this store.</p>
+                )}
+              </AccordionBody>
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
     </div>
   );
 }

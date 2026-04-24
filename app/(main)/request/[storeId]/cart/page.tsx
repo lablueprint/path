@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitTicketButton from '@/app/(main)/request/[storeId]/cart/components/SubmitTicketButton';
 import Link from 'next/link';
+import styles from '@/app/(main)/request/[storeId]/cart/CartPage.module.css';
 
 export default async function CartPage({
   params,
@@ -43,22 +44,15 @@ export default async function CartPage({
             <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
           </div>
         )}
-        <div>No items found in cart.</div>
+        <div className={styles.itemsCard}>
+          <div className={styles.itemsCardHeader}>
+            <h1>ITEMS</h1>
+            <h2>0 in-stock · 0 out-of-stock</h2>
+          </div>
+        </div>
       </div>
     );
   }
-
-  // Query for ticket items
-  const { data: ticketItems, error: itemsError } = await supabase
-    .from('ticket_items')
-    .select('ticket_item_id')
-    .eq('ticket_id', ticket.ticket_id);
-  if (itemsError) {
-    console.error('Error fetching ticket items:', itemsError);
-    return <div>Failed to load cart items.</div>;
-  }
-
-  const hasItems = ticketItems && ticketItems.length > 0;
 
   return (
     <div>
@@ -69,14 +63,10 @@ export default async function CartPage({
           <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
         </div>
       )}
-      {hasItems ? (
-        <>
-          <TicketItemsList ticketId={ticket.ticket_id} />
-          <SubmitTicketButton ticketId={ticket.ticket_id} />
-        </>
-      ) : (
-        <div>No items found in cart.</div>
-      )}
+      <div>
+        <TicketItemsList ticketId={ticket.ticket_id} />
+        <SubmitTicketButton ticketId={ticket.ticket_id} />
+      </div>
     </div>
   );
 }
