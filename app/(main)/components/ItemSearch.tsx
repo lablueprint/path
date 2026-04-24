@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import styles from './ItemSearch.module.css';
 
 type category = {
   name: string;
@@ -81,44 +82,56 @@ export default function ItemSearch({ categories, subcategories }: Props) {
     : subcategories;
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       {/* Search input */}
       <input
+        className={styles.searchInput}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Search..."
+        placeholder="Search items..."
+        aria-label="Search items"
       />
 
-      {/* Category dropdown */}
-      <select
-        value={searchParams.get('category') ?? ''}
-        onChange={(e) => handleCategoryChange(e.target.value)}
-      >
-        <option value="">All categories</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
-
-      {/* Subcategory dropdown - only show if category is selected */}
-      {selectedCategoryId && (
+      <div className={styles.filtersRow}>
+        {/* Category dropdown */}
         <select
+          className={styles.selectInput}
+          value={searchParams.get('category') ?? ''}
+          onChange={(e) => handleCategoryChange(e.target.value)}
+          aria-label="Filter by category"
+        >
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+
+        {/* Subcategory dropdown */}
+        <select
+          className={styles.selectInput}
           value={searchParams.get('subcategory') ?? ''}
           onChange={(e) => handleSubcategoryChange(e.target.value)}
+          aria-label="Filter by subcategory"
         >
-          <option value="">All subcategories</option>
+          <option value="">All Subcategories</option>
           {filteredSubcategories.map((subcategory) => (
             <option key={subcategory.id} value={subcategory.id}>
               {subcategory.name}
             </option>
           ))}
         </select>
-      )}
 
-      {/* Clear button */}
-      <button onClick={handleClearFilters}>Clear filters</button>
+        {/* Clear button */}
+        <button
+          type="button"
+          className={styles.clearButton}
+          onClick={handleClearFilters}
+        >
+          Clear Filters
+        </button>
+      </div>
     </div>
   );
 }
