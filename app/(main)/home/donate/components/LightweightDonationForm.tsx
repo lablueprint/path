@@ -4,6 +4,7 @@ import { DonationInsert } from '@/app/types/donation';
 import { useForm, useWatch, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import { createDonation } from '@/app/actions/donation';
+import { useState } from 'react';
 
 type FormData = {
   donor_type?: 'individual' | 'business';
@@ -32,7 +33,7 @@ export default function LightweightDonationForm() {
     control,
     reset,
     clearErrors,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
@@ -40,6 +41,8 @@ export default function LightweightDonationForm() {
       estimated_value: '',
     },
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const donorType = useWatch({
     control,
@@ -47,6 +50,8 @@ export default function LightweightDonationForm() {
   });
 
   const onSubmit = async (data: FormData) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     const donation: DonationInsert = {
       donor_is_individual: data.donor_type === 'individual',
 
@@ -79,9 +84,10 @@ export default function LightweightDonationForm() {
     };
 
     const result = await createDonation(donation);
-
-    // Reset all fields to empty/default values
     if (result.success) {
+      setSuccessMessage(
+        'Donation submitted successfully! Thank you for your generosity.',
+      );
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -99,7 +105,9 @@ export default function LightweightDonationForm() {
       });
       clearErrors();
     } else {
-      console.error('Failed to create donation:', result.error);
+      setErrorMessage(
+        'Failed to create donation: ' + (result.error || 'Unknown error'),
+      );
     }
   };
 
@@ -126,6 +134,36 @@ export default function LightweightDonationForm() {
       >
         <h1 style={{ margin: 0 }}>Donation Form</h1>
       </div>
+      {errorMessage && (
+        <div
+          style={{
+            backgroundColor: '#f8d7da',
+            color: '#721c24',
+            padding: '12px',
+            borderRadius: '5px',
+            marginBottom: '15px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
+      {successMessage && (
+        <div
+          style={{
+            backgroundColor: '#d4edda',
+            color: '#155724',
+            padding: '12px',
+            borderRadius: '5px',
+            marginBottom: '15px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
@@ -443,21 +481,7 @@ export default function LightweightDonationForm() {
           Submit
         </button>
 
-        {isSubmitSuccessful && (
-          <div
-            style={{
-              backgroundColor: '#d4edda',
-              color: '#155724',
-              padding: '12px',
-              borderRadius: '5px',
-              marginBottom: '15px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}
-          >
-            Form submitted successfully! Thank you for your donation.
-          </div>
-        )}
+        {/* Success message now handled above form */}
       </form>
     </div>
   );
