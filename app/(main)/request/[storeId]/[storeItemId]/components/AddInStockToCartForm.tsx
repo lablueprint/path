@@ -1,18 +1,23 @@
 'use client';
 
 import Form from 'next/form';
+import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
 
 interface AddInStockToCartFormProps {
   storeId: string;
   storeItemId: string;
 }
-
 export default function AddInStockToCartForm({
   storeId,
   storeItemId,
 }: AddInStockToCartFormProps) {
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   const handleSubmit = async (formData: FormData) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     const actualQuantity = Number(formData.get('quantity'));
     const { error: err } = await addToCart(
       storeId,
@@ -20,7 +25,11 @@ export default function AddInStockToCartForm({
       actualQuantity,
     );
     if (err) {
-      console.error('Error fetching ticket:', err);
+      setErrorMessage('Failed to add in-stock item to cart: ' + err);
+      return;
+    } else {
+      setSuccessMessage('Item added to cart successfully!');
+      return;
     }
   };
 
@@ -41,6 +50,36 @@ export default function AddInStockToCartForm({
           Add to Cart
         </button>
       </Form>
+      {errorMessage && (
+        <div
+          style={{
+            backgroundColor: '#f8d7da',
+            color: '#721c24',
+            padding: '12px',
+            borderRadius: '5px',
+            marginBottom: '15px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
+      {successMessage && (
+        <div
+          style={{
+            backgroundColor: '#d4edda',
+            color: '#155724',
+            padding: '12px',
+            borderRadius: '5px',
+            marginBottom: '15px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
     </div>
   );
 }

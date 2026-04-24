@@ -28,6 +28,7 @@ export default function InStockTicketItemCard({
   const hasChanged = quantity !== savedQuantity;
 
   const handleSave = async () => {
+    setErrorMessage('');
     if (quantity < 1) {
       setErrorMessage('Please input a number greater than 0.');
       return;
@@ -36,7 +37,7 @@ export default function InStockTicketItemCard({
     const result = await updateTicketItemQuantity(ticketItemId, quantity);
 
     if (!result.success) {
-      console.error('Error changing ticket item quantity:', result.error);
+      setErrorMessage('Failed to update ticket item quantity.' + result.error);
       return;
     }
 
@@ -68,7 +69,11 @@ export default function InStockTicketItemCard({
           }}
         />
       </label>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {errorMessage && (
+        <p role="alert" style={{ color: 'red' }}>
+          {errorMessage}
+        </p>
+      )}
       {hasChanged && (
         <>
           <button onClick={handleSave}>Save</button>
