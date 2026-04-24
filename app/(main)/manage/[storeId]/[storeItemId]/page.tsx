@@ -52,13 +52,15 @@ export default async function ManageStoreItemPage({
 
   return (
     <div>
-      <h1>{itemData.inventory_items.name}</h1>
-      <p>Description: {itemData.inventory_items.description}</p>
-      <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
-      <p>Subcategory: {itemData.inventory_items.subcategories.name}</p>
+      <h1>Edit</h1>
       <StoreItemForm
         storeId={storeId}
         storeItemId={storeItemId}
+        itemName={itemData.inventory_items.name}
+        categoryName={itemData.inventory_items.subcategories.categories.name}
+        subcategoryName={itemData.inventory_items.subcategories.name}
+        description={itemData.inventory_items.description}
+        photoUrl={itemData.inventory_items.photo_url}
         quantity={itemData.quantity_available ?? 0}
         visibility={itemData.is_hidden ?? false}
       />

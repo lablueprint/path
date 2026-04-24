@@ -1,0 +1,160 @@
+.card {
+  margin-top: 1.5rem;
+  padding: 3.5rem 3.75rem;
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.mediaColumn {
+  flex: 0 0 24.5rem;
+}
+
+.photoFrame {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.35rem;
+  overflow: hidden;
+  background: #dce9f7;
+}
+
+.photoImage,
+.placeholderImage {
+  width: 100%;
+  height: 100%;
+}
+
+.photoImage {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.placeholderImage {
+  background-color: #dce9f7;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160' fill='none'%3E%3Crect x='32' y='42' width='96' height='68' rx='4' stroke='white' stroke-width='8'/%3E%3Ccircle cx='104' cy='62' r='7' fill='white'/%3E%3Cpath d='M39 101L68 71L87 90L98 79L121 102' stroke='white' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 10rem 10rem;
+}
+
+.detailsColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-top: 1.5rem;
+  max-width: 26rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.fieldLabel {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.fieldValue {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.quantityInput {
+  width: 7.6rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #cfd6df;
+  border-radius: 0.35rem;
+  font: inherit;
+  line-height: 1.2;
+}
+
+.quantityInput::placeholder {
+  color: #9aa3af;
+  opacity: 1;
+}
+
+.quantityInput:focus {
+  outline: 2px solid rgba(111, 168, 220, 0.28);
+  outline-offset: 1px;
+}
+
+.checkboxRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: fit-content;
+}
+
+.checkboxInput {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+}
+
+.checkboxLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.descriptionText {
+  margin: 0;
+  max-width: 24rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.errorText {
+  margin: 0;
+  color: #c63d3d;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 991.98px) {
+  .card {
+    padding: 2rem;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .mediaColumn {
+    width: 100%;
+    max-width: 24rem;
+  }
+
+  .detailsColumn {
+    max-width: none;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card {
+    padding: 1.25rem;
+  }
+
+  .placeholderImage {
+    background-size: 7rem 7rem;
+  }
+
+  .quantityInput {
+    width: 100%;
+    max-width: 10rem;
+  }
+}
