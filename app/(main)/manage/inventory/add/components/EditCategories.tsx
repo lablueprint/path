@@ -16,9 +16,12 @@ type Subcategory = {
 };
 
 type Category = {
-  category_id: number;
+  category_id: string;
   name: string;
-  subcategories: Subcategory[];
+  subcategories: {
+    subcategory_id: string;
+    name: string;
+  }[];
 };
 
 export default function EditCategories({
@@ -31,9 +34,7 @@ export default function EditCategories({
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
 
-  const [addingSubcategory, setAddingSubcategory] = useState<number | null>(
-    null,
-  );
+  const [addingSubcategory, setAddingSubcategory] = useState<string | null>(null);
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
 
   const handleCreateCategory = async () => {
@@ -43,7 +44,7 @@ export default function EditCategories({
     setNewCategoryName('');
   };
 
-  const handleCreateSubcategory = async (categoryId: number) => {
+  const handleCreateSubcategory = async (categoryId: string) => {
     if (!newSubcategoryName.trim()) return;
 
     await createSubcategory({
@@ -174,7 +175,7 @@ function EditableField({
   name,
   type,
 }: {
-  id: number;
+  id: string;
   name: string;
   type: 'category' | 'subcategory';
 }) {

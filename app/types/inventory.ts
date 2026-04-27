@@ -18,7 +18,9 @@ export type Category = {
   }[];
 };
 
-export type CategoryInsert = Omit<Category, 'category_id'>;
+export type CategoryInsert = {
+  name: string;
+};
 export type CategoryUpdate = Partial<CategoryInsert>;
 
 export type Subcategory = {

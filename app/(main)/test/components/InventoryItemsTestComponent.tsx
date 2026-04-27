@@ -9,7 +9,7 @@ export default function InventoryItemsTestComponent() {
   const [inventoryIdToDelete, setInventoryIdToDelete] = useState('');
 
   const data: InventoryItemInsert = {
-    subcategory_id: 2, // changed from 1 -> 2 to make default case work w my specific db mods
+    subcategory_id: '2', // changed from 1 -> 2 to make default case work w my specific db mods
     name: 'test name',
     description: 'test description',
     photo_url: 'http://example.com/photo.jpg',

@@ -10,7 +10,7 @@ import {
 
 export default function CategoriesTestComponent() {
   const data: SubcategoryInsert = {
-    category_id: 1,
+    category_id: '1',
     name: 'sample subcategory',
   };
 
@@ -24,14 +24,14 @@ export default function CategoriesTestComponent() {
   };
 
   const handleUpdateSubcategory = async () => {
-    const result = await updateSubcategory(Number(subcategoryId), {
+    const result = await updateSubcategory(subcategoryId, {
       name: updatedName,
     });
     console.log('Update Subcategory Result:', result);
   };
 
   const handleDeleteSubcategory = async () => {
-    const result = await deleteSubcategory(Number(deleteSubcategoryId));
+    const result = await deleteSubcategory(deleteSubcategoryId);
     console.log('Delete Subcategory Result:', result);
   };
 
