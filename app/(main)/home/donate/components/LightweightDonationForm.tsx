@@ -3,7 +3,7 @@
 import { forwardRef, useState } from 'react';
 import { DonationInsert } from '@/app/types/donation';
 import { useForm, useWatch, Controller } from 'react-hook-form';
-import { PatternFormat, NumericFormat } from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 import { Form, Container, Card, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
@@ -89,7 +89,7 @@ export default function LightweightDonationForm({ storeNames }: Props) {
           ? data.business_contact_name ?? null
           : null,
 
-      donor_email: data.email ?? null,
+      donor_email: data.email,
       donor_phone: data.phone ?? null,
       donor_street_address: data.address ?? null,
 

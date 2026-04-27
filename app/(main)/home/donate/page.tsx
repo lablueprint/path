@@ -12,7 +12,6 @@ export default async function DonationPage() {
     console.error('Error fetching stores:', error);
   }
 
-  const storeNames = stores?.map((store: any) => store.name) || [];
-
+  const storeNames = stores?.map((store: { name: string }) => store.name) || [];
   return <LightweightDonationForm storeNames={storeNames} />;
 }
