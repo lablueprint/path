@@ -139,9 +139,7 @@ export default function EditCategories({
                       Save
                     </button>
 
-                    <button
-                      onClick={() => setNewSubcategoryName('')}
-                    >
+                    <button onClick={() => setNewSubcategoryName('')}>
                       Cancel
                     </button>
                   </>
