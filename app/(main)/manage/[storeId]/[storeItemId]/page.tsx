@@ -1,7 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
-import Image from 'next/image';
-import defaultItemPhoto from '@/public/default-profile-picture.png';
+import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
 
 export default async function ManageStoreItemPage({
   params,
@@ -35,7 +34,7 @@ export default async function ManageStoreItemPage({
         inventory_items: {
           name: string;
           description: string;
-          photo_url: string;
+          photo_url: string | null;
           subcategories: {
             name: string;
             categories: {
@@ -71,6 +70,7 @@ export default async function ManageStoreItemPage({
         quantity={itemData.quantity_available ?? 0}
         visibility={itemData.is_hidden ?? false}
       />
+      <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
     </div>
   );
 }

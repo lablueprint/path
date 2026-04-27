@@ -23,16 +23,8 @@ export default function ItemCard({
 }: ItemCardProps) {
   const pathname = usePathname();
   return (
-    <Link className={styles['card-text']} href={`${pathname}/${id}`}>
-      <div className={styles['card']}>
-        <Image
-          src={photoUrl || defaultItemPhoto}
-          alt={item} 
-          width={64}
-          height={64}
-          style={ {objectFit: 'cover'}}
-          unoptimized
-        />
+    <Link className={styles.cardText} href={`${pathname}/${id}`}>
+      <div className={styles.card}>
         <h3>{item}</h3>
         <p>Category: {category}</p>
         <p>Subcategory: {subcategory}</p>

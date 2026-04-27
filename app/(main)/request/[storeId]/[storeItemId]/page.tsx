@@ -1,13 +1,12 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import Image from 'next/image';
-import defaultItemPhoto from '@/public/default-profile-picture.png';
+import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
 
 export default async function RequestStoreItemPage({
   params,
 }: {
   params: Promise<{ storeId: string; storeItemId: string }>;
 }) {
-  const { storeItemId } = await params;
+  const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
 
@@ -33,7 +32,7 @@ export default async function RequestStoreItemPage({
         inventory_items: {
           name: string;
           description: string;
-          photo_url: string;
+          photo_url: string | null;
           subcategories: {
             name: string;
             categories: {
@@ -65,6 +64,7 @@ export default async function RequestStoreItemPage({
       <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
       <p>Subcategory: {itemData.inventory_items.subcategories.name}</p>
       <p>Quantity available: {itemData.quantity_available}</p>
+      <AddInStockToCartForm storeId={storeId} storeItemId={storeItemId} />
     </div>
   );
 }

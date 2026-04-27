@@ -156,6 +156,8 @@ export default function ProfileForm({ user }: { user: User }) {
         if (data.email !== user.email) {
           alert('Please check your new email address to verify the change.');
         }
+      } else {
+        console.error('Error updating profile:', result.error);
       }
     } catch (error) {
       console.error('Error saving profile:', error);

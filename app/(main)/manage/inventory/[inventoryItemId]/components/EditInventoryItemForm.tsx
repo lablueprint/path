@@ -1,15 +1,14 @@
 'use client';
 
-import type { InventoryItem, InventoryItemUpdate } from '@/app/types/inventory';
-import type { Category, Subcategory } from '@/app/types/inventory';
-import Image from 'next/image';
-import { useForm, useWatch } from 'react-hook-form';
-import { deleteItem } from '@/app/actions/inventory';
-import { useState, useRef, useEffect } from 'react';
+import { updateItem } from '@/app/actions/inventory';
 import { createClient } from '@/app/lib/supabase/browser-client';
-import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultItemPhoto from '@/public/default-profile-picture.png';
-import { useRouter } from 'next/navigation';
+import type {
+  Category,
+  InventoryItem,
+  Subcategory,
+} from '@/app/types/inventory';
+import { useEffect, useState } from 'react';
+import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
 
 type FormValues = {
   name: string;
@@ -18,54 +17,51 @@ type FormValues = {
   selectedSubcategory: string;
 };
 
+const DEFAULT_PHOTO_URL = 'https://example.com/default-image.jpg';
+const supabase = createClient();
+
+function getDefaultValues(
+  item: InventoryItem & { category_id: string | undefined },
+): FormValues {
+  return {
+    name: item.name,
+    description: item.description,
+    selectedCategory: item.category_id ? String(item.category_id) : '',
+    selectedSubcategory: item.subcategory_id ? String(item.subcategory_id) : '',
+  };
+}
+
 export default function EditInventoryItemForm({
   item,
-  initialCategory,
+  initialCategories,
+  initialSubcategories,
 }: {
-  item: InventoryItem;
-  initialCategory: string;
+  item: InventoryItem & { category_id: string | undefined };
+  initialCategories: Category[];
+  initialSubcategories: Subcategory[];
 }) {
-  const router = useRouter();
-  const supabase = createClient();
-  const [isSaving, setIsSaving] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState<string | null>(
-    item.photo_url ?? null,
+  const [subcategories, setSubcategories] =
+    useState<Subcategory[]>(initialSubcategories);
+  const [initialValues, setInitialValues] = useState<FormValues>(() =>
+    getDefaultValues(item),
   );
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isPendingDelete, setIsPendingDelete] = useState(false);
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-
-  const photoUploadRef = useRef<{ resetFile: () => void }>(null);
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { isDirty },
+    setValue,
+    trigger,
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<FormValues>({
-    defaultValues: {
-      name: item.name,
-      description: item.description,
-      selectedCategory: initialCategory,
-      selectedSubcategory: item.subcategory_id
-        ? String(item.subcategory_id)
-        : '',
-    },
+    defaultValues: getDefaultValues(item),
   });
 
-  const selectedCategory = useWatch({ control, name: 'selectedCategory' });
-
-  useEffect(() => {
-    async function fetchCategories() {
-      const { data, error } = await supabase.from('categories').select('*');
-      if (!error) setCategories(data);
-    }
-    fetchCategories();
-  }, []);
+  const selectedCategory = useWatch({
+    control,
+    name: 'selectedCategory',
+  });
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -73,248 +69,149 @@ export default function EditInventoryItemForm({
         setSubcategories([]);
         return;
       }
+
+      if (selectedCategory === String(item.category_id)) {
+        setSubcategories(initialSubcategories);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('subcategories')
         .select('*')
-        .eq('category_id', selectedCategory);
-      if (!error) setSubcategories(data);
+        .eq('category_id', Number(selectedCategory));
+
+      if (error) {
+        console.error('Error fetching subcategories:', error);
+        setSubcategories([]);
+        return;
+      }
+
+      setSubcategories(data ?? []);
     }
+
     fetchSubcategories();
-  }, [selectedCategory]);
+  }, [selectedCategory, item.category_id, initialSubcategories]);
 
-  const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
-    const preview = URL.createObjectURL(file);
-    setPreviewUrl(preview);
-    setSelectedFile(file);
-    setIsPendingDelete(false);
-  };
-
-  const handleRemovePhoto = () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(null);
-    setSelectedFile(null);
-    setIsPendingDelete(true);
-    photoUploadRef.current?.resetFile();
-  };
-
-  const onCancel = () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(null);
-    setSelectedFile(null);
-    setIsPendingDelete(false);
-    setPhotoUrl(item.photo_url ?? null);
-    photoUploadRef.current?.resetFile();
-    reset();
-  };
-
-  const onSubmit = async (data: FormValues) => {
-    setIsSaving(true);
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     try {
-      await supabase.auth.getUser();
-      let finalPhotoUrl = photoUrl;
+      const result = await updateItem(item.inventory_item_id, {
+        name: formData.name,
+        description: formData.description,
+        subcategory_id: formData.selectedSubcategory
+          ? Number(formData.selectedSubcategory)
+          : null,
+        photo_url: DEFAULT_PHOTO_URL,
+      });
 
-      const getOldPath = (url: string) => {
-        try {
-          const urlObj = new URL(url);
-          const parts = urlObj.pathname.split('/inventory_item_photos/');
-          return parts.length === 2 ? parts[1] : null;
-        } catch {
-          return null;
-        }
-      };
-
-      if (isPendingDelete) {
-        const oldPath = photoUrl ? getOldPath(photoUrl) : null;
-        if (oldPath) {
-          await supabase.storage
-            .from('inventory_item_photos')
-            .remove([oldPath]);
-        }
-        finalPhotoUrl = null;
+      if (!result.success) {
+        console.error('Failed to update inventory item:', result.error);
+        return;
       }
 
-      if (selectedFile) {
-        const oldPath = photoUrl ? getOldPath(photoUrl) : null;
-        if (oldPath) {
-          await supabase.storage
-            .from('inventory_item_photos')
-            .remove([oldPath]);
-        }
-
-        const uniqueFileName = `${Date.now()}-${selectedFile.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
-        const newFilePath = `${item.inventory_item_id}/${uniqueFileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('inventory_item_photos')
-          .upload(newFilePath, selectedFile, {
-            upsert: false,
-            contentType: selectedFile.type,
-          });
-
-        if (uploadError) {
-          console.error('Upload error:', uploadError.message);
-          setIsSaving(false);
-          return;
-        }
-
-        const { data: publicData } = supabase.storage
-          .from('inventory_item_photos')
-          .getPublicUrl(newFilePath);
-        finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
-      }
-
-      const changes: InventoryItemUpdate = {};
-      if (data.name !== item.name) changes.name = data.name;
-      if (data.description !== item.description)
-        changes.description = data.description;
-      if (data.selectedSubcategory !== String(item.subcategory_id ?? ''))
-        changes.subcategory_id = data.selectedSubcategory
-          ? Number(data.selectedSubcategory)
-          : null;
-      if (selectedFile || isPendingDelete) {
-        changes.photo_url = finalPhotoUrl;
-      }
-
-      const { error: updateError } = await supabase
-        .from('inventory_items')
-        .update(changes)
-        .eq('inventory_item_id', item.inventory_item_id);
-
-      if (updateError) {
-        console.error('Update error:', updateError.message);
-      } else {
-        setPhotoUrl(finalPhotoUrl);
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-        setPreviewUrl(null);
-        setSelectedFile(null);
-        setIsPendingDelete(false);
-        photoUploadRef.current?.resetFile();
-        reset({
-          name: data.name,
-          description: data.description,
-          selectedCategory: data.selectedCategory,
-          selectedSubcategory: data.selectedSubcategory,
-        });
-      }
+      setInitialValues(formData);
+      reset(formData);
     } catch (error) {
-      console.error('Error saving item:', error);
-    } finally {
-      setIsSaving(false);
+      console.error('Error submitting form:', error);
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to remove this inventory item?')) return;
-
-    if (photoUrl) {
-      try {
-        const urlObj = new URL(photoUrl);
-        const parts = urlObj.pathname.split('/inventory_item_photos/');
-        const oldPath = parts.length === 2 ? parts[1] : null;
-        if (oldPath) {
-          await supabase.storage
-            .from('inventory_item_photos')
-            .remove([oldPath]);
-        }
-      } catch (e) {
-        console.error('Failed to parse photo URL for deletion', e);
-      }
+  const handleCancel = () => {
+    if (initialValues.selectedCategory === String(item.category_id)) {
+      setSubcategories(initialSubcategories);
     }
-
-    const result = await deleteItem(item.inventory_item_id);
-    if (result.success) {
-      router.push('/manage/inventory');
-    } else {
-      console.error('Error deleting item:', result.error);
-    }
+    reset(initialValues, { keepErrors: false });
   };
 
-  const displayImage = isPendingDelete
-    ? defaultItemPhoto.src
-    : previewUrl || photoUrl || defaultItemPhoto.src;
-
-  const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
+  const categoryField = register('selectedCategory', {
+    onChange: () => {
+      setValue('selectedSubcategory', '', {
+        shouldDirty: true,
+        shouldValidate: false,
+      });
+    },
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Image
-        src={displayImage}
-        alt="Item photo"
-        width={64}
-        height={64}
-        style={{ objectFit: 'cover' }}
-        unoptimized
-      />
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label>
+          Inventory item name
+          <input
+            type="text"
+            {...register('name', { required: 'Item name is required.' })}
+          />
+        </label>
+        {errors.name && <p role="alert">{errors.name.message}</p>}
+        <br />
 
-      {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
-        <button type="button" onClick={handleRemovePhoto}>
-          Remove
-        </button>
-      )}
+        <label>
+          Description
+          <input
+            type="text"
+            {...register('description', {
+              required: 'Description is required.',
+            })}
+          />
+        </label>
+        {errors.description && <p role="alert">{errors.description.message}</p>}
+        <br />
 
-      <br />
-      <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-      <br />
+        <label>
+          Category
+          <select {...categoryField}>
+            <option value="">None</option>
+            {initialCategories.map((category) => (
+              <option key={category.category_id} value={category.category_id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
 
-      <label>
-        Inventory item name
-        <input type="text" {...register('name', { required: true })} />
-      </label>
-      <br />
-      <label>
-        Description
-        <input type="text" {...register('description', { required: true })} />
-      </label>
-      <br />
-      <label>
-        Category
-        <select {...register('selectedCategory')}>
-          <option value="">None</option>
-          {categories.map((cat) => (
-            <option key={cat.category_id} value={cat.category_id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      {!!selectedCategory && (
-        <>
-          <br />
-          <label>
-            Subcategory
-            <select {...register('selectedSubcategory')}>
-              <option value="">None</option>
-              {subcategories.map((sub) => (
-                <option key={sub.subcategory_id} value={sub.subcategory_id}>
-                  {sub.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </>
-      )}
-      <br />
+        {!!selectedCategory && (
+          <>
+            <br />
+            <label>
+              Subcategory
+              <select
+                {...register('selectedSubcategory', {
+                  required: 'Subcategory is required.',
+                  onChange: () => trigger('selectedSubcategory'),
+                })}
+              >
+                <option value="">None</option>
+                {subcategories.map((subcategory) => (
+                  <option
+                    key={subcategory.subcategory_id}
+                    value={subcategory.subcategory_id}
+                  >
+                    {subcategory.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {errors.selectedSubcategory && (
+              <p role="alert">{errors.selectedSubcategory.message}</p>
+            )}
+          </>
+        )}
 
-      {hasDirtyTextOrImage && (
-        <>
-          <button type="submit" disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" onClick={onCancel} disabled={isSaving}>
-            Cancel
-          </button>
-        </>
-      )}
-
-      <br />
-      <button type="button" onClick={handleDelete}>
-        Remove inventory item
-      </button>
-    </form>
+        {isDirty && (
+          <>
+            <br />
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Save'}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+          </>
+        )}
+      </form>
+    </div>
   );
 }
