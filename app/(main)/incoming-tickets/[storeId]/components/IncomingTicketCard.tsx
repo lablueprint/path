@@ -1,11 +1,10 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import '@/app/globals.css';
+import { usePathname, useRouter } from 'next/navigation';
+import styles from '@/app/(main)/incoming-tickets/[storeId]/components/Ticket.module.css';
 
 type IncomingTicketCardProps = {
-  id: string;
+  ticketId: string;
   requestorFirstName: string;
   requestorLastName: string;
   status: string;
@@ -13,28 +12,33 @@ type IncomingTicketCardProps = {
 };
 
 export default function IncomingTicketCard({
-  id,
+  ticketId,
   requestorFirstName,
   requestorLastName,
   status,
   date,
 }: IncomingTicketCardProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
   // Display requestor's name, status, and date submitted
   return (
-    <Link className="ticket-card-text" href={`${pathname}/${id}`}>
-      <div className="ticket-card">
-        <h3>Ticket ID: {id}</h3>
-        <p>
-          <strong>Requestor:</strong> {requestorFirstName} {requestorLastName}
-        </p>
-        <p>
-          <strong>Status:</strong> {status}
-        </p>
-        <p>
-          <strong>Date submitted:</strong> {new Date(date).toLocaleDateString()}
-        </p>
-      </div>
-    </Link>
+    <tr
+      onClick={() => router.push(`${pathname}/${ticketId}`)}
+      style={{ cursor: 'pointer' }}
+    >
+      <td>{ticketId}</td>
+      <td>
+        {requestorFirstName} {requestorLastName}
+      </td>
+
+      <td>
+        <span className={styles.statusBubble}>
+          {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+        </span>
+      </td>
+
+      <td>{new Date(date).toLocaleString()}</td>
+    </tr>
   );
 }

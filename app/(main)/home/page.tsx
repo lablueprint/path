@@ -1,22 +1,34 @@
-'use client';
-import { createClient } from '@/app/lib/supabase/browser-client';
-import { useRouter } from 'next/navigation';
+import ActionButton from '@/app/(main)/home/components/ActionButton';
+import { createClient } from '@/app/lib/supabase/server-client';
 
-export default function HomePage() {
-  const router = useRouter();
-  const supabase = createClient();
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Sign-out error:', error.message);
-    }
-    router.push('/home');
+export default async function HomePage() {
+  const supabase = await createClient();
+
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
+
+  if (claimsError) {
+    console.error('Error fetching claims:', claimsError);
   }
 
+  const userRole = claimsData?.claims?.user_role;
+
   return (
-    <div>
+    <>
       <h1>Home</h1>
-      <button onClick={signOut}>Sign out</button>
-    </div>
+      <ActionButton text="Donate" url="/home/donate" />
+
+      {['requestor', 'admin', 'superadmin', 'owner'].includes(
+        userRole ?? '',
+      ) && <ActionButton text="Request Inventory" url="/request" />}
+
+      {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
+        <ActionButton text="Manage Inventory" url="/manage" />
+      )}
+
+      {['superadmin', 'owner'].includes(userRole ?? '') && (
+        <ActionButton text="HQ" url="/hq" />
+      )}
+    </>
   );
 }

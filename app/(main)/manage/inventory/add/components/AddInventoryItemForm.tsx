@@ -1,8 +1,9 @@
 'use client';
+
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { InventoryItem, Subcategory, Category } from '@/app/types/inventory';
+import { Subcategory, Category } from '@/app/types/inventory';
 import { createItem } from '@/app/actions/inventory';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, useWatch, SubmitHandler } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 
 type Inputs = {
@@ -12,18 +13,23 @@ type Inputs = {
   selectedSubcategory: string;
 };
 
+const supabase = createClient();
+
 export default function AddInventoryItemForm() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     reset,
     formState: { errors },
   } = useForm<Inputs>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const supabase = createClient();
-  const selectedCategory = watch('selectedCategory');
+
+  const selectedCategory = useWatch({
+    control,
+    name: 'selectedCategory',
+  });
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
     try {
@@ -38,7 +44,6 @@ export default function AddInventoryItemForm() {
       if (result.success) {
         // Reset form fields after successful submission
         reset();
-        console.log('Item created successfully:', result.data);
       } else {
         console.error('Failed to create item:', result.error);
       }
@@ -59,7 +64,7 @@ export default function AddInventoryItemForm() {
       }
     }
     fetchCategories();
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -78,7 +83,7 @@ export default function AddInventoryItemForm() {
       }
     }
     fetchSubcategories();
-  }, [selectedCategory, supabase]);
+  }, [selectedCategory]);
 
   return (
     <div>
@@ -113,7 +118,7 @@ export default function AddInventoryItemForm() {
         {errors.selectedCategory?.type === 'required' && (
           <p role="alert">Category is required.</p>
         )}
-        {selectedCategory !== '' && (
+        {!!selectedCategory && (
           <>
             <br></br>
             <label>

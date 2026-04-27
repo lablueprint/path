@@ -1,12 +1,13 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
+import Link from 'next/link';
 
 export default async function RequestPage() {
   const supabase = await createClient();
   // get all stores from the stores table
   const { data: storesData, error: err } = await supabase
     .from('stores')
-    .select('store_id, name, street_address');
+    .select('*');
 
   if (err) {
     console.error('Error fetching stores:', err);
@@ -17,6 +18,9 @@ export default async function RequestPage() {
   return (
     <div>
       <h1>Request Inventory</h1>
+      <Link href="/request/all">
+        <p>All Stores</p>
+      </Link>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (

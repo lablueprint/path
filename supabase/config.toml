@@ -74,6 +74,7 @@ schema_paths = [
   "./schemas/tickets.sql",
   "./schemas/ticket_items.sql",
   "./schemas/donations.sql",
+  "./schemas/functions/handle_ticket_fulfillment.sql",
   "./schemas/*.sql",
   "./schemas/functions/*.sql"
 ]
@@ -152,6 +153,17 @@ file_size_limit = "50MiB"
 # file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
 # objects_path = "./images"
+
+[storage.buckets.profile_photos]
+public = true
+file_size_limit = "200KB"
+allowed_mime_types = ["image/png", "image/jpeg"]
+
+[storage.buckets.store_photos]
+public = true
+file_size_limit = "200KB"
+allowed_mime_types = ["image/png", "image/jpeg"]
+
 
 [auth]
 enabled = true
@@ -404,3 +416,4 @@ s3_region = "env(S3_REGION)"
 s3_access_key = "env(S3_ACCESS_KEY)"
 # Configures AWS_SECRET_ACCESS_KEY for S3 bucket
 s3_secret_key = "env(S3_SECRET_KEY)"
+

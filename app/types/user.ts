@@ -3,12 +3,13 @@ export type UserRole = {
   user_id: string;
   role_id: number;
 };
+
 export type User = {
   user_id: string;
   first_name: string;
   last_name: string;
   email: string;
-  profile_photo_url: string;
+  profile_photo_url: string | null;
 };
 
-export type UserUpdate = Omit<User, 'user_id'>;
+export type UserUpdate = Partial<Omit<User, 'user_id'>>;

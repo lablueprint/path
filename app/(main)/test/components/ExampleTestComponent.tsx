@@ -5,9 +5,10 @@ import { Example } from '@/app/types/example';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useEffect, useState } from 'react';
 
+const supabase = createClient();
+
 export default function ExampleTestComponent() {
   const [people, setPeople] = useState<Example[] | null>(null);
-  const supabase = createClient();
 
   useEffect(() => {
     const getData = async () => {
