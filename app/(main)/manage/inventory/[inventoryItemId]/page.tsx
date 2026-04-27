@@ -1,7 +1,6 @@
 import DeleteInventoryItemButton from '@/app/(main)/manage/inventory/[inventoryItemId]/components/DeleteInventoryItemButton';
 import EditInventoryItemForm from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm';
 import { createClient } from '@/app/lib/supabase/server-client';
-import EditInventoryItemForm from './components/EditInventoryItemForm';
 
 export default async function InventoryItemPage({
   params,
@@ -45,7 +44,6 @@ export default async function InventoryItemPage({
         subcategories: {
           category_id: number;
           name: string;
-          category_id: string;
           categories: {
             name: string;
           };
@@ -73,7 +71,9 @@ export default async function InventoryItemPage({
     name: data.name,
     description: data.description,
     photo_url: data.photo_url,
-    category_id: data.subcategories?.category_id,
+    category_id: data.subcategories?.category_id != null
+      ? String(data.subcategories.category_id)
+      : undefined,
   };
 
   const categoryName = data.subcategories?.categories?.name ?? 'None';
