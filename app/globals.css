@@ -34,6 +34,27 @@ p {
   font-size: 1rem;
 }
 
+th {
+  text-transform: uppercase;
+}
+
+tr {
+  height: 80px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+Table {
+  margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: #e5f3ff !important;
+  font-weight: 500;
+}
+
 .main-container {
   margin-left: 18rem;
   padding: 3rem;
@@ -42,17 +63,6 @@ p {
 
 .main {
   display: flex;
-}
-
-.ticket-card {
-  border: 0px;
-  padding: 24px;
-  margin-bottom: 24px;
-}
-
-.ticket-card-text {
-  text-decoration: none;
-  color: black;
 }
 
 /* ── white card container ── */
