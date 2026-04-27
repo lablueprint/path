@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Dropdown from '@/app/(main)/team/people/[userId]/components/Dropdown';
+import Image from 'next/image';
 
 export default async function TeamProfilePage({
   params,
@@ -42,6 +43,13 @@ export default async function TeamProfilePage({
         }}
       />
 
+      <Image
+        src={user.profile_photo_url || '/default-profile-picture.png'}
+        alt={`Profile picture for ${user.first_name}`}
+        height={64}
+        width={64}
+        unoptimized
+      />
       <p>
         Name: {user.first_name || 'FirstName'} {user.last_name || 'LastName'}
       </p>

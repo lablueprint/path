@@ -1,8 +1,15 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
-import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
+import TicketItemsList from '@/app/(main)/components/TicketItemsList';
+import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
+import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
+import styles from '@/app/(main)/components/TicketDetails.module.css';
+import { Card } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Image from 'next/image';
+
+type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
 export default async function TicketDetails({
   ticketId,
@@ -32,49 +39,6 @@ export default async function TicketDetails({
     return <div>Failed to load data.</div>;
   }
 
-  let InStockTicketItems = [];
-  let OutOfStockTicketItems: {
-    ticket_item_id: string;
-    free_text_description: string | null;
-  }[] = [];
-  if (userTicket) {
-    const { data: inStockItemsData } = await supabase
-      .from('ticket_items')
-      .select(
-        `
-          *,
-          store_items(
-            quantity_available,
-            inventory_items(
-              name,
-              photo_url,
-              subcategories(
-                name,
-                categories(
-                  name
-                )
-              )
-            )
-          )
-        `,
-      )
-      .eq('ticket_id', ticketId)
-      .eq('is_in_stock_request', true);
-    InStockTicketItems = inStockItemsData || [];
-
-    const { data: outOfStockItemsData } = await supabase
-      .from('ticket_items')
-      .select(
-        `
-          ticket_item_id,
-          free_text_description
-        `,
-      )
-      .eq('ticket_id', ticketId)
-      .eq('is_in_stock_request', false);
-    OutOfStockTicketItems = outOfStockItemsData || [];
-  }
-
   const store = userTicket.stores as unknown as {
     name: string;
     street_address: string;
@@ -100,82 +64,141 @@ export default async function TicketDetails({
     storeAdminsList = (storeAdminsData || [])
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
-  } else {
-    if (userTicket) {
-      const { data: requestorData } = await supabase
-        .from('users')
-        .select()
-        .eq('user_id', userTicket.requestor_user_id)
-        .single();
-      requestor = requestorData;
-    }
   }
+
+  if (userTicket) {
+    const { data: requestorData } = await supabase
+      .from('users')
+      .select()
+      .eq('user_id', userTicket.requestor_user_id)
+      .single();
+    requestor = requestorData;
+  }
+
+  const getOutgoingStatusOptions = (status: TicketStatus): TicketStatus[] => {
+    switch (status) {
+      case 'requested':
+        return ['requested'];
+      case 'ready':
+        return ['ready', 'fulfilled'];
+      case 'rejected':
+        return ['rejected'];
+      case 'fulfilled':
+        return ['fulfilled'];
+      default:
+        return [status];
+    }
+  };
+
+  const getIncomingStatusOptions = (status: TicketStatus): TicketStatus[] => {
+    switch (status) {
+      case 'requested':
+        return ['requested', 'ready', 'rejected'];
+      case 'ready':
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
+      case 'rejected':
+        return ['requested', 'ready', 'rejected', 'fulfilled'];
+      case 'fulfilled':
+        return ['fulfilled'];
+      default:
+        return [status];
+    }
+  };
+
+  const statusOptions = outgoing
+    ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
+    : getIncomingStatusOptions(userTicket.status as TicketStatus);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${month}-${day}-${year}`;
+  };
 
   return (
     <div>
       {userTicket ? (
         <div>
-          <h1>{outgoing ? 'Outgoing' : 'Incoming'} Ticket Details</h1>
-          <p>Ticket ID: {userTicket.ticket_id}</p>
-          <p>Date submitted: {userTicket.date_submitted}</p>
-          <p>Store: {store.name} </p>
-          <p>Store address: {store.street_address}</p>
-          <p>Status: {userTicket.status}</p>
-          {outgoing ? (
-            <div>
-              <h2>Contact Store Admins</h2>
-              {storeAdminsList.map((storeAdmin) => (
-                <UserCard user={storeAdmin} key={storeAdmin.user_id}></UserCard>
-              ))}
+          {/*Header Card*/}
+          <Card className={styles.headerCard}>
+            <Image
+              src={
+                requestor?.profile_photo_url || '/default-profile-picture.png'
+              }
+              alt={`Profile picture for ${requestor?.first_name}`}
+              className={styles.profilePicture}
+              width={95}
+              height={95}
+              unoptimized
+            ></Image>
+            <div className={styles.headerCardText}>
+              <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
+              <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
+              <h2>Ticket #{userTicket.ticket_id}</h2>
             </div>
-          ) : (
-            <div>
-              <h2>Contact Requestor</h2>
-              <UserCard user={requestor}></UserCard>
+            {!outgoing ? (
+              <Button
+                as="a"
+                className={styles.contactButton}
+                href={
+                  requestor?.email ? `mailto:${requestor.email}` : undefined
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                disabled={!requestor?.email}
+              >
+                Contact
+              </Button>
+            ) : null}
+          </Card>
+
+          <div>
+            <p>Status: </p>
+            <TicketStatusDropdown
+              ticketId={userTicket.ticket_id}
+              currentStatus={userTicket.status as TicketStatus}
+              statusOptions={statusOptions}
+            />
+          </div>
+
+          <DeleteTicketButton ticketId={userTicket.ticket_id} />
+
+          <div className={styles.ticketContentLayout}>
+            <div className={styles.ticketContentLeft}>
+              <TicketItemsList ticketId={userTicket.ticket_id} />
             </div>
-          )}
-          {InStockTicketItems.length > 0 ? (
-            <div>
-              <h2>In-Stock Requests</h2>
-              <div>
-                {InStockTicketItems.map((item) => (
-                  <InStockTicketItemCard
-                    key={item.ticket_item_id}
-                    ticketItemId={item.ticket_item_id}
-                    quantityRequested={item.quantity_requested}
-                    quantityAvailable={item.store_items.quantity_available}
-                    itemName={item.store_items.inventory_items.name}
-                    photoUrl={
-                      item.store_items.inventory_items.photo_url || null
-                    }
-                    subcategoryName={
-                      item.store_items?.inventory_items?.subcategories?.name
-                    }
-                    categoryName={
-                      item.store_items?.inventory_items?.subcategories
-                        ?.categories?.name
-                    }
-                  />
-                ))}
+
+            <div className={styles.ticketContentRight}>
+              {outgoing && (
+                <div className={styles.adminCard}>
+                  <h2>CONTACT STORE ADMINS</h2>
+                  {storeAdminsList.map((storeAdmin) => (
+                    <UserCard
+                      className={styles.userCard}
+                      noBottomMargin
+                      user={storeAdmin}
+                      key={storeAdmin.user_id}
+                    ></UserCard>
+                  ))}
+                </div>
+              )}
+
+              <div className={styles.adminCard}>
+                <h2>TICKET LOCATION</h2>
+                <div className={styles.locationCardContent}>
+                  <p>
+                    <strong>Store:</strong> {store.name}
+                  </p>
+                  <p>
+                    <strong>Store Address:</strong> {store.street_address}
+                  </p>
+                </div>
               </div>
             </div>
-          ) : null}
-          {OutOfStockTicketItems.length > 0 ? (
-            <div>
-              <h2>Out-of-Stock Requests</h2>
-              <div>
-                {OutOfStockTicketItems.map((item) => (
-                  <OutOfStockTicketItemCard
-                    key={item.ticket_item_id}
-                    ticketItemId={item.ticket_item_id}
-                    freeTextDescription={
-                      item.free_text_description || 'No description'
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null}
+          </div>
         </div>
       ) : (
         <p>No ticket found.</p>

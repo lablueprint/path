@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { createStoreAdmin } from '@/app/actions/store';
 import { User } from '@/app/types/user';
+import UserCard from '@/app/(main)/components/UserCard';
 
 const supabase = createClient();
 
@@ -19,7 +20,7 @@ export default function AddAdminSearch({
 
   // search filtering
   useEffect(() => {
-    async function fetchSearchData() {
+    const timeout = setTimeout(async () => {
       const d = search.trim();
       if (!d) {
         setSearchData([]);
@@ -40,38 +41,39 @@ export default function AddAdminSearch({
       );
 
       setSearchData(filtered);
-    }
+    }, 300);
 
-    fetchSearchData();
+    // returning a cleanup function to clear previous timeouts
+    return () => clearTimeout(timeout);
   }, [search, existingAdminUserIds]);
 
   return (
     <div>
       {/* searching */}
-      <label>Find users by name</label>
-      <input
-        id="search"
-        placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <div style={{ marginBottom: '20px' }}>
+        <label>Find users by name</label>
+        <input
+          id="search"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
       {/* search results */}
-      <ul>
-        {searchData.map((u) => (
-          <li key={u.user_id}>
-            {u.first_name} {u.last_name}
-            <button
-              type="button"
-              onClick={() =>
-                createStoreAdmin({ user_id: u.user_id, store_id: storeId })
-              }
-            >
-              Add admin
-            </button>
-          </li>
-        ))}
-      </ul>
+      {searchData.map((u) => (
+        <div key={u.user_id} style={{ marginBottom: '40px' }}>
+          <UserCard user={u} noBottomMargin></UserCard>
+          <button
+            type="button"
+            onClick={() =>
+              createStoreAdmin({ user_id: u.user_id, store_id: storeId })
+            }
+          >
+            Add admin
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

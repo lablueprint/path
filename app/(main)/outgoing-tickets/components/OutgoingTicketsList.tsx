@@ -1,6 +1,7 @@
+'use client';
 import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
-
-type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
+import { useState } from 'react';
+import styles from '@/app/(main)/outgoing-tickets/components/OutgoingTicket.module.css';
 
 type Ticket = {
   ticket_id: string;
@@ -10,32 +11,53 @@ type Ticket = {
   stores: { name: string }[] | null;
 };
 
-export default async function OutgoingTicketsList({
+export default function OutgoingTicketsList({
   tickets,
-  status,
 }: {
   tickets: Ticket[];
-  status: Status;
 }) {
-  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
+  const [selectedStatus, setSelectedStatus] = useState<string>('All');
+  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
+  const filteredTickets =
+    selectedStatus === 'All'
+      ? tickets
+      : tickets.filter(
+          (ticket) => ticket.status === selectedStatus.toLowerCase(),
+        );
 
   return (
     <div>
-      <h2>{status.toUpperCase()} TICKETS</h2>
+      {/* Dropdown menu with status options */}
+      <div className="d-flex justify-content-end">
+        <select
+          className={`form-select w-auto ${styles.dropdown}`}
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+        >
+          {statusOptions.map((statusOption) => (
+            <option key={statusOption} value={statusOption}>
+              {statusOption}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {filteredTickets.length > 0 ? (
         <table
-          style={{
-            width: '100%',
-            tableLayout: 'fixed',
-            borderCollapse: 'collapse',
-          }}
+          className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}
         >
+          <colgroup>
+            <col className={styles.idCol} />
+            <col className={styles.storeCol} />
+            <col className={styles.statusCol} />
+            <col className={styles.dateCol} />
+          </colgroup>
           <thead>
             <tr>
-              <th style={{ width: '30%' }}>Ticket ID</th>
-              <th style={{ width: '20%' }}>Store Name</th>
-              <th style={{ width: '30%' }}>Status</th>
-              <th style={{ width: '20%' }}>Date Submitted</th>
+              <th>ID</th>
+              <th>STORE NAME</th>
+              <th>STATUS</th>
+              <th>DATE SUBMITTED</th>
             </tr>
           </thead>
           <tbody>
