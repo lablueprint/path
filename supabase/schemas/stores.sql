@@ -1,7 +1,8 @@
 create table "stores" (
   store_id uuid default uuid_generate_v4 () primary key,
   name text not null,
-  street_address text not null
+  street_address text not null,
+  photo_url text
 );
 
 alter table "stores"

@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { updateTicketItemQuantity } from '@/app/actions/ticket';
+import styles from '@/app/(main)/components/InStockTicketItemCard.module.css';
+import Image from 'next/image';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -50,31 +52,53 @@ export default function InStockTicketItemCard({
   };
 
   return (
-    <div>
-      <h3>{itemName}</h3>
+    <div className={styles.itemCard}>
+      <Image
+        className={styles.itemImage}
+        src={'/placeholder-item-picture.jpeg'}
+        alt={`Picture of ${itemName}`}
+        width={77}
+        height={77}
+        unoptimized
+      ></Image>
+      <div className={styles.textDescriptors}>
+        <h3>{itemName}</h3>
+        <div className={styles.metaRow}>
+          <p>
+            Category:{' '}
+            <span className={styles.descriptorValue}>{categoryName}</span>
+          </p>
+          <p>
+            Subcategory:{' '}
+            <span className={styles.descriptorValue}>{subcategoryName}</span>
+          </p>
+        </div>
+      </div>
       {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
-      <p>Category: {categoryName}</p>
-      <p>Subcategory: {subcategoryName}</p>
-      <p>Quantity available: {quantityAvailable}</p>
-      <label>
-        Quantity requested:{' '}
-        <input
-          type="number"
-          min={1}
-          value={quantity}
-          onChange={(e) => {
-            setQuantity(Number(e.target.value));
-            setErrorMessage('');
-          }}
-        />
-      </label>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
-      {hasChanged && (
-        <>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </>
-      )}
+      <div className={styles.numericalDescriptors}>
+        <div className={styles.quantityCard}>Qty: {quantityAvailable}</div>
+        <div className={styles.availabilityCard}>
+          <label>
+            Quantity requested:{' '}
+            <input
+              type="number"
+              min={1}
+              value={quantity}
+              onChange={(e) => {
+                setQuantity(Number(e.target.value));
+                setErrorMessage('');
+              }}
+            />
+          </label>
+        </div>
+        {errorMessage && <p role="alert">{errorMessage}</p>}
+        {hasChanged && (
+          <>
+            <button onClick={handleSave}>Save</button>
+            <button onClick={handleCancel}>Cancel</button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
