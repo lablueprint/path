@@ -15,7 +15,7 @@ export default async function OutgoingTicketDetailsPage({
       <Breadcrumbs
         labelMap={{
           'outgoing-tickets': 'Outgoing-Tickets',
-          [ticketId]: ticketId, // Keeping the ID as is per your request
+          [`/outgoing-tickets/${ticketId}`]: ticketId, // Keeping the ID as is per your request
         }}
       />
 

@@ -123,12 +123,11 @@ export default async function RequestStorePage({
 
   return (
     <div>
-      <Breadcrumbs labelMap={{ [storeId]: store.name }} />
+      <Breadcrumbs labelMap={{ [`/request/${storeId}`]: store.name }} />{' '}
       <div>
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>
       </div>
-
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
@@ -142,9 +141,7 @@ export default async function RequestStorePage({
           })) || []
         }
       />
-
       <h2>Available Items</h2>
-
       {items && items.length > 0 ? (
         <div>
           {items.map((item) => (

@@ -63,8 +63,8 @@ export default async function RequestStoreItemPage({
     <div>
       <Breadcrumbs
         labelMap={{
-          [storeId]: store?.name ?? 'Store',
-          [storeItemId]: itemData.inventory_items.name,
+          [`/request/${storeId}`]: store?.name ?? 'Store',
+          [`/request/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
         }}
       />
       <h1>{itemData.inventory_items.name}</h1>

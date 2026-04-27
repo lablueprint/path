@@ -48,7 +48,10 @@ export default function Breadcrumbs({ labelMap = {} }: BreadcrumbsProps) {
 
   const crumbs = visibleCrumbs.map((crumb, index) => {
     const isLast = index === visibleCrumbs.length - 1;
-    const label = labelMap[crumb.segment] ?? formatLabel(crumb.segment);
+    const label =
+      labelMap[crumb.href] ??
+      labelMap[crumb.segment] ??
+      formatLabel(crumb.segment);
 
     return (
       <span key={crumb.href}>

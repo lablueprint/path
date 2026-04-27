@@ -36,9 +36,9 @@ export default async function TeamProfilePage({
     <div>
       <Breadcrumbs
         labelMap={{
-          team: 'Team',
-          people: 'People',
-          [userId]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
+          '/team': 'Team',
+          '/team/people': 'People',
+          [`/team/people/${userId}`]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
         }}
       />
 

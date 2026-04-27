@@ -38,8 +38,8 @@ export default async function UsersPage() {
     <div>
       <Breadcrumbs
         labelMap={{
-          team: 'Team',
-          people: 'People',
+          '/team': 'Team',
+          '/team/people': 'People',
         }}
       />
 
