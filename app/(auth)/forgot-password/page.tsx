@@ -1,5 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 
 type ForgotPasswordFormValues = {
@@ -8,7 +9,8 @@ type ForgotPasswordFormValues = {
 
 export default function ForgotPasswordPage() {
   const supabase = createClient();
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const {
     register,
     handleSubmit,
@@ -19,14 +21,19 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = async (values: ForgotPasswordFormValues) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+
     const { error } = await supabase.auth.resetPasswordForEmail(values.email);
 
     if (error) {
-      alert(error.message);
+      setErrorMessage('Failed to send reset password email: ' + error.message);
       return;
     }
 
-    alert('Instructions to reset your password have been sent to your email.');
+    setSuccessMessage(
+      'Instructions to reset your password have been sent to your email.',
+    );
   };
 
   return (
@@ -53,6 +60,9 @@ export default function ForgotPasswordPage() {
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Sending' : 'Reset password'}
         </button>
+
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       </form>
     </div>
   );

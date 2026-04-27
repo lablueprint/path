@@ -2,6 +2,7 @@
 
 import { deleteStoreItem } from '@/app/actions/store';
 import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function DeleteStoreItemButton({
   storeItemId,
@@ -10,15 +11,20 @@ export default function DeleteStoreItemButton({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   async function handleDelete() {
+    setErrorMessage('');
+    setSuccessMessage('');
     const result = await deleteStoreItem(storeItemId);
 
     if (!result.success) {
-      console.error('Failed to delete store item:', result.error);
+      setErrorMessage('Failed to delete store item.' + result.error);
       return;
     }
 
+    setSuccessMessage('Store item deleted successfully!');
     const targetPath = pathname.split('/').slice(0, -1).join('/') || '/';
 
     if (pathname === targetPath) {
@@ -30,8 +36,12 @@ export default function DeleteStoreItemButton({
   }
 
   return (
-    <button type="button" onClick={handleDelete}>
-      Remove item
-    </button>
+    <>
+      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
+      <button type="button" onClick={handleDelete}>
+        Remove item
+      </button>
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -16,18 +17,23 @@ export default function SignInPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const router = useRouter();
   const supabase = createClient();
 
   const onSubmit = async (formData: Inputs) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     const { error } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     });
     if (error) {
-      alert(error.message);
+      setErrorMessage('Failed to sign in: ' + error.message);
       return;
     }
+    setSuccessMessage('Signed in successfully! Redirecting...');
     router.push('/home');
   };
 
@@ -63,6 +69,8 @@ export default function SignInPage() {
       <Link href="/forgot-password">Forgot password?</Link>
       <br />
       <Link href="/sign-up">Sign up</Link>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
     </form>
   );
 }

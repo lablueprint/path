@@ -22,6 +22,8 @@ export default function SignUpPage() {
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const supabase = createClient();
   const router = useRouter();
   const passwordValue = useWatch({
@@ -30,6 +32,8 @@ export default function SignUpPage() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     setIsLoading(true);
     const { error } = await supabase.auth.signUp({
       email: formData.email,
@@ -43,10 +47,12 @@ export default function SignUpPage() {
     });
     setIsLoading(false);
     if (error) {
-      alert(error.message);
+      setErrorMessage('Failed to sign up: ' + error.message);
       return;
     }
-    router.push('/home');
+    setSuccessMessage(
+      'Account created successfully! Please check your email to confirm your account.',
+    );
   };
 
   return (
@@ -131,6 +137,8 @@ export default function SignUpPage() {
       </button>
       <br />
       <Link href="/sign-in">Sign in</Link>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
     </form>
   );
 }
