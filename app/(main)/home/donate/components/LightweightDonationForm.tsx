@@ -1,9 +1,18 @@
 'use client';
 
+import { forwardRef, useState } from 'react';
 import { DonationInsert } from '@/app/types/donation';
 import { useForm, useWatch, Controller } from 'react-hook-form';
-import { PatternFormat } from 'react-number-format';
+import { PatternFormat, NumericFormat } from 'react-number-format';
+import { Form, Container, Card, Alert } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
+import styles from '@/app/(main)/components/DonationForm.module.css';
+
+const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
+  (props, ref) => <Form.Control {...props} ref={ref} />,
+);
+BootstrapInput.displayName = 'BootstrapInput';
 
 type Props = {
   storeNames: string[];
@@ -30,18 +39,22 @@ type FormData = {
 };
 
 export default function LightweightDonationForm({ storeNames }: Props) {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+
   const {
     register,
     handleSubmit,
     control,
     reset,
     clearErrors,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
       phone: '',
       estimated_value: '',
+      receiving_site: 'None',
     },
   });
 
@@ -57,20 +70,23 @@ export default function LightweightDonationForm({ storeNames }: Props) {
       data.receiving_site === 'None' || !data.receiving_site
         ? 'Headquarters'
         : data.receiving_site;
+
+    setShowSuccess(false);
+
     const donation: DonationInsert = {
       donor_is_individual: data.donor_type === 'individual',
 
       donor_individual_name:
         data.donor_type === 'individual'
-          ? (data.individual_name ?? null)
+          ? data.individual_name ?? null
           : null,
 
       donor_business_name:
-        data.donor_type === 'business' ? (data.business_name ?? null) : null,
+        data.donor_type === 'business' ? data.business_name ?? null : null,
 
       donor_business_contact_name:
         data.donor_type === 'business'
-          ? (data.business_contact_name ?? null)
+          ? data.business_contact_name ?? null
           : null,
 
       donor_email: data.email ?? null,
@@ -81,17 +97,22 @@ export default function LightweightDonationForm({ storeNames }: Props) {
       donor_receive_mailings: data.receive_mailings,
       donor_remain_anonymous: data.remain_anonymous,
 
-      estimated_value: parseFloat(data.estimated_value),
+      estimated_value:
+        parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) || 0,
       items_donated: data.items_donated,
-      receiving_site: finalReceivingSite,
+
+      store_name: finalReceivingSite,
+
       receiver_first_name: 'FIRST-NAME',
       receiver_last_name: 'LAST-NAME',
     };
 
     const result = await createDonation(donation);
 
-    // Reset all fields to empty/default values
     if (result.success) {
+      setShowSuccess(true);
+      setResetKey((k) => k + 1);
+
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -107,6 +128,7 @@ export default function LightweightDonationForm({ storeNames }: Props) {
         estimated_value: '',
         items_donated: '',
       });
+
       clearErrors();
     } else {
       console.error('Failed to create donation:', result.error);
@@ -114,360 +136,135 @@ export default function LightweightDonationForm({ storeNames }: Props) {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: '600px',
-        margin: '0 auto',
-        padding: '20px',
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        fontFamily: 'Arial, sans-serif',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1rem',
-          marginTop: '20px',
-          marginBottom: '20px',
-          justifyContent: 'center',
-        }}
-      >
-        <h1 style={{ margin: 0 }}>Donation Form</h1>
-      </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
-      >
-        {/* Receiving Site */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Receiving site
-          </label>
-          <select
-              {...register('receiving_site')}
-              defaultValue="None"
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ccc',
-              }}
-          >
-             {receivingSiteOptions.map((site) => (
-                <option key={site} value={site}>
-                  {site}
-                </option>
-              ))}
-          </select>
-        </div>
+    <Container className={styles.formContainer}>
+      <Card className={styles.formCard}>
+        <Card.Body>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.formBody}>
+            <div className={styles.formSection}>
+              <h1 className={styles.formTitle1}>Store Information</h1>
 
-        {/* Donor Type */}
-        <Controller
-          name="donor_type"
-          control={control}
-          rules={{ required: 'Please select a donor type' }}
-          render={({ field }) => (
-            <>
-              <label>
-                <input
+              <Form.Group className={styles.receivingSiteGroup}>
+                <Form.Label className={styles.fieldLabel}>
+                  Receiving site
+                </Form.Label>
+
+                <Form.Select {...register('receiving_site')}>
+                  {receivingSiteOptions.map((site) => (
+                    <option key={site} value={site}>
+                      {site}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </div>
+
+            <h1 className={styles.formTitle2}>Donor Information</h1>
+
+            <Form.Group>
+              <div className={styles.radioRow}>
+                <Form.Check
                   type="radio"
+                  label="Individual"
                   value="individual"
-                  checked={field.value === 'individual'}
-                  onChange={() => field.onChange('individual')}
-                />{' '}
-                Individual
-              </label>
-              <label>
-                <input
+                  {...register('donor_type', {
+                    required: 'Please select a donor type',
+                  })}
+                />
+                <Form.Check
                   type="radio"
+                  label="Business"
                   value="business"
-                  checked={field.value === 'business'}
-                  onChange={() => field.onChange('business')}
-                />{' '}
-                Business
-              </label>
+                  {...register('donor_type', {
+                    required: 'Please select a donor type',
+                  })}
+                />
+              </div>
               {errors.donor_type && (
-                <p style={{ color: 'red' }}>{errors.donor_type.message}</p>
+                <Form.Text className={styles.errorText}>
+                  {errors.donor_type.message}
+                </Form.Text>
               )}
-            </>
-          )}
-        />
+            </Form.Group>
 
-        {/* Conditional Name Field: Individual */}
-        {donorType === 'individual' && (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-              Individual Name
-            </label>
+            {donorType && (
+              <>
+                <Form.Group>
+                  <Form.Label className={styles.fieldLabel}>
+                    Donor Street Address
+                  </Form.Label>
+                  <Form.Control
+                    {...register('address', {
+                      required: 'Street address is required',
+                    })}
+                    isInvalid={!!errors.address}
+                  />
+                </Form.Group>
 
-            <input
-              {...register('individual_name', {
-                required: 'Individual name is required',
-              })}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ccc',
-              }}
-            />
-
-            {errors.individual_name && (
-              <p style={{ color: 'red', marginTop: '5px' }}>
-                {errors.individual_name.message}
-              </p>
+                <Form.Group>
+                  <Form.Label className={styles.fieldLabel}>
+                    Donor Email
+                  </Form.Label>
+                  <Form.Control
+                    type="email"
+                    {...register('email', {
+                      required: 'Email is required',
+                    })}
+                    isInvalid={!!errors.email}
+                  />
+                </Form.Group>
+              </>
             )}
-          </div>
-        )}
-        {/* Conditional Name Field: Business */}
-        {donorType === 'business' && (
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-                Business Name
-              </label>
 
-              <input
-                {...register('business_name', {
-                  required: 'Business name is required',
+            <h1 className={styles.formTitle2}>Donation Information</h1>
+
+            <Form.Group>
+              <Form.Label className={styles.fieldLabel}>
+                Estimated value (USD)
+              </Form.Label>
+              <Controller
+                key={resetKey}
+                name="estimated_value"
+                control={control}
+                rules={{
+                  required: 'Estimated donation value is required',
+                }}
+                render={({ field }) => (
+                  <NumericFormat
+                    {...field}
+                    prefix="$"
+                    thousandSeparator=","
+                    decimalScale={2}
+                    fixedDecimalScale
+                    allowNegative={false}
+                    customInput={BootstrapInput}
+                  />
+                )}
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label className={styles.fieldLabel}>
+                Items donated
+              </Form.Label>
+              <Form.Control
+                {...register('items_donated', {
+                  required: 'Please enter the items you are donating',
                 })}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
               />
+            </Form.Group>
 
-              {errors.business_name && (
-                <p style={{ color: 'red', marginTop: '5px' }}>
-                  {errors.business_name.message}
-                </p>
-              )}
-            </div>
+            <button type="submit" className={styles.submitButton}>
+              Submit
+            </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-                Business Contact Name
-              </label>
-
-              <input
-                {...register('business_contact_name', {
-                  required: 'Business contact name is required',
-                })}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
-              />
-
-              {errors.business_contact_name && (
-                <p style={{ color: 'red', marginTop: '5px' }}>
-                  {errors.business_contact_name.message}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Email */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Donor Email
-          </label>
-          <input
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Please enter a valid email address',
-              },
-            })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-          {errors.email && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.email.message}
-            </p>
-          )}
-        </div>
-
-        {/* Phone */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Donor Phone Number (Optional)
-          </label>
-          <Controller
-            name="phone"
-            control={control}
-            rules={{
-              validate: (value) => {
-                const digits = value?.replace(/\D/g, '');
-                return (
-                  !digits ||
-                  digits.length === 10 ||
-                  'Phone number must be 10 digits'
-                );
-              },
-            }}
-            render={({ field }) => (
-              <PatternFormat
-                {...field}
-                format="(###) ###-####"
-                mask="_"
-                placeholder="(415) 555-1234"
-                allowEmptyFormatting
-                onValueChange={(values) => {
-                  // store digits only: "4155551234"
-                  field.onChange(values.value);
-                }}
-                style={{
-                  padding: '8px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                }}
-              />
+            {showSuccess && (
+              <Alert variant="success">
+                Form submitted successfully! Thank you for your donation.
+              </Alert>
             )}
-          />
-          {errors.phone && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.phone.message}
-            </p>
-          )}
-        </div>
-
-        {/* Street Address */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Donor Street Address
-          </label>
-          <input
-            {...register('address', { required: 'Street address is required' })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-          {errors.address && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.address.message}
-            </p>
-          )}
-        </div>
-
-        {/* Checkboxes */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-          <label>
-            <input type="checkbox" {...register('receive_emails')} /> Donor
-            receive emails?
-          </label>
-          <label>
-            <input type="checkbox" {...register('receive_mailings')} /> Donor
-            receive mailings?
-          </label>
-          <label>
-            <input type="checkbox" {...register('remain_anonymous')} /> Donor
-            remain anonymous?
-          </label>
-        </div>
-
-        {/* Estimated Value */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Estimated value (USD)
-          </label>
-
-          <input
-            type="text"
-            placeholder="1,234.00"
-            {...register('estimated_value', {
-              required: 'Estimated donation value is required',
-              pattern: {
-                value: /^\d+(\.\d{1,2})?$/,
-                message:
-                  'Please enter a valid dollar amount in the form 1234.56',
-              },
-            })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-
-          {errors.estimated_value && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.estimated_value.message}
-            </p>
-          )}
-        </div>
-
-        {/* Items Donated */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-            Items donated
-          </label>
-          <input
-            type="text"
-            placeholder="Describe the items you are donating"
-            {...register('items_donated', {
-              required: 'Please enter the items you are donating',
-              maxLength: {
-                value: 500,
-                message: 'Items description cannot exceed 500 characters',
-              },
-            })}
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
-          />
-          {errors.items_donated && (
-            <p style={{ color: 'red', marginTop: '5px' }}>
-              {errors.items_donated.message}
-            </p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          style={{
-            marginTop: '20px',
-            padding: '10px',
-            borderRadius: '5px',
-            border: 'none',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            fontWeight: 'bold',
-          }}
-        >
-          Submit
-        </button>
-
-        {isSubmitSuccessful && (
-          <div
-            style={{
-              backgroundColor: '#d4edda',
-              color: '#155724',
-              padding: '12px',
-              borderRadius: '5px',
-              marginBottom: '15px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}
-          >
-            Form submitted successfully! Thank you for your donation.
-          </div>
-        )}
-      </form>
-    </div>
+          </form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }

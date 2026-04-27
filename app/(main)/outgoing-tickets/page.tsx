@@ -28,22 +28,7 @@ export default async function OutgoingTicketsPage() {
   return (
     <div>
       <h1>Outgoing Tickets</h1>
-      <OutgoingTicketsList
-        tickets={userTickets}
-        status="requested"
-      ></OutgoingTicketsList>
-      <OutgoingTicketsList
-        tickets={userTickets}
-        status="ready"
-      ></OutgoingTicketsList>
-      <OutgoingTicketsList
-        tickets={userTickets}
-        status="rejected"
-      ></OutgoingTicketsList>
-      <OutgoingTicketsList
-        tickets={userTickets}
-        status="fulfilled"
-      ></OutgoingTicketsList>
+      <OutgoingTicketsList tickets={userTickets}></OutgoingTicketsList>
     </div>
   );
 }
