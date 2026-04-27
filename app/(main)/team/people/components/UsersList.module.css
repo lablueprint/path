@@ -1,0 +1,12 @@
+.userPfp {
+  margin-right: 10px;
+}
+.userLink,
+.userEmail {
+  color: #333;
+  text-decoration: none;
+}
+
+.userRole {
+  text-transform: uppercase;
+}
