@@ -109,21 +109,27 @@ export default function AddStoreForm() {
   const displayImage = previewUrl || defaultStorePhoto.src;
 
   return (
+    <div className="form-card">
+      <div className="card-body">
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <div>
+        <div className="mb-3">
           <Image
             src={displayImage}
             alt="Profile photo"
             width={64}
             height={64}
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: 'cover', marginBottom: '10px' }}
             unoptimized
           />
 
           {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
           {displayImage !== defaultStorePhoto.src && (
-            <button type="button" onClick={handleRemovePhoto}>
+            <button 
+              type="button" 
+              onClick={handleRemovePhoto}
+              className="btn-cancel"
+            >
               Remove
             </button>
           )}
@@ -132,17 +138,20 @@ export default function AddStoreForm() {
           <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
         </div>
 
-        <label>Store name</label>
-        <input {...register('storeName')} />
+        <div className="mb-3">
+          <label className="form-label field-label">Store name</label>
+          <input {...register('storeName')} className="form-control"/>
+        </div>
       </div>
 
-      <div>
-        <label>Store street address</label>
-        <input {...register('storeStreetAddress')} />
+      <div className="mb-3">
+        <label className="form-label field-label">Store street address</label>
+        <input {...register('storeStreetAddress')} className="form-control"/>
       </div>
 
+      <div style={{ display: 'flex', gap: '12px' }}>
       {bothFilled && (
-        <button type="submit" disabled={isSaving}>
+        <button type="submit" disabled={isSaving} className="btn-submit">
           Save
         </button>
       )}
@@ -150,6 +159,7 @@ export default function AddStoreForm() {
       {eitherFilled && (
         <button
           type="button"
+          className="btn-cancel"
           disabled={isSaving}
           onClick={() => {
             reset({ storeName: '', storeStreetAddress: '' });
@@ -161,6 +171,9 @@ export default function AddStoreForm() {
           Cancel
         </button>
       )}
+      </div>
     </form>
+    </div>
+    </div>
   );
 }

@@ -145,15 +145,15 @@ thead th {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: 1px solid #2d3748;
+  border: 1px solid #e2e8f0;
   border-radius: 5px;
-  background: transparent;
+  background: #f6f6f6;
   color: #2d3748;
   font-weight: 400;
   cursor: pointer;
 }
 
 .btn-cancel:hover {
-  background: #f7fafc;
+  background: #ededed;
   transition: background 0.2s ease;
 }
