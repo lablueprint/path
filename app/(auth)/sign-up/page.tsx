@@ -19,7 +19,7 @@ export default function SignUpPage() {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();

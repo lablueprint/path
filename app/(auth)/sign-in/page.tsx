@@ -14,7 +14,7 @@ export default function SignInPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const router = useRouter();
   const supabase = createClient();
@@ -56,7 +56,9 @@ export default function SignInPage() {
         <p role="alert">Password is required.</p>
       )}
       <br />
-      <button type="submit">Sign in</button>
+      <button type="submit">
+        {isSubmitting ? 'Signing In...' : 'Sign In'}
+      </button>
       <br />
       <Link href="/forgot-password">Forgot password?</Link>
       <br />
