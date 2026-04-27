@@ -10,10 +10,9 @@ add constraint uq_stores_name unique (name);
 
 alter table "stores" enable row level security;
 
-create policy "auth can read stores" on public.stores
-for select
-to authenticated
-using (true);
+create policy "auth can read stores" on public.stores for
+select
+  to authenticated using (true);
 
 create policy "auth can insert stores if >= superadmin" on public.stores for insert to authenticated
 with

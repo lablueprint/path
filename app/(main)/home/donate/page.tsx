@@ -4,9 +4,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 export default async function DonationPage() {
   const supabase = await createClient();
 
-  const { data: stores, error } = await supabase
-    .from('stores')
-    .select('name');
+  const { data: stores, error } = await supabase.from('stores').select('name');
 
   if (error) {
     console.error('Error fetching stores:', error);
