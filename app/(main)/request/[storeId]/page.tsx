@@ -147,7 +147,6 @@ export default async function RequestStorePage({
       <h2>Out-of-Stock Request</h2>
       <AddOutOfStockToCartForm storeId={storeId} />
       <h2>In-Stock Items</h2>
-
       {items && items.length > 0 ? (
         <div>
           {items.map((item) => (

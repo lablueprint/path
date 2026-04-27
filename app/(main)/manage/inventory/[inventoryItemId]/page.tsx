@@ -95,7 +95,7 @@ export default async function InventoryItemPage({
         labelMap={{
           manage: 'Manage',
           inventory: 'Inventory',
-          [inventoryItemId]: item.item ?? 'Item',
+          [inventoryItemId]: item.name ?? 'Item',
         }}
       />
       <h1>{item.name}</h1>
