@@ -157,3 +157,31 @@ thead th {
   background: #ededed;
   transition: background 0.2s ease;
 }
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.radio-row {
+  display: flex;
+  gap: 24px;
+}
+
+.two-col-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .two-col-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.submit-button-row {
+  display: flex;
+  gap: 12px;
+}
