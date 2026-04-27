@@ -34,7 +34,9 @@ export default function EditCategories({
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
 
-  const [addingSubcategory, setAddingSubcategory] = useState<string | null>(null);
+  const [addingSubcategory, setAddingSubcategory] = useState<string | null>(
+    null,
+  );
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
 
   const handleCreateCategory = async () => {
