@@ -37,7 +37,7 @@ export default async function InventoryItemPage({
     .overrideTypes<
       {
         inventory_item_id: string;
-        subcategory_id: number;
+        subcategory_id: string;
         name: string;
         description: string;
         photo_url: string | null;
