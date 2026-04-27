@@ -5,6 +5,10 @@ import { useForm, useWatch, Controller } from 'react-hook-form';
 import { PatternFormat } from 'react-number-format';
 import { createDonation } from '@/app/actions/donation';
 
+type Props = {
+  storeNames: string[];
+};
+
 type FormData = {
   donor_type?: 'individual' | 'business';
 
@@ -25,7 +29,7 @@ type FormData = {
   items_donated: string;
 };
 
-export default function LightweightDonationForm() {
+export default function LightweightDonationForm({ storeNames }: Props) {
   const {
     register,
     handleSubmit,
@@ -46,7 +50,13 @@ export default function LightweightDonationForm() {
     name: 'donor_type',
   });
 
+  const receivingSiteOptions = ['None', ...storeNames];
+
   const onSubmit = async (data: FormData) => {
+    const finalReceivingSite =
+      data.receiving_site === 'None' || !data.receiving_site
+        ? 'Headquarters'
+        : data.receiving_site;
     const donation: DonationInsert = {
       donor_is_individual: data.donor_type === 'individual',
 
@@ -73,7 +83,7 @@ export default function LightweightDonationForm() {
 
       estimated_value: parseFloat(data.estimated_value),
       items_donated: data.items_donated,
-
+      receiving_site: finalReceivingSite,
       receiver_first_name: 'FIRST-NAME',
       receiver_last_name: 'LAST-NAME',
     };
@@ -90,7 +100,7 @@ export default function LightweightDonationForm() {
         email: '',
         phone: '',
         address: '',
-        receiving_site: '',
+        receiving_site: 'None',
         receive_emails: false,
         receive_mailings: false,
         remain_anonymous: false,
@@ -136,20 +146,19 @@ export default function LightweightDonationForm() {
             Receiving site
           </label>
           <select
-            {...register('receiving_site')}
-            defaultValue=""
-            style={{
-              padding: '8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-            }}
+              {...register('receiving_site')}
+              defaultValue="None"
+              style={{
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+              }}
           >
-            <option value="" disabled>
-              Select a receiving site
-            </option>
-            <option value="path-site-1">PATH site 1</option>
-            <option value="path-site-2">PATH site 2</option>
-            <option value="path-site-3">PATH site 3</option>
+             {receivingSiteOptions.map((site) => (
+                <option key={site} value={site}>
+                  {site}
+                </option>
+              ))}
           </select>
         </div>
 
