@@ -188,28 +188,107 @@ export default function LightweightDonationForm({ storeNames }: Props) {
 
             {donorType && (
               <>
-                <Form.Group>
-                  <Form.Label className={styles.fieldLabel}>
-                    Donor Street Address
-                  </Form.Label>
-                  <Form.Control
-                    {...register('address', {
-                      required: 'Street address is required',
-                    })}
-                    isInvalid={!!errors.address}
-                  />
-                </Form.Group>
+                <div className={styles.twoColRow}>
+                  <div>
+                    {donorType === 'individual' && (
+                      <Form.Group controlId="individual_name">
+                        <Form.Label className={styles.fieldLabel}>
+                          Individual Name
+                        </Form.Label>
+                        <Form.Control
+                          {...register('individual_name', {
+                            required: 'Individual name is required',
+                          })}
+                          isInvalid={!!errors.individual_name}
+                        />
+                      </Form.Group>
+                    )}
 
-                <Form.Group>
-                  <Form.Label className={styles.fieldLabel}>
-                    Donor Email
-                  </Form.Label>
-                  <Form.Control
-                    type="email"
-                    {...register('email', {
-                      required: 'Email is required',
-                    })}
-                    isInvalid={!!errors.email}
+                    {donorType === 'business' && (
+                      <>
+                        <Form.Group controlId="business_name">
+                          <Form.Label className={styles.fieldLabel}>
+                            Business Name
+                          </Form.Label>
+                          <Form.Control
+                            {...register('business_name', {
+                              required: 'Business name is required',
+                            })}
+                            isInvalid={!!errors.business_name}
+                          />
+                        </Form.Group>
+
+                        <Form.Group controlId="business_contact_name">
+                          <Form.Label className={styles.fieldLabel}>
+                            Business Contact Name
+                          </Form.Label>
+                          <Form.Control
+                            {...register('business_contact_name', {
+                              required: 'Business contact name is required',
+                            })}
+                            isInvalid={!!errors.business_contact_name}
+                          />
+                        </Form.Group>
+                      </>
+                    )}
+                  </div>
+
+                  <div>
+                    <Form.Group controlId="address">
+                      <Form.Label className={styles.fieldLabel}>
+                        Donor Street Address
+                      </Form.Label>
+                      <Form.Control
+                        {...register('address', {
+                          required: 'Street address is required',
+                        })}
+                        isInvalid={!!errors.address}
+                      />
+                    </Form.Group>
+                  </div>
+                </div>
+
+                <div className={styles.twoColRow}>
+                  <div>
+                    <Form.Group controlId="email">
+                      <Form.Label className={styles.fieldLabel}>
+                        Donor Email
+                      </Form.Label>
+                      <Form.Control
+                        type="email"
+                        {...register('email', {
+                          required: 'Email is required',
+                        })}
+                        isInvalid={!!errors.email}
+                      />
+                    </Form.Group>
+                  </div>
+
+                  <div>
+                    <Form.Group controlId="phone">
+                      <Form.Label className={styles.fieldLabel}>
+                        Donor Phone Number (Optional)
+                      </Form.Label>
+                      <Form.Control {...register('phone')} />
+                    </Form.Group>
+                  </div>
+                </div>
+
+                <Form.Group className={styles.checkboxGroup}>
+                  <Form.Check
+                    type="checkbox"
+                    label="Donor receive emails?"
+                    {...register('receive_emails')}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    label="Donor receive mailings?"
+                    {...register('receive_mailings')}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    label="Donor remain anonymous?"
+                    {...register('remain_anonymous')}
                   />
                 </Form.Group>
               </>
