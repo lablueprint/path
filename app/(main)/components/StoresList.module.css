@@ -4,6 +4,12 @@
   margin-bottom: 16px;
 }
 
+.grid {
+  row-gap: 45px;
+  column-gap: 130px;
+  align-items: flex-start;
+}
+
 .table {
   width: 100%;
 }
@@ -18,18 +24,47 @@
 .tableHeader th {
   padding: 12px 16px;
   color: #4a5568;
+  text-align: left;
+  padding-left: 50px;
+  font-family: Montserrat;
+  font-size: 16.933px;
+  font-weight: 600;
 }
 
 .tableRow td {
   padding: 12px 16px;
+  text-align: left;
+  vertical-align: middle;
+  padding-left: 44.565px;
 }
 
 .tableRow {
-  border-radius: 5px;
+  height: 89.122px;
   background: #fff;
-  border-bottom: 1px solid #9ca3af;
+  border-bottom: 0.446px solid #e5f3ff;
+}
+
+.nameCell {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin-left: -44.565px;
+}
+
+.name {
+  color: #718096;
+  font-family: Montserrat;
+  font-size: 16.933px;
+  font-weight: 600;
 }
 
 .address {
-  color: #9ca3af;
+  color: #718096;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.storePhoto {
+  border-radius: 50%;
 }

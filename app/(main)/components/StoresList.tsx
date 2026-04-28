@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container';
 import ViewToggle, { ViewMode } from '@/app/(main)/components/ViewToggle';
 import Image from 'next/image';
 import styles from './StoresList.module.css';
+import defaultStorePhoto from '@/public/default-store-photo.png';
 
 export default function StoresList({ stores }: { stores: Store[] }) {
   const [view, setView] = useState<ViewMode>('grid');
@@ -18,7 +19,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
         <ViewToggle defaultView="grid" onChange={setView} />
       </div>
       {view === 'grid' ? (
-        <Row>
+        <Row className={styles.grid}>
           {stores?.map((store) => (
             <Col xs={12} sm={6} md={3} key={store.store_id}>
               <StoreCard store={store} />
@@ -37,22 +38,17 @@ export default function StoresList({ stores }: { stores: Store[] }) {
             {stores?.map((store) => (
               <tr className={styles.tableRow} key={store.store_id}>
                 <td>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                    }}
-                  >
+                  <div className={styles.nameCell}>
                     <Image
-                      // src={store.photo_url}
-                      src={'/default-store-photo.png'}
+                      src={store.photo_url || defaultStorePhoto}
                       alt={`${store.name} photo`}
                       width={32}
                       height={32}
-                      style={{ borderRadius: '50%' }}
+                      className={styles.storePhoto}
+                      unoptimized
                     />
-                    {store.name}
+
+                    <span className={styles.name}>{store.name}</span>
                   </div>
                 </td>
                 <td className={styles.address}>{store.street_address}</td>

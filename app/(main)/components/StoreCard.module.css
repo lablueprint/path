@@ -1,17 +1,41 @@
 .card {
-  border: 0px;
-  border-style: solid;
-  border-color: black;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
-  word-break: break-word;
-  height: 380px;
+  overflow: hidden;
+  width: 200px;
 }
 
-.cardText {
+.cardImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.cardLink {
   text-decoration: none;
-  color: black;
-  display: block;
+}
+
+.cardTextWrapper {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100%;
+  word-break: break-word;
+  padding: 0 12px 12px 0;
+  box-sizing: border-box;
+}
+
+.name {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.address {
+  color: #000;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
 }
