@@ -6,7 +6,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
     <div className="main">
       {/* Sidebar */}
       <Sidebar />
-      <main>
+      <main className="main-container">
         {/* Main page content */}
         {children}
       </main>
