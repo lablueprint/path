@@ -89,7 +89,7 @@ export default function LightweightDonationForm({ storeNames }: Props) {
           ? (data.business_contact_name ?? null)
           : null,
 
-      donor_email: data.email,
+      donor_email: data.email ?? null,
       donor_phone: data.phone ?? null,
       donor_street_address: data.address ?? null,
 
