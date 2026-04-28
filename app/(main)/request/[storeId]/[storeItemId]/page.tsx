@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import { createClient } from '@/app/lib/supabase/server-client';
 import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
 
@@ -9,6 +10,15 @@ export default async function RequestStoreItemPage({
   const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
+  const { data: store, error: storeError } = await supabase
+    .from('stores')
+    .select('name')
+    .eq('store_id', storeId)
+    .single();
+
+  if (storeError) {
+    console.error('Error fetching store for breadcrumbs:', storeError);
+  }
 
   const { data: itemData, error } = await supabase
     .from('store_items')
@@ -51,6 +61,13 @@ export default async function RequestStoreItemPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store?.name ?? 'Store',
+          [`/request/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
+        }}
+      />
       <h1>{itemData.inventory_items.name}</h1>
       <p>Description: {itemData.inventory_items.description}</p>
       <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
