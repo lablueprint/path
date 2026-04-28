@@ -125,7 +125,12 @@ export default async function RequestStorePage({
 
   return (
     <div>
-      <Breadcrumbs labelMap={{ [`/request/${storeId}`]: store.name }} />{' '}
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store.name,
+        }}
+      />{' '}
       <div>
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>

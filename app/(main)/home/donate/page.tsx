@@ -7,7 +7,7 @@ export default function DonationPage() {
       <Breadcrumbs
         labelMap={{
           home: 'Home',
-          donate: 'Donations',
+          donate: 'Donate',
         }}
       />
       <LightweightDonationForm />

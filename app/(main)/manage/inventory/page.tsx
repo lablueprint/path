@@ -94,8 +94,8 @@ export default async function InventoryPage({
     <div>
       <Breadcrumbs
         labelMap={{
-          manage: 'Manage',
-          inventory: 'Inventory',
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
         }}
       />
       <h1>Inventory Library</h1>

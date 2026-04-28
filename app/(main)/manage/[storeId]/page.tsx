@@ -121,7 +121,7 @@ export default async function ManageStorePage({
     <div>
       <Breadcrumbs
         labelMap={{
-          manage: 'Manage',
+          manage: 'Manage Inventory',
           [storeId]: store.name,
         }}
       />
