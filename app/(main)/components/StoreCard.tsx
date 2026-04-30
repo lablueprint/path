@@ -12,18 +12,20 @@ export default function StoreCard({ store }: { store: Store }) {
 
   const displayImage = store.photo_url;
   return (
-    <Link className={styles.cardText} href={`${pathname}/${store.store_id}`}>
+    <Link className={styles.cardLink} href={`${pathname}/${store.store_id}`}>
       <div className={styles.card}>
         <Image
-          src={displayImage ?? defaultStorePhoto.src}
+          src={displayImage || defaultStorePhoto.src}
           alt="Store photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
+          width={200}
+          height={200}
+          className={styles.cardImage}
           unoptimized
         />
-        <h2>{store.name}</h2>
-        <p>{store.street_address}</p>
+        <div className={styles.cardTextWrapper}>
+          <p className={styles.name}>{store.name}</p>
+          <p className={styles.address}>{store.street_address}</p>
+        </div>
       </div>
     </Link>
   );
