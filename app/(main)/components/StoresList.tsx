@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import ViewToggle, { ViewMode } from '@/app/(main)/components/ViewToggle';
 import Image from 'next/image';
-import styles from './StoresList.module.css';
+import styles from '@/app/(main)/components/StoresList.module.css';
 import defaultStorePhoto from '@/public/default-store-photo.png';
 
 export default function StoresList({ stores }: { stores: Store[] }) {

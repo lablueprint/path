@@ -1,8 +1,7 @@
-/* ViewToggle.tsx */
 'use client';
 
 import { useState } from 'react';
-import styles from './ViewToggle.module.css';
+import styles from '@/app/(main)/components/ViewToggle.module.css';
 
 export type ViewMode = 'grid' | 'list';
 
