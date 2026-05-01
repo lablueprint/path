@@ -201,10 +201,7 @@ export default function StoreItemsDonationForm({
           // add autofillitems connection pass in prop to storeitemsform
         )}
         {itemSettingsSelected?.includes('addInventoryItems') && (
-          <button
-            type="submit"
-            className="btn-submit"
-          >
+          <button type="submit" className="btn-submit">
             Submit
           </button>
         )}

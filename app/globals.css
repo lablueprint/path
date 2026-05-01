@@ -96,6 +96,26 @@ thead th {
   opacity: 1;
 }
 
+.form-card .card-body input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #2d3748;
+  background: #fff;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-card .card-body input:focus {
+  border-color: #2d3748;
+  box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.1);
+}
+
 .field-label {
   margin-bottom: 5px;
 }

@@ -155,57 +155,66 @@ export default function ProfileForm({ user }: { user: User }) {
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <Image
-          src={displayImage}
-          alt="Profile photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
+    <div className="form-card">
+      <div className="card-body">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <Image
+              src={displayImage}
+              alt="Profile photo"
+              width={64}
+              height={64}
+              style={{ objectFit: 'cover' }}
+              unoptimized
+            />
 
-        {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
-        {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
-          <button type="button" onClick={handleRemovePhoto}>
-            Remove
-          </button>
-        )}
+            {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
+            {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
+              <button type="button" onClick={handleRemovePhoto}>
+                Remove
+              </button>
+            )}
 
-        <br />
-        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+            <br />
+            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          </div>
+
+          <div className="two-col-row">
+            <div>
+              <label className="field-label">First name</label>
+              <input {...register('firstName', { required: true })} />
+              {errors.firstName?.type === 'required' && (
+                <p role="alert">First name is required.</p>
+              )}
+            </div>
+
+            <div>
+              <label className="field-label">Last name</label>
+              <input {...register('lastName', { required: true })} />
+              {errors.lastName?.type === 'required' && (
+                <p role="alert">Last name is required.</p>
+              )}
+            </div>
+          </div>
+
+          <label className="field-label">Email</label>
+          <input {...register('email', { required: true })} />
+          {errors.email?.type === 'required' && (
+            <p role="alert">Email is required.</p>
+          )}
+
+          {hasDirtyTextOrImage && (
+            <>
+              <button type="submit" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button type="button" onClick={onCancel} disabled={isSaving}>
+                Cancel
+              </button>
+            </>
+          )}
+        </form>
       </div>
-
-      <label>First name</label>
-      <input {...register('firstName', { required: true })} />
-      {errors.firstName?.type === 'required' && (
-        <p role="alert">First name is required.</p>
-      )}
-      <br />
-      <label>Last name</label>
-      <input {...register('lastName', { required: true })} />
-      {errors.lastName?.type === 'required' && (
-        <p role="alert">Last name is required.</p>
-      )}
-      <br />
-      <label>Email</label>
-      <input {...register('email', { required: true })} />
-      {errors.email?.type === 'required' && (
-        <p role="alert">Email is required.</p>
-      )}
-      <br />
-
-      {hasDirtyTextOrImage && (
-        <>
-          <button type="submit" disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" onClick={onCancel} disabled={isSaving}>
-            Cancel
-          </button>
-        </>
-      )}
-    </form>
+    </div>
   );
 }
