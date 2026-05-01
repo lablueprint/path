@@ -11,6 +11,9 @@ export default function Dropdown({
   roleId: number;
 }) {
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const allRoles = [
     {
       id: 1,
@@ -37,9 +40,23 @@ export default function Dropdown({
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        const res = await updateUserRole(userId, currentRoleId);
-        if (!res.success) {
-          alert('Insufficient privileges to update role');
+        setIsSubmitting(true);
+        setErrorMessage('');
+        setSuccessMessage('');
+        try {
+          const res = await updateUserRole(userId, currentRoleId);
+          if (!res.success) {
+            setErrorMessage(
+              res.error ?? 'Insufficient privileges to update role.',
+            );
+            return;
+          }
+          setSuccessMessage('Role updated.');
+        } catch (error) {
+          console.error('Role update error:', error);
+          setErrorMessage('Unable to update role. Please try again.');
+        } finally {
+          setIsSubmitting(false);
         }
       }}
     >
@@ -54,7 +71,11 @@ export default function Dropdown({
           </option>
         ))}
       </select>
-      <button type="submit">Update role</button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Updating...' : 'Update role'}
+      </button>
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
     </form>
   );
 }

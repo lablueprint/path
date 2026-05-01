@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import {
   exportDonations,
@@ -13,6 +14,9 @@ type FormValues = {
 };
 
 export default function Donations() {
+  const [isExporting, setIsExporting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const {
     register,
     control,
@@ -30,35 +34,55 @@ export default function Donations() {
     name: 'dateMode',
   });
 
-  const onSubmit = () => {
-    handleExport();
+  const downloadCsv = (csvString: string, filename: string) => {
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', filename);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const onSubmit = async () => {
+    await handleExport();
   };
 
   const handleExport = async () => {
-    if (dateMode === 'range') {
-      const { startDate, endDate } = getValues();
-      const result = await exportDonationsInRange({
-        startDate: startDate || '',
-        endDate: endDate || '',
-      });
-      const csvString = result?.data;
-      const blob = new Blob([csvString || ''], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
-      a.setAttribute('download', `donations_${startDate}_to_${endDate}.csv`);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } else {
-      const result = await exportDonations();
-      const csvString = result?.data;
-      const blob = new Blob([csvString || ''], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
-      a.setAttribute('download', `donations.csv`);
-      a.click();
-      window.URL.revokeObjectURL(url);
+    setIsExporting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      if (dateMode === 'range') {
+        const { startDate, endDate } = getValues();
+        const result = await exportDonationsInRange({
+          startDate: startDate || '',
+          endDate: endDate || '',
+        });
+
+        if (!result?.success || !result.data) {
+          setErrorMessage(result?.error ?? 'Failed to export donations.');
+          return;
+        }
+
+        downloadCsv(result.data, `donations_${startDate}_to_${endDate}.csv`);
+      } else {
+        const result = await exportDonations();
+
+        if (!result?.success || !result.data) {
+          setErrorMessage(result?.error ?? 'Failed to export donations.');
+          return;
+        }
+
+        downloadCsv(result.data, 'donations.csv');
+      }
+
+      setSuccessMessage('Donations export downloaded.');
+    } catch (error) {
+      console.error('Donations export error:', error);
+      setErrorMessage('Failed to export donations. Please try again.');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -96,7 +120,11 @@ export default function Donations() {
         </div>
       )}
 
-      <button type="submit">Export</button>
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
+      <button type="submit" disabled={isExporting}>
+        {isExporting ? 'Exporting...' : 'Export'}
+      </button>
     </form>
   );
 }

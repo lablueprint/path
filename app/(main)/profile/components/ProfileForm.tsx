@@ -17,6 +17,8 @@ type ProfileFormValues = {
 
 export default function ProfileForm({ user }: { user: User }) {
   const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string | null>(
     user.profile_photo_url,
@@ -44,9 +46,13 @@ export default function ProfileForm({ user }: { user: User }) {
   });
 
   const handleFileSelect = (file: File) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     const maxSize = 200 * 1024; // 200 KB in bytes
     if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
+      setErrorMessage(
+        'File is too large. Please select an image under 200 KB.',
+      );
       return;
     }
     // Create a temporary local blob URL for immediate UI feedback
@@ -57,6 +63,8 @@ export default function ProfileForm({ user }: { user: User }) {
   };
 
   const handleRemovePhoto = () => {
+    setErrorMessage('');
+    setSuccessMessage('');
     setPreviewUrl(null);
     setSelectedFile(null);
     setIsPendingDelete(true);
@@ -64,6 +72,8 @@ export default function ProfileForm({ user }: { user: User }) {
   };
 
   const onCancel = () => {
+    setErrorMessage('');
+    setSuccessMessage('');
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setSelectedFile(null);
@@ -75,6 +85,8 @@ export default function ProfileForm({ user }: { user: User }) {
 
   const onSubmit = async (data: ProfileFormValues) => {
     setIsSaving(true);
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
       let finalPhotoUrl = photoUrl;
       const {
@@ -84,9 +96,15 @@ export default function ProfileForm({ user }: { user: User }) {
       if (authUser) {
         // Handle deletion if flagged
         if (isPendingDelete) {
-          await supabase.storage
+          const { error: deleteError } = await supabase.storage
             .from('profile_photos')
             .remove([`${authUser.id}/profile.jpg`]);
+          if (deleteError) {
+            setErrorMessage(
+              deleteError.message ?? 'Failed to remove profile photo.',
+            );
+            return;
+          }
           finalPhotoUrl = null;
         }
 
@@ -100,6 +118,10 @@ export default function ProfileForm({ user }: { user: User }) {
 
           if (uploadError) {
             console.error('Upload error:', uploadError.message);
+            setErrorMessage(
+              uploadError.message ?? 'Failed to upload profile photo.',
+            );
+            return;
           } else {
             const { data: publicData } = supabase.storage
               .from('profile_photos')
@@ -134,12 +156,18 @@ export default function ProfileForm({ user }: { user: User }) {
           lastName: data.lastName,
           email: user.email,
         });
-        if (data.email !== user.email) {
-          alert('Please check your new email address to verify the change.');
-        }
+        setSuccessMessage(
+          data.email !== user.email
+            ? 'Profile saved. Please check your new email address to verify the change.'
+            : 'Profile saved.',
+        );
+      } else {
+        setErrorMessage(result.error ?? 'Failed to save profile.');
+        return;
       }
     } catch (error) {
       console.error('Error saving profile:', error);
+      setErrorMessage('Failed to save profile. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -193,6 +221,9 @@ export default function ProfileForm({ user }: { user: User }) {
         <p role="alert">Email is required.</p>
       )}
       <br />
+
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
 
       {hasDirtyTextOrImage && (
         <>

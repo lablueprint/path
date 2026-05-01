@@ -67,6 +67,9 @@ export default function StoreItemsDonationForm({
     itemSettingsSelected.includes('addInventoryItems');
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
@@ -77,9 +80,12 @@ export default function StoreItemsDonationForm({
     }
   }, [isGiftSelected, isInventorySelected, autoFillItems, methods]);
   const onSubmit = async (data: CombinedFormData) => {
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
-      let inventoryErrorOccurred = false;
-      let donationErrorOccurred = false;
+      const inventoryErrors: string[] = [];
+      let donationError = '';
 
       if (data.itemSettings?.includes('addInventoryItems')) {
         for (const item of data.items) {
@@ -88,7 +94,7 @@ export default function StoreItemsDonationForm({
             item.quantity,
             store.store_id,
           );
-          if (error) inventoryErrorOccurred = true;
+          if (error) inventoryErrors.push(error);
         }
       }
 
@@ -128,14 +134,19 @@ export default function StoreItemsDonationForm({
           store_street_address: store?.street_address,
         };
         const { error } = await createDonation(donation);
-        if (error) donationErrorOccurred = true;
+        if (error) donationError = error;
       }
-      if (inventoryErrorOccurred && donationErrorOccurred) {
-        alert('Both inventory update and donation submission failed.');
-      } else if (inventoryErrorOccurred) {
-        alert('Inventory update failed.');
-      } else if (donationErrorOccurred) {
-        alert('Donation submission failed.');
+
+      if (inventoryErrors.length > 0 && donationError) {
+        setErrorMessage(
+          `Inventory update and donation submission failed. ${donationError}`,
+        );
+      } else if (inventoryErrors.length > 0) {
+        setErrorMessage(
+          inventoryErrors[0] ?? 'One or more inventory updates failed.',
+        );
+      } else if (donationError) {
+        setErrorMessage(donationError);
       } else {
         // Reset all fields to empty/default values
         methods.reset({
@@ -157,9 +168,13 @@ export default function StoreItemsDonationForm({
         });
         setAutoFillItems([]);
         methods.clearErrors();
+        setSuccessMessage('Submission saved.');
       }
     } catch (error) {
       console.error('Failed to process form:', error);
+      setErrorMessage('Failed to process submission. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -196,20 +211,25 @@ export default function StoreItemsDonationForm({
         )}
         {(itemSettingsSelected?.includes('giftInKind') ||
           itemSettingsSelected?.includes('addInventoryItems')) && (
-          <button
-            type="submit"
-            style={{
-              marginTop: '20px',
-              padding: '10px',
-              borderRadius: '5px',
-              border: 'none',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              fontWeight: 'bold',
-            }}
-          >
-            Submit
-          </button>
+          <>
+            {errorMessage && <p role="alert">{errorMessage}</p>}
+            {successMessage && <p role="status">{successMessage}</p>}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                marginTop: '20px',
+                padding: '10px',
+                borderRadius: '5px',
+                border: 'none',
+                backgroundColor: '#007bff',
+                color: '#fff',
+                fontWeight: 'bold',
+              }}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit'}
+            </button>
+          </>
         )}
       </form>
     </FormProvider>

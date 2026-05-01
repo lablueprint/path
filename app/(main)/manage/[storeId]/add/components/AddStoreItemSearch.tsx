@@ -26,11 +26,13 @@ export default function AddStoreItemSearch({
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetch = async () => {
       if (!searchQuery) {
         setResults([]);
+        setErrorMessage('');
         return;
       }
       const { data, error } = await supabase
@@ -39,6 +41,8 @@ export default function AddStoreItemSearch({
         .ilike('name', `%${searchQuery}%`);
       if (error) {
         console.error(error);
+        setErrorMessage(error.message ?? 'Failed to search inventory items.');
+        setResults([]);
         return;
       } else {
         const items: ItemWithNames[] = [];
@@ -49,6 +53,7 @@ export default function AddStoreItemSearch({
             subcategory_name: item.subcategories?.name,
           });
         }
+        setErrorMessage('');
         setResults(items);
       }
     };
@@ -88,6 +93,7 @@ export default function AddStoreItemSearch({
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      {errorMessage && <p role="alert">{errorMessage}</p>}
       <ul>
         {results?.map((item) => (
           <div key={item.name}>

@@ -17,6 +17,9 @@ export default function AddAdminSearch({
 }) {
   const [search, setSearch] = useState('');
   const [searchData, setSearchData] = useState<User[]>([]);
+  const [isAddingUserId, setIsAddingUserId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   // search filtering
   useEffect(() => {
@@ -24,6 +27,8 @@ export default function AddAdminSearch({
       const d = search.trim();
       if (!d) {
         setSearchData([]);
+        setErrorMessage('');
+        setSuccessMessage('');
         return;
       }
 
@@ -33,6 +38,7 @@ export default function AddAdminSearch({
         .ilike('full_name', `%${d}%`);
       if (error) {
         console.error('Error searching for admins:', error);
+        setErrorMessage(error.message ?? 'Failed to search for admins.');
         return;
       }
 
@@ -41,11 +47,34 @@ export default function AddAdminSearch({
       );
 
       setSearchData(filtered);
+      setErrorMessage('');
     }, 300);
 
     // returning a cleanup function to clear previous timeouts
     return () => clearTimeout(timeout);
   }, [search, existingAdminUserIds]);
+
+  const handleAddAdmin = async (userId: string) => {
+    setIsAddingUserId(userId);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const result = await createStoreAdmin({
+        user_id: userId,
+        store_id: storeId,
+      });
+      if (!result.success) {
+        setErrorMessage(result.error ?? 'Failed to add admin.');
+        return;
+      }
+      setSuccessMessage('Admin added.');
+    } catch (error) {
+      console.error('Store admin creation error:', error);
+      setErrorMessage('Failed to add admin. Please try again.');
+    } finally {
+      setIsAddingUserId(null);
+    }
+  };
 
   return (
     <div>
@@ -60,17 +89,19 @@ export default function AddAdminSearch({
         />
       </div>
 
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
+
       {/* search results */}
       {searchData.map((u) => (
         <div key={u.user_id} style={{ marginBottom: '40px' }}>
           <UserCard user={u} noBottomMargin></UserCard>
           <button
             type="button"
-            onClick={() =>
-              createStoreAdmin({ user_id: u.user_id, store_id: storeId })
-            }
+            onClick={() => handleAddAdmin(u.user_id)}
+            disabled={isAddingUserId === u.user_id}
           >
-            Add admin
+            {isAddingUserId === u.user_id ? 'Adding...' : 'Add admin'}
           </button>
         </div>
       ))}

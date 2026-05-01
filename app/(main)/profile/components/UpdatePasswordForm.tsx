@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 
@@ -9,6 +10,9 @@ type FormValues = {
 };
 
 export default function UpdatePasswordForm() {
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const {
     register,
     handleSubmit,
@@ -40,16 +44,28 @@ export default function UpdatePasswordForm() {
     newPassword === newPasswordConfirmation;
 
   const onSubmit = async (formData: FormValues) => {
-    const { error } = await supabase.auth.updateUser({
-      password: formData.newPassword,
-    });
+    setIsSaving(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: formData.newPassword,
+      });
 
-    if (error) {
+      if (error) {
+        console.error('Password update error:', error);
+        setErrorMessage(error.message ?? 'Failed to update password.');
+        return;
+      }
+
+      setSuccessMessage('Password updated.');
+      reset();
+    } catch (error) {
       console.error('Password update error:', error);
-      return;
+      setErrorMessage('Failed to update password. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
-
-    reset();
   };
 
   return (
@@ -86,11 +102,18 @@ export default function UpdatePasswordForm() {
               newPasswordConfirmation: '',
             })
           }
+          disabled={isSaving}
         >
           Cancel
         </button>
       )}
-      {passwordsMatch && <button type="submit">Save</button>}
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
+      {passwordsMatch && (
+        <button type="submit" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Save'}
+        </button>
+      )}
     </form>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { createStore } from '@/app/actions/store';
 
@@ -9,6 +10,9 @@ type FormValues = {
 };
 
 export default function AddStoreForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const { register, handleSubmit, control, reset } = useForm<FormValues>({
     defaultValues: {
       storeName: '',
@@ -31,11 +35,28 @@ export default function AddStoreForm() {
     storeName.trim().length > 0 || storeStreetAddress.trim().length > 0;
 
   const onSubmit = async (data: FormValues) => {
-    await createStore({
-      name: data.storeName,
-      street_address: data.storeStreetAddress,
-    });
-    reset({ storeName: '', storeStreetAddress: '' });
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const result = await createStore({
+        name: data.storeName,
+        street_address: data.storeStreetAddress,
+      });
+
+      if (!result.success) {
+        setErrorMessage(result.error ?? 'Failed to add store.');
+        return;
+      }
+
+      reset({ storeName: '', storeStreetAddress: '' });
+      setSuccessMessage('Store added.');
+    } catch (error) {
+      console.error('Store creation error:', error);
+      setErrorMessage('Failed to add store. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,12 +71,24 @@ export default function AddStoreForm() {
         <input {...register('storeStreetAddress')} />
       </div>
 
-      {bothFilled && <button type="submit">Save</button>}
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
+
+      {bothFilled && (
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Saving...' : 'Save'}
+        </button>
+      )}
 
       {eitherFilled && (
         <button
           type="button"
-          onClick={() => reset({ storeName: '', storeStreetAddress: '' })}
+          onClick={() => {
+            setErrorMessage('');
+            setSuccessMessage('');
+            reset({ storeName: '', storeStreetAddress: '' });
+          }}
+          disabled={isSubmitting}
         >
           Cancel
         </button>
