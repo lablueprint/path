@@ -50,8 +50,8 @@ Table {
   border-collapse: collapse;
 }
 
-thead th {
-  background-color: #e5f3ff !important;
+.table-header th {
+  background-color: #e5f3ff;
   font-weight: 500;
 }
 
