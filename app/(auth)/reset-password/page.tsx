@@ -3,6 +3,7 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type ResetPasswordFormValues = {
   password: string;
@@ -12,6 +13,8 @@ type ResetPasswordFormValues = {
 export default function ResetPasswordPage() {
   const supabase = createClient();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const {
     register,
@@ -29,16 +32,19 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (values: ResetPasswordFormValues) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+    
     const { error } = await supabase.auth.updateUser({
       password: values.password,
     });
 
     if (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
       return;
     }
 
-    alert('Your password has been updated.');
+    setSuccessMessage('Your password has been updated.');
     router.push('/home');
   };
 
@@ -81,6 +87,13 @@ export default function ResetPasswordPage() {
         ) : null}
 
         <br />
+
+        {errorMessage && (
+          <p style={{ color: 'red' }}>{errorMessage}</p>
+        )}
+        {successMessage && (
+          <p style={{ color: 'green' }}>{successMessage}</p>
+        )}
 
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Saving...' : 'Save'}

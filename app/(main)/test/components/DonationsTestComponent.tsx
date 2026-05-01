@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 export default function DonationsTestComponent() {
   const [idToDelete, setIdToDelete] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleCreate = async () => {
     try {
@@ -38,8 +39,9 @@ export default function DonationsTestComponent() {
   };
 
   const handleDelete = async () => {
+    setErrorMessage('');
     if (!idToDelete) {
-      alert('Please enter a valid UUID to delete');
+      setErrorMessage('Please enter a valid UUID to delete');
       return;
     }
 
@@ -58,6 +60,9 @@ export default function DonationsTestComponent() {
       <button onClick={handleDelete} style={{ marginLeft: 10 }}>
         Delete Donation
       </button>
+      {errorMessage && (
+        <p style={{ color: 'red', marginTop: 10 }}>{errorMessage}</p>
+      )}
     </div>
   );
 }

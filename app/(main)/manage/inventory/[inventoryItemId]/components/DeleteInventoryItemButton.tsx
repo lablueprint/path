@@ -2,6 +2,7 @@
 
 import { deleteItem } from '@/app/actions/inventory';
 import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 
 export default function DeleteInventoryItemButton({
   inventoryItemId,
@@ -9,22 +10,34 @@ export default function DeleteInventoryItemButton({
   inventoryItemId: string;
 }) {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   async function handleDelete() {
-    const result = await deleteItem(inventoryItemId);
+    setErrorMessage('');
+    setSuccessMessage('');
+    startTransition(async () => {
+      const result = await deleteItem(inventoryItemId);
 
-    if (!result.success) {
-      alert('Failed to remove item.');
-      console.error('Failed to delete inventory item:', result.error);
-      return;
-    }
+      if (!result.success) {
+        setErrorMessage('Failed to remove item.');
+        console.error('Failed to delete inventory item:', result.error);
+        return;
+      }
 
-    router.push('/manage/inventory');
+      setSuccessMessage('Item removed successfully!');
+      router.push('/manage/inventory');
+    });
   }
 
   return (
-    <button type="button" onClick={handleDelete}>
-      Remove item
-    </button>
+    <>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      <button type="button" onClick={handleDelete} disabled={isPending}>
+        {isPending ? 'Removing...' : 'Remove item'}
+      </button>
+    </>
   );
 }
