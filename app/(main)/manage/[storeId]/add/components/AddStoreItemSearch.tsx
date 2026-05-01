@@ -5,6 +5,7 @@ import { useFormContext, useFieldArray } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { InventoryItem } from '@/app/types/inventory';
 import type { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
+import searchStyles from '@/app/(main)/components/ItemSearch.module.css';
 
 type ItemWithNames = InventoryItem & {
   category_name: string;
@@ -83,11 +84,14 @@ export default function AddStoreItemSearch({
   return (
     <div>
       <h2>Add Store Items</h2>
-      <input
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <div className={searchStyles.wrapper}>
+        <input
+          className={searchStyles.searchInput}
+          placeholder="Search Store"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
       <ul>
         {results?.map((item) => (
           <div key={item.name}>

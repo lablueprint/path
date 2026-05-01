@@ -5,6 +5,7 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { createStoreAdmin } from '@/app/actions/store';
 import { User } from '@/app/types/user';
 import UserCard from '@/app/(main)/components/UserCard';
+import searchStyles from '@/app/(main)/components/ItemSearch.module.css';
 
 const supabase = createClient();
 
@@ -50,11 +51,11 @@ export default function AddAdminSearch({
   return (
     <div>
       {/* searching */}
-      <div style={{ marginBottom: '20px' }}>
-        <label>Find users by name</label>
+      <div className={searchStyles.wrapper}>
         <input
+          className={searchStyles.searchInput}
           id="search"
-          placeholder="Search..."
+          placeholder="Search Users"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

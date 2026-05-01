@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import styles from '@/app/(main)/components/ItemSearch.module.css';
 
 type Role = {
   name: string;
@@ -64,26 +65,36 @@ export default function UserSearch({ roles }: Props) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className={styles.wrapper}>
       <input
+        className={styles.searchInput}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Search users"
       />
 
-      <select
-        value={searchParams.get('role') ?? ''}
-        onChange={(e) => handleRoleChange(e.target.value)}
-      >
-        <option value="">All roles</option>
-        {roles.map((role) => (
-          <option key={role.role_id} value={String(role.role_id)}>
-            {role.name}
-          </option>
-        ))}
-      </select>
+      <div className={styles.filtersRow}>
+        <select
+          className={styles.selectInput}
+          value={searchParams.get('role') ?? ''}
+          onChange={(e) => handleRoleChange(e.target.value)}
+        >
+          <option value="">All roles</option>
+          {roles.map((role) => (
+            <option key={role.role_id} value={String(role.role_id)}>
+              {role.name}
+            </option>
+          ))}
+        </select>
 
-      <button onClick={handleClearFilters}>Clear filters</button>
+        <button
+          type="button"
+          className={styles.clearButton}
+          onClick={handleClearFilters}
+        >
+          Clear filters
+        </button>
+      </div>
     </div>
   );
 }
