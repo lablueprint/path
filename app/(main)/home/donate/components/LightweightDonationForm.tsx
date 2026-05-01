@@ -33,7 +33,7 @@ export default function LightweightDonationForm() {
     control,
     reset,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
@@ -468,6 +468,7 @@ export default function LightweightDonationForm() {
 
         <button
           type="submit"
+          disabled={isSubmitting}
           style={{
             marginTop: '20px',
             padding: '10px',
@@ -478,7 +479,7 @@ export default function LightweightDonationForm() {
             fontWeight: 'bold',
           }}
         >
-          Submit
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
 
         {/* Success message now handled above form */}

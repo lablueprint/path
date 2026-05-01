@@ -18,6 +18,7 @@ export default function TicketStatusDropdown({
   const [originalStatus, setOriginalStatus] =
     useState<TicketStatus>(currentStatus);
   const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleCancel = () => {
     setError(null);
@@ -26,13 +27,18 @@ export default function TicketStatusDropdown({
 
   const handleSave = async () => {
     setError(null);
+    setIsSaving(true);
 
-    const result = await updateTicketStatus(selectedStatus, ticketId);
-    if (result.success) {
-      setOriginalStatus(selectedStatus);
-      return;
-    } else {
-      setError('Error updating status. No changes were saved.' + result.error);
+    try {
+      const result = await updateTicketStatus(selectedStatus, ticketId);
+      if (result.success) {
+        setOriginalStatus(selectedStatus);
+        return;
+      } else {
+        setError('Error updating status. No changes were saved.' + result.error);
+      }
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -41,6 +47,7 @@ export default function TicketStatusDropdown({
       <select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
+        disabled={isSaving}
       >
         {statusOptions.map((status) => (
           <option key={status} value={status}>
@@ -51,10 +58,10 @@ export default function TicketStatusDropdown({
 
       {selectedStatus !== originalStatus && (
         <div>
-          <button type="button" onClick={handleSave}>
-            Save
+          <button type="button" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save'}
           </button>
-          <button type="button" onClick={handleCancel}>
+          <button type="button" onClick={handleCancel} disabled={isSaving}>
             Cancel
           </button>
           {error && <div>{error}</div>}

@@ -93,6 +93,13 @@ export default function UpdatePasswordForm() {
         <p role="alert">Passwords do not match.</p>
       )}
       <br />
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
+      {passwordsMatch && (
+        <button type="submit" disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Save'}
+        </button>
+      )}
       {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
         <button
           type="button"
@@ -105,13 +112,6 @@ export default function UpdatePasswordForm() {
           disabled={isSaving}
         >
           Cancel
-        </button>
-      )}
-      {errorMessage && <p role="alert">{errorMessage}</p>}
-      {successMessage && <p role="status">{successMessage}</p>}
-      {passwordsMatch && (
-        <button type="submit" disabled={isSaving}>
-          {isSaving ? 'Saving...' : 'Save'}
         </button>
       )}
     </form>

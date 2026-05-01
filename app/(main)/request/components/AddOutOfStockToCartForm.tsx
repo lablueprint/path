@@ -3,6 +3,7 @@
 import Form from 'next/form';
 import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
+import SubmitButton from './SubmitButton';
 
 interface AddOutOfStockToCartFormProps {
   storeId: string;
@@ -69,12 +70,7 @@ export default function AddOutOfStockToCartForm({
           type="text"
           placeholder="Description of item..."
         />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add to Cart
-        </button>
+        <SubmitButton />
       </Form>
     </div>
   );

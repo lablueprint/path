@@ -11,9 +11,41 @@ export default function Dropdown({
   roleId: number;
 }) {
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
+  const [originalRoleId, setOriginalRoleId] = useState(roleId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  
+  const hasChanged = currentRoleId !== originalRoleId;
+
+  const handleSave = async () => {
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const res = await updateUserRole(userId, currentRoleId);
+      if (!res.success) {
+        setErrorMessage(
+          res.error ?? 'Insufficient privileges to update role.',
+        );
+        return;
+      }
+      setOriginalRoleId(currentRoleId);
+      setSuccessMessage('Role updated.');
+    } catch (error) {
+      console.error('Role update error:', error);
+      setErrorMessage('Unable to update role. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setCurrentRoleId(originalRoleId);
+    setErrorMessage('');
+    setSuccessMessage('');
+  };
+
   const allRoles = [
     {
       id: 1,
@@ -37,33 +69,11 @@ export default function Dropdown({
     },
   ];
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setErrorMessage('');
-        setSuccessMessage('');
-        try {
-          const res = await updateUserRole(userId, currentRoleId);
-          if (!res.success) {
-            setErrorMessage(
-              res.error ?? 'Insufficient privileges to update role.',
-            );
-            return;
-          }
-          setSuccessMessage('Role updated.');
-        } catch (error) {
-          console.error('Role update error:', error);
-          setErrorMessage('Unable to update role. Please try again.');
-        } finally {
-          setIsSubmitting(false);
-        }
-      }}
-    >
+    <div>
       <select
-        name="role"
         value={currentRoleId}
         onChange={(e) => setCurrentRoleId(Number(e.target.value))}
+        disabled={isSubmitting}
       >
         {allRoles.map((r) => (
           <option key={r.id} value={r.id}>
@@ -71,11 +81,18 @@ export default function Dropdown({
           </option>
         ))}
       </select>
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Updating...' : 'Update role'}
-      </button>
+      {hasChanged && (
+        <div>
+          <button type="button" onClick={handleSave} disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </button>
+          <button type="button" onClick={handleCancel} disabled={isSubmitting}>
+            Cancel
+          </button>
+        </div>
+      )}
       {errorMessage && <p role="alert">{errorMessage}</p>}
       {successMessage && <p role="status">{successMessage}</p>}
-    </form>
+    </div>
   );
 }

@@ -24,6 +24,7 @@ export default function InStockTicketItemCard({
   const [quantity, setQuantity] = useState(quantityRequested);
   const [savedQuantity, setSavedQuantity] = useState(quantityRequested);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const hasChanged = quantity !== savedQuantity;
 
@@ -34,15 +35,20 @@ export default function InStockTicketItemCard({
       return;
     }
 
-    const result = await updateTicketItemQuantity(ticketItemId, quantity);
+    setIsSaving(true);
+    try {
+      const result = await updateTicketItemQuantity(ticketItemId, quantity);
 
-    if (!result.success) {
-      setErrorMessage('Failed to update ticket item quantity.' + result.error);
-      return;
+      if (!result.success) {
+        setErrorMessage('Failed to update ticket item quantity.' + result.error);
+        return;
+      }
+
+      setSavedQuantity(quantity);
+      setErrorMessage('');
+    } finally {
+      setIsSaving(false);
     }
-
-    setSavedQuantity(quantity);
-    setErrorMessage('');
   };
 
   const handleCancel = () => {
@@ -67,6 +73,7 @@ export default function InStockTicketItemCard({
             setQuantity(Number(e.target.value));
             setErrorMessage('');
           }}
+          disabled={isSaving}
         />
       </label>
       {errorMessage && (
@@ -76,8 +83,12 @@ export default function InStockTicketItemCard({
       )}
       {hasChanged && (
         <>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+          <button onClick={handleCancel} disabled={isSaving}>
+            Cancel
+          </button>
         </>
       )}
     </div>
