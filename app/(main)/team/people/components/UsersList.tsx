@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@/app/(main)/team/people/components/UsersList.module.css';
 import { Table } from 'react-bootstrap';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 export default function UsersList({
   users,
@@ -30,7 +31,7 @@ export default function UsersList({
             <tr key={user.user_id}>
               <td>
                 <Image
-                  src={user.profile_photo_url || '/image-placeholder.svg'}
+                  src={user.profile_photo_url || imagePlaceholder}
                   alt={`Profile picture for ${user.first_name}`}
                   height={32}
                   width={32}

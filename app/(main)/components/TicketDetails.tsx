@@ -8,6 +8,7 @@ import styles from '@/app/(main)/components/TicketDetails.module.css';
 import { Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -125,7 +126,7 @@ export default async function TicketDetails({
           {/*Header Card*/}
           <Card className={styles.headerCard}>
             <Image
-              src={requestor?.profile_photo_url || '/image-placeholder.svg'}
+              src={requestor?.profile_photo_url || imagePlaceholder}
               alt={`Profile picture for ${requestor?.first_name}`}
               className={styles.profilePicture}
               width={95}

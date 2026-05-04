@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container';
 import ViewToggle, { ViewMode } from '@/app/(main)/components/ViewToggle';
 import Image from 'next/image';
 import styles from '@/app/(main)/components/StoresList.module.css';
-import defaultStorePhoto from '@/public/default-store-photo.png';
+import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 export default function StoresList({ stores }: { stores: Store[] }) {
   const [view, setView] = useState<ViewMode>('grid');

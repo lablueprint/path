@@ -1,6 +1,7 @@
 import { User } from '@/app/types/user';
 import styles from '@/app/(main)/components/UserCard.module.css';
 import Image from 'next/image';
+import imagePlaceholder from '@/public/image-placeholder.svg'
 
 export default function UserCard({
   user,
@@ -19,7 +20,7 @@ export default function UserCard({
     .filter(Boolean)
     .join(' ');
   const profilePhotoSrc =
-    user.profile_photo_url?.trim() || '/image-placeholder.svg';
+    user.profile_photo_url?.trim() || imagePlaceholder;
 
   return (
     <div className={cardClassName}>

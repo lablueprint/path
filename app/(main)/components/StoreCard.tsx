@@ -15,7 +15,7 @@ export default function StoreCard({ store }: { store: Store }) {
     <Link className={styles.cardLink} href={`${pathname}/${store.store_id}`}>
       <div className={styles.card}>
         <Image
-          src={displayImage || defaultStorePhoto.src}
+          src={displayImage || defaultStorePhoto}
           alt="Store photo"
           width={200}
           height={200}
