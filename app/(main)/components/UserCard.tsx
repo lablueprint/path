@@ -19,7 +19,7 @@ export default function UserCard({
     .filter(Boolean)
     .join(' ');
   const profilePhotoSrc =
-    user.profile_photo_url?.trim() || '/default-profile-picture.png';
+    user.profile_photo_url?.trim() || '/image-placeholder.svg';
 
   return (
     <div className={cardClassName}>

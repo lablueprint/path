@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Store } from '@/app/types/store';
 import styles from '@/app/(main)/components/StoreCard.module.css';
-import defaultStorePhoto from '@/public/default-store-photo.png';
+import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 export default function StoreCard({ store }: { store: Store }) {
   const pathname = usePathname();

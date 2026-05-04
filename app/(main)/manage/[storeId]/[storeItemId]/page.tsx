@@ -2,6 +2,8 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
 import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 export default async function ManageStoreItemPage({
   params,
@@ -72,6 +74,14 @@ export default async function ManageStoreItemPage({
           [`/manage/${storeId}`]: store?.name ?? 'Store',
           [`/manage/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
         }}
+      />
+      <Image
+        src={itemData.inventory_items.photo_url || defaultItemPhoto}
+        alt={itemData.inventory_items.name}
+        width={64}
+        height={64}
+        style={{ objectFit: 'cover' }}
+        unoptimized
       />
       <h1>{itemData.inventory_items.name}</h1>
       <p>Description: {itemData.inventory_items.description}</p>

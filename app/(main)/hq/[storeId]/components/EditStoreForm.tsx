@@ -5,7 +5,7 @@ import type { Store, StoreUpdate } from '@/app/types/store';
 import Image from 'next/image';
 import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
-import defaultStorePhoto from '@/public/default-store-photo.png';
+import defaultStorePhoto from '@/public/image-placeholder.svg';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 

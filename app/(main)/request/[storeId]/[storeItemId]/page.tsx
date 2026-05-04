@@ -1,6 +1,8 @@
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import { createClient } from '@/app/lib/supabase/server-client';
 import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 export default async function RequestStoreItemPage({
   params,
@@ -67,6 +69,14 @@ export default async function RequestStoreItemPage({
           [`/request/${storeId}`]: store?.name ?? 'Store',
           [`/request/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
         }}
+      />
+      <Image
+        src={itemData.inventory_items.photo_url || defaultItemPhoto}
+        alt={itemData.inventory_items.name}
+        width={64}
+        height={64}
+        style={{ objectFit: 'cover' }}
+        unoptimized
       />
       <h1>{itemData.inventory_items.name}</h1>
       <p>Description: {itemData.inventory_items.description}</p>

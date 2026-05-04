@@ -115,7 +115,7 @@ export default async function Sidebar() {
         <Link href="/profile" className={styles.profile}>
           <div className={styles.pfpContainer}>
             <Image
-              src={profilePhotoUrl || '/default-profile-picture.png'}
+              src={profilePhotoUrl || '/image-placeholder.svg'}
               alt={`${displayName} profile photo`}
               width={40}
               height={40}

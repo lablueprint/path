@@ -125,9 +125,7 @@ export default async function TicketDetails({
           {/*Header Card*/}
           <Card className={styles.headerCard}>
             <Image
-              src={
-                requestor?.profile_photo_url || '/default-profile-picture.png'
-              }
+              src={requestor?.profile_photo_url || '/image-placeholder.svg'}
               alt={`Profile picture for ${requestor?.first_name}`}
               className={styles.profilePicture}
               width={95}
