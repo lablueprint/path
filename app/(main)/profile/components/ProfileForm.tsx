@@ -7,7 +7,7 @@ import { updateUser } from '@/app/actions/user';
 import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import defaultProfilePhoto from '@/public/image-placeholder.svg';
 
 type ProfileFormValues = {
   email: string;
@@ -49,6 +49,7 @@ export default function ProfileForm({ user }: { user: User }) {
       alert('File is too large. Please select an image under 200 KB.');
       return;
     }
+    // Create a temporary local blob URL for immediate UI feedback
     const preview = URL.createObjectURL(file);
     setPreviewUrl(preview);
     setSelectedFile(file);
@@ -80,42 +81,21 @@ export default function ProfileForm({ user }: { user: User }) {
         data: { user: authUser },
       } = await supabase.auth.getUser();
 
-      const getOldPath = (url: string) => {
-        try {
-          const urlObj = new URL(url);
-          const parts = urlObj.pathname.split('/profile_photos/');
-          return parts.length === 2 ? parts[1] : null;
-        } catch {
-          return null;
-        }
-      };
-
       if (authUser) {
+        // Handle deletion if flagged
         if (isPendingDelete) {
-          const oldPath = photoUrl ? getOldPath(photoUrl) : null;
-          if (oldPath) {
-            await supabase.storage
-              .from('profile_photos')
-              .remove([oldPath]);
-          }
+          await supabase.storage
+            .from('profile_photos')
+            .remove([`${authUser.id}/profile.jpg`]);
           finalPhotoUrl = null;
         }
 
+        // Handle upload if a new file is selected
         if (selectedFile) {
-          const oldPath = photoUrl ? getOldPath(photoUrl) : null;
-          if (oldPath) {
-             await supabase.storage
-               .from('profile_photos')
-               .remove([oldPath]);
-          }
-
-          const uniqueFileName = `profile-${Date.now()}-${selectedFile.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
-          const newFilePath = `${authUser.id}/${uniqueFileName}`;
-
           const { error: uploadError } = await supabase.storage
             .from('profile_photos')
-            .upload(newFilePath, selectedFile, {
-              upsert: false,
+            .upload(`${authUser.id}/profile.jpg`, selectedFile, {
+              upsert: true,
             });
 
           if (uploadError) {
@@ -123,13 +103,14 @@ export default function ProfileForm({ user }: { user: User }) {
           } else {
             const { data: publicData } = supabase.storage
               .from('profile_photos')
-              .getPublicUrl(newFilePath);
+              .getPublicUrl(`${authUser.id}/profile.jpg`);
 
             finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
           }
         }
       }
 
+      // Create a partial update object
       const changes: UserUpdate = {};
       if (data.firstName !== user.first_name)
         changes.first_name = data.firstName;
@@ -166,6 +147,7 @@ export default function ProfileForm({ user }: { user: User }) {
     }
   };
 
+  // Determine image to show the user
   const displayImage = isPendingDelete
     ? defaultProfilePhoto.src
     : previewUrl || photoUrl || defaultProfilePhoto.src;
@@ -184,6 +166,7 @@ export default function ProfileForm({ user }: { user: User }) {
           unoptimized
         />
 
+        {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
         {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
           <button type="button" onClick={handleRemovePhoto}>
             Remove

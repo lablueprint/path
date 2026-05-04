@@ -30,7 +30,7 @@ export default function UsersList({
             <tr key={user.user_id} className={styles.userTableRow}>
               <td>
                 <Image
-                  src={user.profile_photo_url || '/default-profile-picture.png'}
+                  src={user.profile_photo_url || '/image-placeholder.svg'}
                   alt={`Profile picture for ${user.first_name}`}
                   height={32}
                   width={32}

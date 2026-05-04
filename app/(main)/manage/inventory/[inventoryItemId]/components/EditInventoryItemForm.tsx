@@ -9,7 +9,7 @@ import type {
 } from '@/app/types/inventory';
 import Image from 'next/image';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultItemPhoto from '@/public/default-profile-picture.png';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
 
@@ -31,6 +31,19 @@ function getDefaultValues(
     selectedCategory: item.category_id ? String(item.category_id) : '',
     selectedSubcategory: item.subcategory_id ? String(item.subcategory_id) : '',
   };
+}
+
+function useTime() {
+  const [time, setTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(Date.now());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return time;
 }
 
 export default function EditInventoryItemForm({
@@ -71,6 +84,7 @@ export default function EditInventoryItemForm({
     control,
     name: 'selectedCategory',
   });
+  const time = useTime();
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -121,47 +135,23 @@ export default function EditInventoryItemForm({
     photoUploadRef.current?.resetFile();
   };
 
-  const getOldPath = (url: string) => {
-    try {
-      const urlObj = new URL(url);
-      const parts = urlObj.pathname.split('/inventory_item_photos/');
-      return parts.length === 2 ? parts[1] : null;
-    } catch {
-      return null;
-    }
-  };
-
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     try {
       await supabase.auth.getUser();
       let finalPhotoUrl = photoUrl;
 
       if (isPendingDelete) {
-        const oldPath = photoUrl ? getOldPath(photoUrl) : null;
-        if (oldPath) {
-          await supabase.storage
-            .from('inventory_item_photos')
-            .remove([oldPath]);
-        }
+        await supabase.storage
+          .from('inventory_item_photos')
+          .remove([`${item.inventory_item_id}/item.jpg`]);
         finalPhotoUrl = null;
       }
 
       if (selectedFile) {
-        const oldPath = photoUrl ? getOldPath(photoUrl) : null;
-        if (oldPath) {
-          await supabase.storage
-            .from('inventory_item_photos')
-            .remove([oldPath]);
-        }
-
-        const uniqueFileName = `${Date.now()}-${selectedFile.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
-        const newFilePath = `${item.inventory_item_id}/${uniqueFileName}`;
-
         const { error: uploadError } = await supabase.storage
           .from('inventory_item_photos')
-          .upload(newFilePath, selectedFile, {
-            upsert: false,
-            contentType: selectedFile.type,
+          .upload(`${item.inventory_item_id}/item.jpg`, selectedFile, {
+            upsert: true,
           });
 
         if (uploadError) {
@@ -171,8 +161,8 @@ export default function EditInventoryItemForm({
 
         const { data: publicData } = supabase.storage
           .from('inventory_item_photos')
-          .getPublicUrl(newFilePath);
-        finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+          .getPublicUrl(`${item.inventory_item_id}/item.jpg`);
+        finalPhotoUrl = `${publicData.publicUrl}?t=${time}`;
       }
 
       const result = await updateItem(item.inventory_item_id, {
@@ -196,7 +186,7 @@ export default function EditInventoryItemForm({
       setPreviewUrl(null);
       setSelectedFile(null);
       setIsPendingDelete(false);
-      photoUploadRef.current?.resetFile();
+      /* photoUploadRef.current?.resetFile(); */
       setInitialValues(formData);
       reset(formData);
     } catch (error) {

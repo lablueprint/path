@@ -1,5 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 export default async function RequestStoreItemPage({
   params,

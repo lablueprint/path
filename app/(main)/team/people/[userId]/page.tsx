@@ -35,7 +35,7 @@ export default async function TeamProfilePage({
   return (
     <div>
       <Image
-        src={user.profile_photo_url || '/default-profile-picture.png'}
+        src={user.profile_photo_url || '/image-placeholder.svg'}
         alt={`Profile picture for ${user.first_name}`}
         height={64}
         width={64}

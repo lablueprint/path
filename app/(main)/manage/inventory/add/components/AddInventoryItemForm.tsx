@@ -7,7 +7,7 @@ import { useForm, useWatch, SubmitHandler } from 'react-hook-form';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultItemPhoto from '@/public/default-profile-picture.png';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 type Inputs = {
   name: string;
@@ -17,6 +17,19 @@ type Inputs = {
 };
 
 const supabase = createClient();
+
+function useTime() {
+  const [time, setTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(Date.now());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return time;
+}
 
 export default function AddInventoryItemForm() {
   const {
@@ -36,6 +49,8 @@ export default function AddInventoryItemForm() {
     control,
     name: 'selectedCategory',
   });
+
+  const time = useTime();
 
   const handleFileSelect = (file: File) => {
     const maxSize = 200 * 1024;
@@ -68,19 +83,16 @@ export default function AddInventoryItemForm() {
           : null,
       });
 
-      if (result.success) {
-        // Reset form fields after successful submission
-        reset();
-      } else {
+      if (!result.success) {
         console.error('Failed to create item:', result.error);
         return;
       }
 
-      const inventoryItemId = result.data.inventory_item_id;
+      const inventoryItemId = result?.data?.inventory_item_id;
 
       // Upload photo if selected
       if (selectedFile) {
-        const filePath = `${inventoryItemId}/photo.jpg`;
+        const filePath = `${inventoryItemId}/item.jpg`;
         const { error: uploadError } = await supabase.storage
           .from('inventory_item_photos')
           .upload(filePath, selectedFile, { upsert: true });
@@ -91,7 +103,7 @@ export default function AddInventoryItemForm() {
           const { data: publicData } = supabase.storage
             .from('inventory_item_photos')
             .getPublicUrl(filePath);
-          photoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+          photoUrl = `${publicData.publicUrl}?t=${time}`;
 
           // Update the item with the photo_url
           await supabase
@@ -108,7 +120,7 @@ export default function AddInventoryItemForm() {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
       setSelectedFile(null);
-      photoUploadRef.current?.resetFile();
+      /* photoUploadRef.current?.resetFile(); */
     } catch (error) {
       console.error('Error submitting form:', error);
     }

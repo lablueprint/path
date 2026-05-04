@@ -1,6 +1,8 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
 import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 export default async function ManageStoreItemPage({
   params,

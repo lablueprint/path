@@ -71,9 +71,10 @@ export default async function InventoryItemPage({
     name: data.name,
     description: data.description,
     photo_url: data.photo_url,
-    category_id: data.subcategories?.category_id != null
-      ? String(data.subcategories.category_id)
-      : undefined,
+    category_id:
+      data.subcategories?.category_id != null
+        ? String(data.subcategories.category_id)
+        : undefined,
   };
 
   const categoryName = data.subcategories?.categories?.name ?? 'None';
