@@ -1,6 +1,7 @@
 import DeleteInventoryItemButton from '@/app/(main)/manage/inventory/[inventoryItemId]/components/DeleteInventoryItemButton';
 import EditInventoryItemForm from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm';
 import { createClient } from '@/app/lib/supabase/server-client';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function InventoryItemPage({
   params,
@@ -93,6 +94,13 @@ export default async function InventoryItemPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+          [inventoryItemId]: item.name ?? 'Item',
+        }}
+      />
       <h1>{item.name}</h1>
       <EditInventoryItemForm
         item={item}

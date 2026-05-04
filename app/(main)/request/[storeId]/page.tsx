@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
@@ -124,6 +125,12 @@ export default async function RequestStorePage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store.name,
+        }}
+      />{' '}
       <div>
         <h1>{store.name}</h1>
         <p>{store.street_address}</p>
@@ -145,7 +152,6 @@ export default async function RequestStorePage({
       <h2>Out-of-Stock Request</h2>
       <AddOutOfStockToCartForm storeId={storeId} />
       <h2>In-Stock Items</h2>
-
       {items && items.length > 0 ? (
         <div>
           {items.map((item) => (

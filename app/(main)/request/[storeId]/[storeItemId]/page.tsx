@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import { createClient } from '@/app/lib/supabase/server-client';
 import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
 import Image from 'next/image';
@@ -11,6 +12,15 @@ export default async function RequestStoreItemPage({
   const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
+  const { data: store, error: storeError } = await supabase
+    .from('stores')
+    .select('name')
+    .eq('store_id', storeId)
+    .single();
+
+  if (storeError) {
+    console.error('Error fetching store for breadcrumbs:', storeError);
+  }
 
   const { data: itemData, error } = await supabase
     .from('store_items')
@@ -53,6 +63,13 @@ export default async function RequestStoreItemPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store?.name ?? 'Store',
+          [`/request/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
+        }}
+      />
       <Image
         src={itemData.inventory_items.photo_url || defaultItemPhoto}
         alt={itemData.inventory_items.name}
