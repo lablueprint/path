@@ -2,7 +2,6 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import styles from './ItemSearch.module.css';
 
 type category = {
   name: string;
@@ -82,20 +81,20 @@ export default function ItemSearch({ categories, subcategories }: Props) {
     : subcategories;
 
   return (
-    <div className={styles.wrapper}>
+    <div className="search-filter-wrapper">
       {/* Search input */}
       <input
-        className={styles.searchInput}
+        className="search-filter-input"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Search items..."
         aria-label="Search items"
       />
 
-      <div className={styles.filtersRow}>
+      <div className="search-filter-row">
         {/* Category dropdown */}
         <select
-          className={styles.selectInput}
+          className="search-filter-select"
           value={searchParams.get('category') ?? ''}
           onChange={(e) => handleCategoryChange(e.target.value)}
           aria-label="Filter by category"
@@ -110,7 +109,7 @@ export default function ItemSearch({ categories, subcategories }: Props) {
 
         {/* Subcategory dropdown */}
         <select
-          className={styles.selectInput}
+          className="search-filter-select"
           value={searchParams.get('subcategory') ?? ''}
           onChange={(e) => handleSubcategoryChange(e.target.value)}
           aria-label="Filter by subcategory"
@@ -126,7 +125,7 @@ export default function ItemSearch({ categories, subcategories }: Props) {
         {/* Clear button */}
         <button
           type="button"
-          className={styles.clearButton}
+          className="search-filter-clear"
           onClick={handleClearFilters}
         >
           Clear Filters

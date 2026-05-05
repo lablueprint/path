@@ -2,7 +2,6 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import styles from '@/app/(main)/components/ItemSearch.module.css';
 
 type Role = {
   name: string;
@@ -65,17 +64,17 @@ export default function UserSearch({ roles }: Props) {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div className="search-filter-wrapper">
       <input
-        className={styles.searchInput}
+        className="search-filter-input"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Search users"
       />
 
-      <div className={styles.filtersRow}>
+      <div className="search-filter-row">
         <select
-          className={styles.selectInput}
+          className="search-filter-select"
           value={searchParams.get('role') ?? ''}
           onChange={(e) => handleRoleChange(e.target.value)}
         >
@@ -89,7 +88,7 @@ export default function UserSearch({ roles }: Props) {
 
         <button
           type="button"
-          className={styles.clearButton}
+          className="search-filter-clear"
           onClick={handleClearFilters}
         >
           Clear filters

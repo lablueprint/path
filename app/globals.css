@@ -64,3 +64,55 @@ thead th {
 .main {
   display: flex;
 }
+
+/* search bar layout */
+.search-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin: 0.5rem 0 1rem;
+}
+
+/* filter button styling */
+.search-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Gives all 3 controls a matching style */
+.search-filter-input, .search-filter-select, .search-filter-clear {
+  min-height: 2rem;
+  border: 1px solid #d7dfeb;
+  border-radius: 0.45rem;
+  background-color: #ffffff;
+  color: #101214;
+  font-family: inherit;
+}
+
+/* Search bar styling */
+.search-filter-input { 
+  width: 100%;
+  padding: 0.45rem 2.75rem 0.45rem 0.85rem;
+  font-size: 0.95rem;
+  background: #fff url('/magnifying-glass (2) 1.png') no-repeat right 0.75rem center / 1.2rem;
+}
+
+/* filter dropdown styling */
+.search-filter-select {
+  width: 15rem;
+  padding: 0.45rem 2.5rem 0.45rem 0.8rem;
+  appearance: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: #fff url('/chevron.svg') no-repeat right 0.75rem center / 1.15rem;
+}
+
+/* clear filter button styling */
+.search-filter-clear {
+  padding: 0.45rem 0.85rem 0.45rem 2.35rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background: #fff url('/funnel 1.png') no-repeat left 0.8rem center / 1.1rem;
+}
