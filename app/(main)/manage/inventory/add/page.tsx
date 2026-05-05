@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import AddInventoryItemForm, {
@@ -13,6 +13,20 @@ const supabase = createClient();
 export default function AddInventoryItemPage() {
   const methods = useForm<Inputs>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  function useTime() {
+    const [time, setTime] = useState(() => Date.now());
+
+    useEffect(() => {
+      const id = setInterval(() => {
+        setTime(Date.now());
+      }, 1000);
+      return () => clearInterval(id);
+    }, []);
+
+    return time;
+  }
+  const time = useTime();
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
     try {
@@ -42,7 +56,7 @@ export default function AddInventoryItemPage() {
           const { data: publicData } = supabase.storage
             .from('inventory_item_photos')
             .getPublicUrl(filePath);
-          const photoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+          const photoUrl = `${publicData.publicUrl}?t=${time}`;
 
           await supabase
             .from('inventory_items')

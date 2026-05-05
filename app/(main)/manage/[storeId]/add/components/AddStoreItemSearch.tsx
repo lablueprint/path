@@ -40,6 +40,20 @@ export default function AddStoreItemSearch({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const createItemMethods = useForm<Inputs>();
 
+  function useTime() {
+    const [time, setTime] = useState(() => Date.now());
+
+    useEffect(() => {
+      const id = setInterval(() => {
+        setTime(Date.now());
+      }, 1000);
+      return () => clearInterval(id);
+    }, []);
+
+    return time;
+  }
+  const time = useTime();
+
   // Debounce search (300ms)
   useEffect(() => {
     const timeout = setTimeout(async () => {
@@ -119,7 +133,7 @@ export default function AddStoreItemSearch({
             const { data: publicData } = supabase.storage
               .from('inventory_item_photos')
               .getPublicUrl(filePath);
-            photoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+            photoUrl = `${publicData.publicUrl}?t=${time}`;
 
             await supabase
               .from('inventory_items')

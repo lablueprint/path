@@ -32,10 +32,17 @@ export default function AddInventoryItemForm({
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedFileState, setSelectedFileState] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const photoUploadRef = useRef<{ resetFile: () => void }>(null);
   const selectedCategory = watch('selectedCategory');
   const selectedFile = selectedFileProp ?? selectedFileState;
+
+  const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+
+  useEffect(() => {
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
+
   const supabase = createClient();
 
   const handleFileChanged = (file: File | null) => {
@@ -60,20 +67,6 @@ export default function AddInventoryItemForm({
     handleFileChanged(null);
     photoUploadRef.current?.resetFile();
   };
-
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreviewUrl(null);
-      return;
-    }
-
-    const preview = URL.createObjectURL(selectedFile);
-    setPreviewUrl(preview);
-
-    return () => {
-      URL.revokeObjectURL(preview);
-    };
-  }, [selectedFile]);
 
   useEffect(() => {
     if (!selectedFile) {
