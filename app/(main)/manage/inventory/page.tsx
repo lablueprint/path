@@ -2,6 +2,7 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -45,7 +46,7 @@ export default async function InventoryPage({
       {
         inventory_item_id: string;
         name: string;
-        photo_url: string;
+        photo_url: string | null;
         subcategories: {
           name: string;
           categories: {
@@ -91,6 +92,12 @@ export default async function InventoryPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+        }}
+      />
       <h1>Inventory Library</h1>
       <Link href="/manage/inventory/add">
         <p>Add inventory item</p>

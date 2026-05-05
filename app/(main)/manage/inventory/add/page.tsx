@@ -1,5 +1,6 @@
 'use client';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
@@ -32,6 +33,14 @@ export default function AddInventoryItemPage() {
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+          add: 'Add Inventory Item',
+        }}
+      />
+
       <h1>Add Inventory Item</h1>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
