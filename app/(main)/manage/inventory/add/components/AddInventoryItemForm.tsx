@@ -112,9 +112,6 @@ export default function AddInventoryItemForm() {
             .eq('inventory_item_id', inventoryItemId);
         }
       }
-
-      console.log('Item created successfully:', result.data);
-
       // Reset everything
       reset();
       if (previewUrl) URL.revokeObjectURL(previewUrl);

@@ -10,7 +10,6 @@ export default async function PersonalProfilePage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log(user);
   if (!user) {
     return <div>Please sign in.</div>;
   }
@@ -20,7 +19,6 @@ export default async function PersonalProfilePage() {
     .select('*')
     .eq('user_id', user.id)
     .single();
-  console.log(profile);
 
   if (err || !profile) {
     console.error('Error fetching profile:', err);

@@ -22,9 +22,6 @@ export default function AddInventoryItemPage() {
       if (result.success) {
         // Reset form fields after successful submission
         methods.reset();
-        console.log('Item created successfully:', result.data);
-      } else {
-        console.error('Failed to create item:', result.error);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
