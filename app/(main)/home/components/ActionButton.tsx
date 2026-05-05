@@ -5,7 +5,7 @@ import Link from 'next/link';
 type ActionButtonProps = {
   text: string;
   url: string;
-  icon: any;
+  icon: string;
 };
 
 export default function ActionButton({ text, url, icon }: ActionButtonProps) {
