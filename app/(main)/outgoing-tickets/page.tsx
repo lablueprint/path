@@ -16,14 +16,14 @@ export default async function OutgoingTicketsPage() {
         status,
         date_submitted,
         store_id,
-        stores (
+        stores!fk_stores (
           name
         )
       `,
     )
     .eq('requestor_user_id', user?.id);
 
-  if (error) return <div>Failed to load data.</div>;
+  if (error) return <div>Failed to load data: {error.message}</div>;
 
   return (
     <div>
