@@ -267,3 +267,28 @@ export async function addToCart(
 
   return { success: true, data: ticket };
 }
+
+export async function updateTicketDestStore(
+  newDestStoreId: string,
+  ticketId: string,
+  storeId: string,
+) {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('tickets')
+    .update({ dest_store_id: newDestStoreId})
+    .eq('ticket_id', ticketId)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error changing ticket destination store:', err);
+    return { success: false, data: null, error: err.message };
+  }
+
+  revalidatePath(`/request/${storeId}/cart`);
+  revalidatePath(`incoming-tickets.${storeId}`);
+  revalidatePath(`/incoming-tickets/${storeId}/${ticketId}`);
+
+  return { success: true, data: entry as Ticket };
+}
