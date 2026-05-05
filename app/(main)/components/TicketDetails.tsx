@@ -4,6 +4,8 @@ import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
+import { Store } from '@/app/types/store';
+import TicketDestStoreDropdown from './TicketDestStoreDropdown';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -20,7 +22,7 @@ export default async function TicketDetails({
     .from('tickets')
     .select(
       `
-        store_id, ticket_id, requestor_user_id, status, date_submitted,
+        store_id, ticket_id, requestor_user_id, status, date_submitted, dest_store_id,
         stores!fk_stores (
           name,
           street_address
@@ -105,6 +107,22 @@ export default async function TicketDetails({
     ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
     : getIncomingStatusOptions(userTicket.status as TicketStatus);
 
+    // If ticket exists, query for dest store options
+  const { data: destStoreOptions, error: destStoreOptionsError } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .neq('store_id', userTicket.store_id);
+  if (destStoreOptionsError) {
+    console.error('Error fetching destination store options:', destStoreOptionsError);
+  }
+
+  // If ticket exists, query for current dest store
+  const { data: currentDestStore, error: currentDestStoreError } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', userTicket.dest_store_id)
+    .single();
+
   return (
     <div>
       {userTicket ? (
@@ -120,6 +138,14 @@ export default async function TicketDetails({
               ticketId={userTicket.ticket_id}
               currentStatus={userTicket.status as TicketStatus}
               statusOptions={statusOptions}
+            />
+          </div>
+          <div>
+            <p>Ticket Destination Store: </p>
+            <TicketDestStoreDropdown 
+              ticketId={ticketId}
+              currentDestStore={ currentDestStore as Store || null }
+              destStoreOptions={ (destStoreOptions ?? []).map((store) => ( { store })) }
             />
           </div>
 
