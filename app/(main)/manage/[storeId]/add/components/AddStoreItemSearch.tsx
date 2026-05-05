@@ -1,11 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useFormContext, useFieldArray, FormProvider, useForm } from 'react-hook-form';
+import {
+  useFormContext,
+  useFieldArray,
+  FormProvider,
+  useForm,
+} from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { InventoryItem } from '@/app/types/inventory';
 import type { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
-import AddInventoryItemForm, { Inputs } from '@/app/(main)/manage/components/AddInventoryItemForm';
+import AddInventoryItemForm, {
+  Inputs,
+} from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
 import ItemCard from '@/app/(main)/components/ItemCard';
 
@@ -29,7 +36,7 @@ export default function AddStoreItemSearch({
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
-  
+
   const [showCreateForm, setShowCreateForm] = useState(false);
   const createItemMethods = useForm<Inputs>();
 
@@ -112,7 +119,7 @@ export default function AddStoreItemSearch({
         }
 
         // Clear and hide the create form
-        createItemMethods.reset();
+        createItemMethods.reset({}, { keepValues: false });
         setShowCreateForm(false);
       } else {
         console.error('Failed to create item:', result.error);
@@ -145,7 +152,7 @@ export default function AddStoreItemSearch({
       </ul>
 
       {/* Create new item button with AddInventoryItemForm */}
-       {showCreateForm && (
+      {showCreateForm && (
         <FormProvider {...createItemMethods}>
           <AddInventoryItemForm />
           <button
