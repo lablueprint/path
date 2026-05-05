@@ -31,10 +31,7 @@ export default function AddOutOfStockToCartForm({
           type="text"
           placeholder="Description of item..."
         />
-        <button
-          type="submit"
-          className="btn-submit"
-        >
+        <button type="submit" className="btn-submit">
           Add to Cart
         </button>
       </Form>
