@@ -36,8 +36,8 @@ export default function AddStoreItemSearch({
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
-
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const createItemMethods = useForm<Inputs>();
 
   // Debounce search (300ms)
@@ -93,6 +93,8 @@ export default function AddStoreItemSearch({
 
   const handleCreateAndSelect = async (formData: Inputs) => {
     try {
+      let photoUrl: string | null = null;
+
       const result = await createItem({
         name: formData.name,
         description: formData.description,
@@ -102,11 +104,36 @@ export default function AddStoreItemSearch({
       });
 
       if (result.success && result.data) {
+        const inventoryItemId = result.data.inventory_item_id;
+
+        // Upload photo if selected
+        if (inventoryItemId && selectedFile) {
+          const filePath = `${inventoryItemId}/item.jpg`;
+          const { error: uploadError } = await supabase.storage
+            .from('inventory_item_photos')
+            .upload(filePath, selectedFile, { upsert: true });
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError.message);
+          } else {
+            const { data: publicData } = supabase.storage
+              .from('inventory_item_photos')
+              .getPublicUrl(filePath);
+            photoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
+
+            await supabase
+              .from('inventory_items')
+              .update({ photo_url: photoUrl })
+              .eq('inventory_item_id', inventoryItemId);
+          }
+          setSelectedFile(null);
+        }
+
         // Fetch the full item with category/subcategory names to add to selected
         const { data, error } = await supabase
           .from('inventory_items')
           .select(`*, subcategories (name, categories(name))`)
-          .eq('inventory_item_id', result.data.inventory_item_id)
+          .eq('inventory_item_id', inventoryItemId)
           .single();
 
         if (!error && data) {
@@ -118,7 +145,6 @@ export default function AddStoreItemSearch({
           handleSelect(newItem);
         }
 
-        // Clear and hide the create form
         createItemMethods.reset({}, { keepValues: false });
         setShowCreateForm(false);
       } else {
@@ -137,7 +163,15 @@ export default function AddStoreItemSearch({
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <button type="button" onClick={() => setShowCreateForm((prev) => !prev)}>
+      <button
+        type="button"
+        onClick={() => {
+          setShowCreateForm((prev) => {
+            if (prev) setSelectedFile(null);
+            return !prev;
+          });
+        }}
+      >
         {showCreateForm ? 'Cancel' : 'Create new item'}
       </button>
       <ul>
@@ -151,10 +185,12 @@ export default function AddStoreItemSearch({
         ))}
       </ul>
 
-      {/* Create new item button with AddInventoryItemForm */}
       {showCreateForm && (
         <FormProvider {...createItemMethods}>
-          <AddInventoryItemForm />
+          <AddInventoryItemForm
+            selectedFile={selectedFile}
+            onFileChange={setSelectedFile}
+          />
           <button
             type="button"
             onClick={createItemMethods.handleSubmit(handleCreateAndSelect)}
@@ -170,7 +206,7 @@ export default function AddStoreItemSearch({
           <div key={field.id}>
             <ItemCard
               id={selectedItems[idx]?.inventory_item_id}
-              photoUrl={null}
+              photoUrl={selectedItems[idx]?.photo_url ?? null}
               item={selectedItems[idx]?.name}
               subcategory={selectedItems[idx]?.subcategory_name}
               category={selectedItems[idx]?.category_name}
