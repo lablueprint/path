@@ -43,27 +43,25 @@
   aspect-ratio: 1 / 1;
   border-radius: 0.35rem;
   overflow: hidden;
-  background: #dce9f7;
+  border: 1px solid rgba(0, 174, 239, 0.2);
+  background: rgba(0, 174, 239, 0.05);
 }
 
 .photoImage,
 .placeholderImage {
   width: 100%;
   height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .photoImage {
-  background-position: center;
-  background-repeat: no-repeat;
   background-size: cover;
 }
 
 .placeholderImage {
-  background-color: #dce9f7;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160' fill='none'%3E%3Crect x='32' y='42' width='96' height='68' rx='4' stroke='white' stroke-width='8'/%3E%3Ccircle cx='104' cy='62' r='7' fill='white'/%3E%3Cpath d='M39 101L68 71L87 90L98 79L121 102' stroke='white' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 10rem 10rem;
+  background-image: url('/Image Placeholder.svg');
+  background-size: cover;
 }
 
 .detailsColumn {
@@ -81,17 +79,22 @@
   gap: 0.55rem;
 }
 
-.fieldLabel {
+.fieldLabel,
+.fieldValue,
+.descriptionText,
+.quantityInput,
+.stockBadge {
   margin: 0;
-  font-size: 1rem;
+  color: #000000;
+  font-size: 0.875rem;
+}
+
+.fieldLabel {
   font-weight: 700;
   line-height: 1.3;
 }
 
 .fieldValue {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 400;
   line-height: 1.35;
 }
 
@@ -105,35 +108,27 @@
 .quantityInput {
   width: 7.6rem;
   padding: 0.55rem 0.8rem;
-  border: 1px solid #cfd6df;
+  border: 1px solid rgba(0, 174, 239, 0.2);
   border-radius: 0.35rem;
+  background: rgba(0, 174, 239, 0.05);
   font: inherit;
   line-height: 1.2;
 }
 
 .quantityInput::placeholder {
-  color: #9aa3af;
+  color: rgba(0, 0, 0, 0.45);
   opacity: 1;
-}
-
-.quantityInput:focus {
-  outline: 2px solid rgba(111, 168, 220, 0.28);
-  outline-offset: 1px;
 }
 
 .stockBadge {
   display: inline;
-  padding: 0;
   color: #bb3030;
-  font-size: 0.8rem;
   font-weight: 500;
   line-height: 1.2;
 }
 
 .descriptionText {
-  margin: 0;
   max-width: 24rem;
-  font-size: 1rem;
   line-height: 1.4;
 }
 
@@ -143,21 +138,12 @@
   padding: 0.6rem 1.25rem;
   border: 0;
   border-radius: 0.4rem;
-  background: #5b9dff;
+  background: #8a288f;
   color: #ffffff;
   font: inherit;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   line-height: 1.2;
-  cursor: pointer;
-}
-
-.addButton:hover {
-  background: #4a90f7;
-}
-
-.addButton:focus-visible {
-  outline: 2px solid rgba(91, 157, 255, 0.32);
-  outline-offset: 2px;
 }
 
 @media (max-width: 991.98px) {
@@ -183,10 +169,6 @@
 @media (max-width: 575.98px) {
   .card {
     padding: 1.25rem;
-  }
-
-  .placeholderImage {
-    background-size: 7rem 7rem;
   }
 
   .quantityInput {
