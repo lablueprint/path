@@ -2,7 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Dropdown from '@/app/(main)/team/people/[userId]/components/Dropdown';
 import Image from 'next/image';
-import imagePlaceholder from '@/public/image-placeholder.svg'
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 export default async function TeamProfilePage({
   params,
