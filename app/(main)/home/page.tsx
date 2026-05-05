@@ -6,7 +6,6 @@ import InventoryIcon from '@/public/inventory.svg';
 import PieIcon from '@/public/pie.svg';
 import { Col, Container, Row } from 'react-bootstrap';
 
-
 export default async function HomePage() {
   const supabase = await createClient();
 
@@ -21,29 +20,39 @@ export default async function HomePage() {
 
   return (
     <>
-      <h1 style={{marginBottom: '4rem'}}>Home</h1>
+      <h1 style={{ marginBottom: '4rem' }}>Home</h1>
       <Container>
-        <Row className="g-5 mb-4">
-          <Col xs={"auto"}>
-            <ActionButton text="Donate" url="/home/donate" icon={DonateIcon}/>
+        <Row className="g-5 gy-5">
+          <Col xs={'auto'}>
+            <ActionButton text="Donate" url="/home/donate" icon={DonateIcon} />
           </Col>
 
-          <Col xs={"auto"}>
+          <Col xs={'auto'}>
             {['requestor', 'admin', 'superadmin', 'owner'].includes(
               userRole ?? '',
-            ) && <ActionButton text="Request Inventory" url="/request" icon={InventoryIcon}/>}
+            ) && (
+              <ActionButton
+                text="Request Inventory"
+                url="/request"
+                icon={InventoryIcon}
+              />
+            )}
           </Col>
         </Row>
 
         <Row className="g-5">
-          <Col xs={"auto"}>
+          <Col xs={'auto'}>
             {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
-              <ActionButton text="Manage Inventory" url="/manage" icon={HomeIcon}/>
+              <ActionButton
+                text="Manage Inventory"
+                url="/manage"
+                icon={HomeIcon}
+              />
             )}
           </Col>
-          <Col xs={"auto"}>
+          <Col xs={'auto'}>
             {['superadmin', 'owner'].includes(userRole ?? '') && (
-              <ActionButton text="HQ" url="/hq" icon={PieIcon}/>
+              <ActionButton text="HQ" url="/hq" icon={PieIcon} />
             )}
           </Col>
         </Row>
