@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Offcanvas } from 'react-bootstrap';
+import { Offcanvas, CloseButton } from 'react-bootstrap';
 import Link from 'next/link';
 import Image from 'next/image';
 import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
@@ -60,22 +60,19 @@ export default function MobileSidebar({
       </div>
 
       <Offcanvas show={show} onHide={handleClose} placement="start">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>
-            <Link href="/home" onClick={handleClose} className={styles.pathHomeLink}>
-              <Image
-                src="/path.png"
-                alt="Path Home Logo"
-                width={120}
-                height={57}
-                priority
-              />
-            </Link>
-          </Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body
-          style={{ display: 'flex', flexDirection: 'column', overflowY: 'hidden', padding: '1rem' }}
-        >
+        <div className={styles.offcanvasInner}>
+          <CloseButton className={styles.offcanvasClose} onClick={handleClose} aria-label="Close menu" />
+          <Link href="/home" onClick={handleClose} className={styles.pathHomeLink}>
+            <Image
+              src="/path.png"
+              alt="Path Home Logo"
+              width={160}
+              height={76}
+              className={styles.pathHomeImage}
+              priority
+            />
+          </Link>
+
           <div className={styles.offcanvasLinks}>
             {sidebarGroups.map((group, index) => {
               const visibleLinks = group.links.filter((link) =>
@@ -116,7 +113,7 @@ export default function MobileSidebar({
             </div>
             <div>{displayName}</div>
           </Link>
-        </Offcanvas.Body>
+        </div>
       </Offcanvas>
     </>
   );
