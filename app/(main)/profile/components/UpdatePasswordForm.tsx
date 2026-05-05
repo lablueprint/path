@@ -85,21 +85,27 @@ export default function UpdatePasswordForm() {
             <p role="alert">Passwords do not match.</p>
           )}
           <br />
-          {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={() =>
-                reset({
-                  newPassword: '',
-                  newPasswordConfirmation: '',
-                })
-              }
-            >
-              Cancel
-            </button>
-          )}
-          {passwordsMatch && <button type="submit">Save</button>}
+          <div className="btn-row">
+            {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={() =>
+                  reset({
+                    newPassword: '',
+                    newPasswordConfirmation: '',
+                  })
+                }
+              >
+                Cancel
+              </button>
+            )}
+            {passwordsMatch && (
+              <button className="btn-save" type="submit">
+                Save
+              </button>
+            )}
+          </div>
         </form>
       </div>
     </div>

@@ -177,6 +177,12 @@ thead th {
   transition: background 0.2s ease;
 }
 
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 .form-body {
   display: flex;
   flex-direction: column;

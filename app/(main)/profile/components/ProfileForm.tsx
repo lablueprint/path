@@ -272,7 +272,7 @@ export default function ProfileForm({ user }: { user: User }) {
           </div>
 
           {hasDirtyTextOrImage && (
-            <div className={styles.buttonRow}>
+            <div className="btn-row">
               <button className="btn-save" type="submit" disabled={isSaving}>
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
