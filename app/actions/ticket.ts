@@ -275,7 +275,7 @@ export async function updateTicketDestStore(
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('tickets')
-    .update({ dest_store_id: newDestStoreId})
+    .update({ dest_store_id: newDestStoreId })
     .eq('ticket_id', ticketId)
     .select()
     .single();

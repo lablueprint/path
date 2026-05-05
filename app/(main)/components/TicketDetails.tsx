@@ -122,20 +122,25 @@ export default async function TicketDetails({
   };
 
   // If ticket exists, query for dest store options
-  const { data: destStoreOptions, error: destStoreOptionsError } = await supabase
-    .from('stores')
-    .select('store_id, name, street_address')
-    .neq('store_id', userTicket.store_id);
+  const { data: destStoreOptions, error: destStoreOptionsError } =
+    await supabase
+      .from('stores')
+      .select('store_id, name, street_address')
+      .neq('store_id', userTicket.store_id);
   if (destStoreOptionsError) {
-    console.error('Error fetching destination store options:', destStoreOptionsError);
+    console.error(
+      'Error fetching destination store options:',
+      destStoreOptionsError,
+    );
   }
 
   // If ticket exists, query for current dest store
-  const { data: currentDestStore, error: currentDestStoreError } = await supabase
-    .from('stores')
-    .select('store_id, name, street_address')
-    .eq('store_id', userTicket.dest_store_id)
-    .single();
+  const { data: currentDestStore, error: currentDestStoreError } =
+    await supabase
+      .from('stores')
+      .select('store_id, name, street_address')
+      .eq('store_id', userTicket.dest_store_id)
+      .single();
 
   return (
     <div>
@@ -182,10 +187,12 @@ export default async function TicketDetails({
           </div>
           <div>
             <p>Ticket Destination Store: </p>
-            <TicketDestStoreDropdown 
+            <TicketDestStoreDropdown
               ticketId={ticketId}
-              currentDestStore={ currentDestStore as Store || null }
-              destStoreOptions={ (destStoreOptions ?? []).map((store) => ( { store })) }
+              currentDestStore={(currentDestStore as Store) || null}
+              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                store,
+              }))}
             />
           </div>
 

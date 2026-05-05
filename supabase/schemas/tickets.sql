@@ -13,7 +13,6 @@ create table tickets (
   status ticket_status not null,
   date_submitted timestamp with time zone default now(),
   dest_store_id uuid null,
-  
   constraint fk_dest_stores foreign key (dest_store_id) references stores (store_id),
   constraint fk_users foreign key (requestor_user_id) references users (user_id),
   constraint fk_stores foreign key (store_id) references stores (store_id)
