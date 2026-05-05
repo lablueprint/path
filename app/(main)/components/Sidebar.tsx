@@ -2,7 +2,8 @@ import Link from 'next/link';
 import styles from '@/app/(main)/components/Sidebar.module.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
-import SidebarNavLink from './SidebarNavLink';
+import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
@@ -115,7 +116,7 @@ export default async function Sidebar() {
         <Link href="/profile" className={styles.profile}>
           <div className={styles.pfpContainer}>
             <Image
-              src={profilePhotoUrl || '/default-profile-picture.png'}
+              src={profilePhotoUrl || imagePlaceholder}
               alt={`${displayName} profile photo`}
               width={40}
               height={40}

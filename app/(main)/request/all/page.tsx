@@ -3,6 +3,7 @@ import ItemSearch from '@/app/(main)/components/ItemSearch';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -134,6 +135,12 @@ export default async function RequestAllStoresPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          all: 'All Stores',
+        }}
+      />
       <div>
         <h1>All Stores</h1>
         <Link href="/request/all/cart">Cart</Link>

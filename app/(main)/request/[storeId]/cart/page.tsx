@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitTicketButton from '@/app/(main)/request/[storeId]/cart/components/SubmitTicketButton';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 import { Store } from '@/app/types/store';
@@ -24,6 +25,17 @@ export default async function CartPage({
 
   if (!user) {
     return <div>User not found</div>;
+  }
+
+  const { data: store, error: storeError } = await supabase
+    .from('stores')
+    .select('*')
+    .eq('store_id', storeId)
+    .single();
+
+  if (storeError || !store) {
+    console.error('Error fetching store:', storeError);
+    return <div>Failed to load store.</div>;
   }
 
   // Query for draft ticket
@@ -81,6 +93,12 @@ export default async function CartPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store.name,
+        }}
+      />
       <h1>Cart</h1>
       <div>
         <p>Ticket Destination Store: </p>

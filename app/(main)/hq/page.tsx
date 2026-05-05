@@ -35,12 +35,12 @@ export default async function HqPage() {
       <h2>Donations</h2>
       <h3>Recent Donations</h3>
       <Table borderless>
-        <thead>
+        <thead className="table-header">
           <tr>
-            <th className={`w-20`}>Receiver</th>
-            <th className={`w-20`}>Store</th>
-            <th className={`w-30`}>Items Donated</th>
-            <th className={`w-30`}>Date Submitted</th>
+            <th>Receiver</th>
+            <th>Store</th>
+            <th>Items Donated</th>
+            <th>Date Submitted</th>
           </tr>
         </thead>
         <tbody>
@@ -57,11 +57,9 @@ export default async function HqPage() {
         </tbody>
       </Table>
 
-      <h3>Export Donations</h3>
       <DonationsExportForm />
 
       <h2>Stores</h2>
-      <h3>Add Store</h3>
       <AddStoreForm />
       <h3>Edit Stores</h3>
       {stores.length > 0 ? (

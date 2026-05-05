@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@/app/(main)/team/people/components/UsersList.module.css';
 import { Table } from 'react-bootstrap';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 export default function UsersList({
   users,
@@ -17,20 +18,20 @@ export default function UsersList({
 }) {
   return (
     <div>
-      <Table borderless className={styles.userTable}>
-        <thead className={styles.userTableHeader}>
-          <tr className={styles.userTableRow}>
-            <th className={`w-30 ${styles.headerCell}`}>Requestor</th>
-            <th className={`w-30 ${styles.headerCell}`}>Role</th>
-            <th className={`w-40 ${styles.headerCell}`}>Email</th>
+      <Table borderless>
+        <thead className="table-header">
+          <tr>
+            <th>Requestor</th>
+            <th>Role</th>
+            <th>Email</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.user_id} className={styles.userTableRow}>
+            <tr key={user.user_id}>
               <td>
                 <Image
-                  src={user.profile_photo_url || '/default-profile-picture.png'}
+                  src={user.profile_photo_url || imagePlaceholder}
                   alt={`Profile picture for ${user.first_name}`}
                   height={32}
                   width={32}

@@ -4,7 +4,10 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { Subcategory, Category } from '@/app/types/inventory';
 import { createItem } from '@/app/actions/inventory';
 import { useForm, useWatch, SubmitHandler } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
+import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 type Inputs = {
   name: string;
@@ -14,6 +17,19 @@ type Inputs = {
 };
 
 const supabase = createClient();
+
+function useTime() {
+  const [time, setTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(Date.now());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return time;
+}
 
 export default function AddInventoryItemForm() {
   const {
@@ -25,14 +41,40 @@ export default function AddInventoryItemForm() {
   } = useForm<Inputs>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const photoUploadRef = useRef<{ resetFile: () => void }>(null);
 
   const selectedCategory = useWatch({
     control,
     name: 'selectedCategory',
   });
 
+  const time = useTime();
+
+  const handleFileSelect = (file: File) => {
+    const maxSize = 200 * 1024;
+    if (file.size > maxSize) {
+      alert('File is too large. Please select an image under 200 KB.');
+      return;
+    }
+    const preview = URL.createObjectURL(file);
+    setPreviewUrl(preview);
+    setSelectedFile(file);
+  };
+
+  const handleRemovePhoto = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setSelectedFile(null);
+    photoUploadRef.current?.resetFile();
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
     try {
+      let photoUrl: string | null = null;
+
+      // Create the item first to get the inventory_item_id
       const result = await createItem({
         name: formData.name,
         description: formData.description,
@@ -41,12 +83,41 @@ export default function AddInventoryItemForm() {
           : null,
       });
 
-      if (result.success) {
-        // Reset form fields after successful submission
-        reset();
-      } else {
+      if (!result.success) {
         console.error('Failed to create item:', result.error);
+        return;
       }
+
+      const inventoryItemId = result?.data?.inventory_item_id;
+
+      // Upload photo if selected
+      if (selectedFile) {
+        const filePath = `${inventoryItemId}/item.jpg`;
+        const { error: uploadError } = await supabase.storage
+          .from('inventory_item_photos')
+          .upload(filePath, selectedFile, { upsert: true });
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError.message);
+        } else {
+          const { data: publicData } = supabase.storage
+            .from('inventory_item_photos')
+            .getPublicUrl(filePath);
+          photoUrl = `${publicData.publicUrl}?t=${time}`;
+
+          // Update the item with the photo_url
+          await supabase
+            .from('inventory_items')
+            .update({ photo_url: photoUrl })
+            .eq('inventory_item_id', inventoryItemId);
+        }
+      }
+      // Reset everything
+      reset();
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+      setSelectedFile(null);
+      /* photoUploadRef.current?.resetFile(); */
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -88,6 +159,22 @@ export default function AddInventoryItemForm() {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Image
+          src={previewUrl || defaultItemPhoto}
+          alt="Item photo"
+          width={64}
+          height={64}
+          style={{ objectFit: 'cover' }}
+          unoptimized
+        />
+        {selectedFile && (
+          <button type="button" onClick={handleRemovePhoto}>
+            Remove
+          </button>
+        )}
+        <br />
+        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+        <br />
         <label>
           Inventory item name
           <input type="text" {...register('name', { required: true })} />

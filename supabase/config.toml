@@ -159,6 +159,11 @@ public = true
 file_size_limit = "200KB"
 allowed_mime_types = ["image/png", "image/jpeg"]
 
+[storage.buckets.inventory_item_photos]
+public = true
+file_size_limit = "200KB"
+allowed_mime_types = ["image/png", "image/jpeg"]
+
 [storage.buckets.store_photos]
 public = true
 file_size_limit = "200KB"
