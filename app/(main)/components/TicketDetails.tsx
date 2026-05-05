@@ -4,10 +4,6 @@ import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
 import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
-import styles from '@/app/(main)/components/TicketDetails.module.css';
-import { Card } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Image from 'next/image';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -64,15 +60,15 @@ export default async function TicketDetails({
     storeAdminsList = (storeAdminsData || [])
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
-  }
-
-  if (userTicket) {
-    const { data: requestorData } = await supabase
-      .from('users')
-      .select()
-      .eq('user_id', userTicket.requestor_user_id)
-      .single();
-    requestor = requestorData;
+  } else {
+    if (userTicket) {
+      const { data: requestorData } = await supabase
+        .from('users')
+        .select()
+        .eq('user_id', userTicket.requestor_user_id)
+        .single();
+      requestor = requestorData;
+    }
   }
 
   const getOutgoingStatusOptions = (status: TicketStatus): TicketStatus[] => {
@@ -109,52 +105,15 @@ export default async function TicketDetails({
     ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
     : getIncomingStatusOptions(userTicket.status as TicketStatus);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${month}-${day}-${year}`;
-  };
-
   return (
     <div>
       {userTicket ? (
         <div>
-          {/*Header Card*/}
-          <Card className={styles.headerCard}>
-            <Image
-              src={
-                requestor?.profile_photo_url || '/default-profile-picture.png'
-              }
-              alt={`Profile picture for ${requestor?.first_name}`}
-              className={styles.profilePicture}
-              width={95}
-              height={95}
-              unoptimized
-            ></Image>
-            <div className={styles.headerCardText}>
-              <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
-              <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
-              <h2>Ticket #{userTicket.ticket_id}</h2>
-            </div>
-            {!outgoing ? (
-              <Button
-                as="a"
-                className={styles.contactButton}
-                href={
-                  requestor?.email ? `mailto:${requestor.email}` : undefined
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                disabled={!requestor?.email}
-              >
-                Contact
-              </Button>
-            ) : null}
-          </Card>
-
+          <h1>{outgoing ? 'Outgoing' : 'Incoming'} Ticket Details</h1>
+          <p>Ticket ID: {userTicket.ticket_id}</p>
+          <p>Date submitted: {userTicket.date_submitted}</p>
+          <p>Store: {store.name} </p>
+          <p>Store address: {store.street_address}</p>
           <div>
             <p>Status: </p>
             <TicketStatusDropdown
@@ -165,40 +124,20 @@ export default async function TicketDetails({
           </div>
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
-
-          <div className={styles.ticketContentLayout}>
-            <div className={styles.ticketContentLeft}>
-              <TicketItemsList ticketId={userTicket.ticket_id} />
+          {outgoing ? (
+            <div>
+              <h2>Contact Store Admins</h2>
+              {storeAdminsList.map((storeAdmin) => (
+                <UserCard user={storeAdmin} key={storeAdmin.user_id}></UserCard>
+              ))}
             </div>
-
-            <div className={styles.ticketContentRight}>
-              {outgoing && (
-                <div className={styles.adminCard}>
-                  <h2>CONTACT STORE ADMINS</h2>
-                  {storeAdminsList.map((storeAdmin) => (
-                    <UserCard
-                      className={styles.userCard}
-                      noBottomMargin
-                      user={storeAdmin}
-                      key={storeAdmin.user_id}
-                    ></UserCard>
-                  ))}
-                </div>
-              )}
-
-              <div className={styles.adminCard}>
-                <h2>TICKET LOCATION</h2>
-                <div className={styles.locationCardContent}>
-                  <p>
-                    <strong>Store:</strong> {store.name}
-                  </p>
-                  <p>
-                    <strong>Store Address:</strong> {store.street_address}
-                  </p>
-                </div>
-              </div>
+          ) : (
+            <div>
+              <h2>Contact Requestor</h2>
+              <UserCard user={requestor}></UserCard>
             </div>
-          </div>
+          )}
+          <TicketItemsList ticketId={userTicket.ticket_id} />
         </div>
       ) : (
         <p>No ticket found.</p>
