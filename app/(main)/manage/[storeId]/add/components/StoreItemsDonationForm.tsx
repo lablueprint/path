@@ -201,18 +201,7 @@ export default function StoreItemsDonationForm({
           // add autofillitems connection pass in prop to storeitemsform
         )}
         {itemSettingsSelected?.includes('addInventoryItems') && (
-          <button
-            type="submit"
-            style={{
-              marginTop: '20px',
-              padding: '10px',
-              borderRadius: '5px',
-              border: 'none',
-              backgroundColor: '#007bff',
-              color: '#fff',
-              fontWeight: 'bold',
-            }}
-          >
+          <button type="submit" className="btn-submit">
             Submit
           </button>
         )}

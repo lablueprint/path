@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm, useWatch } from 'react-hook-form';
+import { Form, Card } from 'react-bootstrap';
 import {
   exportDonations,
   exportDonationsInRange,
@@ -63,40 +64,70 @@ export default function Donations() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>
-        <input type="radio" value="all" {...register('dateMode')} />
-        All time
-      </label>
-      <br />
-      <label>
-        <input type="radio" value="range" {...register('dateMode')} />
-        Date range
-      </label>
-      <br />
-      {dateMode === 'range' && (
-        <div>
-          <label>Start date</label>
-          <input
-            type="date"
-            {...register('startDate', { required: 'Start date is required.' })}
-          />
-          {errors.startDate && (
-            <p style={{ color: 'red' }}>{errors.startDate.message}</p>
-          )}
-          <br />
-          <label>End date</label>
-          <input
-            type="date"
-            {...register('endDate', { required: 'End date is required.' })}
-          />
-          {errors.endDate && (
-            <p style={{ color: 'red' }}>{errors.endDate.message}</p>
-          )}
-        </div>
-      )}
+    <Card className="form-card">
+      <Card.Body>
+        <h2 className="form-title-1">Export Donations</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-body">
+            <Form.Group>
+              <div className="radio-row">
+                <Form.Check
+                  type="radio"
+                  label="All time"
+                  value="all"
+                  id="date-mode-all"
+                  {...register('dateMode')}
+                />
+                <Form.Check
+                  type="radio"
+                  label="Date range"
+                  value="range"
+                  id="date-mode-range"
+                  {...register('dateMode')}
+                />
+              </div>
+            </Form.Group>
 
-      <button type="submit">Export</button>
-    </form>
+            {dateMode === 'range' && (
+              <div className="two-col-row">
+                <Form.Group controlId="startDate">
+                  <Form.Label className="field-label">Start date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    {...register('startDate', {
+                      required: 'Start date is required.',
+                    })}
+                    isInvalid={!!errors.startDate}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.startDate?.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="endDate">
+                  <Form.Label className="field-label">End date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    {...register('endDate', {
+                      required: 'End date is required.',
+                    })}
+                    isInvalid={!!errors.endDate}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.endDate?.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+            )}
+
+            <div className="submit-button-row">
+              <button type="submit" className="btn-submit">
+                Export
+              </button>
+            </div>
+          </div>
+        </form>
+      </Card.Body>
+    </Card>
   );
 }
