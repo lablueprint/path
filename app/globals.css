@@ -56,9 +56,20 @@ Table {
 }
 
 .main-container {
-  margin-left: 18rem;
   padding: 3rem;
   width: 100%;
+}
+
+@media (min-width: 992px) {
+  .main-container {
+    margin-left: 18rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .main-container {
+    padding-top: calc(3rem + 3.5rem);
+  }
 }
 
 .main {
