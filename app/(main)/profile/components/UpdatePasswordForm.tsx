@@ -75,9 +75,11 @@ export default function UpdatePasswordForm() {
           )}
           <br />
           <label className="field-label">Confirm new password</label>
-          <input  
-          className="form-control"
-          type="password" {...register('newPasswordConfirmation')} />
+          <input
+            className="form-control"
+            type="password"
+            {...register('newPasswordConfirmation')}
+          />
 
           {newPasswordConfirmation.length > 0 && !passwordsMatch && (
             <p role="alert">Passwords do not match.</p>
@@ -86,6 +88,7 @@ export default function UpdatePasswordForm() {
           {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
             <button
               type="button"
+              className="btn-cancel"
               onClick={() =>
                 reset({
                   newPassword: '',

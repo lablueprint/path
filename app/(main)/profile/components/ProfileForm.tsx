@@ -234,49 +234,54 @@ export default function ProfileForm({ user }: { user: User }) {
               id="photo-upload-input"
             />
           </div>
-<div className={styles.fieldGroup}>
-          <div className="two-col-row">
-            <div>
-              <label className="field-label">First name</label>
-              <input
-                className="form-control"
-                {...register('firstName', { required: true })}
-              />
-              {errors.firstName?.type === 'required' && (
-                <p role="alert">First name is required.</p>
-              )}
-            </div>
+          <div className={styles.fieldGroup}>
+            <div className="two-col-row">
+              <div>
+                <label className="field-label">First name</label>
+                <input
+                  className="form-control"
+                  {...register('firstName', { required: true })}
+                />
+                {errors.firstName?.type === 'required' && (
+                  <p role="alert">First name is required.</p>
+                )}
+              </div>
 
-            <div>
-              <label className="field-label">Last name</label>
-              <input
-                className="form-control"
-                {...register('lastName', { required: true })}
-              />
-              {errors.lastName?.type === 'required' && (
-                <p role="alert">Last name is required.</p>
-              )}
+              <div>
+                <label className="field-label">Last name</label>
+                <input
+                  className="form-control"
+                  {...register('lastName', { required: true })}
+                />
+                {errors.lastName?.type === 'required' && (
+                  <p role="alert">Last name is required.</p>
+                )}
+              </div>
             </div>
           </div>
-          </div>
 
-<div className={styles.fieldGroup}>
-          <label className="field-label">Email</label>
-          <input
-            className="form-control"
-            {...register('email', { required: true })}
-          />
-          {errors.email?.type === 'required' && (
-            <p role="alert">Email is required.</p>
-          )}
+          <div className={styles.fieldGroup}>
+            <label className="field-label">Email</label>
+            <input
+              className="form-control"
+              {...register('email', { required: true })}
+            />
+            {errors.email?.type === 'required' && (
+              <p role="alert">Email is required.</p>
+            )}
           </div>
 
           {hasDirtyTextOrImage && (
-             <div className={styles.buttonRow}>
+            <div className={styles.buttonRow}>
               <button className="btn-save" type="submit" disabled={isSaving}>
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
-              <button className="btn-cancel" type="button" onClick={onCancel} disabled={isSaving}>
+              <button
+                className="btn-cancel"
+                type="button"
+                onClick={onCancel}
+                disabled={isSaving}
+              >
                 Cancel
               </button>
             </div>

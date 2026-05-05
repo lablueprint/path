@@ -28,8 +28,10 @@ export default async function PersonalProfilePage() {
   return (
     <div className="form-body" style={{ paddingTop: '30px' }}>
       <h1>Profile</h1>
-      <ProfileForm user={profile as User} />
-      <UpdatePasswordForm />
+      <div className="form-card">
+        <ProfileForm user={profile as User} />
+        <UpdatePasswordForm />
+      </div>
       <SignOutButton />
     </div>
   );

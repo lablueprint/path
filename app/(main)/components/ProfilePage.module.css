@@ -100,6 +100,6 @@
     box-shadow 0.2s ease;
 }
 .input:focus {
-  border-color: #3182CE;
+  border-color: #3182ce;
   box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
 }
