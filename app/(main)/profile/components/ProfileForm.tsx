@@ -8,6 +8,8 @@ import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import styles from '@/app/(main)/components/ProfilePage.module.css';
+import uploadPhotoIcon from '@/public/image-upload.svg';
 
 type ProfileFormValues = {
   email: string;
@@ -29,6 +31,9 @@ export default function ProfileForm({ user }: { user: User }) {
 
   const supabase = createClient();
   const photoUploadRef = useRef<{ resetFile: () => void }>(null);
+
+  // For drag and drop image file
+  const [isDragging, setIsDragging] = useState(false);
 
   const {
     register,
@@ -61,6 +66,24 @@ export default function ProfileForm({ user }: { user: User }) {
     setSelectedFile(null);
     setIsPendingDelete(true);
     photoUploadRef.current?.resetFile();
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      handleFileSelect(file);
+    }
   };
 
   const onCancel = () => {
@@ -155,10 +178,11 @@ export default function ProfileForm({ user }: { user: User }) {
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <div className="form-card">
+    <div className="form-card profile-form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
+          <h2>User Information</h2>
+          {/* <div className={styles.photoSection}>
             <Image
               src={displayImage}
               alt="Profile photo"
@@ -168,7 +192,6 @@ export default function ProfileForm({ user }: { user: User }) {
               unoptimized
             />
 
-            {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
             {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
               <button type="button" onClick={handleRemovePhoto}>
                 Remove
@@ -177,12 +200,72 @@ export default function ProfileForm({ user }: { user: User }) {
 
             <br />
             <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          </div> */}
+          <div className={styles.photoSection}>
+            {/* Clicking the circle triggers the hidden PhotoUpload input */}
+            <label htmlFor="photo-upload-input" style={{ cursor: 'pointer' }}>
+              <div
+                className={`${styles.photoCircle} ${isDragging ? styles.photoCircleDragging : ''}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                {displayImage !== defaultProfilePhoto.src ? (
+                  <Image
+                    src={displayImage}
+                    alt="Profile photo"
+                    width={120}
+                    height={120}
+                    style={{ objectFit: 'cover' }}
+                    unoptimized
+                  />
+                ) : (
+                  <div className={styles.photoPlaceholder}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={uploadPhotoIcon.src}
+                      alt="Upload photo"
+                      style={{ width: 32, height: 32 }}
+                    />
+                    {/* <Image
+                      src={uploadPhotoIcon}
+                      alt="Upload photo"
+                      width={10}
+                      height={10}
+                    /> */}
+                    <span className={styles.photoPlaceholderText}>
+                      Drag and drop file here or <u>Browse</u>
+                    </span>
+                  </div>
+                )}
+              </div>
+            </label>
+
+            {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                style={{ marginTop: 8 }}
+              >
+                Remove
+              </button>
+            )}
+
+            {/* Hidden — triggered by clicking the circle label */}
+            <PhotoUpload
+              ref={photoUploadRef}
+              onFileSelect={handleFileSelect}
+              id="photo-upload-input"
+            />
           </div>
 
           <div className="two-col-row">
             <div>
               <label className="field-label">First name</label>
-              <input {...register('firstName', { required: true })} />
+              <input
+                className={styles.input}
+                {...register('firstName', { required: true })}
+              />
               {errors.firstName?.type === 'required' && (
                 <p role="alert">First name is required.</p>
               )}
@@ -190,7 +273,10 @@ export default function ProfileForm({ user }: { user: User }) {
 
             <div>
               <label className="field-label">Last name</label>
-              <input {...register('lastName', { required: true })} />
+              <input
+                className={styles.input}
+                {...register('lastName', { required: true })}
+              />
               {errors.lastName?.type === 'required' && (
                 <p role="alert">Last name is required.</p>
               )}
@@ -198,7 +284,10 @@ export default function ProfileForm({ user }: { user: User }) {
           </div>
 
           <label className="field-label">Email</label>
-          <input {...register('email', { required: true })} />
+          <input
+            className={styles.input}
+            {...register('email', { required: true })}
+          />
           {errors.email?.type === 'required' && (
             <p role="alert">Email is required.</p>
           )}

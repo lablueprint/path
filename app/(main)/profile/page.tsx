@@ -26,11 +26,9 @@ export default async function PersonalProfilePage() {
   }
 
   return (
-    <div>
+    <div className="form-body">
       <h1>Profile</h1>
-      <h2>Public Profile</h2>
       <ProfileForm user={profile as User} />
-      <h2>Authentication</h2>
       <UpdatePasswordForm />
       <SignOutButton />
     </div>

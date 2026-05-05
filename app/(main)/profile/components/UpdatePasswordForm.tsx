@@ -53,44 +53,49 @@ export default function UpdatePasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>New password</label>
-      <input
-        type="password"
-        {...register('newPassword', {
-          minLength: 8,
-          pattern:
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        })}
-      />
-      {errors.newPassword && (
-        <p role="alert">
-          Password must be at least 8 characters and include an uppercase
-          letter, a lowercase letter, a number, and a symbol.
-        </p>
-      )}
-      <br />
-      <label>Confirm new password</label>
-      <input type="password" {...register('newPasswordConfirmation')} />
+    <div className="form-card">
+      <div className="card-body">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h2>Privacy</h2>
+          <label>New password</label>
+          <input
+            type="password"
+            {...register('newPassword', {
+              minLength: 8,
+              pattern:
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+            })}
+          />
+          {errors.newPassword && (
+            <p role="alert">
+              Password must be at least 8 characters and include an uppercase
+              letter, a lowercase letter, a number, and a symbol.
+            </p>
+          )}
+          <br />
+          <label>Confirm new password</label>
+          <input type="password" {...register('newPasswordConfirmation')} />
 
-      {newPasswordConfirmation.length > 0 && !passwordsMatch && (
-        <p role="alert">Passwords do not match.</p>
-      )}
-      <br />
-      {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
-        <button
-          type="button"
-          onClick={() =>
-            reset({
-              newPassword: '',
-              newPasswordConfirmation: '',
-            })
-          }
-        >
-          Cancel
-        </button>
-      )}
-      {passwordsMatch && <button type="submit">Save</button>}
-    </form>
+          {newPasswordConfirmation.length > 0 && !passwordsMatch && (
+            <p role="alert">Passwords do not match.</p>
+          )}
+          <br />
+          {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+            <button
+              type="button"
+              onClick={() =>
+                reset({
+                  newPassword: '',
+                  newPasswordConfirmation: '',
+                })
+              }
+            >
+              Cancel
+            </button>
+          )}
+          {passwordsMatch && <button type="submit">Save</button>}
+        </form>
+      </div>
+    </div>
   );
 }

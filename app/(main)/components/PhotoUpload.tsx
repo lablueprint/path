@@ -6,9 +6,10 @@ import React from 'react';
 type FileUploaderProps = {
   onFileSelect: (file: File) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
+  id?: string;
 };
 
-const FileUploader = ({ onFileSelect, inputRef }: FileUploaderProps) => {
+const FileUploader = ({ onFileSelect, inputRef, id }: FileUploaderProps) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -19,6 +20,7 @@ const FileUploader = ({ onFileSelect, inputRef }: FileUploaderProps) => {
   return (
     <input
       ref={inputRef}
+      id={id}
       type="file"
       accept="image/*"
       onChange={handleFileChange}
@@ -28,10 +30,11 @@ const FileUploader = ({ onFileSelect, inputRef }: FileUploaderProps) => {
 
 type PhotoUploadProps = {
   onFileSelect?: (file: File) => void;
+  id?: string;
 };
 
 const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
-  ({ onFileSelect }, ref) => {
+  ({ onFileSelect, id }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -46,7 +49,13 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
       onFileSelect?.(file);
     };
 
-    return <FileUploader onFileSelect={handleFileUpload} inputRef={inputRef} />;
+    return (
+      <FileUploader
+        onFileSelect={handleFileUpload}
+        inputRef={inputRef}
+        id={id}
+      />
+    );
   },
 );
 
