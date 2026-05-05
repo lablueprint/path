@@ -271,7 +271,6 @@ export async function addToCart(
 export async function updateTicketDestStore(
   newDestStoreId: string,
   ticketId: string,
-  storeId: string,
 ) {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
@@ -286,9 +285,16 @@ export async function updateTicketDestStore(
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/request/${storeId}/cart`);
-  revalidatePath(`incoming-tickets.${storeId}`);
-  revalidatePath(`/incoming-tickets/${storeId}/${ticketId}`);
+  // fetch the ticket storeId for revalidating paths after updating the dest store
+  const { data: ticket } = await supabase
+    .from('tickets')
+    .select('store_id')
+    .eq('ticket_id', ticketId)
+    .single();
+
+  revalidatePath(`/request/${ticket?.store_id}/cart`);
+  revalidatePath(`incoming-tickets.${ticket?.store_id}`);
+  revalidatePath(`/incoming-tickets/${ticket?.store_id}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };
 }
