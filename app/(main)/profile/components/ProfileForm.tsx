@@ -182,30 +182,11 @@ export default function ProfileForm({ user }: { user: User }) {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>User Information</h2>
-          {/* <div className={styles.photoSection}>
-            <Image
-              src={displayImage}
-              alt="Profile photo"
-              width={64}
-              height={64}
-              style={{ objectFit: 'cover' }}
-              unoptimized
-            />
-
-            {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
-              <button type="button" onClick={handleRemovePhoto}>
-                Remove
-              </button>
-            )}
-
-            <br />
-            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-          </div> */}
           <div className={styles.photoSection}>
             {/* Clicking the circle triggers the hidden PhotoUpload input */}
             <label htmlFor="photo-upload-input" style={{ cursor: 'pointer' }}>
               <div
-                className={`${styles.photoCircle} ${isDragging ? styles.photoCircleDragging : ''}`}
+                className={`${styles.photoCircle} ${isDragging ? styles.photoCircleDragging : ''} ${displayImage !== defaultProfilePhoto.src ? styles.photoCircleWithImage : ''}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -214,8 +195,8 @@ export default function ProfileForm({ user }: { user: User }) {
                   <Image
                     src={displayImage}
                     alt="Profile photo"
-                    width={120}
-                    height={120}
+                    width={200}
+                    height={200}
                     style={{ objectFit: 'cover' }}
                     unoptimized
                   />
@@ -227,12 +208,6 @@ export default function ProfileForm({ user }: { user: User }) {
                       alt="Upload photo"
                       style={{ width: 32, height: 32 }}
                     />
-                    {/* <Image
-                      src={uploadPhotoIcon}
-                      alt="Upload photo"
-                      width={10}
-                      height={10}
-                    /> */}
                     <span className={styles.photoPlaceholderText}>
                       Drag and drop file here or <u>Browse</u>
                     </span>

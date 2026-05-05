@@ -24,6 +24,7 @@ const FileUploader = ({ onFileSelect, inputRef, id }: FileUploaderProps) => {
       type="file"
       accept="image/*"
       onChange={handleFileChange}
+      style={{ display: 'none' }}
     />
   );
 };
