@@ -269,7 +269,7 @@ export async function addToCart(
 }
 
 export async function updateTicketDestStore(
-  newDestStoreId: string,
+  newDestStoreId: string | null,
   ticketId: string,
 ) {
   const supabase = await createClient();
