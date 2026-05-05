@@ -59,7 +59,7 @@ export default function MobileSidebar({
         </Link>
       </div>
 
-      <Offcanvas show={show} onHide={handleClose} placement="start">
+      <Offcanvas show={show} onHide={handleClose} placement="start" style={{ width: '18rem' }}>
         <div className={styles.offcanvasInner}>
           <CloseButton className={styles.offcanvasClose} onClick={handleClose} aria-label="Close menu" />
           <Link href="/home" onClick={handleClose} className={styles.pathHomeLink}>
