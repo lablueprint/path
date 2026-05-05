@@ -91,30 +91,32 @@ export default async function Sidebar() {
             />
           </Link>
 
-          {sidebarGroups.map((group, index) => {
-            const visibleLinks = group.links.filter((link) =>
-              link.allowedRoles.includes(role),
-            );
+          <div className={styles.desktopLinks}>
+            {sidebarGroups.map((group, index) => {
+              const visibleLinks = group.links.filter((link) =>
+                link.allowedRoles.includes(role),
+              );
 
-            // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
-            if (visibleLinks.length === 0) return null;
+              // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
+              if (visibleLinks.length === 0) return null;
 
-            return (
-              <div key={index}>
-                {group.heading && (
-                  <h3 className={styles.groupHeading}>{group.heading}</h3>
-                )}
-                {/* Bootstrap ul classes */}
-                <ul className={`nav flex-column ${styles.linkList}`}>
-                  {visibleLinks.map((link) => (
-                    <li key={link.href} className={`nav-item ${styles.linkItem}`}>
-                      <SidebarNavLink href={link.href} label={link.label} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
+              return (
+                <div key={index}>
+                  {group.heading && (
+                    <h3 className={styles.groupHeading}>{group.heading}</h3>
+                  )}
+                  {/* Bootstrap ul classes */}
+                  <ul className={`nav flex-column ${styles.linkList}`}>
+                    {visibleLinks.map((link) => (
+                      <li key={link.href} className={`nav-item ${styles.linkItem}`}>
+                        <SidebarNavLink href={link.href} label={link.label} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
 
           <Link href="/profile" className={styles.profile}>
             <div className={styles.pfpContainer}>

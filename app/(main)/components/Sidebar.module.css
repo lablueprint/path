@@ -10,6 +10,15 @@
   top: 0;
   left: 0;
   z-index: 1;
+  overflow: hidden;
+}
+
+.desktopLinks {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .pathHomeLink {
@@ -60,7 +69,7 @@
 }
 
 .profile {
-  margin-top: auto;
+  margin-top: 2rem;
   display: flex;
   align-items: center;
   gap: 1rem;
