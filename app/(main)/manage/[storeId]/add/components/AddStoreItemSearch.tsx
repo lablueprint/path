@@ -190,7 +190,7 @@ export default function AddStoreItemSearch({
       </button>
       <ul>
         {results?.map((item) => (
-          <div key={item.name}>
+          <div key={item.inventory_item_id}>
             <li>{item.name}</li>
             <button type="button" onClick={() => handleSelect(item)}>
               Select

@@ -139,7 +139,7 @@ export default function StoreItemsDonationForm({
       } else if (donationErrorOccurred) {
         alert('Donation submission failed.');
       } else {
-        alert('Donation submitted successfully!');
+        alert('Success!');
         // Reset all fields to empty/default values
         methods.reset({
           itemSettings: [],
