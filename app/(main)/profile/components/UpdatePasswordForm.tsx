@@ -57,8 +57,9 @@ export default function UpdatePasswordForm() {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>Privacy</h2>
-          <label>New password</label>
+          <label className="field-label">New password</label>
           <input
+            className="form-control"
             type="password"
             {...register('newPassword', {
               minLength: 8,
@@ -73,8 +74,10 @@ export default function UpdatePasswordForm() {
             </p>
           )}
           <br />
-          <label>Confirm new password</label>
-          <input type="password" {...register('newPasswordConfirmation')} />
+          <label className="field-label">Confirm new password</label>
+          <input  
+          className="form-control"
+          type="password" {...register('newPasswordConfirmation')} />
 
           {newPasswordConfirmation.length > 0 && !passwordsMatch && (
             <p role="alert">Passwords do not match.</p>
