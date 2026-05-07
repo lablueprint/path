@@ -75,6 +75,7 @@
 .headerCard {
   position: relative;
   width: 100%;
+  min-width: 36.0625rem;
   height: 8.625rem;
   border-radius: 0.9375rem;
   background: #fff;
