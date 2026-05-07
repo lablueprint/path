@@ -5,7 +5,7 @@ import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
-import { Card } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
@@ -165,12 +165,12 @@ export default async function TicketDetails({
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
 
-          <div className={styles.ticketContentLayout}>
-            <div className={styles.ticketContentLeft}>
+          <Row className={styles.ticketContentLayout}>
+            <Col xs={12} lg={8}>
               <TicketItemsList ticketId={userTicket.ticket_id} />
-            </div>
+            </Col>
 
-            <div className={styles.ticketContentRight}>
+            <Col xs={12} lg={4} className={styles.ticketContentRight}>
               {outgoing && (
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
@@ -196,8 +196,8 @@ export default async function TicketDetails({
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
       ) : (
         <p>No ticket found.</p>
