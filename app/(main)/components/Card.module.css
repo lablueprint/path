@@ -24,24 +24,16 @@
   aspect-ratio: 1;
 }
 
-.image {
-  object-fit: cover;
-}
-
 .cardBody {
   padding: 0.75rem;
 }
 
-.itemName {
+.name {
   font-weight: 600;
   font-size: 1rem;
   margin-bottom: 0;
 }
 
-.categoryText {
-  margin-bottom: 0;
-}
-
-.subcategoryText {
+.cardText {
   margin-bottom: 0;
 }
