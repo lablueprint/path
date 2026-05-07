@@ -75,7 +75,6 @@ export default function InStockTicketItemCard({
           </p>
         </div>
       </div>
-      {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
       <div className={styles.numericalDescriptors}>
         <div className={styles.quantityCard}>Qty: {quantityAvailable}</div>
         <div className={styles.availabilityCard}>
