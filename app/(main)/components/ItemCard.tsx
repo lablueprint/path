@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from '@/app/(main)/components/ItemCard.module.css';
+import Image from 'next/image';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 type ItemCardProps = {
   id: string;
@@ -14,7 +16,7 @@ type ItemCardProps = {
 
 export default function ItemCard({
   id,
-  photoUrl: _photoUrl,
+  photoUrl,
   item,
   subcategory,
   category,
@@ -25,7 +27,13 @@ export default function ItemCard({
     <Link className={styles.cardLink} href={`${pathname}/${id}`}>
       <div className={styles.card}>
         <div className={styles.imageContainer}>
-          <div className={styles.imagePlaceholder} />
+          <Image
+            src={photoUrl || defaultItemPhoto}
+            objectFit={'cover'}
+            alt="Item photo"
+            fill
+            unoptimized
+          />
         </div>
         <div className={styles.cardBody}>
           <p className={styles.itemName}>{item}</p>

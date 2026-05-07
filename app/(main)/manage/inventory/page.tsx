@@ -2,7 +2,7 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
-import styles from './page.module.css';
+import styles from '@/app/(main)/manage/inventory/InventoryPage.module.css';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
@@ -105,9 +105,7 @@ export default async function InventoryPage({
       />
       <div className={styles.pageHeader}>
         <h1>Inventory Library</h1>
-        <Link href="/manage/inventory/add" className={styles.addLink}>
-          + Add inventory item
-        </Link>
+        <Link href="/manage/inventory/add">Add inventory item</Link>
       </div>
 
       <ItemSearch
@@ -128,7 +126,7 @@ export default async function InventoryPage({
 
       <h2>Items</h2>
       {items && items.length > 0 ? (
-        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
           {items.map((item) => (
             <div key={item.id} className="col">
               <ItemCard

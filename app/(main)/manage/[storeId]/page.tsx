@@ -2,8 +2,10 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
-import styles from './page.module.css';
+import styles from '@/app/(main)/manage/[storeId]/ManageStorePage.module.css';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
 
 type SearchParams = {
   query?: string;
@@ -38,7 +40,6 @@ export default async function ManageStorePage({
     .select('*')
     .eq('store_id', storeId)
     .single();
-
 
   if (storeError || !store) {
     console.error('Error fetching store:', storeError);
@@ -130,20 +131,10 @@ export default async function ManageStorePage({
       />
       <div className={styles.pageHeader}>
         <h1>
-          <span className={styles.managingFrom}>Managing </span>
-          {store.name}
-          {' '}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className={styles.pinIcon}
-          >
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-          </svg>
+          <span>Managing </span>
+          {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
         </h1>
-        <Link href={`/manage/${storeId}/add`} className={styles.addLink}>
-          + Add store items / gift-in-kind form
-        </Link>
+        <Link href={`/manage/${storeId}/add`}>Add and/or donate</Link>
       </div>
 
       <ItemSearch
@@ -164,7 +155,7 @@ export default async function ManageStorePage({
 
       <h2>Items</h2>
       {items && items.length > 0 ? (
-        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
           {items.map((item) => (
             <div key={item.id} className="col">
               <ItemCard

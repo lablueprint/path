@@ -4,7 +4,10 @@ import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
-import styles from './page.module.css';
+import styles from '@/app/(main)/request/[storeId]/RequestStorePage.module.css';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
+import cartIcon from '@/public/cart-icon.svg';
 
 type SearchParams = {
   query?: string;
@@ -134,19 +137,10 @@ export default async function RequestStorePage({
       />{' '}
       <div className={styles.pageHeader}>
         <h1>
-          <span className={styles.requestingFrom}>Requesting from </span>
-          {store.name}
-          {' '}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className={styles.pinIcon}
-          >
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-          </svg>
+          <span>Requesting from </span>
+          {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
         </h1>
       </div>
-
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
@@ -160,13 +154,11 @@ export default async function RequestStorePage({
           })) || []
         }
       />
-
       <h2>Out-of-Stock Request</h2>
       <AddOutOfStockToCartForm storeId={storeId} />
-
       <h2>In-Stock Items</h2>
       {items && items.length > 0 ? (
-        <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
           {items.map((item) => (
             <div key={item.id} className="col">
               <ItemCard
@@ -182,17 +174,8 @@ export default async function RequestStorePage({
       ) : (
         <p>No available items found.</p>
       )}
-
       <Link href={`/request/${storeId}/cart`} className={styles.cartButton}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          className={styles.cartIcon}
-        >
-          <circle cx="9" cy="21" r="1" />
-          <circle cx="20" cy="21" r="1" />
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-        </svg>
+        <Image src={cartIcon} height={32} alt="Cart icon" />
       </Link>
     </div>
   );
