@@ -1,14 +1,47 @@
 .card {
-  border: 0px;
-  border-style: solid;
-  border-color: black;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  height: 100%;
+  transition: 0.2s ease-in-out;
 }
 
-.cardText {
+.cardLink {
   text-decoration: none;
   color: black;
+  display: block;
+  height: 100%;
+}
+
+.cardLink:hover .card {
+  transform: scale(1.05);
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: 0.75rem;
+}
+
+.itemName {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.categoryText {
+  margin-bottom: 0;
+}
+
+.subcategoryText {
+  margin-bottom: 0;
 }

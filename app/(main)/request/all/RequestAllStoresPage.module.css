@@ -1,0 +1,20 @@
+.cartButton {
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  width: 6rem;
+  height: 5rem;
+  border-radius: 2.5rem;
+  background: white;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  transition: 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.cartButton:hover {
+  transform: scale(1.05);
+}
