@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Form, Row, Col, Button } from 'react-bootstrap';
 
 type Role = {
   name: string;
@@ -65,35 +66,39 @@ export default function UserSearch({ roles }: Props) {
 
   return (
     <div className="search-filter-wrapper">
-      <input
-        className="search-filter-input"
+      <Form.Control
+        type="text"
+        placeholder="Search users..."
+        className="search-bar"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Search users"
       />
 
-      <div className="search-filter-row">
-        <select
-          className="search-filter-select"
-          value={searchParams.get('role') ?? ''}
-          onChange={(e) => handleRoleChange(e.target.value)}
-        >
-          <option value="">All roles</option>
-          {roles.map((role) => (
-            <option key={role.role_id} value={String(role.role_id)}>
-              {role.name}
-            </option>
-          ))}
-        </select>
-
-        <button
-          type="button"
-          className="search-filter-clear"
-          onClick={handleClearFilters}
-        >
-          Clear filters
-        </button>
-      </div>
+      <Row className="g-2">
+        <Col xs="auto">
+          <Form.Select
+            value={searchParams.get('role') ?? ''}
+            onChange={(e) => handleRoleChange(e.target.value)}
+          >
+            <option value="">All Roles</option>
+            {roles.map((role) => (
+              <option key={role.role_id} value={String(role.role_id)}>
+                {role.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+        <Col xs="auto">
+          {/* Clear button */}
+          <Button
+            type="button"
+            className="search-filter-clear"
+            onClick={handleClearFilters}
+          >
+            Clear Filters
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }

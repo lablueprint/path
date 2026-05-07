@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Form, Row, Col, Button } from 'react-bootstrap';
 
 type category = {
   name: string;
@@ -83,54 +84,57 @@ export default function ItemSearch({ categories, subcategories }: Props) {
   return (
     <div className="search-filter-wrapper">
       {/* Search input */}
-      <input
-        className="search-filter-input"
+      <Form.Control
+        type="text"
+        placeholder="Search items..."
+        className="search-bar"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Search items..."
-        aria-label="Search items"
       />
-
-      <div className="search-filter-row">
+      <Row className="g-2">
         {/* Category dropdown */}
-        <select
-          className="search-filter-select"
-          value={searchParams.get('category') ?? ''}
-          onChange={(e) => handleCategoryChange(e.target.value)}
-          aria-label="Filter by category"
-        >
-          <option value="">All Categories</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-
-        {/* Subcategory dropdown */}
-        <select
-          className="search-filter-select"
-          value={searchParams.get('subcategory') ?? ''}
-          onChange={(e) => handleSubcategoryChange(e.target.value)}
-          aria-label="Filter by subcategory"
-        >
-          <option value="">All Subcategories</option>
-          {filteredSubcategories.map((subcategory) => (
-            <option key={subcategory.id} value={subcategory.id}>
-              {subcategory.name}
-            </option>
-          ))}
-        </select>
-
-        {/* Clear button */}
-        <button
-          type="button"
-          className="search-filter-clear"
-          onClick={handleClearFilters}
-        >
-          Clear Filters
-        </button>
-      </div>
+        <Col xs="auto">
+          <Form.Select
+            value={searchParams.get('category') ?? ''}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            aria-label="Filter by category"
+          >
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+        {selectedCategoryId && (
+          <Col xs="auto">
+            {/* Subcategory dropdown */}
+            <Form.Select
+              value={searchParams.get('subcategory') ?? ''}
+              onChange={(e) => handleSubcategoryChange(e.target.value)}
+              aria-label="Filter by subcategory"
+            >
+              <option value="">All Subcategories</option>
+              {filteredSubcategories.map((subcategory) => (
+                <option key={subcategory.id} value={subcategory.id}>
+                  {subcategory.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+        )}
+        <Col xs="auto">
+          {/* Clear button */}
+          <Button
+            type="button"
+            className="search-filter-clear"
+            onClick={handleClearFilters}
+          >
+            Clear Filters
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }
