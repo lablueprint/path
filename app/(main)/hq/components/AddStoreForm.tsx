@@ -3,11 +3,10 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { useState, useRef } from 'react';
 import { createStore, updateStore } from '@/app/actions/store';
-import { Form, Card, Container } from 'react-bootstrap';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import Image from 'next/image';
-import defaultStorePhoto from '@/public/default-store-photo.png';
+import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 type FormValues = {
   storeName: string;
@@ -111,69 +110,77 @@ export default function AddStoreForm() {
   return (
     <div className="form-card">
       <div className="card-body">
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <div className="mb-3">
-          <Image
-            src={displayImage}
-            alt="Profile photo"
-            width={64}
-            height={64}
-            style={{ objectFit: 'cover', marginBottom: '10px' }}
-            unoptimized
-          />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <div className="mb-3">
+              <Image
+                src={displayImage}
+                alt="Profile photo"
+                width={64}
+                height={64}
+                style={{ objectFit: 'cover', marginBottom: '10px' }}
+                unoptimized
+              />
 
-          {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
-          {displayImage !== defaultStorePhoto.src && (
-            <button 
-              type="button" 
-              onClick={handleRemovePhoto}
-              className="btn-cancel"
-            >
-              Remove
-            </button>
-          )}
+              {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
+              {displayImage !== defaultStorePhoto.src && (
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  className="btn-cancel"
+                >
+                  Remove
+                </button>
+              )}
 
-          <br />
-          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-        </div>
+              <br />
+              <PhotoUpload
+                ref={photoUploadRef}
+                onFileSelect={handleFileSelect}
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="form-label field-label">Store name</label>
-          <input {...register('storeName')} className="form-control"/>
-        </div>
+            <div className="mb-3">
+              <label className="form-label field-label">Store name</label>
+              <input {...register('storeName')} className="form-control" />
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label field-label">
+              Store street address
+            </label>
+            <input
+              {...register('storeStreetAddress')}
+              className="form-control"
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {bothFilled && (
+              <button type="submit" disabled={isSaving} className="btn-submit">
+                Save
+              </button>
+            )}
+
+            {eitherFilled && (
+              <button
+                type="button"
+                className="btn-cancel"
+                disabled={isSaving}
+                onClick={() => {
+                  reset({ storeName: '', storeStreetAddress: '' });
+                  setSelectedFile(null);
+                  setPreviewUrl(defaultStorePhoto.src);
+                  photoUploadRef.current?.resetFile();
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
       </div>
-
-      <div className="mb-3">
-        <label className="form-label field-label">Store street address</label>
-        <input {...register('storeStreetAddress')} className="form-control"/>
-      </div>
-
-      <div style={{ display: 'flex', gap: '12px' }}>
-      {bothFilled && (
-        <button type="submit" disabled={isSaving} className="btn-submit">
-          Save
-        </button>
-      )}
-
-      {eitherFilled && (
-        <button
-          type="button"
-          className="btn-cancel"
-          disabled={isSaving}
-          onClick={() => {
-            reset({ storeName: '', storeStreetAddress: '' });
-            setSelectedFile(null);
-            setPreviewUrl(defaultStorePhoto.src);
-            photoUploadRef.current?.resetFile();
-          }}
-        >
-          Cancel
-        </button>
-      )}
-      </div>
-    </form>
-    </div>
     </div>
   );
 }

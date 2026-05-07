@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import styles from './ActionButton.module.css';
+import styles from '@/app/(main)/home/components/ActionButton.module.css';
 
 type ActionButtonProps = {
   text: string;

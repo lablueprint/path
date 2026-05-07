@@ -5,25 +5,27 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Store } from '@/app/types/store';
 import styles from '@/app/(main)/components/StoreCard.module.css';
-import defaultStorePhoto from '@/public/default-store-photo.png';
+import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 export default function StoreCard({ store }: { store: Store }) {
   const pathname = usePathname();
 
   const displayImage = store.photo_url;
   return (
-    <Link className={styles.cardText} href={`${pathname}/${store.store_id}`}>
+    <Link className={styles.cardLink} href={`${pathname}/${store.store_id}`}>
       <div className={styles.card}>
         <Image
-          src={displayImage ?? defaultStorePhoto.src}
+          src={displayImage || defaultStorePhoto}
           alt="Store photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
+          width={200}
+          height={200}
+          className={styles.cardImage}
           unoptimized
         />
-        <h2>{store.name}</h2>
-        <p>{store.street_address}</p>
+        <div className={styles.cardTextWrapper}>
+          <p className={styles.name}>{store.name}</p>
+          <p className={styles.address}>{store.street_address}</p>
+        </div>
       </div>
     </Link>
   );

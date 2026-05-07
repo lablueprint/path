@@ -1,4 +1,5 @@
 import TicketDetails from '@/app/(main)/components/TicketDetails';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function OutgoingTicketDetailsPage({
   params,
@@ -7,5 +8,16 @@ export default async function OutgoingTicketDetailsPage({
 }) {
   const { ticketId } = await params;
 
-  return <TicketDetails ticketId={ticketId} outgoing={true} />;
+  return (
+    <div>
+      <Breadcrumbs
+        labelMap={{
+          'outgoing-tickets': 'Outgoing Tickets',
+          [`/outgoing-tickets/${ticketId}`]: ticketId,
+        }}
+      />
+
+      <TicketDetails ticketId={ticketId} outgoing={true} />
+    </div>
+  );
 }

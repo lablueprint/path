@@ -1,7 +1,7 @@
 'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
 import { useState } from 'react';
-import styles from '@/app/(main)/incoming-tickets/[storeId]/components/Ticket.module.css';
+import styles from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicket.module.css';
 
 type IncomingTicketsListProps = {
   tickets: {

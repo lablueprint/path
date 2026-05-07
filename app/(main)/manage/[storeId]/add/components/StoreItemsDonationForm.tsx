@@ -139,7 +139,7 @@ export default function StoreItemsDonationForm({
       } else if (donationErrorOccurred) {
         alert('Donation submission failed.');
       } else {
-        alert('Donation submitted successfully!');
+        alert('Success!');
         // Reset all fields to empty/default values
         methods.reset({
           itemSettings: [],
@@ -201,10 +201,7 @@ export default function StoreItemsDonationForm({
           // add autofillitems connection pass in prop to storeitemsform
         )}
         {itemSettingsSelected?.includes('addInventoryItems') && (
-          <button
-            type="submit"
-            className="btn-submit"
-          >
+          <button type="submit" className="btn-submit">
             Submit
           </button>
         )}
