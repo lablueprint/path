@@ -135,12 +135,10 @@ export default async function RequestStorePage({
           [`/request/${storeId}`]: store.name,
         }}
       />{' '}
-      <div className={styles.pageHeader}>
-        <h1>
-          <span>Requesting from </span>
-          {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
-        </h1>
-      </div>
+      <h1>
+        <span>Requesting from </span>
+        {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
