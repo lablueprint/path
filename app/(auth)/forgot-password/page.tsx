@@ -1,6 +1,7 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import Image from 'next/image';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -30,30 +31,42 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div>
-      <h1>Reset Password</h1>
+    <div className={'auth-form-wrap'}>
+      <div className={'auth-left'}></div>
+      <div className={'auth-right'}>
+        <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
+          <Image width={96} height={46} src="/path.png" alt="path logo" />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="email">Email</label>
-
-        <input
-          id="email"
-          type="email"
-          {...register('email', {
-            required: 'Email is required.',
-            pattern: {
-              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              message: 'Please enter a valid email address.',
-            },
-          })}
-        />
-
-        {errors.email?.message ? <p>{errors.email.message}</p> : null}
-
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Sending' : 'Reset password'}
-        </button>
-      </form>
+          <p className={'auth-title'}>Forgot Password</p>
+          <div className={'auth-form-body'}>
+            <input
+              id="email"
+              type="email"
+              placeholder="Email"
+              className={'auth-field first'}
+              {...register('email', {
+                required: 'Email is required.',
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: 'Please enter a valid email address.',
+                },
+              })}
+            />
+            {errors.email?.message ? (
+              <p className={'auth-error'}>{errors.email.message}</p>
+            ) : null}
+          </div>
+          <div className={'submit-button-row'}>
+            <button
+              type="submit"
+              className={'btn-submit auth'}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Sending' : 'Reset password'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
