@@ -15,6 +15,7 @@ import AddInventoryItemForm, {
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
 import ItemCard from '@/app/(main)/components/ItemCard';
+import { Form } from 'react-bootstrap';
 
 type ItemWithNames = InventoryItem & {
   category_name: string;
@@ -172,11 +173,15 @@ export default function AddStoreItemSearch({
   return (
     <div>
       <h2>Add Store Items</h2>
-      <input
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <div className="search-filter-wrapper">
+        <Form.Control
+          type="text"
+          placeholder="Search store items..."
+          className="search-bar"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
       <button
         type="button"
         onClick={() => {

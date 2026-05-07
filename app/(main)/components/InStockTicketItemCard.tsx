@@ -56,7 +56,7 @@ export default function InStockTicketItemCard({
     <div className={styles.itemCard}>
       <Image
         className={styles.itemImage}
-        src={imagePlaceholder}
+        src={photoUrl || imagePlaceholder}
         alt={`Picture of ${itemName}`}
         width={77}
         height={77}

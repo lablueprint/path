@@ -91,7 +91,7 @@ Table {
   font-family: inherit;
 }
 
-.form-card .form-control::placeholder {
+.form-control::placeholder {
   color: #a2a2a2;
   opacity: 1;
 }
@@ -184,4 +184,29 @@ Table {
 .submit-button-row {
   display: flex;
   gap: 12px;
+}
+
+/* search bar layout */
+.search-filter-wrapper {
+  margin-bottom: 1rem;
+}
+
+/* clear filter button styling */
+.btn-primary.search-filter-clear {
+  padding-left: 2.25rem;
+  background: #fff url('/filter-icon.svg') no-repeat left 0.75rem center / 1rem;
+  border-color: #dee2e6;
+  color: #000;
+}
+
+.btn-primary.search-filter-clear:hover {
+  background: #dee2e6 url('/filter-icon.svg') no-repeat left 0.75rem center /
+    1rem;
+  border-color: #dee2e6;
+  color: #000;
+}
+
+.search-bar {
+  background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
+  margin-bottom: 0.5rem;
 }
