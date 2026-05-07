@@ -1,8 +1,13 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
+import styles from '@/app/(main)/request/[storeId]/RequestStorePage.module.css';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
+import cartIcon from '@/public/cart-icon.svg';
 
 type SearchParams = {
   query?: string;
@@ -124,11 +129,16 @@ export default async function RequestStorePage({
 
   return (
     <div>
-      <div>
-        <h1>{store.name}</h1>
-        <p>{store.street_address}</p>
-      </div>
-      <Link href={`/request/${storeId}/cart`}>Cart</Link>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store.name,
+        }}
+      />{' '}
+      <h1>
+        <span>Requesting from </span>
+        {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
@@ -145,23 +155,26 @@ export default async function RequestStorePage({
       <h2>Out-of-Stock Request</h2>
       <AddOutOfStockToCartForm storeId={storeId} />
       <h2>In-Stock Items</h2>
-
       {items && items.length > 0 ? (
-        <div>
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
           {items.map((item) => (
-            <ItemCard
-              key={item.id}
-              id={item.id}
-              item={item.item}
-              subcategory={item.subcategory}
-              category={item.category}
-              photoUrl={item.photoUrl}
-            />
+            <div key={item.id} className="col">
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                subcategory={item.subcategory}
+                category={item.category}
+                photoUrl={item.photoUrl}
+              />
+            </div>
           ))}
         </div>
       ) : (
         <p>No available items found.</p>
       )}
+      <Link href={`/request/${storeId}/cart`} className={styles.cartButton}>
+        <Image src={cartIcon} height={32} alt="Cart icon" />
+      </Link>
     </div>
   );
 }

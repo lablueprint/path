@@ -7,7 +7,10 @@ import type {
   InventoryItem,
   Subcategory,
 } from '@/app/types/inventory';
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
 
 type FormValues = {
@@ -17,7 +20,6 @@ type FormValues = {
   selectedSubcategory: string;
 };
 
-const DEFAULT_PHOTO_URL = 'https://example.com/default-image.jpg';
 const supabase = createClient();
 
 function getDefaultValues(
@@ -29,6 +31,19 @@ function getDefaultValues(
     selectedCategory: item.category_id ? String(item.category_id) : '',
     selectedSubcategory: item.subcategory_id ? String(item.subcategory_id) : '',
   };
+}
+
+function useTime() {
+  const [time, setTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(Date.now());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return time;
 }
 
 export default function EditInventoryItemForm({
@@ -45,6 +60,13 @@ export default function EditInventoryItemForm({
   const [initialValues, setInitialValues] = useState<FormValues>(() =>
     getDefaultValues(item),
   );
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    item.photo_url ?? null,
+  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isPendingDelete, setIsPendingDelete] = useState(false);
+  const photoUploadRef = useRef<{ resetFile: () => void }>(null);
 
   const {
     register,
@@ -62,6 +84,7 @@ export default function EditInventoryItemForm({
     control,
     name: 'selectedCategory',
   });
+  const time = useTime();
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -92,15 +115,65 @@ export default function EditInventoryItemForm({
     fetchSubcategories();
   }, [selectedCategory, item.category_id, initialSubcategories]);
 
+  const handleFileSelect = (file: File) => {
+    const maxSize = 200 * 1024;
+    if (file.size > maxSize) {
+      alert('File is too large. Please select an image under 200 KB.');
+      return;
+    }
+    const preview = URL.createObjectURL(file);
+    setPreviewUrl(preview);
+    setSelectedFile(file);
+    setIsPendingDelete(false);
+  };
+
+  const handleRemovePhoto = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setSelectedFile(null);
+    setIsPendingDelete(true);
+    photoUploadRef.current?.resetFile();
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     try {
+      await supabase.auth.getUser();
+      let finalPhotoUrl = photoUrl;
+
+      if (isPendingDelete) {
+        await supabase.storage
+          .from('inventory_item_photos')
+          .remove([`${item.inventory_item_id}/item.jpg`]);
+        finalPhotoUrl = null;
+      }
+
+      if (selectedFile) {
+        const { error: uploadError } = await supabase.storage
+          .from('inventory_item_photos')
+          .upload(`${item.inventory_item_id}/item.jpg`, selectedFile, {
+            upsert: true,
+          });
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError.message);
+          return;
+        }
+
+        const { data: publicData } = supabase.storage
+          .from('inventory_item_photos')
+          .getPublicUrl(`${item.inventory_item_id}/item.jpg`);
+        finalPhotoUrl = `${publicData.publicUrl}?t=${time}`;
+      }
+
       const result = await updateItem(item.inventory_item_id, {
         name: formData.name,
         description: formData.description,
         subcategory_id: formData.selectedSubcategory
           ? Number(formData.selectedSubcategory)
           : null,
-        photo_url: DEFAULT_PHOTO_URL,
+        ...(selectedFile || isPendingDelete
+          ? { photo_url: finalPhotoUrl }
+          : {}),
       });
 
       if (!result.success) {
@@ -108,6 +181,12 @@ export default function EditInventoryItemForm({
         return;
       }
 
+      setPhotoUrl(finalPhotoUrl);
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+      setSelectedFile(null);
+      setIsPendingDelete(false);
+      /* photoUploadRef.current?.resetFile(); */
       setInitialValues(formData);
       reset(formData);
     } catch (error) {
@@ -116,6 +195,11 @@ export default function EditInventoryItemForm({
   };
 
   const handleCancel = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setSelectedFile(null);
+    setIsPendingDelete(false);
+    photoUploadRef.current?.resetFile();
     if (initialValues.selectedCategory === String(item.category_id)) {
       setSubcategories(initialSubcategories);
     }
@@ -131,9 +215,34 @@ export default function EditInventoryItemForm({
     },
   });
 
+  const displayImage = isPendingDelete
+    ? defaultItemPhoto.src
+    : previewUrl || photoUrl || defaultItemPhoto.src;
+
+  const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Image
+          src={displayImage}
+          alt="Item photo"
+          width={64}
+          height={64}
+          style={{ objectFit: 'cover' }}
+          unoptimized
+        />
+
+        {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
+          <button type="button" onClick={handleRemovePhoto}>
+            Remove
+          </button>
+        )}
+
+        <br />
+        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+        <br />
+
         <label>
           Inventory item name
           <input
@@ -196,7 +305,7 @@ export default function EditInventoryItemForm({
           </>
         )}
 
-        {isDirty && (
+        {hasDirtyTextOrImage && (
           <>
             <br />
             <button type="submit" disabled={isSubmitting}>

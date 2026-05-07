@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from './Sidebar.module.css';
+import styles from '@/app/(main)/components/Sidebar.module.css';
 
 type SidebarNavLinkProps = {
   href: string;

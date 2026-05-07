@@ -3,6 +3,10 @@ import ItemSearch from '@/app/(main)/components/ItemSearch';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import styles from '@/app/(main)/request/all/RequestAllStoresPage.module.css';
+import Image from 'next/image';
+import cartIcon from '@/public/cart-icon.svg';
 
 type SearchParams = {
   query?: string;
@@ -134,9 +138,14 @@ export default async function RequestAllStoresPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          all: 'All Stores',
+        }}
+      />
       <div>
-        <h1>All Stores</h1>
-        <Link href="/request/all/cart">Cart</Link>
+        <h1>Requesting from All Stores</h1>
       </div>
       <ItemSearch
         categories={
@@ -162,18 +171,22 @@ export default async function RequestAllStoresPage({
             {storeItems.length > 0 ? (
               <div>
                 <h3>In-Stock Items</h3>
-                {storeItems.map((item) => (
-                  <ItemCard
-                    key={item.store_item_id}
-                    id={item.store_item_id}
-                    item={item.inventory_items.name}
-                    subcategory={item.inventory_items.subcategories.name}
-                    category={
-                      item.inventory_items.subcategories.categories.name
-                    }
-                    photoUrl={item.inventory_items.photo_url}
-                  />
-                ))}
+                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+                  {storeItems.map((item) => (
+                    <div key={item.store_item_id} className="col">
+                      <ItemCard
+                        key={item.store_item_id}
+                        id={item.store_item_id}
+                        item={item.inventory_items.name}
+                        subcategory={item.inventory_items.subcategories.name}
+                        category={
+                          item.inventory_items.subcategories.categories.name
+                        }
+                        photoUrl={item.inventory_items.photo_url}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
               <p>No available items in this store.</p>
@@ -181,6 +194,9 @@ export default async function RequestAllStoresPage({
           </div>
         );
       })}
+      <Link href={`/request/all/cart`} className={styles.cartButton}>
+        <Image src={cartIcon} height={32} alt="Cart icon" />
+      </Link>
     </div>
   );
 }

@@ -34,10 +34,7 @@ export default function AddInStockToCartForm({
           required
         />
 
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="btn-submit">
           Add to Cart
         </button>
       </Form>
