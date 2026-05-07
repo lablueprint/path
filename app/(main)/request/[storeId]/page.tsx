@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 import styles from './page.module.css';
@@ -125,6 +126,12 @@ export default async function RequestStorePage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store.name,
+        }}
+      />{' '}
       <div className={styles.pageHeader}>
         <h1>
           <span className={styles.requestingFrom}>Requesting from </span>

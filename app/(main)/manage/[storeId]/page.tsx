@@ -3,6 +3,7 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
 import styles from './page.module.css';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -22,13 +23,11 @@ export default async function ManageStorePage({
 
   const supabase = await createClient();
 
-  // Fetch categories
   const { data: categories } = await supabase
     .from('categories')
     .select('category_id, name')
     .order('name');
 
-  // Fetch subcategories
   const { data: subcategories } = await supabase
     .from('subcategories')
     .select('subcategory_id, name, category_id')
@@ -39,6 +38,7 @@ export default async function ManageStorePage({
     .select('*')
     .eq('store_id', storeId)
     .single();
+
 
   if (storeError || !store) {
     console.error('Error fetching store:', storeError);
@@ -67,12 +67,14 @@ export default async function ManageStorePage({
   if (query) {
     filteredItems = filteredItems.ilike('inventory_items.name', `%${query}%`);
   }
+
   if (category) {
     filteredItems = filteredItems.eq(
       'inventory_items.subcategories.category_id',
       category,
     );
   }
+
   if (subcategory) {
     filteredItems = filteredItems.eq(
       'inventory_items.subcategory_id',
@@ -120,6 +122,12 @@ export default async function ManageStorePage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          [storeId]: store.name,
+        }}
+      />
       <div className={styles.pageHeader}>
         <h1>
           <span className={styles.managingFrom}>Managing </span>

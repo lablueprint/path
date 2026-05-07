@@ -7,7 +7,7 @@ import { updateUser } from '@/app/actions/user';
 import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import defaultProfilePhoto from '@/public/image-placeholder.svg';
 
 type ProfileFormValues = {
   email: string;
@@ -137,6 +137,8 @@ export default function ProfileForm({ user }: { user: User }) {
         if (data.email !== user.email) {
           alert('Please check your new email address to verify the change.');
         }
+      } else {
+        console.error('Error updating profile:', result.error);
       }
     } catch (error) {
       console.error('Error saving profile:', error);

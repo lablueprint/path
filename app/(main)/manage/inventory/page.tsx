@@ -3,6 +3,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import styles from './page.module.css';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -96,6 +97,12 @@ export default async function InventoryPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+        }}
+      />
       <div className={styles.pageHeader}>
         <h1>Inventory Library</h1>
         <Link href="/manage/inventory/add" className={styles.addLink}>

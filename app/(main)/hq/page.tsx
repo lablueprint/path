@@ -2,6 +2,7 @@ import DonationsExportForm from '@/app/(main)/hq/components/DonationsExportForm'
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import AddStoreForm from '@/app/(main)/hq/components/AddStoreForm';
+import { Table } from 'react-bootstrap';
 
 export default async function HqPage() {
   const supabase = await createClient();
@@ -15,7 +16,7 @@ export default async function HqPage() {
 
   const { data: storesData, error: storesErr } = await supabase
     .from('stores')
-    .select('store_id, name, street_address');
+    .select('store_id, name, street_address, photo_url');
 
   if (err) {
     console.error('Error fetching donations:', err);
@@ -33,8 +34,8 @@ export default async function HqPage() {
       <h1>HQ</h1>
       <h2>Donations</h2>
       <h3>Recent Donations</h3>
-      <table>
-        <thead>
+      <Table borderless>
+        <thead className="table-header">
           <tr>
             <th>Receiver</th>
             <th>Store</th>
@@ -54,13 +55,11 @@ export default async function HqPage() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
 
-      <h3>Export Donations</h3>
       <DonationsExportForm />
 
       <h2>Stores</h2>
-      <h3>Add Store</h3>
       <AddStoreForm />
       <h3>Edit Stores</h3>
       {stores.length > 0 ? (
