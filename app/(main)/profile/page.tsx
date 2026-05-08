@@ -38,7 +38,7 @@ export default async function PersonalProfilePage() {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           paddingTop: '16px',
           paddingBottom: '16px',
         }}
