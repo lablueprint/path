@@ -4,7 +4,6 @@ import DonateIcon from '@/public/donate.svg';
 import HomeIcon from '@/public/home.svg';
 import InventoryIcon from '@/public/inventory.svg';
 import PieIcon from '@/public/pie.svg';
-import { Col, Container, Row } from 'react-bootstrap';
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -20,43 +19,37 @@ export default async function HomePage() {
 
   return (
     <>
-      <h1 style={{ marginBottom: '4rem' }}>Home</h1>
-      <Container>
-        <Row className="g-5 gy-5">
-          <Col xs={'auto'}>
-            <ActionButton text="Donate" url="/home/donate" icon={DonateIcon} />
-          </Col>
-
-          <Col xs={'auto'}>
-            {['requestor', 'admin', 'superadmin', 'owner'].includes(
-              userRole ?? '',
-            ) && (
-              <ActionButton
-                text="Request Inventory"
-                url="/request"
-                icon={InventoryIcon}
-              />
-            )}
-          </Col>
-        </Row>
-
-        <Row className="g-5">
-          <Col xs={'auto'}>
-            {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
-              <ActionButton
-                text="Manage Inventory"
-                url="/manage"
-                icon={HomeIcon}
-              />
-            )}
-          </Col>
-          <Col xs={'auto'}>
-            {['superadmin', 'owner'].includes(userRole ?? '') && (
-              <ActionButton text="HQ" url="/hq" icon={PieIcon} />
-            )}
-          </Col>
-        </Row>
-      </Container>
+      <h1>Home</h1>
+      <div className="row row-cols-1 row-cols-sm-2 g-5">
+        <div className="col">
+          <ActionButton text="Donate" url="/home/donate" icon={DonateIcon} />
+        </div>
+        <div className="col">
+          {['requestor', 'admin', 'superadmin', 'owner'].includes(
+            userRole ?? '',
+          ) && (
+            <ActionButton
+              text="Request Inventory"
+              url="/request"
+              icon={InventoryIcon}
+            />
+          )}
+        </div>
+        <div className="col">
+          {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
+            <ActionButton
+              text="Manage Inventory"
+              url="/manage"
+              icon={HomeIcon}
+            />
+          )}
+        </div>
+        <div className="col">
+          {['superadmin', 'owner'].includes(userRole ?? '') && (
+            <ActionButton text="HQ" url="/hq" icon={PieIcon} />
+          )}
+        </div>
+      </div>
     </>
   );
 }
