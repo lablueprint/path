@@ -63,6 +63,7 @@ export default function UserSearch({ roles }: Props) {
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
   }
 
+  // sort roles by roleOrder, with any roles not in the list appearing at the end
   function formatRole(role: string) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
   }
