@@ -62,12 +62,13 @@ Table {
 }
 
 .main-container {
-  padding-top: calc(3rem + 3.5rem);
+  padding-top: calc(3rem + 3.875rem);
 }
 
 @media (min-width: 992px) {
   .main-container {
     margin-left: 18rem;
+    padding-top: 3rem;
   }
 }
 
