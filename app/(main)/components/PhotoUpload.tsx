@@ -7,6 +7,7 @@ import uploadPhotoIcon from '@/public/image-upload.svg';
 import styles from './PhotoUpload.module.css';
 
 type PhotoUploadProps = {
+  variant?: 'circle' | 'rectangle';
   initialPhotoUrl?: string | null;
   onFileSelect?: (file: File) => void;
   onRemove?: () => void;
@@ -18,6 +19,7 @@ type PhotoUploadProps = {
 const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
   (
     {
+      variant = 'rectangle',
       initialPhotoUrl,
       onFileSelect,
       onRemove,
@@ -62,37 +64,46 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
     const hasPhoto = displayImage !== defaultProfilePhoto.src;
 
     return (
-      <>
-        <label htmlFor={id} style={{ cursor: 'pointer' }}>
-          <div
-            className={isDragging ? styles.dragging : ''}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            {hasPhoto ? (
-              <Image
-                src={displayImage}
-                alt="Profile photo"
-                width={200}
-                height={200}
-                style={{ objectFit: 'cover' }}
-                unoptimized
+      <div className={styles.wrapper}>
+        <label
+          htmlFor={id}
+          className={[
+            styles.container,
+            styles[variant],
+            isDragging ? styles.dragging : '',
+            hasPhoto ? styles.hasPhoto : '',
+          ].join(' ')}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {hasPhoto ? (
+            <Image
+              src={displayImage}
+              alt="Profile photo"
+              width={200}
+              height={200}
+              style={{
+                objectFit: 'cover',
+              }}
+              unoptimized
+            />
+          ) : (
+            <div
+              className={styles.placeholder}
+              style={{ width: '100%', height: '100%' }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={uploadPhotoIcon.src}
+                alt="Upload photo"
+                style={{ width: 32, height: 32 }}
               />
-            ) : (
-              <div className={styles.placeholder}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={uploadPhotoIcon.src}
-                  alt="Upload photo"
-                  style={{ width: 32, height: 32 }}
-                />
-                <span className={styles.photoPlaceholderText}>
-                  Drag and drop file here or <u>Browse</u>
-                </span>
-              </div>
-            )}
-          </div>
+              <span className={styles.photoPlaceholderText}>
+                Drag and drop file here or <u>Browse</u>
+              </span>
+            </div>
+          )}
         </label>
 
         {!isPendingDelete && hasPhoto && (
@@ -114,7 +125,7 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
           onChange={handleFileChange}
           style={{ display: 'none' }}
         />
-      </>
+      </div>
     );
   },
 );

@@ -154,18 +154,18 @@ export default function ProfileForm({ user }: { user: User }) {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>User Information</h2>
-          <div className={styles.photoCircle}>
-            <PhotoUpload
-              ref={photoUploadRef}
-              id="photo-upload-input"
-              initialPhotoUrl={photoUrl}
-              previewUrl={previewUrl}
-              isPendingDelete={isPendingDelete}
-              onFileSelect={handleFileSelect}
-              onRemove={handleRemovePhoto}
-            />
-          </div>
-          
+
+          <PhotoUpload
+            variant="circle"
+            ref={photoUploadRef}
+            id="photo-upload-input"
+            initialPhotoUrl={photoUrl}
+            previewUrl={previewUrl}
+            isPendingDelete={isPendingDelete}
+            onFileSelect={handleFileSelect}
+            onRemove={handleRemovePhoto}
+          />
+
           <div className={styles.fieldGroup}>
             <div className="two-col-row">
               <div>
