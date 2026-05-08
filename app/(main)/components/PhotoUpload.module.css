@@ -1,0 +1,21 @@
+.dragging {
+  border-color: #2d3748;
+  background: #e2e8f0;
+  transform: scale(1.03);
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  text-align: center;
+  color: #000000;
+}
+
+.placeholderText {
+  font-size: 0.9rem;
+  line-height: 1.3;
+}

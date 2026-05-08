@@ -1,15 +1,12 @@
 'use client';
 
 import type { User, UserUpdate } from '@/app/types/user';
-import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { updateUser } from '@/app/actions/user';
 import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
 import styles from '@/app/(main)/components/ProfilePage.module.css';
-import uploadPhotoIcon from '@/public/image-upload.svg';
 
 type ProfileFormValues = {
   email: string;
@@ -31,9 +28,6 @@ export default function ProfileForm({ user }: { user: User }) {
 
   const supabase = createClient();
   const photoUploadRef = useRef<{ resetFile: () => void }>(null);
-
-  // For drag and drop image file
-  const [isDragging, setIsDragging] = useState(false);
 
   const {
     register,
@@ -66,24 +60,6 @@ export default function ProfileForm({ user }: { user: User }) {
     setSelectedFile(null);
     setIsPendingDelete(true);
     photoUploadRef.current?.resetFile();
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      handleFileSelect(file);
-    }
   };
 
   const onCancel = () => {
@@ -171,10 +147,6 @@ export default function ProfileForm({ user }: { user: User }) {
   };
 
   // Determine image to show the user
-  const displayImage = isPendingDelete
-    ? defaultProfilePhoto.src
-    : previewUrl || photoUrl || defaultProfilePhoto.src;
-
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
@@ -182,58 +154,18 @@ export default function ProfileForm({ user }: { user: User }) {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>User Information</h2>
-          <div className={styles.photoSection}>
-            {/* Clicking the circle triggers the hidden PhotoUpload input */}
-            <label htmlFor="photo-upload-input" style={{ cursor: 'pointer' }}>
-              <div
-                className={`${styles.photoCircle} ${isDragging ? styles.photoCircleDragging : ''} ${displayImage !== defaultProfilePhoto.src ? styles.photoCircleWithImage : ''}`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                {displayImage !== defaultProfilePhoto.src ? (
-                  <Image
-                    src={displayImage}
-                    alt="Profile photo"
-                    width={200}
-                    height={200}
-                    style={{ objectFit: 'cover' }}
-                    unoptimized
-                  />
-                ) : (
-                  <div className={styles.photoPlaceholder}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={uploadPhotoIcon.src}
-                      alt="Upload photo"
-                      style={{ width: 32, height: 32 }}
-                    />
-                    <span className={styles.photoPlaceholderText}>
-                      Drag and drop file here or <u>Browse</u>
-                    </span>
-                  </div>
-                )}
-              </div>
-            </label>
-
-            {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
-              <button
-                type="button"
-                onClick={handleRemovePhoto}
-                style={{ marginTop: 8 }}
-                className="btn-cancel"
-              >
-                Remove
-              </button>
-            )}
-
-            {/* Hidden — triggered by clicking the circle label */}
+          <div className={styles.photoCircle}>
             <PhotoUpload
               ref={photoUploadRef}
-              onFileSelect={handleFileSelect}
               id="photo-upload-input"
+              initialPhotoUrl={photoUrl}
+              previewUrl={previewUrl}
+              isPendingDelete={isPendingDelete}
+              onFileSelect={handleFileSelect}
+              onRemove={handleRemovePhoto}
             />
           </div>
+          
           <div className={styles.fieldGroup}>
             <div className="two-col-row">
               <div>

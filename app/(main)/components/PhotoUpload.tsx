@@ -1,65 +1,123 @@
 'use client';
 
-import { forwardRef, useImperativeHandle, useRef } from 'react';
-import React from 'react';
-
-type FileUploaderProps = {
-  onFileSelect: (file: File) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  id?: string;
-};
-
-const FileUploader = ({ onFileSelect, inputRef, id }: FileUploaderProps) => {
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onFileSelect(file);
-    }
-  };
-
-  return (
-    <input
-      ref={inputRef}
-      id={id}
-      type="file"
-      accept="image/*"
-      onChange={handleFileChange}
-      style={{ display: 'none' }}
-    />
-  );
-};
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import Image from 'next/image';
+import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import uploadPhotoIcon from '@/public/image-upload.svg';
+import styles from './PhotoUpload.module.css';
 
 type PhotoUploadProps = {
+  initialPhotoUrl?: string | null;
   onFileSelect?: (file: File) => void;
+  onRemove?: () => void;
+  previewUrl?: string | null;
+  isPendingDelete?: boolean;
   id?: string;
 };
 
 const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
-  ({ onFileSelect, id }, ref) => {
+  (
+    {
+      initialPhotoUrl,
+      onFileSelect,
+      onRemove,
+      previewUrl,
+      isPendingDelete,
+      id = 'photo-upload-input',
+    },
+    ref,
+  ) => {
     const inputRef = useRef<HTMLInputElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
 
     useImperativeHandle(ref, () => ({
       resetFile: () => {
-        if (inputRef.current) {
-          inputRef.current.value = '';
-        }
+        if (inputRef.current) inputRef.current.value = '';
       },
     }));
 
-    const handleFileUpload = (file: File) => {
-      onFileSelect?.(file);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) onFileSelect?.(file);
     };
 
+    const handleDragOver = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(true);
+    };
+
+    const handleDragLeave = () => setIsDragging(false);
+
+    const handleDrop = (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      const file = e.dataTransfer.files?.[0];
+      if (file?.type.startsWith('image/')) onFileSelect?.(file);
+    };
+
+    const displayImage = isPendingDelete
+      ? defaultProfilePhoto.src
+      : previewUrl || initialPhotoUrl || defaultProfilePhoto.src;
+
+    const hasPhoto = displayImage !== defaultProfilePhoto.src;
+
     return (
-      <FileUploader
-        onFileSelect={handleFileUpload}
-        inputRef={inputRef}
-        id={id}
-      />
+      <>
+        <label htmlFor={id} style={{ cursor: 'pointer' }}>
+          <div
+            className={isDragging ? styles.dragging : ''}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {hasPhoto ? (
+              <Image
+                src={displayImage}
+                alt="Profile photo"
+                width={200}
+                height={200}
+                style={{ objectFit: 'cover' }}
+                unoptimized
+              />
+            ) : (
+              <div className={styles.placeholder}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={uploadPhotoIcon.src}
+                  alt="Upload photo"
+                  style={{ width: 32, height: 32 }}
+                />
+                <span className={styles.photoPlaceholderText}>
+                  Drag and drop file here or <u>Browse</u>
+                </span>
+              </div>
+            )}
+          </div>
+        </label>
+
+        {!isPendingDelete && hasPhoto && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="btn-cancel"
+            style={{ marginTop: 8 }}
+          >
+            Remove
+          </button>
+        )}
+
+        <input
+          ref={inputRef}
+          id={id}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </>
     );
   },
 );
 
 PhotoUpload.displayName = 'PhotoUpload';
-
 export default PhotoUpload;
