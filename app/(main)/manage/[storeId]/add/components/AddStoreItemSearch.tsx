@@ -14,9 +14,11 @@ import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
-import { Form } from 'react-bootstrap';
+import { Form, Container, Card } from 'react-bootstrap';
 import AddItemCard from './AddItemCard';
 import donationStyles from '@/app/(main)/components/DonationForm.module.css';
+import searchStyles from './AddStoreItemSearch.module.css';
+import { ListGroup } from 'react-bootstrap';
 
 type ItemWithNames = InventoryItem & {
   category_name: string;
@@ -175,62 +177,78 @@ export default function AddStoreItemSearch({
 
   return (
     <div>
-      <div className="form-card">
-        <div className={donationStyles.radioRow}>
-          <Form.Check
-            type="radio"
-            label="Search for existing item in inventory"
-            value="existing"
-            id="inventory-existing"
-            name="inventoryType"
-            onChange={() => setInventoryType('existing')}
-          />
-          <Form.Check
-            type="radio"
-            label="Create new item"
-            value="new"
-            id="inventory-new"
-            name="inventoryType"
-            onChange={() => setInventoryType('new')}
-          />
-        </div>
-        {inventoryType == 'existing' && (
-          <div className="search-filter-wrapper">
-            <Form.Control
-              type="text"
-              placeholder="Search store items..."
-              className="search-bar"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        )}
-        {inventoryType == 'new' && (
-          <FormProvider {...createItemMethods}>
-            <AddInventoryItemForm
-              selectedFile={selectedFile}
-              onFileChange={setSelectedFile}
-            />
-            <button
-              type="button"
-              onClick={createItemMethods.handleSubmit(handleCreateAndSelect)}
-            >
-              Create and select
-            </button>
-          </FormProvider>
-        )}
-
-        <ul>
-          {results?.map((item) => (
-            <div key={item.inventory_item_id}>
-              <li>{item.name}</li>
-              <button type="button" onClick={() => handleSelect(item)}>
-                Select
-              </button>
+      <Container className={donationStyles.formContainer}>
+        <Card className="form-card">
+          <Card.Body>
+            <div className={donationStyles.formBody}>
+              <Form.Group>
+                <div className={donationStyles.radioRow}>
+                  <Form.Check
+                    type="radio"
+                    label="Search for existing item in inventory"
+                    value="existing"
+                    id="inventory-existing"
+                    name="inventoryType"
+                    onChange={() => setInventoryType('existing')}
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Create new item"
+                    value="new"
+                    id="inventory-new"
+                    name="inventoryType"
+                    onChange={() => setInventoryType('new')}
+                  />
+                </div>
+              </Form.Group>
+              {inventoryType == 'existing' && (
+                <div>
+                  <div className="search-filter-wrapper">
+                    <Form.Control
+                      type="text"
+                      placeholder="Search store items..."
+                      className="search-bar"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  {results.length > 0 && (
+                    <ListGroup className={searchStyles.results}>
+                      {results?.map((item) => (
+                        <ListGroup.Item
+                          key={item.inventory_item_id}
+                          action
+                          type="button"
+                          className={searchStyles.item}
+                          onClick={() => handleSelect(item)}
+                        >
+                          {item.name}
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  )}
+                </div>
+              )}
+              {inventoryType == 'new' && (
+                <FormProvider {...createItemMethods}>
+                  <AddInventoryItemForm
+                    selectedFile={selectedFile}
+                    onFileChange={setSelectedFile}
+                  />
+                  <button
+                    type="button"
+                    onClick={createItemMethods.handleSubmit(
+                      handleCreateAndSelect,
+                    )}
+                  >
+                    Create and select
+                  </button>
+                </FormProvider>
+              )}
             </div>
-          ))}
-        </ul>
-      </div>
+          </Card.Body>
+        </Card>
+      </Container>
 
       <h3>Selected Items</h3>
       {fields.length > 0 ? (
