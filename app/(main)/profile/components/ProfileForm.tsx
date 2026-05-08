@@ -150,11 +150,10 @@ export default function ProfileForm({ user }: { user: User }) {
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <div className="form-card profile-form-card">
+    <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>User Information</h2>
-
           <PhotoUpload
             variant="circle"
             ref={photoUploadRef}
@@ -165,7 +164,6 @@ export default function ProfileForm({ user }: { user: User }) {
             onFileSelect={handleFileSelect}
             onRemove={handleRemovePhoto}
           />
-
           <div className={styles.fieldGroup}>
             <div className="two-col-row">
               <div>
