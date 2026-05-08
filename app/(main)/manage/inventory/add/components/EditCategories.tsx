@@ -51,7 +51,7 @@ export default function EditCategories({
 
     await createSubcategory({
       name: newSubcategoryName,
-      category_id: categoryId,
+      category_id: Number(categoryId),
     });
 
     setNewSubcategoryName('');

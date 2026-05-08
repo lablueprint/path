@@ -10,7 +10,7 @@ import {
 
 export default function CategoriesTestComponent() {
   const data: SubcategoryInsert = {
-    category_id: '1',
+    category_id: 1,
     name: 'sample subcategory',
   };
 

@@ -97,7 +97,9 @@ export default function EditInventoryItemForm({
       const result = await updateItem(item.inventory_item_id, {
         name: formData.name,
         description: formData.description,
-        subcategory_id: formData.selectedSubcategory || null,
+        subcategory_id: formData.selectedSubcategory
+          ? Number(formData.selectedSubcategory)
+          : null,
         photo_url: DEFAULT_PHOTO_URL,
       });
 
