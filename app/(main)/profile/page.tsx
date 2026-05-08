@@ -29,18 +29,20 @@ export default async function PersonalProfilePage() {
     <div className="form-body">
       <h1>Profile</h1>
       <div style={{ height: '50px' }} />
-      <div className="form-card">
-        <ProfileForm user={profile as User} />
+
+      <ProfileForm user={profile as User} />
+      <div className="form-card card-body">
         <UpdatePasswordForm />
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            padding: '0 40px 40px',
-          }}
-        >
-          <SignOutButton />
-        </div>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '0 40px 40px',
+        }}
+      >
+        <SignOutButton />
       </div>
     </div>
   );

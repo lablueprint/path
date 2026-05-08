@@ -203,9 +203,6 @@ export default function ProfileForm({ user }: { user: User }) {
 
           {hasDirtyTextOrImage && (
             <div className="btn-row">
-              <button className="btn-save" type="submit" disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
               <button
                 className="btn-cancel"
                 type="button"
@@ -213,6 +210,9 @@ export default function ProfileForm({ user }: { user: User }) {
                 disabled={isSaving}
               >
                 Cancel
+              </button>
+              <button className="btn-save" type="submit" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save'}
               </button>
             </div>
           )}
