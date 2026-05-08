@@ -281,7 +281,7 @@ export default function EditInventoryItemForm({
 
         <div className="mb-3">
           <label className="form-label field-label">
-            Category
+            <p>Category</p>
             <select {...categoryField}>
               <option value="">None</option>
               {initialCategories.map((category) => (
@@ -295,9 +295,8 @@ export default function EditInventoryItemForm({
 
         {!!selectedCategory && (
           <div className="mb-3">
-            <br />
             <label className="form-label field-label">
-              Subcategory
+              <p>Subcategory</p>
               <select
                 {...register('selectedSubcategory', {
                   required: 'Subcategory is required.',
@@ -323,8 +322,6 @@ export default function EditInventoryItemForm({
 
         {hasDirtyTextOrImage && (
           <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
-            <br />
-
             <button
               type="submit"
               disabled={isSubmitting}
@@ -332,7 +329,6 @@ export default function EditInventoryItemForm({
             >
               {isSubmitting ? 'Saving...' : 'Save'}
             </button>
-
             <button
               type="button"
               className="btn-cancel"
