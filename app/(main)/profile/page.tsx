@@ -33,21 +33,18 @@ export default async function PersonalProfilePage() {
       <ProfileForm user={profile as User} />
       <div className="form-card card-body">
         <UpdatePasswordForm />
-         
       </div>
 
-        <div
+      <div
         style={{
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'flex-start',
           paddingTop: '16px',
-    paddingBottom: '16px',
+          paddingBottom: '16px',
         }}
       >
         <SignOutButton />
       </div>
-
-   
     </div>
   );
 }
