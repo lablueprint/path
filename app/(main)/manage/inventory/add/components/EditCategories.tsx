@@ -1,5 +1,6 @@
 'use client';
 
+import styles from './EditCategories.module.css';
 import { useState } from 'react';
 import {
   updateCategory,
@@ -51,36 +52,50 @@ export default function EditCategories({
 
     await createSubcategory({
       name: newSubcategoryName,
-      category_id: Number(categoryId),
+      category_id: categoryId,
     });
 
     setNewSubcategoryName('');
   };
 
   return (
-    <div>
-      <button onClick={() => setEditing(!editing)}>
-        {editing ? 'Done' : 'Edit'}
-      </button>
+    <div className={styles.pageContainer}>
+      <div className={styles.topButtons}>
+        <button
+          className={styles.primaryButton}
+          onClick={() => setEditing(!editing)}
+        >
+          {editing ? 'Done' : 'Edit'}
+        </button>
+      </div>
 
       {/* Add Category */}
       {editing && (
-        <div style={{ marginTop: '1rem' }}>
-          <button onClick={() => setShowAddCategory(!showAddCategory)}>
+        <div className={styles.addSection}>
+          <button
+            className={styles.primaryButton}
+            onClick={() => setShowAddCategory(!showAddCategory)}
+          >
             {showAddCategory ? 'Done' : 'Add'}
           </button>
 
           {showAddCategory && (
-            <div>
+            <div className={styles.buttonGroup}>
               <input
                 placeholder="New category name"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
+                className={styles.inputField}
               />
 
               {newCategoryName && (
                 <>
-                  <button onClick={handleCreateCategory}>Save</button>
+                  <button
+                    className={styles.secondaryButton}
+                    onClick={handleCreateCategory}
+                  >
+                    Save
+                  </button>
 
                   <button
                     onClick={() => {
@@ -96,63 +111,78 @@ export default function EditCategories({
         </div>
       )}
 
-      <ul>
+      <ul className={styles.categoriesContainer}>
         {categories?.map((category) => (
-          <li key={category.category_id}>
-            {editing ? (
-              <EditableField
-                id={category.category_id}
-                name={category.name}
-                type="category"
-              />
-            ) : (
-              category.name
-            )}
+          <li
+            key={category.category_id}
+            className={styles.categoryBlock}
+          >
+            <div className={styles.categoryRow}>
+              {editing ? (
+                <EditableField
+                  id={category.category_id}
+                  name={category.name}
+                  type="category"
+                />
+              ) : (
+                <p className="fw-semibold mb-0">{category.name}</p>
+              )}
 
-            {/* Add Subcategory */}
-            {editing && (
-              <button
-                onClick={() =>
-                  setAddingSubcategory(
-                    addingSubcategory === category.category_id
-                      ? null
-                      : category.category_id,
-                  )
-                }
-              >
-                {addingSubcategory === category.category_id ? 'Done' : 'Add'}
-              </button>
-            )}
+              {/* Add Subcategory */}
+              {editing && (
+                <button
+                  className={styles.primaryButton}
+                  onClick={() =>
+                    setAddingSubcategory(
+                      addingSubcategory === category.category_id
+                        ? null
+                        : category.category_id,
+                    )
+                  }
+                >
+                  {addingSubcategory === category.category_id
+                    ? 'Done'
+                    : 'Add'}
+                </button>
+              )}
+            </div>
 
             {editing && addingSubcategory === category.category_id && (
-              <div>
-                <input
-                  placeholder="New subcategory"
-                  value={newSubcategoryName}
-                  onChange={(e) => setNewSubcategoryName(e.target.value)}
-                />
+              <div className={styles.addSection}>
+                <div className={styles.buttonGroup}>
+                  <input
+                    placeholder="New subcategory"
+                    value={newSubcategoryName}
+                    onChange={(e) => setNewSubcategoryName(e.target.value)}
+                    className={styles.inputField}
+                  />
 
-                {newSubcategoryName && (
-                  <>
-                    <button
-                      onClick={() =>
-                        handleCreateSubcategory(category.category_id)
-                      }
-                    >
-                      Save
-                    </button>
+                  {newSubcategoryName && (
+                    <>
+                      <button
+                        className={styles.secondaryButton}
+                        onClick={() =>
+                          handleCreateSubcategory(category.category_id)
+                        }
+                      >
+                        Save
+                      </button>
 
-                    <button onClick={() => setNewSubcategoryName('')}>
-                      Cancel
-                    </button>
-                  </>
-                )}
+                      <button onClick={() => setNewSubcategoryName('')}>
+                        Cancel
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 
-            <ul>
+            <ul className={styles.subcategoryList}>
               {category.subcategories?.map((sub) => (
-                <li key={sub.subcategory_id}>
+                <li
+                  key={sub.subcategory_id}
+                  className={styles.subcategoryRow}
+                >
                   {editing ? (
                     <EditableField
                       id={sub.subcategory_id}
@@ -160,7 +190,7 @@ export default function EditCategories({
                       type="subcategory"
                     />
                   ) : (
-                    sub.name
+                    <p className="mb-0">{sub.name}</p>
                   )}
                 </li>
               ))}
@@ -220,10 +250,11 @@ function EditableField({
   };
 
   return (
-    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+    <div className={styles.buttonGroup}>
       <input
         value={value}
         disabled={loading}
+        className={styles.inputField}
         onChange={(e) => {
           setValue(e.target.value);
           setIsDirty(e.target.value !== name);
@@ -232,7 +263,11 @@ function EditableField({
 
       {isDirty && (
         <>
-          <button onClick={handleSave} disabled={loading}>
+          <button
+            className={styles.secondaryButton}
+            onClick={handleSave}
+            disabled={loading}
+          >
             {loading ? 'Saving...' : 'Save'}
           </button>
 
@@ -248,7 +283,11 @@ function EditableField({
         </>
       )}
 
-      <button onClick={handleDelete} disabled={loading}>
+      <button
+        className={styles.removeButton}
+        onClick={handleDelete}
+        disabled={loading}
+      >
         Remove
       </button>
     </div>
