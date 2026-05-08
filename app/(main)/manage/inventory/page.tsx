@@ -71,11 +71,11 @@ export default async function InventoryPage({
     .order('name', { referencedTable: 'subcategories', ascending: true })
     .overrideTypes<
       {
-        category_id: string;
+        category_id: number;
         name: string;
         subcategories: {
           name: string;
-          subcategory_id: string;
+          subcategory_id: number;
         }[];
       }[],
       { merge: false }

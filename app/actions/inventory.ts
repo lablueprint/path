@@ -92,7 +92,7 @@ export const createSubcategory = async (data: SubcategoryInsert) => {
 };
 
 export const updateSubcategory = async (
-  subcategoryId: string,
+  subcategoryId: number,
   data: SubcategoryUpdate,
 ) => {
   const supabase = await createClient();
@@ -113,7 +113,7 @@ export const updateSubcategory = async (
   return { success: true, data: entry as Subcategory };
 };
 
-export const deleteSubcategory = async (subcategoryId: string) => {
+export const deleteSubcategory = async (subcategoryId: number) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('subcategories')
@@ -151,7 +151,7 @@ export const createCategory = async (data: CategoryInsert) => {
 };
 
 export const updateCategory = async (
-  categoryId: string,
+  categoryId: number,
   data: CategoryUpdate,
 ) => {
   const supabase = await createClient();
@@ -172,7 +172,7 @@ export const updateCategory = async (
   return { success: true, data: entry as Category };
 };
 
-export const deleteCategory = async (categoryId: string) => {
+export const deleteCategory = async (categoryId: number) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('categories')

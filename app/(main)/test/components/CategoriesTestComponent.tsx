@@ -24,14 +24,14 @@ export default function CategoriesTestComponent() {
   };
 
   const handleUpdateSubcategory = async () => {
-    const result = await updateSubcategory(subcategoryId, {
+    const result = await updateSubcategory(Number(subcategoryId), {
       name: updatedName,
     });
     console.log('Update Subcategory Result:', result);
   };
 
   const handleDeleteSubcategory = async () => {
-    const result = await deleteSubcategory(deleteSubcategoryId);
+    const result = await deleteSubcategory(Number(deleteSubcategoryId));
     console.log('Delete Subcategory Result:', result);
   };
 
