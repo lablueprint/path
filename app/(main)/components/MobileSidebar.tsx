@@ -44,8 +44,20 @@ export default function MobileSidebar({
           onClick={handleShow}
           aria-label="Open menu"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 30 30" aria-hidden="true">
-            <path stroke="rgba(0,0,0,0.55)" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="2" d="M4 7h22M4 15h22M4 23h22" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 30 30"
+            aria-hidden="true"
+          >
+            <path
+              stroke="rgba(0,0,0)"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="2"
+              d="M4 7h22M4 15h22M4 23h22"
+            />
           </svg>
         </button>
         <Link href="/home" className={styles.mobileLogoLink}>
@@ -59,10 +71,23 @@ export default function MobileSidebar({
         </Link>
       </div>
 
-      <Offcanvas show={show} onHide={handleClose} placement="start" style={{ width: '18rem' }}>
+      <Offcanvas
+        show={show}
+        onHide={handleClose}
+        placement="start"
+        style={{ width: '18rem' }}
+      >
         <div className={styles.offcanvasInner}>
-          <CloseButton className={styles.offcanvasClose} onClick={handleClose} aria-label="Close menu" />
-          <Link href="/home" onClick={handleClose} className={styles.pathHomeLink}>
+          <CloseButton
+            className={styles.offcanvasClose}
+            onClick={handleClose}
+            aria-label="Close menu"
+          />
+          <Link
+            href="/home"
+            onClick={handleClose}
+            className={styles.pathHomeLink}
+          >
             <Image
               src="/path.png"
               alt="Path Home Logo"
@@ -86,7 +111,10 @@ export default function MobileSidebar({
                   )}
                   <ul className={`nav flex-column ${styles.linkList}`}>
                     {visibleLinks.map((link) => (
-                      <li key={link.href} className={`nav-item ${styles.linkItem}`}>
+                      <li
+                        key={link.href}
+                        className={`nav-item ${styles.linkItem}`}
+                      >
                         <SidebarNavLink
                           href={link.href}
                           label={link.label}
@@ -100,7 +128,11 @@ export default function MobileSidebar({
             })}
           </div>
 
-          <Link href="/profile" className={styles.profile} onClick={handleClose}>
+          <Link
+            href="/profile"
+            className={styles.profile}
+            onClick={handleClose}
+          >
             <div className={styles.pfpContainer}>
               <Image
                 src={profilePhotoUrl || imagePlaceholder}

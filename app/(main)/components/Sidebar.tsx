@@ -108,7 +108,10 @@ export default async function Sidebar() {
                   {/* Bootstrap ul classes */}
                   <ul className={`nav flex-column ${styles.linkList}`}>
                     {visibleLinks.map((link) => (
-                      <li key={link.href} className={`nav-item ${styles.linkItem}`}>
+                      <li
+                        key={link.href}
+                        className={`nav-item ${styles.linkItem}`}
+                      >
                         <SidebarNavLink href={link.href} label={link.label} />
                       </li>
                     ))}

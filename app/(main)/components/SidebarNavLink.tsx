@@ -10,7 +10,11 @@ type SidebarNavLinkProps = {
   onClick?: () => void;
 };
 
-export default function SidebarNavLink({ href, label, onClick }: SidebarNavLinkProps) {
+export default function SidebarNavLink({
+  href,
+  label,
+  onClick,
+}: SidebarNavLinkProps) {
   const pathname = usePathname();
 
   const isActive = pathname === href || pathname.startsWith(`${href}/`);

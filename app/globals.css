@@ -60,15 +60,13 @@ Table {
   width: 100%;
 }
 
+.main-container {
+  padding-top: calc(3rem + 3.5rem);
+}
+
 @media (min-width: 992px) {
   .main-container {
     margin-left: 18rem;
-  }
-}
-
-@media (max-width: 991.98px) {
-  .main-container {
-    padding-top: calc(3rem + 3.5rem);
   }
 }
 
