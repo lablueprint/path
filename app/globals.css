@@ -139,8 +139,6 @@ thead th {
   background: #1a202c;
 }
 
-
-
 .btn-cancel {
   display: inline-flex;
   padding: 8px 40px;
@@ -163,7 +161,7 @@ thead th {
 .btn-row {
   display: flex;
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .form-body {
