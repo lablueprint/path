@@ -86,7 +86,7 @@ export default function AddInventoryItemForm({
       }
     }
     fetchCategories();
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -105,7 +105,7 @@ export default function AddInventoryItemForm({
       }
     }
     fetchSubcategories();
-  }, [selectedCategory, supabase]);
+  }, [selectedCategory]);
 
   return (
     <div>
