@@ -240,8 +240,9 @@ export default function AddStoreItemSearch({
                     onClick={createItemMethods.handleSubmit(
                       handleCreateAndSelect,
                     )}
+                    className="btn-submit"
                   >
-                    Create and select
+                    Create Item
                   </button>
                 </FormProvider>
               )}
