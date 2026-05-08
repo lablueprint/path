@@ -26,6 +26,7 @@ export default function IncomingTicketsList({
       : tickets.filter(
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) => (b.date).localeCompare(a.date,),);
 
   return (
     <div>
@@ -64,7 +65,7 @@ export default function IncomingTicketsList({
             </thead>
             <tbody>
               {/* Map the list of tickets to IncomingTicketCard components */}
-              {filteredTickets.map((ticket) => (
+              {sortedFilteredTickets.map((ticket) => (
                 <IncomingTicketCard
                   key={ticket.id}
                   ticketId={ticket.id}
