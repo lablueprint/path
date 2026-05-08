@@ -122,29 +122,6 @@ thead th {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: none;
-  border-radius: 5px;
-  background: #2d3748;
-  color: #fff;
-  font-weight: 400;
-  cursor: pointer;
-}
-
-.btn-submit:hover {
-  background: #4a5568;
-  transition: background 0.2s ease;
-}
-
-.btn-submit:active {
-  background: #1a202c;
-}
-
-.btn-save {
-  display: inline-flex;
-  padding: 8px 40px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
   border: 1px solid #3182ce;
   border-radius: 5px;
   background: #3182ce;
@@ -153,10 +130,16 @@ thead th {
   cursor: pointer;
 }
 
-.btn-save:hover {
+.btn-submit:hover {
   background: #2473bc;
   transition: background 0.2s ease;
 }
+
+.btn-submit:active {
+  background: #1a202c;
+}
+
+
 
 .btn-cancel {
   display: inline-flex;

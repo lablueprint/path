@@ -15,7 +15,7 @@ export default function SignOutButton() {
   }
 
   return (
-    <button className="btn-save" onClick={signOut}>
+    <button className="btn-submit" onClick={signOut}>
       Sign out
     </button>
   );

@@ -211,7 +211,7 @@ export default function ProfileForm({ user }: { user: User }) {
               >
                 Cancel
               </button>
-              <button className="btn-save" type="submit" disabled={isSaving}>
+              <button className="btn-submit" type="submit" disabled={isSaving}>
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
             </div>

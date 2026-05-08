@@ -111,7 +111,7 @@ export default function UpdatePasswordForm() {
             )}
             {passwordsMatch && (
               <button
-                className="btn-save"
+                className="btn-submit"
                 type="submit"
                 style={{ visibility: passwordsMatch ? 'visible' : 'hidden' }}
               >
