@@ -63,6 +63,19 @@ export default function UserSearch({ roles }: Props) {
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
   }
 
+  function formatRole(role: string) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  }
+  const roleOrder = ['Owner', 'Superadmin', 'Admin', 'Requestor', 'Default'];
+  const sortedRoles = [...roles].sort((a, b) => {
+    const aIndex = roleOrder.indexOf(formatRole(a.name));
+    const bIndex = roleOrder.indexOf(formatRole(b.name));
+    return (
+      (aIndex === -1 ? roleOrder.length : aIndex) -
+      (bIndex === -1 ? roleOrder.length : bIndex)
+    )
+  });
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       <input
@@ -76,10 +89,10 @@ export default function UserSearch({ roles }: Props) {
         onChange={(e) => handleRoleChange(e.target.value)}
       >
         <option value="">All roles</option>
-        {roles.map((role) => (
-          <option key={role.role_id} value={String(role.role_id)}>
-            {role.name}
-          </option>
+        {sortedRoles.map((role) => (
+            <option key={role.role_id} value={String(role.role_id)}>
+              {formatRole(role.name)}
+            </option>
         ))}
       </select>
 
