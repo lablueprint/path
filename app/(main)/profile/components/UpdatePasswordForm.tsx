@@ -53,8 +53,8 @@ export default function UpdatePasswordForm() {
   };
 
   return (
-    <div className="form-card">
-      <div className="card-body">
+    <div>
+      <div style={{ paddingLeft: "40px", paddingRight: "40px"}}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>Privacy</h2>
           <label className="field-label">New password</label>

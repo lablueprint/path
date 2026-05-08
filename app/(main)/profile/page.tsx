@@ -26,7 +26,7 @@ export default async function PersonalProfilePage() {
   }
 
   return (
-    <div className="form-body" style={{ paddingTop: '30px' }}>
+    <div className="form-body">
       <h1>Profile</h1>
       <div style={{ height: '50px' }} />
       <div className="form-card">

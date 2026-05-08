@@ -150,7 +150,6 @@ export default function ProfileForm({ user }: { user: User }) {
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-
     <div className={styles.card}>
       <div className={styles.cardBody}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -220,6 +219,5 @@ export default function ProfileForm({ user }: { user: User }) {
         </form>
       </div>
     </div>
-
   );
 }

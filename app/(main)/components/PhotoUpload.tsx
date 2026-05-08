@@ -111,8 +111,9 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
             type="button"
             onClick={onRemove}
             className="btn-cancel"
-            style={{ marginTop: 8 }}
+            style={{ marginTop: 15 }}
           >
+            {/* Remove */}
             Remove
           </button>
         )}
