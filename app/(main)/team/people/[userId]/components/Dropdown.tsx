@@ -33,6 +33,21 @@ export default function Dropdown({
       roleName: 'owner',
     },
   ];
+
+  // sort roles by roleOrder, with any roles not in the list appearing at the end
+  function formatRole(role: string) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  }
+  const roleOrder = ['Owner', 'Superadmin', 'Admin', 'Requestor', 'Default'];
+  const sortedRoles = [...allRoles].sort((a, b) => {
+    const aIndex = roleOrder.indexOf(formatRole(a.roleName));
+    const bIndex = roleOrder.indexOf(formatRole(b.roleName));
+    return (
+      (aIndex === -1 ? roleOrder.length : aIndex) -
+      (bIndex === -1 ? roleOrder.length : bIndex)
+    )
+  });
+
   return (
     <form
       onSubmit={async (e) => {
@@ -48,9 +63,9 @@ export default function Dropdown({
         value={currentRoleId}
         onChange={(e) => setCurrentRoleId(Number(e.target.value))}
       >
-        {allRoles.map((r) => (
+        {sortedRoles.map((r) => (
           <option key={r.id} value={r.id}>
-            {r.roleName}
+            {formatRole(r.roleName)}
           </option>
         ))}
       </select>
