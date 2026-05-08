@@ -7,7 +7,8 @@ import Image from 'next/image';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultItemPhoto from '@/public/image-placeholder.svg';
 import { Form } from 'react-bootstrap';
-import styles from '@/app/(main)/components/DonationForm.module.css';
+import donationStyles from '@/app/(main)/components/DonationForm.module.css';
+import styles from './AddInventoryItemForm.module.css';
 
 export type Inputs = {
   name: string;
@@ -110,12 +111,15 @@ export default function AddInventoryItemForm({
   }, [selectedCategory]);
 
   return (
-    <div className={styles.formBody}>
+    <div className={donationStyles.formBody}>
       {/* Item Title */}
       <Form.Group controlId="name">
-        <Form.Label className={styles.fieldLabel}>Item Title</Form.Label>
+        <Form.Label className={donationStyles.fieldLabel}>
+          Item Title
+        </Form.Label>
         <Form.Control
           type="text"
+          className={styles.nameField}
           {...register('name', { required: 'Item name is required' })}
           isInvalid={!!errors.name}
         />
@@ -125,7 +129,7 @@ export default function AddInventoryItemForm({
       </Form.Group>
       {/* Image */}
       <Form.Group controlId="image">
-        <Form.Label className={styles.fieldLabel}>Image</Form.Label>
+        <Form.Label className={donationStyles.fieldLabel}>Image</Form.Label>
         {/* placeholder for drag and drop */}
         <div>
           <Image
@@ -149,9 +153,12 @@ export default function AddInventoryItemForm({
 
       {/* Description */}
       <Form.Group controlId="description">
-        <Form.Label className={styles.fieldLabel}>Description</Form.Label>
+        <Form.Label className={donationStyles.fieldLabel}>
+          Description
+        </Form.Label>
         <Form.Control
-          type="text"
+          as="textarea"
+          className={styles.descriptionField}
           {...register('description', { required: 'Description is required' })}
           isInvalid={!!errors.description}
         />
@@ -162,8 +169,9 @@ export default function AddInventoryItemForm({
 
       {/* Category */}
       <Form.Group controlId="selectedCategory">
-        <Form.Label className={styles.fieldLabel}>Category</Form.Label>
+        <Form.Label className={donationStyles.fieldLabel}>Category</Form.Label>
         <Form.Select
+          className={styles.selectField}
           {...register('selectedCategory', {
             required: 'Category is required.',
           })}
@@ -182,8 +190,11 @@ export default function AddInventoryItemForm({
       </Form.Group>
       {/* subcategory */}
       <Form.Group controlId="selectedSubcategory">
-        <Form.Label className={styles.fieldLabel}>Subcategory</Form.Label>
+        <Form.Label className={donationStyles.fieldLabel}>
+          Subcategory
+        </Form.Label>
         <Form.Select
+          className={styles.selectField}
           {...register('selectedSubcategory', {
             required: 'Subcategory is required.',
           })}

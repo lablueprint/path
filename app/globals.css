@@ -211,3 +211,11 @@ Table {
   background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
   margin-bottom: 0.5rem;
 }
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  margin: 40px 0;
+  align-self: stretch;
+}

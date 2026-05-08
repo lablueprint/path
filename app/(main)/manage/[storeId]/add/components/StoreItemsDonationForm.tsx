@@ -10,7 +10,8 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-
+import { Form } from 'react-bootstrap';
+import styles from './StoreItemsDonationForm.module.css';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -170,23 +171,21 @@ export default function StoreItemsDonationForm({
       <h2>Add Items</h2>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <div>
-            <label>
-              <input
-                value="addInventoryItems"
-                type="checkbox"
-                {...methods.register('itemSettings')}
-              />
-              Inventory
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="giftInKind"
-                {...methods.register('itemSettings')}
-              />
-              Gift in Donation
-            </label>
+          <div className={styles.checkboxRow}>
+            <Form.Check
+              type="checkbox"
+              id="addInventoryItems"
+              label="Inventory"
+              value="addInventoryItems"
+              {...methods.register('itemSettings')}
+            />
+            <Form.Check
+              type="checkbox"
+              id="giftInKind"
+              label="Gift in Donation"
+              value="giftInKind"
+              {...methods.register('itemSettings')}
+            />
           </div>
 
           {itemSettingsSelected?.includes('giftInKind') && (
@@ -198,14 +197,15 @@ export default function StoreItemsDonationForm({
               }
             />
           )}
+
           {itemSettingsSelected?.includes('addInventoryItems') && (
-            <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
-            // add autofillitems connection pass in prop to storeitemsform
-          )}
-          {itemSettingsSelected?.includes('addInventoryItems') && (
-            <button type="submit" className="btn-submit">
-              Submit
-            </button>
+            <>
+              <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
+              {/* add autofillitems connection pass in prop to storeitemsform */}
+              <button type="submit" className="btn-submit">
+                Submit
+              </button>
+            </>
           )}
         </form>
       </FormProvider>

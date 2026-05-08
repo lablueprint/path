@@ -235,15 +235,19 @@ export default function AddStoreItemSearch({
                     selectedFile={selectedFile}
                     onFileChange={setSelectedFile}
                   />
-                  <button
-                    type="button"
-                    onClick={createItemMethods.handleSubmit(
-                      handleCreateAndSelect,
-                    )}
-                    className="btn-submit"
-                  >
-                    Create Item
-                  </button>
+                  <div>
+                    <div className="submit-button-row">
+                      <button
+                        type="button"
+                        onClick={createItemMethods.handleSubmit(
+                          handleCreateAndSelect,
+                        )}
+                        className="btn-submit"
+                      >
+                        Create Item
+                      </button>
+                    </div>
+                  </div>
                 </FormProvider>
               )}
             </div>
