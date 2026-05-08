@@ -10,6 +10,24 @@
   margin-top: 24px;
 }
 
+.card {
+  border: none;
+  border-radius: 5px;
+  padding: 0;
+  background: #fff;
+  margin-top: 00px; /* whatever you need */
+}
+
+.userInfoText {
+    margin-top: 90px;
+    margin-bottom: 20px;
+}
+
+.cardBody {
+  padding: 40px;
+  margin-top: 50px;
+}
+
 .input {
   width: 100%;
   padding: 8px 12px;

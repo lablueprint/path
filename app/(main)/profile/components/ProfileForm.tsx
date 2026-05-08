@@ -150,10 +150,11 @@ export default function ProfileForm({ user }: { user: User }) {
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <div className="form-card">
-      <div className="card-body">
+
+    <div className={styles.card}>
+      <div className={styles.cardBody}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2>User Information</h2>
+          <h2 className={styles.userInfoText}>User Information</h2>
           <PhotoUpload
             variant="circle"
             ref={photoUploadRef}
@@ -219,5 +220,6 @@ export default function ProfileForm({ user }: { user: User }) {
         </form>
       </div>
     </div>
+
   );
 }
