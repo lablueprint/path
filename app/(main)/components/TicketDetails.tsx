@@ -68,6 +68,7 @@ export default async function TicketDetails({
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
   }
+  const sortedStoreAdminsList = [...storeAdminsList].sort((a, b) => (a.first_name).localeCompare(b.first_name,),);
 
   if (userTicket) {
     const { data: requestorData } = await supabase
@@ -207,7 +208,7 @@ export default async function TicketDetails({
               {outgoing && (
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
-                  {storeAdminsList.map((storeAdmin) => (
+                  {sortedStoreAdminsList.map((storeAdmin) => (
                     <UserCard
                       className={styles.userCard}
                       noBottomMargin
