@@ -57,9 +57,18 @@ Table {
 }
 
 .main-container {
-  margin-left: 18rem;
   padding: 3rem;
   width: 100%;
+}
+
+.main-container {
+  padding-top: calc(3rem + 3.5rem);
+}
+
+@media (min-width: 992px) {
+  .main-container {
+    margin-left: 18rem;
+  }
 }
 
 .main {
