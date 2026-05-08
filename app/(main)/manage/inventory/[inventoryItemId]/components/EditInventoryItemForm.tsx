@@ -224,63 +224,79 @@ export default function EditInventoryItemForm({
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Image
-          src={displayImage}
-          alt="Item photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
-
-        {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
-          <button type="button" onClick={handleRemovePhoto}>
-            Remove
-          </button>
-        )}
-
-        <br />
-        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-        <br />
-
-        <label>
-          Inventory item name
-          <input
-            type="text"
-            {...register('name', { required: 'Item name is required.' })}
+        <div className="mb-3">
+          <Image
+            src={displayImage}
+            alt="Item photo"
+            width={64}
+            height={64}
+            style={{ objectFit: 'cover', marginBottom: '10px' }}
+            unoptimized
           />
-        </label>
-        {errors.name && <p role="alert">{errors.name.message}</p>}
-        <br />
 
-        <label>
-          Description
-          <input
-            type="text"
-            {...register('description', {
-              required: 'Description is required.',
-            })}
-          />
-        </label>
-        {errors.description && <p role="alert">{errors.description.message}</p>}
-        <br />
+          {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
+            <button
+              type="button"
+              onClick={handleRemovePhoto}
+              className="btn-cancel"
+            >
+              Remove
+            </button>
+          )}
 
-        <label>
-          Category
-          <select {...categoryField}>
-            <option value="">None</option>
-            {initialCategories.map((category) => (
-              <option key={category.category_id} value={category.category_id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <br />
+          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          <br />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label field-label">
+            Inventory item name
+            <input
+              type="text"
+              {...register('name', { required: 'Item name is required.' })}
+              className="form-control"
+            />
+          </label>
+          {errors.name && <p role="alert">{errors.name.message}</p>}
+          <br />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label field-label">
+            Description
+            <input
+              type="text"
+              {...register('description', {
+                required: 'Description is required.',
+              })}
+              className="form-control"
+            />
+          </label>
+          {errors.description && (
+            <p role="alert">{errors.description.message}</p>
+          )}
+          <br />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label field-label">
+            Category
+            <select {...categoryField}>
+              <option value="">None</option>
+              {initialCategories.map((category) => (
+                <option key={category.category_id} value={category.category_id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
         {!!selectedCategory && (
-          <>
+          <div className="mb-3">
             <br />
-            <label>
+            <label className="form-label field-label">
               Subcategory
               <select
                 {...register('selectedSubcategory', {
@@ -302,23 +318,30 @@ export default function EditInventoryItemForm({
             {errors.selectedSubcategory && (
               <p role="alert">{errors.selectedSubcategory.message}</p>
             )}
-          </>
+          </div>
         )}
 
         {hasDirtyTextOrImage && (
-          <>
+          <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
             <br />
-            <button type="submit" disabled={isSubmitting}>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-submit"
+            >
               {isSubmitting ? 'Saving...' : 'Save'}
             </button>
+
             <button
               type="button"
+              className="btn-cancel"
               onClick={handleCancel}
               disabled={isSubmitting}
             >
               Cancel
             </button>
-          </>
+          </div>
         )}
       </form>
     </div>
