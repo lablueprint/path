@@ -145,7 +145,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
             alt="Store photo"
             width={64}
             height={64}
-            style={{ objectFit: 'cover', marginBottom: '10px' }}
+            className="photo"
             unoptimized
           />
 
@@ -174,7 +174,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
         </div>
 
         {hasDirtyTextOrImage && (
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div className="button-spacing">
             <button type="submit" disabled={isSaving} className="btn-submit">
               {isSaving ? 'Saving...' : 'Save'}
             </button>

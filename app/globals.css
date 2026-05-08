@@ -185,3 +185,13 @@ Table {
   display: flex;
   gap: 12px;
 }
+
+.photo {
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.button-spacing {
+  display: flex;
+  gap: 12px;
+}

@@ -230,7 +230,7 @@ export default function EditInventoryItemForm({
             alt="Item photo"
             width={64}
             height={64}
-            style={{ objectFit: 'cover', marginBottom: '10px' }}
+            className="photo"
             unoptimized
           />
 
@@ -321,7 +321,7 @@ export default function EditInventoryItemForm({
         )}
 
         {hasDirtyTextOrImage && (
-          <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+          <div className="button-spacing">
             <button
               type="submit"
               disabled={isSubmitting}

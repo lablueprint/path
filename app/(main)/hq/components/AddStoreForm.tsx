@@ -118,7 +118,7 @@ export default function AddStoreForm() {
                 alt="Profile photo"
                 width={64}
                 height={64}
-                style={{ objectFit: 'cover', marginBottom: '10px' }}
+                className="photo"
                 unoptimized
               />
 
@@ -156,7 +156,7 @@ export default function AddStoreForm() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div className="button-spacing">
             {bothFilled && (
               <button type="submit" disabled={isSaving} className="btn-submit">
                 {isSaving ? 'Saving...' : 'Save'}
