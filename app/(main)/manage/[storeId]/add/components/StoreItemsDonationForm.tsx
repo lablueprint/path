@@ -166,46 +166,49 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <div>
-          <label>
-            <input
-              value="addInventoryItems"
-              type="checkbox"
-              {...methods.register('itemSettings')}
-            />
-            Add inventory items to store?
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="giftInKind"
-              {...methods.register('itemSettings')}
-            />
-            Submit gift-in-kind donation?
-          </label>
-        </div>
+    <div>
+      <h2>Add Items</h2>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <div>
+            <label>
+              <input
+                value="addInventoryItems"
+                type="checkbox"
+                {...methods.register('itemSettings')}
+              />
+              Inventory
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="giftInKind"
+                {...methods.register('itemSettings')}
+              />
+              Gift in Donation
+            </label>
+          </div>
 
-        {itemSettingsSelected?.includes('giftInKind') && (
-          <DonationForm
-            donorType={donorType}
-            setItemsDonated={setItemsDonated}
-            showSubmitButton={
-              !itemSettingsSelected?.includes('addInventoryItems')
-            }
-          />
-        )}
-        {itemSettingsSelected?.includes('addInventoryItems') && (
-          <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
-          // add autofillitems connection pass in prop to storeitemsform
-        )}
-        {itemSettingsSelected?.includes('addInventoryItems') && (
-          <button type="submit" className="btn-submit">
-            Submit
-          </button>
-        )}
-      </form>
-    </FormProvider>
+          {itemSettingsSelected?.includes('giftInKind') && (
+            <DonationForm
+              donorType={donorType}
+              setItemsDonated={setItemsDonated}
+              showSubmitButton={
+                !itemSettingsSelected?.includes('addInventoryItems')
+              }
+            />
+          )}
+          {itemSettingsSelected?.includes('addInventoryItems') && (
+            <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
+            // add autofillitems connection pass in prop to storeitemsform
+          )}
+          {itemSettingsSelected?.includes('addInventoryItems') && (
+            <button type="submit" className="btn-submit">
+              Submit
+            </button>
+          )}
+        </form>
+      </FormProvider>
+    </div>
   );
 }

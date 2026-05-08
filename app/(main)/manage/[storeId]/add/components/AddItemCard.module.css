@@ -1,0 +1,9 @@
+.label {
+  color: #000;
+  font-weight: 700;
+  margin: 0;
+}
+
+.container {
+  padding: 0 16px;
+}
