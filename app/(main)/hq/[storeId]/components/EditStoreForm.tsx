@@ -137,44 +137,54 @@ export default function EditStoreForm({ store }: { store: Store }) {
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <Image
-          src={displayImage}
-          alt="Store photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
+    <form onSubmit={handleSubmit(onSubmit)} className="form-card">
+      <div className="card-body">
+        <div className="mb-3">
+          <Image
+            src={displayImage}
+            alt="Store photo"
+            width={64}
+            height={64}
+            style={{ objectFit: 'cover', marginBottom: '10px' }}
+            unoptimized
+          />
 
-        {!isPendingDelete && displayImage !== defaultStorePhoto.src && (
-          <button type="button" onClick={handleRemovePhoto}>
-            Remove
-          </button>
+          {!isPendingDelete && displayImage !== defaultStorePhoto.src && (
+            <button type="button" onClick={handleRemovePhoto} className="btn-cancel">
+              Remove
+            </button>
+          )}
+
+          <br />
+          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label field-label">
+            Store name
+          </label>
+          <input {...register('name')} className="form-control" />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label field-label">
+            Store street address
+          </label>
+          <input {...register('street_address')} className="form-control" />
+        </div>
+
+        {hasDirtyTextOrImage && (
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button type="submit" disabled={isSaving} className="btn-submit">
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
+
+            <button type="button" className="btn-cancel" onClick={onCancel} disabled={isSaving}>
+              Cancel
+            </button>
+          </div>
         )}
-        <br />
-        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
       </div>
-      <div>
-        <label>Store name</label>
-        <input {...register('name')} />
-      </div>
-      <div>
-        <label>Store street address</label>
-        <input {...register('street_address')} />
-      </div>
-
-      {hasDirtyTextOrImage && (
-        <>
-          <button type="submit" disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" onClick={onCancel} disabled={isSaving}>
-            Cancel
-          </button>
-        </>
-      )}
     </form>
   );
 }
