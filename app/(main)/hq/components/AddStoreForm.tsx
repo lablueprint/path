@@ -159,7 +159,7 @@ export default function AddStoreForm() {
           <div style={{ display: 'flex', gap: '12px' }}>
             {bothFilled && (
               <button type="submit" disabled={isSaving} className="btn-submit">
-                Save
+                {isSaving ? 'Saving...' : 'Save'}
               </button>
             )}
 
