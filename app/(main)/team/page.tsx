@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ViewToggle from '../components/ViewToggle';
 
 export default async function TeamPage() {
   return (

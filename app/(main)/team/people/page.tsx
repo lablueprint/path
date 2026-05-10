@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import UsersList from '@/app/(main)/team/people/components/UsersList';
 import UserSearch from '@/app/(main)/team/people/components/UserSearch';
+import ViewToggle, { ViewMode } from '../../components/ViewToggle';
 
 type searchParams = {
   query?: string;
@@ -83,6 +84,7 @@ export default async function UsersPage({
       />
 
       <h1>People</h1>
+      <ViewToggle useUrl />
       <UserSearch roles={rolesData ?? []} />
       {users.length > 0 ? <UsersList users={users} /> : <p>No users found.</p>}
     </div>
