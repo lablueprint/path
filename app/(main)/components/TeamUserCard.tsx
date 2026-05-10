@@ -1,49 +1,46 @@
+'use client';
 import { User } from '@/app/types/user';
-import styles from '@/app/(main)/components/UserCard.module.css';
+import styles from '@/app/(main)/components/Card.module.css';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function TeamUserCard({
   user,
-  noBottomMargin = false,
-  className,
 }: {
   user: User;
   noBottomMargin?: boolean;
   className?: string;
 }) {
-  const cardClassName = [
-    styles.userCard,
-    noBottomMargin ? styles.noBottomMargin : '',
-    className || '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-  const profilePhotoSrc = user.profile_photo_url?.trim() || imagePlaceholder;
+  const pathname = usePathname();
+  const displayImage = user.profile_photo_url;
 
   return (
-    <div className={cardClassName}>
-      <Image
-        className={styles.profilePicture}
-        src={profilePhotoSrc}
-        alt={`Profile picture for ${user.first_name}`}
-        height={55}
-        width={55}
-        unoptimized
-      />
-      <div className={styles.userText}>
-        <h3 className={styles.userName}>
-          {user.first_name} {user.last_name}
-        </h3>
-        <a
-          className={styles.emailLink}
-          href={`mailto:${user.email}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className={styles.userEmail}>{user.email}</span>
-        </a>
+    <Link className={styles.cardLink} href={`${pathname}/${user.user_id}`}>
+      <div className={styles.card}>
+        <div className={styles.imageContainer}>
+          <Image
+            src={displayImage || imagePlaceholder}
+            alt={`Profile picture for ${user.first_name}`}
+            fill
+            unoptimized
+          />
+        </div>
+        <div className={styles.cardBody}>
+          <p className={styles.name}>
+            {user.first_name} {user.last_name}
+          </p>
+          <a
+            className={styles.emailLink}
+            href={`mailto:${user.email}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className={styles.cardText}>{user.email}</span>
+          </a>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
