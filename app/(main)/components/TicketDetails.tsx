@@ -9,6 +9,8 @@ import { Card } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import { Store } from '@/app/types/store';
+import TicketDestStoreDropdown from './TicketDestStoreDropdown';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -25,8 +27,8 @@ export default async function TicketDetails({
     .from('tickets')
     .select(
       `
-        store_id, ticket_id, requestor_user_id, status, date_submitted,
-        stores (
+        store_id, ticket_id, requestor_user_id, status, date_submitted, dest_store_id,
+        stores!fk_stores (
           name,
           street_address
         )
@@ -119,6 +121,26 @@ export default async function TicketDetails({
     return `${month}-${day}-${year}`;
   };
 
+  // If ticket exists, query for dest store options
+  const { data: destStoreOptions, error: destStoreOptionsError } =
+    await supabase
+      .from('stores')
+      .select('store_id, name, street_address')
+      .neq('store_id', userTicket.store_id);
+  if (destStoreOptionsError) {
+    console.error(
+      'Error fetching destination store options:',
+      destStoreOptionsError,
+    );
+  }
+
+  // If ticket exists, query for current dest store
+  const { data: currentDestStore } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', userTicket.dest_store_id)
+    .single();
+
   return (
     <div>
       {userTicket ? (
@@ -160,6 +182,16 @@ export default async function TicketDetails({
               ticketId={userTicket.ticket_id}
               currentStatus={userTicket.status as TicketStatus}
               statusOptions={statusOptions}
+            />
+          </div>
+          <div>
+            <p>Ticket Destination Store: </p>
+            <TicketDestStoreDropdown
+              ticketId={ticketId}
+              currentDestStore={(currentDestStore as Store) || null}
+              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                store,
+              }))}
             />
           </div>
 
