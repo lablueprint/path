@@ -28,7 +28,7 @@ export default async function TicketDetails({
     .select(
       `
         store_id, ticket_id, requestor_user_id, status, date_submitted, dest_store_id,
-        stores (
+        stores!fk_stores (
           name,
           street_address
         )
@@ -135,12 +135,11 @@ export default async function TicketDetails({
   }
 
   // If ticket exists, query for current dest store
-  const { data: currentDestStore, error: currentDestStoreError } =
-    await supabase
-      .from('stores')
-      .select('store_id, name, street_address')
-      .eq('store_id', userTicket.dest_store_id)
-      .single();
+  const { data: currentDestStore } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', userTicket.dest_store_id)
+    .single();
 
   return (
     <div>
