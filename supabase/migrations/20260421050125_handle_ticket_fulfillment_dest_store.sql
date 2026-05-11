@@ -1,8 +1,21 @@
-create schema if not exists private;
+alter table "public"."tickets" add column "dest_store_id" uuid;
 
-create or replace function private.handle_ticket_fulfillment () returns trigger language plpgsql security definer
-set
-  search_path = '' as $$
+alter table "public"."tickets" add constraint "ck_store_id_dest_store_id" CHECK ((store_id <> dest_store_id)) not valid;
+
+alter table "public"."tickets" validate constraint "ck_store_id_dest_store_id";
+
+alter table "public"."tickets" add constraint "fk_dest_stores" FOREIGN KEY (dest_store_id) REFERENCES public.stores(store_id) not valid;
+
+alter table "public"."tickets" validate constraint "fk_dest_stores";
+
+set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION private.handle_ticket_fulfillment()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
 begin
 	-- Logic
   if old.status is distinct from 'fulfilled' 
@@ -38,9 +51,7 @@ begin
 
   return new;
 end;
-$$;
+$function$
+;
 
-create trigger "after update tickets status"
-after
-update of status on public.tickets for each row
-execute function private.handle_ticket_fulfillment ();
+

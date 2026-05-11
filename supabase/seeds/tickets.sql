@@ -4,7 +4,8 @@ insert into
     requestor_user_id,
     store_id,
     status,
-    date_submitted
+    date_submitted,
+    dest_store_id
   )
 values
   -- Ticket 1
@@ -13,7 +14,8 @@ values
     '00000000-0000-0000-0000-000000000001', -- User 1
     '00000000-0000-0000-0000-000000000001', -- Headquarters
     'requested',
-    now() - interval '2 hours'
+    now() - interval '2 hours',
+    '00000000-0000-0000-0000-000000000002'
   ),
   -- Ticket 2
   (
@@ -21,7 +23,8 @@ values
     '00000000-0000-0000-0000-000000000001', -- User 1
     '00000000-0000-0000-0000-000000000002', -- Hollywood
     'ready',
-    now() - interval '1 day'
+    now() - interval '1 day',
+    '00000000-0000-0000-0000-000000000001'
   ),
   -- Ticket 3
   (
@@ -29,7 +32,8 @@ values
     '00000000-0000-0000-0000-000000000001', -- User 1
     '00000000-0000-0000-0000-000000000003', -- West Los Angeles
     'fulfilled',
-    now() - interval '3 days'
+    now() - interval '3 days',
+    null
   ),
   -- Ticket 4
   (
@@ -37,7 +41,8 @@ values
     '00000000-0000-0000-0000-000000000001', -- User 1
     '00000000-0000-0000-0000-000000000001', -- Headquarters
     'rejected',
-    now() - interval '5 hours'
+    now() - interval '5 hours',
+    null
   ),
   -- Ticket 5
   (
@@ -45,5 +50,6 @@ values
     '00000000-0000-0000-0000-000000000001', -- User 1
     '00000000-0000-0000-0000-000000000002', -- Hollywood
     'requested',
-    now()
+    now(),
+    null
   );

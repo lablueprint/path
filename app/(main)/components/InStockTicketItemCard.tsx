@@ -56,7 +56,7 @@ export default function InStockTicketItemCard({
     <div className={styles.itemCard}>
       <Image
         className={styles.itemImage}
-        src={imagePlaceholder}
+        src={photoUrl || imagePlaceholder}
         alt={`Picture of ${itemName}`}
         width={77}
         height={77}
@@ -75,7 +75,6 @@ export default function InStockTicketItemCard({
           </p>
         </div>
       </div>
-      {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
       <div className={styles.numericalDescriptors}>
         <div className={styles.quantityCard}>Qty: {quantityAvailable}</div>
         <div className={styles.availabilityCard}>
