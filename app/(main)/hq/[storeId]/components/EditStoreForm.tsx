@@ -150,7 +150,11 @@ export default function EditStoreForm({ store }: { store: Store }) {
           />
 
           {!isPendingDelete && displayImage !== defaultStorePhoto.src && (
-            <button type="button" onClick={handleRemovePhoto} className="btn-cancel">
+            <button
+              type="button"
+              onClick={handleRemovePhoto}
+              className="btn-cancel"
+            >
               Remove
             </button>
           )}
@@ -160,16 +164,12 @@ export default function EditStoreForm({ store }: { store: Store }) {
         </div>
 
         <div className="mb-3">
-          <label className="form-label field-label">
-            Store name
-          </label>
+          <label className="form-label field-label">Store name</label>
           <input {...register('name')} className="form-control" />
         </div>
 
         <div className="mb-3">
-          <label className="form-label field-label">
-            Store street address
-          </label>
+          <label className="form-label field-label">Store street address</label>
           <input {...register('street_address')} className="form-control" />
         </div>
 
@@ -179,7 +179,12 @@ export default function EditStoreForm({ store }: { store: Store }) {
               {isSaving ? 'Saving...' : 'Save'}
             </button>
 
-            <button type="button" className="btn-cancel" onClick={onCancel} disabled={isSaving}>
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={onCancel}
+              disabled={isSaving}
+            >
               Cancel
             </button>
           </div>
