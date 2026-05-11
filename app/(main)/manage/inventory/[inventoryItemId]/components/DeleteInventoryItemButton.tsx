@@ -22,7 +22,6 @@ export default function DeleteInventoryItemButton({
 
       if (!result.success) {
         setErrorMessage('Failed to remove item.');
-        console.error('Failed to delete inventory item:', result.error);
         return;
       }
 
@@ -36,7 +35,7 @@ export default function DeleteInventoryItemButton({
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
       <button type="button" onClick={handleDelete} disabled={isPending}>
-        {isPending ? 'Removing...' : 'Remove item'}
+        {isPending ? 'Removing...' : 'Remove'}
       </button>
     </>
   );

@@ -85,9 +85,7 @@ export default function LightweightDonationForm() {
 
     const result = await createDonation(donation);
     if (result.success) {
-      setSuccessMessage(
-        'Donation submitted successfully! Thank you for your generosity.',
-      );
+      setSuccessMessage('Donation submitted successfully!');
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -134,40 +132,9 @@ export default function LightweightDonationForm() {
       >
         <h1 style={{ margin: 0 }}>Donation Form</h1>
       </div>
-      {errorMessage && (
-        <div
-          style={{
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          {errorMessage}
-        </div>
-      )}
-      {successMessage && (
-        <div
-          style={{
-            backgroundColor: '#d4edda',
-            color: '#155724',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          {successMessage}
-        </div>
-      )}
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
-      >
+      {errorMessage && <p>{errorMessage}</p>}
+      {successMessage && <div>{successMessage}</div>}
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* Receiving Site */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <label style={{ fontWeight: 'bold', marginBottom: '5px' }}>

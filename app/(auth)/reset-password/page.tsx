@@ -34,7 +34,7 @@ export default function ResetPasswordPage() {
   const onSubmit = async (values: ResetPasswordFormValues) => {
     setErrorMessage('');
     setSuccessMessage('');
-    
+
     const { error } = await supabase.auth.updateUser({
       password: values.password,
     });
@@ -88,12 +88,8 @@ export default function ResetPasswordPage() {
 
         <br />
 
-        {errorMessage && (
-          <p style={{ color: 'red' }}>{errorMessage}</p>
-        )}
-        {successMessage && (
-          <p style={{ color: 'green' }}>{successMessage}</p>
-        )}
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
 
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Saving...' : 'Save'}

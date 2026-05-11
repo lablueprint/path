@@ -6,11 +6,7 @@ export default function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="bg-blue-500 text-white px-4 py-2 rounded"
-    >
+    <button type="submit" disabled={pending}>
       {pending ? 'Adding...' : 'Add to Cart'}
     </button>
   );

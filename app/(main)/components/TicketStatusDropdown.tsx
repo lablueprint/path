@@ -35,7 +35,7 @@ export default function TicketStatusDropdown({
         setOriginalStatus(selectedStatus);
         return;
       } else {
-        setError('Error updating status. No changes were saved.' + result.error);
+        setError('Failed to update status: ' + result.error);
       }
     } finally {
       setIsSaving(false);

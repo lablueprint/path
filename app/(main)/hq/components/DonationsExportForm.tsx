@@ -61,7 +61,7 @@ export default function Donations() {
         });
 
         if (!result?.success || !result.data) {
-          setErrorMessage(result?.error ?? 'Failed to export donations.');
+          setErrorMessage('Failed to export donations.');
           return;
         }
 
@@ -70,7 +70,7 @@ export default function Donations() {
         const result = await exportDonations();
 
         if (!result?.success || !result.data) {
-          setErrorMessage(result?.error ?? 'Failed to export donations.');
+          setErrorMessage('Failed to export donations.');
           return;
         }
 
@@ -79,8 +79,7 @@ export default function Donations() {
 
       setSuccessMessage('Donations export downloaded.');
     } catch (error) {
-      console.error('Donations export error:', error);
-      setErrorMessage('Failed to export donations. Please try again.');
+      setErrorMessage('Donations export error: ' + error);
     } finally {
       setIsExporting(false);
     }

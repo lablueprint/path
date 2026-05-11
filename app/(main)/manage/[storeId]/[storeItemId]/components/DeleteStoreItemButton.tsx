@@ -22,7 +22,7 @@ export default function DeleteStoreItemButton({
       const result = await deleteStoreItem(storeItemId);
 
       if (!result.success) {
-        setErrorMessage('Failed to delete store item.' + result.error);
+        setErrorMessage('Failed to delete store item: ' + result.error);
         return;
       }
 
@@ -43,7 +43,7 @@ export default function DeleteStoreItemButton({
       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
       <button type="button" onClick={handleDelete} disabled={isPending}>
-        {isPending ? 'Removing...' : 'Remove item'}
+        {isPending ? 'Removing...' : 'Remove'}
       </button>
     </>
   );

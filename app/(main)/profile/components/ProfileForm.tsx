@@ -158,7 +158,7 @@ export default function ProfileForm({ user }: { user: User }) {
         });
         setSuccessMessage(
           data.email !== user.email
-            ? 'Profile saved. Please check your new email address to verify the change.'
+            ? 'Profile saved. Please check both your new and old email addresses to verify the change.'
             : 'Profile saved.',
         );
       } else {
@@ -167,7 +167,7 @@ export default function ProfileForm({ user }: { user: User }) {
       }
     } catch (error) {
       console.error('Error saving profile:', error);
-      setErrorMessage('Failed to save profile. Please try again.');
+      setErrorMessage('Failed to save profile.');
     } finally {
       setIsSaving(false);
     }

@@ -15,7 +15,7 @@ export default function Dropdown({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
+
   const hasChanged = currentRoleId !== originalRoleId;
 
   const handleSave = async () => {
@@ -25,14 +25,13 @@ export default function Dropdown({
     try {
       const res = await updateUserRole(userId, currentRoleId);
       if (!res.success) {
-        setErrorMessage(
-          res.error ?? 'Insufficient privileges to update role.',
-        );
+        setErrorMessage(res.error ?? 'Insufficient privileges to update role.');
         return;
       }
       setOriginalRoleId(currentRoleId);
       setSuccessMessage('Role updated.');
     } catch (error) {
+      console.error('Role update error:', error);
       setErrorMessage('Unable to update role. Please try again.');
     } finally {
       setIsSubmitting(false);

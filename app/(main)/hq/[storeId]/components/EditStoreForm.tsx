@@ -28,15 +28,14 @@ export default function EditStoreForm({ store }: { store: Store }) {
     try {
       const result = await updateStore(store.store_id, data);
       if (!result.success) {
-        setErrorMessage(result.error ?? 'Failed to update store.');
+        setErrorMessage('Failed to update store: ' + result.error);
         return;
       }
 
       reset(data);
       setSuccessMessage('Store updated.');
     } catch (error) {
-      console.error('Store update error:', error);
-      setErrorMessage('Failed to update store. Please try again.');
+      setErrorMessage('Failed to update store: ' + error);
     } finally {
       setIsSubmitting(false);
     }

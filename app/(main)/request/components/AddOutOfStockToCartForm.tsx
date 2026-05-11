@@ -3,7 +3,7 @@
 import Form from 'next/form';
 import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
-import SubmitButton from './SubmitButton';
+import SubmitButton from '@/app/(main)/request/components/SubmitButton';
 
 interface AddOutOfStockToCartFormProps {
   storeId: string;
@@ -34,36 +34,8 @@ export default function AddOutOfStockToCartForm({
 
   return (
     <div>
-      {errorMessage && (
-        <div
-          style={{
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          {errorMessage}
-        </div>
-      )}
-      {successMessage && (
-        <div
-          style={{
-            backgroundColor: '#d4edda',
-            color: '#155724',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          {successMessage}
-        </div>
-      )}
+      {errorMessage && <p>{errorMessage}</p>}
+      {successMessage && <p>{successMessage}</p>}
       <Form action={handleSubmit}>
         <input
           name="description"

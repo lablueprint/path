@@ -46,36 +46,8 @@ export default function AddInStockToCartForm({
 
         <SubmitButton />
       </Form>
-      {errorMessage && (
-        <div
-          style={{
-            backgroundColor: '#f8d7da',
-            color: '#721c24',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          {errorMessage}
-        </div>
-      )}
-      {successMessage && (
-        <div
-          style={{
-            backgroundColor: '#d4edda',
-            color: '#155724',
-            padding: '12px',
-            borderRadius: '5px',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-        >
-          {successMessage}
-        </div>
-      )}
+      {errorMessage && <p>{errorMessage}</p>}
+      {successMessage && <p>{successMessage}</p>}
     </div>
   );
 }

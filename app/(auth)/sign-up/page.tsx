@@ -4,7 +4,6 @@ import { useForm, useWatch, SubmitHandler } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 type Inputs = {
   firstName: string;
@@ -19,13 +18,12 @@ export default function SignUpPage() {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const supabase = createClient();
-  const router = useRouter();
   const passwordValue = useWatch({
     control,
     name: 'password',
@@ -133,7 +131,7 @@ export default function SignUpPage() {
       )}
       <br />
       <button type="submit" disabled={isLoading}>
-        {isLoading ? 'Creating account...' : 'Sign up'}
+        {isLoading ? 'Creating account...' : 'Sign Up'}
       </button>
       <br />
       <Link href="/sign-in">Sign in</Link>

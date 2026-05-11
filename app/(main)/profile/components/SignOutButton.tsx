@@ -32,7 +32,7 @@ export default function SignOutButton() {
   return (
     <>
       <button onClick={signOut} disabled={isSigningOut}>
-        {isSigningOut ? 'Signing out...' : 'Sign out'}
+        {isSigningOut ? 'Signing out...' : 'Sign Out'}
       </button>
       {errorMessage && <p role="alert">{errorMessage}</p>}
     </>

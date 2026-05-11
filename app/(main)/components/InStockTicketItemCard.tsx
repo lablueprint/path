@@ -40,7 +40,9 @@ export default function InStockTicketItemCard({
       const result = await updateTicketItemQuantity(ticketItemId, quantity);
 
       if (!result.success) {
-        setErrorMessage('Failed to update ticket item quantity.' + result.error);
+        setErrorMessage(
+          'Failed to update ticket item quantity.' + result.error,
+        );
         return;
       }
 

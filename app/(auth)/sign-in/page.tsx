@@ -63,7 +63,7 @@ export default function SignInPage() {
       )}
       <br />
       <button type="submit">
-        {isSubmitting ? 'Signing In...' : 'Sign In'}
+        {isSubmitting ? 'Signing in...' : 'Sign In'}
       </button>
       <br />
       <Link href="/forgot-password">Forgot password?</Link>

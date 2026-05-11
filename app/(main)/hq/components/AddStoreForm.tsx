@@ -45,15 +45,14 @@ export default function AddStoreForm() {
       });
 
       if (!result.success) {
-        setErrorMessage(result.error ?? 'Failed to add store.');
+        setErrorMessage('Failed to add store: ' + result.error);
         return;
       }
 
       reset({ storeName: '', storeStreetAddress: '' });
       setSuccessMessage('Store added.');
     } catch (error) {
-      console.error('Store creation error:', error);
-      setErrorMessage('Failed to add store. Please try again.');
+      setErrorMessage('Failed to add store: ' + error);
     } finally {
       setIsSubmitting(false);
     }

@@ -25,7 +25,7 @@ export default function DeleteStoreAdminButton({
       setSuccessMessage('Admin removed.');
     } catch (error) {
       console.error('Store admin deletion error:', error);
-      setErrorMessage('Failed to remove admin. Please try again.');
+      setErrorMessage('Failed to remove admin.');
     } finally {
       setIsDeleting(false);
     }

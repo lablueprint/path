@@ -49,7 +49,7 @@ export default function OutOfStockTicketItemCard({
       setIsChanged(false);
     } catch (e) {
       // Handle infrastructure/network errors
-      setErrorMessage('A critical connection error occurred.' + e);
+      setErrorMessage('A critical connection error occurred. ' + e);
       return;
     } finally {
       setIsSaving(false);
@@ -58,38 +58,25 @@ export default function OutOfStockTicketItemCard({
 
   return (
     <div className="flex flex-col gap-2">
-      <textarea 
-        className="border p-2 rounded"
-        value={description} 
-        onChange={handleChange} 
-        rows={4} 
+      <textarea
+        value={description}
+        onChange={handleChange}
+        rows={4}
         disabled={isSaving}
       />
-      
+
       {isChanged && (
-        <div className="flex gap-2">
-          <button 
-            onClick={handleSave} 
-            disabled={isSaving}
-            className="bg-blue-600 text-white px-3 py-1 rounded disabled:opacity-50"
-          >
+        <div>
+          <button onClick={handleSave} disabled={isSaving}>
             {isSaving ? 'Saving...' : 'Save'}
           </button>
-          <button 
-            onClick={handleCancel} 
-            disabled={isSaving}
-            className="bg-gray-200 px-3 py-1 rounded"
-          >
+          <button onClick={handleCancel} disabled={isSaving}>
             Cancel
           </button>
         </div>
       )}
 
-      {errorMessage && (
-        <p role="alert" className="text-red-600 font-medium text-sm">
-          {errorMessage}
-        </p>
-      )}
+      {errorMessage && <p role="alert">{errorMessage}</p>}
     </div>
   );
 }

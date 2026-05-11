@@ -20,15 +20,14 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
     try {
       const { success, error } = await deleteStore(storeId);
       if (!success) {
-        setErrorMessage(error ?? 'Failed to remove store.');
+        setErrorMessage('Failed to remove store: ' + error);
         return;
       }
 
-      setSuccessMessage('Store removed. Redirecting...');
+      setSuccessMessage('Store removed.');
       router.push('/hq');
     } catch (error) {
-      console.error('Store deletion error:', error);
-      setErrorMessage('Failed to remove store. Please try again.');
+      setErrorMessage('Failed to remove store: ' + error);
     } finally {
       setIsRemoving(false);
     }
@@ -39,7 +38,7 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
       {errorMessage && <p role="alert">{errorMessage}</p>}
       {successMessage && <p role="status">{successMessage}</p>}
       <button type="button" onClick={handleDeletion} disabled={isRemoving}>
-        {isRemoving ? 'Removing...' : 'Remove store'}
+        {isRemoving ? 'Removing...' : 'Remove'}
       </button>
     </>
   );

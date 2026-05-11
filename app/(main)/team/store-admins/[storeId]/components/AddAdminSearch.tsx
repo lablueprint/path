@@ -70,7 +70,7 @@ export default function AddAdminSearch({
       setSuccessMessage('Admin added.');
     } catch (error) {
       console.error('Store admin creation error:', error);
-      setErrorMessage('Failed to add admin. Please try again.');
+      setErrorMessage('Failed to add admin.');
     } finally {
       setIsAddingUserId(null);
     }

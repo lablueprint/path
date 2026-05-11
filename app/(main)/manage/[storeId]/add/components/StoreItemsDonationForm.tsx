@@ -139,7 +139,7 @@ export default function StoreItemsDonationForm({
 
       if (inventoryErrors.length > 0 && donationError) {
         setErrorMessage(
-          `Inventory update and donation submission failed. ${donationError}`,
+          'Inventory update and donation submission failed: ' + donationError,
         );
       } else if (inventoryErrors.length > 0) {
         setErrorMessage(
@@ -171,8 +171,7 @@ export default function StoreItemsDonationForm({
         setSuccessMessage('Submission saved.');
       }
     } catch (error) {
-      console.error('Failed to process form:', error);
-      setErrorMessage('Failed to process submission. Please try again.');
+      setErrorMessage('Failed to process submission: ' + error);
     } finally {
       setIsSubmitting(false);
     }
@@ -214,19 +213,7 @@ export default function StoreItemsDonationForm({
           <>
             {errorMessage && <p role="alert">{errorMessage}</p>}
             {successMessage && <p role="status">{successMessage}</p>}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              style={{
-                marginTop: '20px',
-                padding: '10px',
-                borderRadius: '5px',
-                border: 'none',
-                backgroundColor: '#007bff',
-                color: '#fff',
-                fontWeight: 'bold',
-              }}
-            >
+            <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
           </>
