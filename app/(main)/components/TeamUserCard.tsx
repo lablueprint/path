@@ -17,8 +17,8 @@ export default function TeamUserCard({
   const displayImage = user.profile_photo_url;
 
   return (
-    <Link className={styles.cardLink} href={`${pathname}/${user.user_id}`}>
-      <div className={styles.card}>
+    <div className={styles.card}>
+      <Link className={styles.cardLink} href={`${pathname}/${user.user_id}`}>
         <div className={styles.imageContainer}>
           <Image
             src={displayImage || imagePlaceholder}
@@ -31,16 +31,16 @@ export default function TeamUserCard({
           <p className={styles.name}>
             {user.first_name} {user.last_name}
           </p>
-          <a
-            className={styles.emailLink}
-            href={`mailto:${user.email}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className={styles.cardText}>{user.email}</span>
-          </a>
         </div>
-      </div>
-    </Link>
+      </Link>
+      <a
+        className={styles.emailLink}
+        href={`mailto:${user.email}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span className={styles.cardText}>{user.email}</span>
+      </a>
+    </div>
   );
 }
