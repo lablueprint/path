@@ -88,12 +88,11 @@ export default async function CartPage({
   }
 
   // If ticket exists, query for current dest store
-  const { data: currentDestStore, error: currentDestStoreError } =
-    await supabase
-      .from('stores')
-      .select('store_id, name, street_address')
-      .eq('store_id', ticket.dest_store_id)
-      .single();
+  const { data: currentDestStore } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', ticket.dest_store_id)
+    .single();
 
   return (
     <div>
