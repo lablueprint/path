@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { Form, FormGroup } from 'react-bootstrap';
 
 type Inputs = {
   email: string;
@@ -46,35 +47,38 @@ export default function SignInPage() {
             </Link>
           </p>
           <div className={'auth-form-body'}>
-            <input
-              {...register('email', {
-                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                required: true,
-              })}
-              placeholder="Email"
-              className={'auth-field first'}
-            />
-            {errors.email?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                Email is required.
-              </p>
-            )}
-            {errors.email?.type === 'pattern' && (
-              <p role="alert" className="auth-error">
-                Please enter a valid email.
-              </p>
-            )}
-            <input
-              {...register('password', { required: true })}
-              placeholder="Password"
-              type="password"
-              className={'auth-field'}
-            />
-            {errors.password?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                Password is required.
-              </p>
-            )}
+            <Form.Group controlId="email">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                className="auth-field first"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Please enter a valid email.',
+                  },
+                })}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid" className="auth-error">
+                {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="password">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                className="auth-field"
+                {...register('password', {
+                  required: 'Password is required',
+                })}
+                isInvalid={!!errors.password}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
           </div>
           <Link className={'forgot-password'} href="/forgot-password">
             Forgot password?

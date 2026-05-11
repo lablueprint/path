@@ -2,6 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
+import { Form } from 'react-bootstrap';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -39,22 +40,26 @@ export default function ForgotPasswordPage() {
 
           <p className={'auth-title'}>Forgot Password</p>
           <div className={'auth-form-body'}>
-            <input
-              id="email"
-              type="email"
-              placeholder="Email"
-              className={'auth-field first'}
-              {...register('email', {
-                required: 'Email is required.',
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: 'Please enter a valid email address.',
-                },
-              })}
-            />
-            {errors.email?.message ? (
-              <p className={'auth-error'}>{errors.email.message}</p>
-            ) : null}
+            <div className={'auth-form-body'}>
+              <Form.Group controlId="email">
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  className="auth-field first"
+                  {...register('email', {
+                    required: 'Email is required.',
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                      message: 'Please enter a valid email address.',
+                    },
+                  })}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email?.message}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </div>
           </div>
           <div className={'submit-button-row'}>
             <button

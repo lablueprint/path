@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { Form } from 'react-bootstrap';
 type Inputs = {
   firstName: string;
   lastName: string;
@@ -60,95 +61,88 @@ export default function SignUpPage() {
             <Link href="/sign-in">Sign in</Link>
           </p>
           <div className={'auth-form-body'}>
-            <input
-              {...register('firstName', { required: true })}
-              placeholder="First name"
-              type="text"
-              className={'auth-field first'}
-            />
-            {errors.firstName?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                First name is required.
-              </p>
-            )}
-            <input
-              {...register('lastName', { required: true })}
-              placeholder="Last name"
-              type="text"
-              className={'auth-field'}
-            />
-            {errors.lastName?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                Last name is required.
-              </p>
-            )}
-            <input
-              {...register('email', {
-                required: true,
-                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              })}
-              placeholder="Email"
-              className={'auth-field'}
-            />
-            {errors.email?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                Email is required.
-              </p>
-            )}
-            {errors.email?.type === 'pattern' && (
-              <p role="alert" className="auth-error">
-                Enter a valid email.
-              </p>
-            )}
-            <input
-              {...register('password', {
-                required: true,
-                minLength: 8,
-                pattern:
-                  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-              })}
-              placeholder="Password"
-              // Minimum eight characters, at least one letter, one number and one special character
-              type="password"
-              className={'auth-field'}
-            />
-            {errors.password?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                Password is required.
-              </p>
-            )}
-            {errors.password?.type === 'minLength' && (
-              <p role="alert" className="auth-error">
-                Password must be at least 8 characters and include an uppercase
-                letter, a lowercase letter, a number, and a symbol.
-              </p>
-            )}
-            {errors.password?.type === 'pattern' && (
-              <p role="alert" className="auth-error">
-                Password must be at least 8 characters and include an uppercase
-                letter, a lowercase letter, a number, and a symbol.
-              </p>
-            )}
-            <input
-              {...register('passwordConfirmation', {
-                required: true,
-                validate: (value) =>
-                  value === passwordValue || 'Passwords do not match.',
-              })}
-              placeholder="Confirm password"
-              type="password"
-              className={'auth-field'}
-            />
-            {errors.passwordConfirmation?.type === 'required' && (
-              <p role="alert" className="auth-error">
-                Please confirm your password.
-              </p>
-            )}
-            {errors.passwordConfirmation?.type === 'validate' && (
-              <p role="alert" className="auth-error">
-                Passwords do not match.
-              </p>
-            )}
+            <Form.Group controlId="firstName">
+              <Form.Control
+                type="text"
+                placeholder="First name"
+                className="auth-field first"
+                {...register('firstName', {
+                  required: 'First name is required.',
+                })}
+                isInvalid={!!errors.firstName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.firstName?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="lastName">
+              <Form.Control
+                type="text"
+                placeholder="Last name"
+                className="auth-field"
+                {...register('lastName', {
+                  required: 'Last name is required.',
+                })}
+                isInvalid={!!errors.lastName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.lastName?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="email">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                className="auth-field"
+                {...register('email', {
+                  required: 'Email is required.',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Enter a valid email.',
+                  },
+                })}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="password">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                className="auth-field"
+                {...register('password', {
+                  required: 'Password is required.',
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                    message:
+                      'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
+                  },
+                })}
+                isInvalid={!!errors.password}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="passwordConfirmation">
+              <Form.Control
+                type="password"
+                placeholder="Confirm password"
+                className="auth-field"
+                {...register('passwordConfirmation', {
+                  required: 'Please confirm your password.',
+                  validate: (value) =>
+                    value === passwordValue || 'Passwords do not match.',
+                })}
+                isInvalid={!!errors.passwordConfirmation}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.passwordConfirmation?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
           </div>
           <div className={'submit-button-row'}>
             <button

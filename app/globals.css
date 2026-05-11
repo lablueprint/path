@@ -201,6 +201,7 @@ Table {
   height: 653px;
   margin: 100px 0 76px;
   padding: 57px 41px 0 58px;
+  overflow-y: auto;
 }
 
 .auth-left {
@@ -255,10 +256,6 @@ Table {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.auth-error {
-  margin: 4px 0 0;
 }
 
 .auth-link {
