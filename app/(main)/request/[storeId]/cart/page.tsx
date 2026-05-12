@@ -1,9 +1,8 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
-import SubmitTicketButton from '@/app/(main)/request/[storeId]/cart/components/SubmitTicketButton';
+import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
 import Link from 'next/link';
-import styles from '@/app/(main)/request/[storeId]/cart/CartPage.module.css';
-
+import styles from '@/app/(main)/request/CartPage.module.css';
 export default async function CartPage({
   params,
   searchParams,

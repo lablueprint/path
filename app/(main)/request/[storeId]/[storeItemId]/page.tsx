@@ -1,12 +1,12 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
+import AddInStockToCartForm from '@/app/(main)/request/components/AddInStockToCartForm';
 
 export default async function RequestStoreItemPage({
   params,
 }: {
-  params: Promise<{ storeId: string; storeItemId: string }>;
+  params: Promise<{ storeItemId: string }>;
 }) {
-  const { storeId, storeItemId } = await params;
+  const { storeItemId } = await params;
 
   const supabase = await createClient();
 
@@ -14,6 +14,7 @@ export default async function RequestStoreItemPage({
     .from('store_items')
     .select(
       `
+        store_id,
         store_item_id,
         quantity_available,
         inventory_items(name, description, photo_url,
@@ -27,6 +28,7 @@ export default async function RequestStoreItemPage({
     .single()
     .overrideTypes<
       {
+        store_id: string;
         store_item_id: string;
         quantity_available: number;
         inventory_items: {
@@ -56,7 +58,10 @@ export default async function RequestStoreItemPage({
       <p>Category: {itemData.inventory_items.subcategories.categories.name}</p>
       <p>Subcategory: {itemData.inventory_items.subcategories.name}</p>
       <p>Quantity available: {itemData.quantity_available}</p>
-      <AddInStockToCartForm storeId={storeId} storeItemId={storeItemId} />
+      <AddInStockToCartForm
+        storeId={itemData.store_id}
+        storeItemId={storeItemId}
+      />
     </div>
   );
 }

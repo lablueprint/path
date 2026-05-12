@@ -156,11 +156,11 @@ export default async function RequestAllStoresPage({
         }
       />
 
-      <Accordion defaultActiveKey="0">
-        {sortedStores.map((store) => {
-          const storeItems = itemsByStore.get(store.store_id) || [];
-          return (
-            <AccordionItem eventKey={store.store_id} key={store.store_id}>
+      {sortedStores.map((store) => {
+        const storeItems = itemsByStore.get(store.store_id) || [];
+        return (
+          <Accordion key={store.store_id}>
+            <AccordionItem eventKey={store.store_id}>
               <AccordionHeader>{store.name}</AccordionHeader>
               <AccordionBody>
                 <h3>Out-of-Stock Request</h3>
@@ -186,9 +186,9 @@ export default async function RequestAllStoresPage({
                 )}
               </AccordionBody>
             </AccordionItem>
-          );
-        })}
-      </Accordion>
+          </Accordion>
+        );
+      })}
     </div>
   );
 }
