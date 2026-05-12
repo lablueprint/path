@@ -114,3 +114,23 @@
   font-size: 1rem;
   color: #2d3748;
 }
+
+.avatarCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -310px;
+  margin-bottom: 110px;  
+}
+
+.avatarCircle img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profileLabel {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
