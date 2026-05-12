@@ -1,13 +1,7 @@
 .header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 16px;
-}
-
-.grid {
-  row-gap: 45px;
-  column-gap: 130px;
-  align-items: flex-start;
+  margin-bottom: 1rem;
 }
 
 .table {

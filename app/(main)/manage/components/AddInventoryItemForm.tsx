@@ -2,7 +2,10 @@
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { Subcategory, Category } from '@/app/types/inventory';
 import { useFormContext } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
+import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import defaultItemPhoto from '@/public/image-placeholder.svg';
 
 export type Inputs = {
   name: string;
@@ -11,7 +14,17 @@ export type Inputs = {
   selectedSubcategory: string;
 };
 
-export default function AddInventoryItemForm() {
+type AddInventoryItemFormProps = {
+  selectedFile?: File | null;
+  onFileChange?: (file: File | null) => void;
+};
+
+const supabase = createClient();
+
+export default function AddInventoryItemForm({
+  selectedFile: selectedFileProp,
+  onFileChange,
+}: AddInventoryItemFormProps) {
   const {
     register,
     watch,
@@ -20,8 +33,46 @@ export default function AddInventoryItemForm() {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const supabase = createClient();
+  const [selectedFileState, setSelectedFileState] = useState<File | null>(null);
+  const photoUploadRef = useRef<{ resetFile: () => void }>(null);
   const selectedCategory = watch('selectedCategory');
+  const selectedFile = selectedFileProp ?? selectedFileState;
+
+  const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+
+  useEffect(() => {
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
+
+  const handleFileChanged = (file: File | null) => {
+    if (onFileChange) {
+      onFileChange(file);
+    } else {
+      setSelectedFileState(file);
+    }
+  };
+
+  const handleFileSelect = (file: File) => {
+    const maxSize = 200 * 1024;
+    if (file.size > maxSize) {
+      alert('File is too large. Please select an image under 200 KB.');
+      return;
+    }
+    handleFileChanged(file);
+  };
+
+  const handleRemovePhoto = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    handleFileChanged(null);
+    photoUploadRef.current?.resetFile();
+  };
+
+  useEffect(() => {
+    if (!selectedFile) {
+      photoUploadRef.current?.resetFile();
+    }
+  }, [selectedFile]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -35,7 +86,7 @@ export default function AddInventoryItemForm() {
       }
     }
     fetchCategories();
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -54,10 +105,26 @@ export default function AddInventoryItemForm() {
       }
     }
     fetchSubcategories();
-  }, [selectedCategory, supabase]);
+  }, [selectedCategory]);
 
   return (
     <div>
+      <Image
+        src={previewUrl || defaultItemPhoto}
+        alt="Item photo"
+        width={64}
+        height={64}
+        style={{ objectFit: 'cover' }}
+        unoptimized
+      />
+      {selectedFile && (
+        <button type="button" onClick={handleRemovePhoto}>
+          Remove
+        </button>
+      )}
+      <br />
+      <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+      <br />
       <label>
         Inventory item name
         <input type="text" {...register('name', { required: true })} />
@@ -65,7 +132,7 @@ export default function AddInventoryItemForm() {
       {errors.name?.type === 'required' && (
         <p role="alert">Item name is required.</p>
       )}
-      <br></br>
+      <br />
       <label>
         Description
         <input type="text" {...register('description', { required: true })} />
@@ -73,7 +140,7 @@ export default function AddInventoryItemForm() {
       {errors.description?.type === 'required' && (
         <p role="alert">Description is required.</p>
       )}
-      <br></br>
+      <br />
       <label>
         Category
         <select {...register('selectedCategory', { required: true })}>
@@ -90,7 +157,7 @@ export default function AddInventoryItemForm() {
       )}
       {selectedCategory !== '' && (
         <>
-          <br></br>
+          <br />
           <label>
             Subcategory
             <select {...register('selectedSubcategory', { required: true })}>

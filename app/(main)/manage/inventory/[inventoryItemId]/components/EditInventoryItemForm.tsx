@@ -223,48 +223,46 @@ export default function EditInventoryItemForm({
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-3">
-          <Image
-            src={displayImage}
-            alt="Item photo"
-            width={64}
-            height={64}
-            className="photo"
-            unoptimized
-          />
+      <form onSubmit={handleSubmit(onSubmit)} className="form-card">
+        <div className="card-body">
+          <div className="mb-3">
+            <Image
+              src={displayImage}
+              alt="Item photo"
+              width={64}
+              height={64}
+              className="photo"
+              unoptimized
+            />
 
-          {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
-            <button
-              type="button"
-              onClick={handleRemovePhoto}
-              className="btn-cancel"
-            >
-              Remove
-            </button>
-          )}
+            {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                className="btn-cancel"
+              >
+                Remove
+              </button>
+            )}
 
-          <br />
-          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-          <br />
-        </div>
+            <br />
+            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label field-label">
-            Inventory item name
+          <div className="mb-3">
+            <label className="form-label field-label">
+              Inventory item name
+            </label>
             <input
               type="text"
               {...register('name', { required: 'Item name is required.' })}
               className="form-control"
             />
-          </label>
-          {errors.name && <p role="alert">{errors.name.message}</p>}
-          <br />
-        </div>
+            {errors.name && <p role="alert">{errors.name.message}</p>}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label field-label">
-            Description
+          <div className="mb-3">
+            <label className="form-label field-label">Description</label>
             <input
               type="text"
               {...register('description', {
@@ -272,17 +270,14 @@ export default function EditInventoryItemForm({
               })}
               className="form-control"
             />
-          </label>
-          {errors.description && (
-            <p role="alert">{errors.description.message}</p>
-          )}
-          <br />
-        </div>
+            {errors.description && (
+              <p role="alert">{errors.description.message}</p>
+            )}
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label field-label">
-            <p>Category</p>
-            <select {...categoryField}>
+          <div className="mb-3">
+            <label className="form-label field-label">Category</label>
+            <select className="form-select" {...categoryField}>
               <option value="">None</option>
               {initialCategories.map((category) => (
                 <option key={category.category_id} value={category.category_id}>
@@ -290,14 +285,13 @@ export default function EditInventoryItemForm({
                 </option>
               ))}
             </select>
-          </label>
-        </div>
+          </div>
 
-        {!!selectedCategory && (
-          <div className="mb-3">
-            <label className="form-label field-label">
-              <p>Subcategory</p>
+          {!!selectedCategory && (
+            <div className="mb-3">
+              <label className="form-label field-label">Subcategory</label>
               <select
+                className="form-select"
                 {...register('selectedSubcategory', {
                   required: 'Subcategory is required.',
                   onChange: () => trigger('selectedSubcategory'),
@@ -313,32 +307,32 @@ export default function EditInventoryItemForm({
                   </option>
                 ))}
               </select>
-            </label>
-            {errors.selectedSubcategory && (
-              <p role="alert">{errors.selectedSubcategory.message}</p>
-            )}
-          </div>
-        )}
+              {errors.selectedSubcategory && (
+                <p role="alert">{errors.selectedSubcategory.message}</p>
+              )}
+            </div>
+          )}
 
-        {hasDirtyTextOrImage && (
-          <div className="button-spacing">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-submit"
-            >
-              {isSubmitting ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-          </div>
-        )}
+          {hasDirtyTextOrImage && (
+            <div className="button-spacing">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-submit"
+              >
+                {isSubmitting ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

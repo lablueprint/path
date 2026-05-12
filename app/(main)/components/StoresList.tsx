@@ -1,10 +1,8 @@
 'use client';
+
 import { useState } from 'react';
 import StoreCard from '@/app/(main)/components/StoreCard';
 import { Store } from '@/app/types/store';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
 import ViewToggle, { ViewMode } from '@/app/(main)/components/ViewToggle';
 import Image from 'next/image';
 import styles from '@/app/(main)/components/StoresList.module.css';
@@ -16,18 +14,18 @@ export default function StoresList({ stores }: { stores: Store[] }) {
   const sortedStores = [...stores].sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <Container>
+    <div>
       <div className={styles.header}>
         <ViewToggle defaultView="grid" onChange={setView} />
       </div>
       {view === 'grid' ? (
-        <Row className={styles.grid}>
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
           {sortedStores?.map((store) => (
-            <Col xs={12} sm={6} md={3} key={store.store_id}>
+            <div key={store.store_id} className="col">
               <StoreCard store={store} />
-            </Col>
+            </div>
           ))}
-        </Row>
+        </div>
       ) : (
         <table className={styles.table}>
           <thead className={styles.tableHeader}>
@@ -59,6 +57,6 @@ export default function StoresList({ stores }: { stores: Store[] }) {
           </tbody>
         </table>
       )}
-    </Container>
+    </div>
   );
 }
