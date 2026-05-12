@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -19,16 +20,13 @@ export default async function ManageStorePage({
   const { storeId } = await params;
   const { query, category, subcategory } = await searchParams;
 
-  // fetching data for store associated with storeId
   const supabase = await createClient();
 
-  // Fetch categories
   const { data: categories } = await supabase
     .from('categories')
     .select('category_id, name')
     .order('name');
 
-  // Fetch subcategories
   const { data: subcategories } = await supabase
     .from('subcategories')
     .select('subcategory_id, name, category_id')
@@ -39,6 +37,7 @@ export default async function ManageStorePage({
     .select('*')
     .eq('store_id', storeId)
     .single();
+
   if (storeError || !store) {
     console.error('Error fetching store:', storeError);
     return <div>Failed to load store.</div>;
@@ -66,12 +65,14 @@ export default async function ManageStorePage({
   if (query) {
     filteredItems = filteredItems.ilike('inventory_items.name', `%${query}%`);
   }
+
   if (category) {
     filteredItems = filteredItems.eq(
       'inventory_items.subcategories.category_id',
       category,
     );
   }
+
   if (subcategory) {
     filteredItems = filteredItems.eq(
       'inventory_items.subcategory_id',
@@ -97,17 +98,16 @@ export default async function ManageStorePage({
       { merge: false }
     >();
 
-  // Sort itemsData in JavaScript
+  if (itemsError) {
+    console.error('Error fetching store items:', itemsError);
+    return <div>Failed to load store items.</div>;
+  }
+
   const sortedItemsData = itemsData?.sort((a, b) => {
     const nameA = a.inventory_items.name.toLowerCase() || '';
     const nameB = b.inventory_items.name.toLowerCase() || '';
     return nameA.localeCompare(nameB);
   });
-
-  if (itemsError) {
-    console.error('Error fetching store items:', itemsError);
-    return <div>Failed to load store items.</div>;
-  }
 
   const items = sortedItemsData?.map((item) => ({
     id: item.store_item_id,
@@ -119,13 +119,19 @@ export default async function ManageStorePage({
 
   return (
     <div>
-      {/* store info */}
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          [storeId]: store.name,
+        }}
+      />
       <h1>{store.name}</h1>
       <p>{store.street_address}</p>
+
       <Link href={`/manage/${storeId}/add`}>
         <p>Add store items and/or submit gift-in-kind form</p>
       </Link>
-      {/* store items + info */}
+
       <div>
         <ItemSearch
           categories={
@@ -142,7 +148,9 @@ export default async function ManageStorePage({
             })) || []
           }
         />
+
         <h2>Items</h2>
+
         {items && items.length > 0 ? (
           items.map((item) => (
             <ItemCard

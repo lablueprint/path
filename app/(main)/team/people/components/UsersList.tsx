@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import styles from '@/app/(main)/team/people/components/UsersList.module.css';
+import { Table } from 'react-bootstrap';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 export default function UsersList({
   users,
@@ -15,48 +18,44 @@ export default function UsersList({
 }) {
   return (
     <div>
-      <table
-        style={{
-          width: '100%',
-          tableLayout: 'fixed',
-          borderCollapse: 'collapse',
-          border: '1px solid #d1d5db',
-        }}
-      >
-        <thead>
+      <Table borderless>
+        <thead className="table-header">
           <tr>
-            <th style={{ width: '30%' }}>Name</th>
-            <th style={{ width: '20%' }}>Email</th>
-            <th style={{ width: '30%' }}>Role</th>
+            <th>Requestor</th>
+            <th>Role</th>
+            <th>Email</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.user_id} style={{ border: '1px solid #d1d5db' }}>
+            <tr key={user.user_id}>
               <td>
                 <Image
-                  src={user.profile_photo_url || '/default-profile-picture.png'}
+                  src={user.profile_photo_url || imagePlaceholder}
                   alt={`Profile picture for ${user.first_name}`}
                   height={32}
                   width={32}
-                  style={{ marginRight: '10px' }}
                   unoptimized
+                  className={styles.userPfp}
                 />
                 <Link
                   key={user.user_id}
                   href={`/team/people/${user.user_id}`} // Where to navigate
+                  className={styles.userLink}
                 >
                   {user.first_name + ' ' + user.last_name}
                 </Link>
               </td>
+              <td className={styles.userRole}>{user.role}</td>
               <td>
-                <a href={`mailto:${user.email}`}>{user.email}</a>
+                <a className={styles.userEmail} href={`mailto:${user.email}`}>
+                  {user.email}
+                </a>
               </td>
-              <td>{user.role}</td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }

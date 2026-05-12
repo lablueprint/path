@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
 import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
 import RemoveTicketItemButton from '@/app/(main)/components/RemoveTicketItemButton';
+import styles from '@/app/(main)/components/TicketItemsList.module.css';
 
 export default async function TicketItemsList({
   ticketId,
@@ -47,59 +48,72 @@ export default async function TicketItemsList({
     .eq('ticket_id', ticketId)
     .eq('is_in_stock_request', false);
   OutOfStockTicketItems = outOfStockItemsData || [];
+  const totalTicketItems =
+    InStockTicketItems.length + OutOfStockTicketItems.length;
 
   return (
-    <>
-      {InStockTicketItems.length > 0 ? (
-        <div>
-          <h2>In-Stock Requests</h2>
-          <div>
-            {InStockTicketItems.map((item) => (
-              <div
-                key={item.ticket_item_id}
-                style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-              >
-                <InStockTicketItemCard
-                  key={item.ticket_item_id}
-                  ticketItemId={item.ticket_item_id}
-                  quantityRequested={item.quantity_requested}
-                  quantityAvailable={item.store_items.quantity_available}
-                  itemName={item.store_items.inventory_items.name}
-                  photoUrl={item.store_items.inventory_items.photo_url || null}
-                  subcategoryName={
-                    item.store_items.inventory_items.subcategories.name
-                  }
-                  categoryName={
-                    item.store_items.inventory_items.subcategories.categories
-                      .name
-                  }
-                />
-                <RemoveTicketItemButton ticketItemId={item.ticket_item_id} />
+    <div className={styles.itemsCard}>
+      <div className={styles.itemsCardHeader}>
+        <h1>ITEMS</h1>
+        <h2>
+          {InStockTicketItems.length} in-stock · {OutOfStockTicketItems.length}{' '}
+          out-of-stock
+        </h2>
+      </div>
+      {totalTicketItems > 0 ? (
+        <div className={styles.itemsCardBody}>
+          {InStockTicketItems.length > 0 ? (
+            <div>
+              <h2 className={styles.instockHead}>In-Stock Requests</h2>
+              <div className={styles.ticketsDisplay}>
+                {InStockTicketItems.map((item) => (
+                  <div key={item.ticket_item_id} className={styles.itemRow}>
+                    <InStockTicketItemCard
+                      key={item.ticket_item_id}
+                      ticketItemId={item.ticket_item_id}
+                      quantityRequested={item.quantity_requested}
+                      quantityAvailable={item.store_items.quantity_available}
+                      itemName={item.store_items.inventory_items.name}
+                      photoUrl={
+                        item.store_items.inventory_items.photo_url || null
+                      }
+                      subcategoryName={
+                        item.store_items.inventory_items.subcategories.name
+                      }
+                      categoryName={
+                        item.store_items.inventory_items.subcategories
+                          .categories.name
+                      }
+                    />
+                    <RemoveTicketItemButton
+                      ticketItemId={item.ticket_item_id}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : null}
+          {OutOfStockTicketItems.length > 0 ? (
+            <div>
+              <h2 className={styles.outofstockHead}>Out-of-Stock Requests</h2>
+              <div className={styles.ticketsDisplay}>
+                {OutOfStockTicketItems.map((item) => (
+                  <div key={item.ticket_item_id} className={styles.itemRow}>
+                    <OutOfStockTicketItemCard
+                      key={item.ticket_item_id}
+                      ticketItemId={item.ticket_item_id}
+                      freeTextDescription={item.free_text_description || ''}
+                    />
+                    <RemoveTicketItemButton
+                      ticketItemId={item.ticket_item_id}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
-      {OutOfStockTicketItems.length > 0 ? (
-        <div>
-          <h2>Out-of-Stock Requests</h2>
-          <div>
-            {OutOfStockTicketItems.map((item) => (
-              <div
-                key={item.ticket_item_id}
-                style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-              >
-                <OutOfStockTicketItemCard
-                  key={item.ticket_item_id}
-                  ticketItemId={item.ticket_item_id}
-                  freeTextDescription={item.free_text_description || ''}
-                />
-                <RemoveTicketItemButton ticketItemId={item.ticket_item_id} />
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
-    </>
+    </div>
   );
 }

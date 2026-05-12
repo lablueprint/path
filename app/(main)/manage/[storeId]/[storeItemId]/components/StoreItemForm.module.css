@@ -16,6 +16,7 @@
 }
 
 .photoFrame {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 0.35rem;
@@ -24,21 +25,8 @@
   background: rgba(0, 174, 239, 0.05);
 }
 
-.photoImage,
-.placeholderImage {
-  width: 100%;
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
 .photoImage {
-  background-size: cover;
-}
-
-.placeholderImage {
-  background-image: url('/Image Placeholder.svg');
-  background-size: cover;
+  object-fit: cover;
 }
 
 .detailsColumn {
@@ -56,18 +44,23 @@
   gap: 0.55rem;
 }
 
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
 .fieldLabel,
 .fieldValue,
 .descriptionText,
-.checkboxLabel,
-.quantityInput {
+.checkboxGroup :global(.form-check-label) {
   margin: 0;
   color: #000000;
   font-size: 0.875rem;
 }
 
 .fieldLabel,
-.checkboxLabel {
+.checkboxGroup :global(.form-check-label) {
   font-weight: 700;
   line-height: 1.3;
 }
@@ -77,31 +70,7 @@
 }
 
 .quantityInput {
-  width: 7.6rem;
-  padding: 0.55rem 0.8rem;
-  border: 1px solid rgba(0, 174, 239, 0.2);
-  border-radius: 0.35rem;
-  background: rgba(0, 174, 239, 0.05);
-  font: inherit;
-  line-height: 1.2;
-}
-
-.quantityInput::placeholder {
-  color: rgba(0, 0, 0, 0.45);
-  opacity: 1;
-}
-
-.checkboxRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  width: fit-content;
-}
-
-.checkboxInput {
-  width: 1.1rem;
-  height: 1.1rem;
-  margin: 0;
+  max-width: 7.6rem;
 }
 
 .descriptionText {
