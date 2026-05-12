@@ -2,13 +2,10 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import UsersList from '@/app/(main)/team/people/components/UsersList';
 import UserSearch from '@/app/(main)/team/people/components/UserSearch';
-import ViewToggle, { ViewMode } from '../../components/ViewToggle';
-import TeamUserCard from '../../components/TeamUserCard';
 
 type searchParams = {
   query?: string;
   role?: string;
-  view?: string;
 };
 
 export default async function UsersPage({
@@ -18,7 +15,7 @@ export default async function UsersPage({
 }) {
   const supabase = await createClient();
 
-  const { query, role, view = 'grid' } = await searchParams;
+  const { query, role } = await searchParams;
 
   const { data: rolesData } = await supabase
     .from('roles')
@@ -86,24 +83,8 @@ export default async function UsersPage({
       />
 
       <h1>People</h1>
-      <ViewToggle useUrl />
       <UserSearch roles={rolesData ?? []} />
-
-      {users.length > 0 ? (
-        view == 'grid' ? (
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
-            {users.map((u) => (
-              <div key={u.user_id} className="col">
-                <TeamUserCard user={u} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <UsersList users={users} />
-        )
-      ) : (
-        <p>No users found.</p>
-      )}
+      {users.length > 0 ? <UsersList users={users} /> : <p>No users found.</p>}
     </div>
   );
 }
