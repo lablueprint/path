@@ -28,12 +28,13 @@ begin
         store_id,
         inventory_item_id,
         quantity_available,
-        is_hidden -- ?
+        is_hidden
       )
       select
         new.dest_store_id,
         deduction.inventory_item_id,
         deduction.quantity_deducted,
+        false
       from (
         select
           source_store_item.inventory_item_id,
