@@ -9,7 +9,6 @@ import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
-
 type DraftTicket = {
   ticket_id: string;
   store_id: string;
