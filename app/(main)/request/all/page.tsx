@@ -7,6 +7,10 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import styles from '@/app/(main)/request/Cart.module.css';
+import Image from 'next/image';
+import cartIcon from '@/public/cart-icon.svg';
 
 type SearchParams = {
   query?: string;
@@ -138,9 +142,14 @@ export default async function RequestAllStoresPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          all: 'All Stores',
+        }}
+      />
       <div>
-        <h1>All Stores</h1>
-        <Link href="/request/all/cart">Cart</Link>
+        <h1>Requesting from All Stores</h1>
       </div>
       <ItemSearch
         categories={
@@ -189,6 +198,9 @@ export default async function RequestAllStoresPage({
           </Accordion>
         );
       })}
+      <Link href={`/request/all/cart`} className={styles.cartButton}>
+        <Image src={cartIcon} height={32} alt="Cart icon" />
+      </Link>
     </div>
   );
 }

@@ -2,8 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import styles from '@/app/(main)/components/Breadcrumbs.module.css';
 
-export default function Breadcrumbs() {
+type BreadcrumbsProps = {
+  labelMap?: Record<string, string>;
+};
+
+export default function Breadcrumbs({ labelMap = {} }: BreadcrumbsProps) {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean); // e.g. ["manage", "123", "add"]
   // .filter(Boolean) removes empty strings and other falsy values
@@ -44,7 +49,10 @@ export default function Breadcrumbs() {
 
   const crumbs = visibleCrumbs.map((crumb, index) => {
     const isLast = index === visibleCrumbs.length - 1;
-    const label = formatLabel(crumb.segment);
+    const label =
+      labelMap[crumb.href] ??
+      labelMap[crumb.segment] ??
+      formatLabel(crumb.segment);
 
     return (
       <span key={crumb.href}>
@@ -55,5 +63,9 @@ export default function Breadcrumbs() {
     );
   });
 
-  return <nav aria-label="Breadcrumb">{crumbs}</nav>;
+  return (
+    <nav className={styles.breadcrumbs} aria-label="Breadcrumbs">
+      {crumbs}
+    </nav>
+  );
 }

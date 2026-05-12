@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemsDonationForm from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function AddStoreItemsPage({
   params,
@@ -31,6 +32,13 @@ export default async function AddStoreItemsPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          [storeId]: storeData.name,
+          add: 'Add Store Items',
+        }}
+      />
       <StoreItemsDonationForm store={storeData} user={userData} />
     </div>
   );

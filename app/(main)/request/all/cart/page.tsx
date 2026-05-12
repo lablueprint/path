@@ -7,6 +7,8 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+
 
 type DraftTicket = {
   ticket_id: string;
@@ -76,6 +78,13 @@ export default async function AllCartsPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          all: 'All Stores',
+          cart: 'All Carts',
+        }}
+      />
       <h1>All Carts</h1>
       {sortedStores.map((store) => {
         const draftTicket = draftTicketByStore[store.store_id];

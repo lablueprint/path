@@ -1,4 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import UsersList from '@/app/(main)/team/people/components/UsersList';
 import UserSearch from '@/app/(main)/team/people/components/UserSearch';
 
@@ -74,6 +75,13 @@ export default async function UsersPage({
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          '/team': 'Team',
+          '/team/people': 'People',
+        }}
+      />
+
       <h1>People</h1>
       <UserSearch roles={rolesData ?? []} />
       {users.length > 0 ? <UsersList users={users} /> : <p>No users found.</p>}

@@ -2,6 +2,9 @@ import Link from 'next/link';
 import styles from '@/app/(main)/components/Sidebar.module.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
+import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
+import MobileSidebar from '@/app/(main)/components/MobileSidebar';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
@@ -13,22 +16,20 @@ export default async function Sidebar() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Get user claims (JWT)
   const { data } = await supabase.auth.getClaims();
   const role = data?.claims?.user_role as Role | undefined;
 
-  // Not logged in or not authenticated user → no sidebar
   if (!user || !role) return null;
 
-  // Fetch profile to get names
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name')
+    .select('first_name, last_name, profile_photo_url')
     .eq('user_id', user.id)
     .single();
 
   const firstName = profile?.first_name || '';
   const lastName = profile?.last_name || '';
+  const profilePhotoUrl = profile?.profile_photo_url || '';
   const displayName = `${firstName} ${lastName}`.trim() || 'Profile';
 
   const sidebarGroups = [
@@ -75,57 +76,74 @@ export default async function Sidebar() {
   ];
 
   return (
-    <aside>
-      <nav className={styles.navContainer}>
-        <Link href="/home" className={styles.pathHomeLink}>
-          <Image
-            src="/path.png"
-            alt="Path Home Logo"
-            width={160}
-            height={76}
-            className={styles.pathHomeImage}
-            priority
-          />
-        </Link>
+    <>
+      {/* Desktop sidebar – visible on lg and up */}
+      <aside className="d-none d-lg-block">
+        <nav className={styles.navContainer}>
+          <Link href="/home" className={styles.pathHomeLink}>
+            <Image
+              src="/path.png"
+              alt="Path Home Logo"
+              width={160}
+              height={76}
+              className={styles.pathHomeImage}
+              priority
+            />
+          </Link>
 
-        {sidebarGroups.map((group, index) => {
-          // Filters the links based on the user's role
-          const visibleLinks = group.links.filter((link) =>
-            link.allowedRoles.includes(role),
-          );
+          <div className={styles.desktopLinks}>
+            {sidebarGroups.map((group, index) => {
+              const visibleLinks = group.links.filter((link) =>
+                link.allowedRoles.includes(role),
+              );
 
-          // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
-          if (visibleLinks.length === 0) return null;
+              // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
+              if (visibleLinks.length === 0) return null;
 
-          return (
-            <div key={index}>
-              {group.heading && (
-                <h3 className={styles.groupHeading}>{group.heading}</h3>
-              )}
-              {/* Bootstrap ul classes */}
-              <ul className={`nav flex-column ${styles.linkList}`}>
-                {visibleLinks.map((link) => (
-                  <li key={link.href} className={`nav-item ${styles.linkItem}`}>
-                    <Link
-                      href={link.href}
-                      className={`nav-link ${styles.navLink}`}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-
-        <Link href="/profile" className={styles.profile}>
-          <div className={styles.pfpContainer}>
-            <div className={styles.pfp}></div>
+              return (
+                <div key={index}>
+                  {group.heading && (
+                    <h3 className={styles.groupHeading}>{group.heading}</h3>
+                  )}
+                  {/* Bootstrap ul classes */}
+                  <ul className={`nav flex-column ${styles.linkList}`}>
+                    {visibleLinks.map((link) => (
+                      <li
+                        key={link.href}
+                        className={`nav-item ${styles.linkItem}`}
+                      >
+                        <SidebarNavLink href={link.href} label={link.label} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
-          <div>{displayName}</div>
-        </Link>
-      </nav>
-    </aside>
+
+          <Link href="/profile" className={styles.profile}>
+            <div className={styles.pfpContainer}>
+              <Image
+                src={profilePhotoUrl || imagePlaceholder}
+                alt={`${displayName} profile photo`}
+                width={40}
+                height={40}
+                className={styles.pfp}
+                unoptimized
+              />
+            </div>
+            <div>{displayName}</div>
+          </Link>
+        </nav>
+      </aside>
+
+      {/* Mobile sidebar – visible below lg */}
+      <MobileSidebar
+        sidebarGroups={sidebarGroups}
+        role={role}
+        displayName={displayName}
+        profilePhotoUrl={profilePhotoUrl}
+      />
+    </>
   );
 }
