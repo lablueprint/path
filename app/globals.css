@@ -158,6 +158,25 @@ thead th {
   transition: background 0.2s ease;
 }
 
+.btn-remove {
+  display: inline-flex;
+  padding: 8px 40px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #C53030;
+  border-radius: 5px;
+  background: #FFEFEF;
+  color: #C53030;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  background: #fbe0e0;
+  transition: background 0.2s ease;
+}
+
 .btn-row {
   display: flex;
   gap: 12px;
