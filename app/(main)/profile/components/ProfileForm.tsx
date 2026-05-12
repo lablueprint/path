@@ -19,7 +19,9 @@ type ProfileFormValues = {
 export default function ProfileForm({ user }: { user: User }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState<string | null>(user.profile_photo_url);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    user.profile_photo_url,
+  );
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isPendingDelete, setIsPendingDelete] = useState(false);
@@ -76,7 +78,9 @@ export default function ProfileForm({ user }: { user: User }) {
     setIsSaving(true);
     try {
       let finalPhotoUrl = photoUrl;
-      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
 
       if (authUser) {
         if (isPendingDelete) {
@@ -89,7 +93,9 @@ export default function ProfileForm({ user }: { user: User }) {
         if (selectedFile) {
           const { error: uploadError } = await supabase.storage
             .from('profile_photos')
-            .upload(`${authUser.id}/profile.jpg`, selectedFile, { upsert: true });
+            .upload(`${authUser.id}/profile.jpg`, selectedFile, {
+              upsert: true,
+            });
 
           if (uploadError) {
             console.error('Upload error:', uploadError.message);
@@ -103,10 +109,12 @@ export default function ProfileForm({ user }: { user: User }) {
       }
 
       const changes: UserUpdate = {};
-      if (data.firstName !== user.first_name) changes.first_name = data.firstName;
+      if (data.firstName !== user.first_name)
+        changes.first_name = data.firstName;
       if (data.lastName !== user.last_name) changes.last_name = data.lastName;
       if (data.email !== user.email) changes.email = data.email;
-      if (selectedFile || isPendingDelete) changes.profile_photo_url = finalPhotoUrl;
+      if (selectedFile || isPendingDelete)
+        changes.profile_photo_url = finalPhotoUrl;
 
       const result = await updateUser(user.user_id, changes);
 
@@ -117,7 +125,11 @@ export default function ProfileForm({ user }: { user: User }) {
         setSelectedFile(null);
         setIsPendingDelete(false);
         photoUploadRef.current?.resetFile();
-        reset({ firstName: data.firstName, lastName: data.lastName, email: user.email });
+        reset({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: user.email,
+        });
         setIsEditing(false);
         if (data.email !== user.email) {
           alert('Please check your new email address to verify the change.');
@@ -139,7 +151,6 @@ export default function ProfileForm({ user }: { user: User }) {
       <div className={styles.cardBody}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2 className={styles.userInfoText}>User Information</h2>
-          
 
           {/* ↓ plain circle in view mode, full PhotoUpload in edit mode */}
           {isEditing ? (
@@ -180,7 +191,9 @@ export default function ProfileForm({ user }: { user: User }) {
                     )}
                   </>
                 ) : (
-                  <p className="form-control-plaintext">{watchedValues.firstName}</p>
+                  <p className="form-control-plaintext">
+                    {watchedValues.firstName}
+                  </p>
                 )}
               </div>
 
@@ -197,7 +210,9 @@ export default function ProfileForm({ user }: { user: User }) {
                     )}
                   </>
                 ) : (
-                  <p className="form-control-plaintext">{watchedValues.lastName}</p>
+                  <p className="form-control-plaintext">
+                    {watchedValues.lastName}
+                  </p>
                 )}
               </div>
             </div>
@@ -236,8 +251,13 @@ export default function ProfileForm({ user }: { user: User }) {
             </div>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             {!isEditing && (
               <button
                 type="button"

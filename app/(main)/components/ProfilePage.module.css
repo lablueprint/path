@@ -24,7 +24,7 @@
 }
 
 .userInfoTextRead {
-    margin-top: 0px;
+  margin-top: 0px;
 }
 
 .cardBody {
@@ -98,7 +98,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -310px;  /* same as .circle in PhotoUpload */
+  margin-top: -310px; /* same as .circle in PhotoUpload */
   margin-bottom: 0;
 }
 
@@ -120,7 +120,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: -310px;
-  margin-bottom: 110px;  
+  margin-bottom: 110px;
 }
 
 .avatarCircle img {
@@ -131,6 +131,6 @@
 }
 
 .profileLabel {
-    font-weight: 500;
-    margin-bottom: 5px;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
