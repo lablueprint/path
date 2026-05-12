@@ -125,33 +125,39 @@ export default async function TicketDetails({
         <div>
           {/*Header Card*/}
           <Card className={styles.headerCard}>
-            <Image
-              src={requestor?.profile_photo_url || imagePlaceholder}
-              alt={`Profile picture for ${requestor?.first_name}`}
-              className={styles.profilePicture}
-              width={95}
-              height={95}
-              unoptimized
-            ></Image>
-            <div className={styles.headerCardText}>
-              <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
-              <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
-              <h2>Ticket #{userTicket.ticket_id}</h2>
-            </div>
-            {!outgoing ? (
-              <Button
-                as="a"
-                className={styles.contactButton}
-                href={
-                  requestor?.email ? `mailto:${requestor.email}` : undefined
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                disabled={!requestor?.email}
-              >
-                Contact
-              </Button>
-            ) : null}
+            <Row className={styles.headerCardRow}>
+              <Col xs={12} className={styles.headerCardMain}>
+                <Image
+                  src={requestor?.profile_photo_url || imagePlaceholder}
+                  alt={`Profile picture for ${requestor?.first_name}`}
+                  className={styles.profilePicture}
+                  width={95}
+                  height={95}
+                  unoptimized
+                ></Image>
+                <div className={styles.headerCardText}>
+                  <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
+                  <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
+                  <h2>Ticket #{userTicket.ticket_id}</h2>
+                </div>
+              </Col>
+              {!outgoing ? (
+                <Col xs={12} className={styles.headerCardContact}>
+                  <Button
+                    as="a"
+                    className={styles.contactButton}
+                    href={
+                      requestor?.email ? `mailto:${requestor.email}` : undefined
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    disabled={!requestor?.email}
+                  >
+                    Contact
+                  </Button>
+                </Col>
+              ) : null}
+            </Row>
           </Card>
 
           <div>
@@ -166,11 +172,14 @@ export default async function TicketDetails({
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
 
           <Row className={styles.ticketContentLayout}>
-            <Col xs={12} lg={8}>
+            <Col xs={12} className={styles.ticketContentMain}>
               <TicketItemsList ticketId={userTicket.ticket_id} />
             </Col>
 
-            <Col xs={12} lg={4} className={styles.ticketContentRight}>
+            <Col
+              xs={12}
+              className={`${styles.ticketContentSide} ${styles.ticketContentRight}`}
+            >
               {outgoing && (
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
