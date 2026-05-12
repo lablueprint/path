@@ -45,7 +45,7 @@ export default function Dropdown({
     return (
       (aIndex === -1 ? roleOrder.length : aIndex) -
       (bIndex === -1 ? roleOrder.length : bIndex)
-    )
+    );
   });
 
   return (

@@ -25,7 +25,9 @@ export default function OutgoingTicketsList({
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
 
-  const sortedFilteredTickets = [...filteredTickets].sort((a, b) => (b.date_submitted).localeCompare(a.date_submitted,),);
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
 
   return (
     <div>

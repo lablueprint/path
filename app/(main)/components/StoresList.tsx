@@ -11,7 +11,7 @@ import defaultStorePhoto from '@/public/image-placeholder.svg';
 export default function StoresList({ stores }: { stores: Store[] }) {
   const [view, setView] = useState<ViewMode>('grid');
 
-  const sortedStores = [...stores].sort((a, b) => a.name.localeCompare(b.name))
+  const sortedStores = [...stores].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div>

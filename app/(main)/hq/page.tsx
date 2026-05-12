@@ -27,7 +27,9 @@ export default async function HqPage() {
     console.error('Error fetching stores:', storesErr);
   }
 
-  const sortedDonations = [...data].sort((a, b) => (b.date_submitted).localeCompare(a.date_submitted,),);
+  const sortedDonations = [...data].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
 
   const stores = storesData || [];
 

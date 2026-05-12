@@ -36,7 +36,11 @@ export default async function TicketItemsList({
     .eq('ticket_id', ticketId)
     .eq('is_in_stock_request', true);
   InStockTicketItems = inStockItemsData || [];
-  const sortedInStockTicketItems = [...InStockTicketItems].sort((a, b) => (a.store_items?.inventory_items?.name).localeCompare(b.store_items?.inventory_items?.name,),);
+  const sortedInStockTicketItems = [...InStockTicketItems].sort((a, b) =>
+    (a.store_items?.inventory_items?.name).localeCompare(
+      b.store_items?.inventory_items?.name,
+    ),
+  );
 
   const { data: outOfStockItemsData } = await supabase
     .from('ticket_items')
