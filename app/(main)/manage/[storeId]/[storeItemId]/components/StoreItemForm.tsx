@@ -7,7 +7,7 @@ import {
   updateStoreItemQuantity,
   updateStoreItemIsHidden,
 } from '@/app/actions/store';
-import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm.module.css';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/ManageStoreItemPage.module.css';
 
 export default function StoreItemForm({
   storeId,
@@ -62,7 +62,7 @@ export default function StoreItemForm({
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} className="form-body">
       <Form.Group>
         <Form.Label className={styles.fieldLabel}>Quantity</Form.Label>
         <Form.Control
@@ -88,9 +88,11 @@ export default function StoreItemForm({
 
       <Form.Group>
         <Form.Check
+          className={styles.isHiddenCheckbox}
           type="checkbox"
           label="Is Hidden?"
           disabled={isSubmitting}
+          id="is-hidden"
           {...register('isHidden')}
         />
       </Form.Group>

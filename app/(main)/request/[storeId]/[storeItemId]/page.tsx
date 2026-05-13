@@ -1,9 +1,14 @@
 import Image from 'next/image';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import AddInStockToCartForm from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm';
-import styles from '@/app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm.module.css';
+import styles from '@/app/(main)/request/[storeId]/[storeItemId]/RequestStoreItemPage.module.css';
 import { createClient } from '@/app/lib/supabase/server-client';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import { Card, Row, Col } from 'react-bootstrap';
+import pinIcon from '@/public/pin-icon.svg';
+import cartStyles from '@/app/(main)/request/Cart.module.css';
+import cartIcon from '@/public/cart-icon.svg';
+import Link from 'next/link';
 
 export default async function RequestStoreItemPage({
   params,
@@ -72,70 +77,71 @@ export default async function RequestStoreItemPage({
           [`/request/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
         }}
       />
-
-      <div className={styles.wrapper}>
-        <h1>
-          Requesting from{' '}
-          <span className={styles.locationName}>{storeData.name}</span>
-        </h1>
-
-        <div className={styles.card}>
-          <div className={styles.content}>
-            <div className={styles.mediaColumn}>
+      <h1>
+        <span>Requesting from </span>
+        {storeData?.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
+      <Card className="form-card">
+        <div className="card-body">
+          <Row className="gx-md-5">
+            <Col md className="mt-0">
               <div className={styles.photoFrame}>
                 <Image
                   src={itemData.inventory_items.photo_url || imagePlaceholder}
                   alt={itemData.inventory_items.name}
                   fill
                   className={styles.photoImage}
-                  sizes="392px"
                   unoptimized
                 />
               </div>
-            </div>
+            </Col>
 
-            <div className={styles.detailsColumn}>
+            <Col md className="form-body mt-3 mt-md-0">
               <div className={styles.fieldGroup}>
                 <p className={styles.fieldLabel}>Name</p>
                 <p className={styles.fieldValue}>
                   {itemData.inventory_items.name}
                 </p>
               </div>
-
               <div className={styles.fieldGroup}>
                 <p className={styles.fieldLabel}>Category</p>
                 <p className={styles.fieldValue}>
                   {itemData.inventory_items.subcategories.categories.name}
                 </p>
               </div>
-
               <div className={styles.fieldGroup}>
                 <p className={styles.fieldLabel}>Subcategory</p>
                 <p className={styles.fieldValue}>
                   {itemData.inventory_items.subcategories.name}
                 </p>
               </div>
-
-              <AddInStockToCartForm
-                storeId={storeId}
-                storeItemId={storeItemId}
-              />
-
-              <p className={styles.stockBadge}>
-                {itemData.quantity_available} in Stock
-              </p>
-
               <div className={styles.fieldGroup}>
                 <p className={styles.fieldLabel}>Description</p>
-                <p className={styles.descriptionText}>
+                <p className={styles.fieldValue}>
                   {itemData.inventory_items.description ||
                     'No description provided.'}
                 </p>
               </div>
-            </div>
-          </div>
+              <div className={styles.fieldGroup}>
+                {itemData.quantity_available > 0 ? (
+                  <p className={styles.inStock}>
+                    {itemData.quantity_available} in Stock
+                  </p>
+                ) : (
+                  <p className={styles.outOfStock}>Out of Stock</p>
+                )}
+              </div>
+              <AddInStockToCartForm
+                storeId={storeId}
+                storeItemId={storeItemId}
+              />
+            </Col>
+          </Row>
         </div>
-      </div>
+      </Card>
+      <Link href={`/request/${storeId}/cart`} className={cartStyles.cartButton}>
+        <Image src={cartIcon} height={32} alt="Cart icon" />
+      </Link>
     </div>
   );
 }

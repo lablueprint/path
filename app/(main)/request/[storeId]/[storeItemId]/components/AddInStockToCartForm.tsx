@@ -1,10 +1,9 @@
 'use client';
 
-import Form from 'next/form';
 import Button from 'react-bootstrap/Button';
-import BootstrapForm from 'react-bootstrap/Form';
+import Form from 'react-bootstrap/Form';
 import { addToCart } from '@/app/actions/ticket';
-import styles from './AddInStockToCartForm.module.css';
+import styles from '@/app/(main)/request/[storeId]/[storeItemId]/RequestStoreItemPage.module.css';
 
 interface AddInStockToCartFormProps {
   storeId: string;
@@ -28,24 +27,19 @@ export default function AddInStockToCartForm({
   };
 
   return (
-    <Form action={handleSubmit} className={styles.formFields}>
-      <BootstrapForm.Group className={styles.fieldGroup}>
-        <BootstrapForm.Label className={styles.fieldLabel}>
-          Quantity
-        </BootstrapForm.Label>
-        <div className={styles.quantityRow}>
-          <BootstrapForm.Control
-            id="quantity"
-            className={styles.quantityInput}
-            name="quantity"
-            type="number"
-            min={1}
-            step={1}
-            placeholder="###"
-            required
-          />
-        </div>
-      </BootstrapForm.Group>
+    <Form action={handleSubmit} className="form-body">
+      <Form.Group>
+        <Form.Label className={styles.fieldLabel}>Quantity</Form.Label>
+        <Form.Control
+          id="quantity"
+          className={styles.quantityInput}
+          name="quantity"
+          type="number"
+          min={1}
+          step={1}
+          required
+        />
+      </Form.Group>
 
       <Button type="submit" className="align-self-start">
         Add to Cart

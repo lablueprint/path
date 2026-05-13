@@ -2,9 +2,11 @@ import Image from 'next/image';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
-import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm.module.css';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/ManageStoreItemPage.module.css';
 import { createClient } from '@/app/lib/supabase/server-client';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import { Card, Row, Col } from 'react-bootstrap';
+import pinIcon from '@/public/pin-icon.svg';
 
 export default async function ManageStoreItemPage({
   params,
@@ -74,62 +76,63 @@ export default async function ManageStoreItemPage({
           [`/manage/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
         }}
       />
-      <h1>Edit</h1>
+      <h1>
+        <span>Managing </span>
+        {store?.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
+      <Card className="form-card">
+        <div className="card-body">
+          <Row className="gx-md-5">
+            <Col md className="mt-0">
+              <div className={styles.photoFrame}>
+                <Image
+                  src={itemData.inventory_items.photo_url || imagePlaceholder}
+                  alt={itemData.inventory_items.name}
+                  fill
+                  className={styles.photoImage}
+                  unoptimized
+                />
+              </div>
+            </Col>
 
-      <div className={styles.card}>
-        <div className={styles.content}>
-          <div className={styles.mediaColumn}>
-            <div className={styles.photoFrame}>
-              <Image
-                src={itemData.inventory_items.photo_url || imagePlaceholder}
-                alt={itemData.inventory_items.name}
-                fill
-                className={styles.photoImage}
-                sizes="392px"
-                unoptimized
+            <Col md className="form-body mt-3 mt-md-0">
+              <div className={styles.fieldGroup}>
+                <p className={styles.fieldLabel}>Name</p>
+                <p className={styles.fieldValue}>
+                  {itemData.inventory_items.name}
+                </p>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <p className={styles.fieldLabel}>Category</p>
+                <p className={styles.fieldValue}>
+                  {itemData.inventory_items.subcategories.categories.name}
+                </p>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <p className={styles.fieldLabel}>Subcategory</p>
+                <p className={styles.fieldValue}>
+                  {itemData.inventory_items.subcategories.name}
+                </p>
+              </div>
+              <div className={styles.fieldGroup}>
+                <p className={styles.fieldLabel}>Description</p>
+                <p className={styles.fieldValue}>
+                  {itemData.inventory_items.description ||
+                    'No description provided.'}
+                </p>
+              </div>
+              <StoreItemForm
+                storeId={storeId}
+                storeItemId={storeItemId}
+                quantity={itemData.quantity_available ?? 0}
+                visibility={itemData.is_hidden ?? false}
               />
-            </div>
-          </div>
-
-          <div className={styles.detailsColumn}>
-            <div className={styles.fieldGroup}>
-              <p className={styles.fieldLabel}>Name</p>
-              <p className={styles.fieldValue}>
-                {itemData.inventory_items.name}
-              </p>
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <p className={styles.fieldLabel}>Category</p>
-              <p className={styles.fieldValue}>
-                {itemData.inventory_items.subcategories.categories.name}
-              </p>
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <p className={styles.fieldLabel}>Subcategory</p>
-              <p className={styles.fieldValue}>
-                {itemData.inventory_items.subcategories.name}
-              </p>
-            </div>
-
-            <StoreItemForm
-              storeId={storeId}
-              storeItemId={storeItemId}
-              quantity={itemData.quantity_available ?? 0}
-              visibility={itemData.is_hidden ?? false}
-            />
-
-            <div className={styles.fieldGroup}>
-              <p className={styles.fieldLabel}>Description</p>
-              <p className={styles.descriptionText}>
-                {itemData.inventory_items.description ||
-                  'No description provided.'}
-              </p>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
-      </div>
+      </Card>
 
       <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
     </div>
