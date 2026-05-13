@@ -57,11 +57,9 @@ export default async function HqPage() {
         </tbody>
       </Table>
 
-      <h3>Export Donations</h3>
       <DonationsExportForm />
 
       <h2>Stores</h2>
-      <h3>Add Store</h3>
       <AddStoreForm />
       <h3>Edit Stores</h3>
       {stores.length > 0 ? (

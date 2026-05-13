@@ -4,6 +4,7 @@ export type Ticket = {
   store_id: string;
   status: string; // string corresponds to varchar
   date_submitted: Date | string; // Date | string corresponds to time stamp with time zone
+  dest_store_id?: string | null;
 };
 
 export type TicketInsert = Omit<Ticket, 'ticket_id' | 'date_submitted'>;

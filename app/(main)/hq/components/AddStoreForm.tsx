@@ -108,58 +108,79 @@ export default function AddStoreForm() {
   const displayImage = previewUrl || defaultStorePhoto.src;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <div>
-          <Image
-            src={displayImage}
-            alt="Profile photo"
-            width={64}
-            height={64}
-            style={{ objectFit: 'cover' }}
-            unoptimized
-          />
+    <div className="form-card">
+      <div className="card-body">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <div className="mb-3">
+              <Image
+                src={displayImage}
+                alt="Profile photo"
+                width={64}
+                height={64}
+                className="photo"
+                unoptimized
+              />
 
-          {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
-          {displayImage !== defaultStorePhoto.src && (
-            <button type="button" onClick={handleRemovePhoto}>
-              Remove
-            </button>
-          )}
+              {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
+              {displayImage !== defaultStorePhoto.src && (
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  className="btn-cancel"
+                >
+                  Remove
+                </button>
+              )}
 
-          <br />
-          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-        </div>
+              <br />
+              <PhotoUpload
+                ref={photoUploadRef}
+                onFileSelect={handleFileSelect}
+              />
+            </div>
 
-        <label>Store name</label>
-        <input {...register('storeName')} />
+            <div className="mb-3">
+              <label className="form-label field-label">Store name</label>
+              <input {...register('storeName')} className="form-control" />
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label field-label">
+              Store street address
+            </label>
+            <input
+              {...register('storeStreetAddress')}
+              className="form-control"
+            />
+          </div>
+
+          <div className="button-spacing">
+            {bothFilled && (
+              <button type="submit" disabled={isSaving} className="btn-submit">
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+            )}
+
+            {eitherFilled && (
+              <button
+                type="button"
+                className="btn-cancel"
+                disabled={isSaving}
+                onClick={() => {
+                  reset({ storeName: '', storeStreetAddress: '' });
+                  setSelectedFile(null);
+                  setPreviewUrl(defaultStorePhoto.src);
+                  photoUploadRef.current?.resetFile();
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
       </div>
-
-      <div>
-        <label>Store street address</label>
-        <input {...register('storeStreetAddress')} />
-      </div>
-
-      {bothFilled && (
-        <button type="submit" disabled={isSaving}>
-          Save
-        </button>
-      )}
-
-      {eitherFilled && (
-        <button
-          type="button"
-          disabled={isSaving}
-          onClick={() => {
-            reset({ storeName: '', storeStreetAddress: '' });
-            setSelectedFile(null);
-            setPreviewUrl(defaultStorePhoto.src);
-            photoUploadRef.current?.resetFile();
-          }}
-        >
-          Cancel
-        </button>
-      )}
-    </form>
+    </div>
   );
 }
