@@ -94,7 +94,9 @@ export default async function ManageStoreItemPage({
           <div className={styles.detailsColumn}>
             <div className={styles.fieldGroup}>
               <p className={styles.fieldLabel}>Name</p>
-              <p className={styles.fieldValue}>{itemData.inventory_items.name}</p>
+              <p className={styles.fieldValue}>
+                {itemData.inventory_items.name}
+              </p>
             </div>
 
             <div className={styles.fieldGroup}>

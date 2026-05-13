@@ -29,7 +29,7 @@ export default function AddInStockToCartForm({
 
   return (
     <Form action={handleSubmit} className={styles.formFields}>
-      <BootstrapForm.Group className={styles.fieldGroup} controlId="quantity">
+      <BootstrapForm.Group className={styles.fieldGroup}>
         <BootstrapForm.Label className={styles.fieldLabel}>
           Quantity
         </BootstrapForm.Label>

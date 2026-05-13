@@ -3,8 +3,11 @@
 import { useForm } from 'react-hook-form';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { updateStoreItemQuantity, updateStoreItemIsHidden,} from '@/app/actions/store';
-import styles from './StoreItemForm.module.css';
+import {
+  updateStoreItemQuantity,
+  updateStoreItemIsHidden,
+} from '@/app/actions/store';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm.module.css';
 
 export default function StoreItemForm({
   storeId,
@@ -59,15 +62,15 @@ export default function StoreItemForm({
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className={styles.formFields}>
-      <Form.Group className={styles.fieldGroup} controlId="quantityAvailable">
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form.Group>
         <Form.Label className={styles.fieldLabel}>Quantity</Form.Label>
         <Form.Control
           className={styles.quantityInput}
           type="number"
           min={0}
           step={1}
-          placeholder="###"
+          placeholder=""
           disabled={isSubmitting}
           isInvalid={!!errors.quantityAvailable}
           {...register('quantityAvailable', {
@@ -83,7 +86,7 @@ export default function StoreItemForm({
         </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Group className={styles.checkboxGroup} controlId="isHidden">
+      <Form.Group>
         <Form.Check
           type="checkbox"
           label="Is Hidden?"
@@ -93,7 +96,7 @@ export default function StoreItemForm({
       </Form.Group>
 
       {isDirty && (
-        <div className="d-flex gap-2 align-self-start">
+        <div>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
