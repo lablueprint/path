@@ -1,7 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
-import UserCard from '@/app/(main)/components/UserCard';
+import TicketUserCard from '@/app/(main)/components/TicketUserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
@@ -207,12 +207,10 @@ export default async function TicketDetails({
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
                   {storeAdminsList.map((storeAdmin) => (
-                    <UserCard
-                      className={styles.userCard}
-                      noBottomMargin
+                    <TicketUserCard
                       user={storeAdmin}
                       key={storeAdmin.user_id}
-                    ></UserCard>
+                    ></TicketUserCard>
                   ))}
                 </div>
               )}

@@ -98,6 +98,17 @@ Table {
 .form-card .form-control,
 .form-card .form-select,
 .form-card .form-check-label,
+.delete-button {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
 .form-card .form-label {
   font-family: inherit;
 }

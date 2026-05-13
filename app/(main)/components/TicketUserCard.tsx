@@ -1,21 +1,16 @@
 import { User } from '@/app/types/user';
-import styles from '@/app/(main)/components/UserCard.module.css';
+import styles from '@/app/(main)/components/TicketUserCard.module.css';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 
-export default function UserCard({
-  user,
-  noBottomMargin = false,
-  className,
+export default function TicketUserCard({
+  user
 }: {
   user: User;
-  noBottomMargin?: boolean;
   className?: string;
 }) {
   const cardClassName = [
     styles.userCard,
-    noBottomMargin ? styles.noBottomMargin : '',
-    className || '',
   ]
     .filter(Boolean)
     .join(' ');

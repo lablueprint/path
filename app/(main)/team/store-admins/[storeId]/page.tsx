@@ -2,7 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import DeleteStoreAdminButton from '@/app/(main)/team/store-admins/[storeId]/components/DeleteStoreAdminButton';
 import AddAdminSearch from '@/app/(main)/team/store-admins/[storeId]/components/AddAdminSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import UserCard from '@/app/(main)/components/UserCard';
+import TicketUserCard from '@/app/(main)/components/TicketUserCard';
 
 export default async function StoreAdminPage({
   params,
@@ -109,9 +109,8 @@ export default async function StoreAdminPage({
           admins.map((admin) => {
             const user = admin.users;
             return (
-              <div key={admin.store_admin_id} style={{ marginBottom: '40px' }}>
-                <UserCard user={user} noBottomMargin></UserCard>
-                {/* removing store admins if eligible role */}
+              <div key={admin.store_admin_id}>
+                <TicketUserCard user={user}></TicketUserCard>
                 {canChangeAdmins && (
                   <DeleteStoreAdminButton storeAdminId={admin.store_admin_id} />
                 )}
