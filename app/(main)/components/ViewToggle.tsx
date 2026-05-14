@@ -2,22 +2,32 @@
 
 import { useState } from 'react';
 import styles from '@/app/(main)/components/ViewToggle.module.css';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export type ViewMode = 'grid' | 'list';
 
 interface ViewToggleProps {
   defaultView?: ViewMode;
   onChange?: (view: ViewMode) => void;
+  useUrl?: boolean;
 }
 
 export default function ViewToggle({
   defaultView = 'grid',
   onChange,
+  useUrl,
 }: ViewToggleProps) {
   const [view, setView] = useState<ViewMode>(defaultView);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleChange = (newView: ViewMode) => {
     setView(newView);
+    if (useUrl) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('view', newView);
+      router.push(`?${params.toString()}`);
+    }
     onChange?.(newView);
   };
 

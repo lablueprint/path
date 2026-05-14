@@ -1,10 +1,13 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import {
   updateStoreItemQuantity,
   updateStoreItemIsHidden,
 } from '@/app/actions/store';
+import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/ManageStoreItemPage.module.css';
 
 export default function StoreItemForm({
   storeId,
@@ -59,14 +62,17 @@ export default function StoreItemForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label>Quantity available: </label>
-        <input
+    <Form onSubmit={handleSubmit(onSubmit)} className="form-body">
+      <Form.Group>
+        <Form.Label className={styles.fieldLabel}>Quantity</Form.Label>
+        <Form.Control
+          className={styles.quantityInput}
           type="number"
           min={0}
           step={1}
+          placeholder=""
           disabled={isSubmitting}
+          isInvalid={!!errors.quantityAvailable}
           {...register('quantityAvailable', {
             valueAsNumber: true,
             required: 'Please enter a numeric quantity.',
@@ -75,31 +81,37 @@ export default function StoreItemForm({
               'Please enter a combination of digits only (0-9).',
           })}
         />
+        <Form.Control.Feedback type="invalid">
+          {errors.quantityAvailable?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
 
-        {errors.quantityAvailable && (
-          <div style={{ color: 'red' }}>{errors.quantityAvailable.message}</div>
-        )}
-      </div>
-
-      <div>
-        <label>Hidden? </label>
-        <input
+      <Form.Group>
+        <Form.Check
+          className={styles.isHiddenCheckbox}
           type="checkbox"
+          label="Is Hidden?"
           disabled={isSubmitting}
+          id="is-hidden"
           {...register('isHidden')}
         />
-      </div>
+      </Form.Group>
 
       {isDirty && (
         <div>
-          <button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" disabled={isSubmitting} onClick={() => reset()}>
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={isSubmitting}
+            onClick={() => reset()}
+          >
             Cancel
-          </button>
+          </Button>
         </div>
       )}
-    </form>
+    </Form>
   );
 }

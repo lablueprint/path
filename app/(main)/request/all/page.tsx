@@ -4,7 +4,7 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import Link from 'next/link';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import styles from '@/app/(main)/request/all/RequestAllStoresPage.module.css';
+import styles from '@/app/(main)/request/Cart.module.css';
 import Image from 'next/image';
 import cartIcon from '@/public/cart-icon.svg';
 

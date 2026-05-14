@@ -19,6 +19,8 @@ type AddInventoryItemFormProps = {
   onFileChange?: (file: File | null) => void;
 };
 
+const supabase = createClient();
+
 export default function AddInventoryItemForm({
   selectedFile: selectedFileProp,
   onFileChange,
@@ -42,8 +44,6 @@ export default function AddInventoryItemForm({
     if (!previewUrl) return;
     return () => URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
-
-  const supabase = createClient();
 
   const handleFileChanged = (file: File | null) => {
     if (onFileChange) {
@@ -86,7 +86,7 @@ export default function AddInventoryItemForm({
       }
     }
     fetchCategories();
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     async function fetchSubcategories() {
@@ -105,7 +105,7 @@ export default function AddInventoryItemForm({
       }
     }
     fetchSubcategories();
-  }, [selectedCategory, supabase]);
+  }, [selectedCategory]);
 
   return (
     <div>

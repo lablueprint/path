@@ -10,6 +10,15 @@
   top: 0;
   left: 0;
   z-index: 1;
+  overflow: hidden;
+}
+
+.desktopLinks {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .pathHomeLink {
@@ -60,7 +69,7 @@
 }
 
 .profile {
-  margin-top: auto;
+  margin-top: 2rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -80,4 +89,60 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.mobileTopBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.875rem;
+  background-color: #fff;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  z-index: 2;
+  gap: 1rem;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  z-index: 2;
+}
+
+.mobileLogoLink {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.offcanvasInner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  padding: 3rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.offcanvasClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.offcanvasLinks {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
