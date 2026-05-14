@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
 import { Form } from 'react-bootstrap';
+import pathLogo from '@/public/path.png';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -36,7 +37,7 @@ export default function ForgotPasswordPage() {
       <div className={'auth-left'}></div>
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
-          <Image width={96} height={46} src="/path.png" alt="path logo" />
+          <Image width={96} height={46} src={pathLogo} alt="PATH logo" />
 
           <p className={'auth-title'}>Forgot Password</p>
           <div className={'auth-form-body'}>

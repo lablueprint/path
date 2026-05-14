@@ -5,6 +5,7 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Form } from 'react-bootstrap';
+import pathLogo from '@/public/path.png';
 
 type ResetPasswordFormValues = {
   password: string;
@@ -49,7 +50,13 @@ export default function ResetPasswordPage() {
       <div className={'auth-left'}></div>
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
-          <Image width={96} height={46} src="/path.png" alt="path logo" />
+          <Image
+            width={96}
+            height={46}
+            src={pathLogo}
+            alt="PATH logo"
+            priority
+          />
           <p className={'auth-title'}>Reset Password</p>
           <div className={'auth-form-body'}>
             <Form.Group controlId="password">

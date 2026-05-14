@@ -14,6 +14,7 @@ type Inputs = {
   password: string;
   passwordConfirmation: string;
 };
+import pathLogo from '@/public/path.png';
 
 export default function SignUpPage() {
   const {
@@ -54,7 +55,7 @@ export default function SignUpPage() {
       <div className={'auth-left'}></div>
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
-          <Image width={96} height={46} src="/path.png" alt="path logo" />
+          <Image width={96} height={46} src={pathLogo} alt="PATH logo" />
           <p className={'auth-title'}>Sign Up</p>
           <p className={'auth-prompt'}>
             Already a member?

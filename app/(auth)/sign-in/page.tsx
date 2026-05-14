@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Form, FormGroup } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import pathLogo from '@/public/path.png';
 
 type Inputs = {
   email: string;
@@ -38,7 +39,7 @@ export default function SignInPage() {
       <div className={'auth-left'}></div>
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
-          <Image width={96} height={46} src="/path.png" alt="path logo" />
+          <Image width={96} height={46} src={pathLogo} alt="PATH logo" />
           <p className={'auth-title'}>Sign In</p>
           <p className={'auth-prompt'}>
             Not a member?
