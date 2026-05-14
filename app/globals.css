@@ -98,17 +98,6 @@ Table {
 .form-card .form-control,
 .form-card .form-select,
 .form-card .form-check-label,
-.delete-button {
-  background-color: #dc3545;
-  border-color: #dc3545;
-  color: white;
-}
-
-.delete-button:hover {
-  background-color: #c82333;
-  border-color: #bd2130;
-}
-
 .form-card .form-label {
   font-family: inherit;
 }
@@ -138,6 +127,20 @@ Table {
 }
 
 /* ── buttons ── */
+.btn-outline-danger.btn-remove {
+  background-color: #ffefef;
+  border-color: #c53030;
+  color: #c53030;
+}
+
+.btn-outline-danger.btn-remove:hover,
+.btn-outline-danger.btn-remove:active,
+.btn-outline-danger.btn-remove:focus {
+  background-color: #f1c9c9;
+  border-color: #c53030;
+  color: #c53030;
+}
+
 .btn-submit {
   display: inline-flex;
   padding: 8px 40px;

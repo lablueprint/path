@@ -72,7 +72,7 @@ export default async function TicketDetails({
   if (userTicket) {
     const { data: requestorData } = await supabase
       .from('users')
-      .select()
+      .select('*')
       .eq('user_id', userTicket.requestor_user_id)
       .single();
     requestor = requestorData;
@@ -149,7 +149,7 @@ export default async function TicketDetails({
           <Card className={styles.headerCard}>
             <Image
               src={requestor?.profile_photo_url || imagePlaceholder}
-              alt={`Profile picture for ${requestor?.first_name}`}
+              alt={requestor?.first_name + ' ' + requestor?.last_name}
               className={styles.profilePicture}
               width={95}
               height={95}

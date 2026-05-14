@@ -36,9 +36,11 @@ export default function ItemCard({
           />
         </div>
         <div className={styles.cardBody}>
-          <p className={styles.name}>{item}</p>
-          <p className={styles.cardText}>{category}</p>
-          <p className={styles.cardText}>↳ {subcategory}</p>
+          <div className={styles.cardTextGroup}>
+            <p className={styles.name}>{item}</p>
+            <p className={styles.cardText}>{category}</p>
+            <p className={styles.cardText}>↳ {subcategory}</p>
+          </div>
         </div>
       </div>
     </Link>

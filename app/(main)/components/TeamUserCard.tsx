@@ -17,16 +17,18 @@ export default function TeamUserCard({ user }: { user: User }) {
           <Image
             src={displayImage || imagePlaceholder}
             objectFit={'cover'}
-            alt={`Profile picture for ${user.first_name}`}
+            alt={user.first_name + ' ' + user.last_name}
             fill
             unoptimized
           />
         </div>
         <div className={styles.cardBody}>
-          <p className={styles.name}>
-            {user.first_name} {user.last_name}
-          </p>
-          <p className={styles.cardText}>{user.email}</p>
+          <div className={styles.cardTextGroup}>
+            <p className={styles.name}>
+              {user.first_name} {user.last_name}
+            </p>
+            <p className={styles.cardText}>{user.email}</p>
+          </div>
         </div>
       </div>
     </Link>
