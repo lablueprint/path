@@ -18,21 +18,6 @@ export default async function RequestStoreItemPage({
   const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
-
-  let store: { name: string } | null = null;
-  if (storeId !== 'all') {
-    const { data, error: storeError } = await supabase
-      .from('stores')
-      .select('name')
-      .eq('store_id', storeId)
-      .single();
-
-    if (storeError) {
-      console.error('Error fetching store for breadcrumbs:', storeError);
-    }
-    store = data;
-  }
-
   const { data: itemData, error: itemError } = await supabase
     .from('store_items')
     .select(
