@@ -1,0 +1,35 @@
+.itemsCard {
+  width: 36.0625rem;
+  height: auto;
+  background: #fff;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.05));
+  border-radius: 0.9375rem;
+}
+
+.itemsCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.94rem;
+}
+
+.itemsCardHeader h1 {
+  color: #1a202c;
+  font-family: Montserrat;
+  font-size: 1.1875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin: 0;
+}
+
+.itemsCardHeader h2 {
+  color: #718096;
+  font-family: Montserrat;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+}

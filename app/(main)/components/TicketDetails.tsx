@@ -5,7 +5,7 @@ import UserCard from '@/app/(main)/components/UserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
-import { Card } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
@@ -68,6 +68,9 @@ export default async function TicketDetails({
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
   }
+  const sortedStoreAdminsList = [...storeAdminsList].sort((a, b) =>
+    a.first_name.localeCompare(b.first_name),
+  );
 
   if (userTicket) {
     const { data: requestorData } = await supabase
@@ -147,33 +150,39 @@ export default async function TicketDetails({
         <div>
           {/*Header Card*/}
           <Card className={styles.headerCard}>
-            <Image
-              src={requestor?.profile_photo_url || imagePlaceholder}
-              alt={`Profile picture for ${requestor?.first_name}`}
-              className={styles.profilePicture}
-              width={95}
-              height={95}
-              unoptimized
-            ></Image>
-            <div className={styles.headerCardText}>
-              <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
-              <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
-              <h2>Ticket #{userTicket.ticket_id}</h2>
-            </div>
-            {!outgoing ? (
-              <Button
-                as="a"
-                className={styles.contactButton}
-                href={
-                  requestor?.email ? `mailto:${requestor.email}` : undefined
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                disabled={!requestor?.email}
-              >
-                Contact
-              </Button>
-            ) : null}
+            <Row className={styles.headerCardRow}>
+              <Col xs={12} className={styles.headerCardMain}>
+                <Image
+                  src={requestor?.profile_photo_url || imagePlaceholder}
+                  alt={`Profile picture for ${requestor?.first_name}`}
+                  className={styles.profilePicture}
+                  width={95}
+                  height={95}
+                  unoptimized
+                ></Image>
+                <div className={styles.headerCardText}>
+                  <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
+                  <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
+                  <h2>Ticket #{userTicket.ticket_id}</h2>
+                </div>
+              </Col>
+              {!outgoing ? (
+                <Col xs={12} className={styles.headerCardContact}>
+                  <Button
+                    as="a"
+                    className={styles.contactButton}
+                    href={
+                      requestor?.email ? `mailto:${requestor.email}` : undefined
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    disabled={!requestor?.email}
+                  >
+                    Contact
+                  </Button>
+                </Col>
+              ) : null}
+            </Row>
           </Card>
 
           <div>
@@ -197,16 +206,19 @@ export default async function TicketDetails({
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
 
-          <div className={styles.ticketContentLayout}>
-            <div className={styles.ticketContentLeft}>
+          <Row className={styles.ticketContentLayout}>
+            <Col xs={12} className={styles.ticketContentMain}>
               <TicketItemsList ticketId={userTicket.ticket_id} />
-            </div>
+            </Col>
 
-            <div className={styles.ticketContentRight}>
+            <Col
+              xs={12}
+              className={`${styles.ticketContentSide} ${styles.ticketContentRight}`}
+            >
               {outgoing && (
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
-                  {storeAdminsList.map((storeAdmin) => (
+                  {sortedStoreAdminsList.map((storeAdmin) => (
                     <UserCard
                       className={styles.userCard}
                       noBottomMargin
@@ -228,8 +240,8 @@ export default async function TicketDetails({
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
       ) : (
         <p>No ticket found.</p>

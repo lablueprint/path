@@ -2,7 +2,6 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
-import styles from '@/app/(main)/manage/[storeId]/ManageStorePage.module.css';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
@@ -129,7 +128,7 @@ export default async function ManageStorePage({
           [storeId]: store.name,
         }}
       />
-      <div className={styles.pageHeader}>
+      <div className="page-header">
         <h1>
           <span>Managing </span>
           {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />

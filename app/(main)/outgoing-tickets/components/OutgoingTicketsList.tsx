@@ -25,6 +25,10 @@ export default function OutgoingTicketsList({
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
 
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
+
   return (
     <div>
       {/* Dropdown menu with status options */}
@@ -61,7 +65,7 @@ export default function OutgoingTicketsList({
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) => (
+            {sortedFilteredTickets.map((ticket) => (
               <OutgoingTicketCard
                 key={ticket.ticket_id}
                 ticketId={ticket.ticket_id}
