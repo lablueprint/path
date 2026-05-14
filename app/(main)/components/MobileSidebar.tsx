@@ -7,6 +7,7 @@ import Image from 'next/image';
 import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
 import styles from '@/app/(main)/components/Sidebar.module.css';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import pathLogo from '@/public/path.png';
 
 type SidebarGroup = {
   heading: string;
@@ -62,8 +63,8 @@ export default function MobileSidebar({
         </button>
         <Link href="/home" className={styles.mobileLogoLink}>
           <Image
-            src="/path.png"
-            alt="Path Home Logo"
+            src={pathLogo}
+            alt="Path logo"
             width={80}
             height={38}
             priority
@@ -89,7 +90,7 @@ export default function MobileSidebar({
             className={styles.pathHomeLink}
           >
             <Image
-              src="/path.png"
+              src={pathLogo}
               alt="Path Home Logo"
               width={160}
               height={76}
