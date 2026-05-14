@@ -38,49 +38,47 @@ export default function ForgotPasswordPage() {
       <div className={'auth-left'}></div>
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
-          <div className={'scrollable'}>
-            <Link href="/home">
-              <Image
-                width={96}
-                height={46}
-                src={pathLogo}
-                alt="PATH logo"
-                priority
-              />
-            </Link>
-            <p className={'auth-title'}>Reset Password</p>
+          <Link href="/home">
+            <Image
+              width={96}
+              height={46}
+              src={pathLogo}
+              alt="PATH logo"
+              priority
+            />
+          </Link>
+          <p className={'auth-title'}>Reset Password</p>
 
-            <div className={'form-body'}>
-              <p className={'auth-prompt'}>
-                We&apos;ll send a link to your email.
-              </p>
-              <Form.Group controlId="email">
-                <Form.Control
-                  type="email"
-                  placeholder="Email"
-                  className="auth-field first"
-                  {...register('email', {
-                    required: 'Email is required.',
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: 'Please enter a valid email address.',
-                    },
-                  })}
-                  isInvalid={!!errors.email}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email?.message}
-                </Form.Control.Feedback>
-              </Form.Group>
-              <div className={'submit-button-row'}>
-                <button
-                  type="submit"
-                  className={'btn-submit auth'}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Sending' : 'Reset'}
-                </button>
-              </div>
+          <div className={'form-body'}>
+            <p className={'auth-prompt'}>
+              We&apos;ll send a link to your email.
+            </p>
+            <Form.Group controlId="email">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                className="auth-field first"
+                {...register('email', {
+                  required: 'Email is required.',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Please enter a valid email address.',
+                  },
+                })}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <div className={'submit-button-row'}>
+              <button
+                type="submit"
+                className={'btn-submit auth'}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Sending' : 'Reset'}
+              </button>
             </div>
           </div>
         </form>

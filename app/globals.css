@@ -224,10 +224,7 @@ Table {
   max-height: calc(100% - 3rem);
   margin: 1.5rem;
   padding: 1.5rem;
-}
-
-.form-card.auth .scrollable {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 @media (min-width: 576px) {
