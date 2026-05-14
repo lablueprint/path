@@ -4,6 +4,7 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
 import { Form } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
+import Link from 'next/link';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -37,11 +38,22 @@ export default function ForgotPasswordPage() {
       <div className={'auth-left'}></div>
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
-          <Image width={96} height={46} src={pathLogo} alt="PATH logo" />
+          <div className={'scrollable'}>
+            <Link href="/home">
+              <Image
+                width={96}
+                height={46}
+                src={pathLogo}
+                alt="PATH logo"
+                priority
+              />
+            </Link>
+            <p className={'auth-title'}>Reset Password</p>
 
-          <p className={'auth-title'}>Forgot Password</p>
-          <div className={'auth-form-body'}>
-            <div className={'auth-form-body'}>
+            <div className={'form-body'}>
+              <p className={'auth-prompt'}>
+                We&apos;ll send a link to your email.
+              </p>
               <Form.Group controlId="email">
                 <Form.Control
                   type="email"
@@ -60,16 +72,16 @@ export default function ForgotPasswordPage() {
                   {errors.email?.message}
                 </Form.Control.Feedback>
               </Form.Group>
+              <div className={'submit-button-row'}>
+                <button
+                  type="submit"
+                  className={'btn-submit auth'}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending' : 'Reset'}
+                </button>
+              </div>
             </div>
-          </div>
-          <div className={'submit-button-row'}>
-            <button
-              type="submit"
-              className={'btn-submit auth'}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Sending' : 'Reset password'}
-            </button>
           </div>
         </form>
       </div>
