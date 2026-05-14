@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { createStoreAdmin } from '@/app/actions/store';
 import { User } from '@/app/types/user';
-import UserCard from '@/app/(main)/components/UserCard';
-import { Form } from 'react-bootstrap';
+import { Form, ListGroup } from 'react-bootstrap';
 
 const supabase = createClient();
 
@@ -62,19 +61,19 @@ export default function AddAdminSearch({
       </div>
 
       {/* search results */}
-      {searchData.map((u) => (
-        <div key={u.user_id} style={{ marginBottom: '40px' }}>
-          <UserCard user={u} noBottomMargin></UserCard>
-          <button
-            type="button"
+      <ListGroup>
+        {searchData.map((u) => (
+          <ListGroup.Item
+            key={u.user_id}
+            action
             onClick={() =>
               createStoreAdmin({ user_id: u.user_id, store_id: storeId })
             }
           >
-            Add admin
-          </button>
-        </div>
-      ))}
+            {u.first_name}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
     </div>
   );
 }

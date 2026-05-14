@@ -1,7 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
-import UserCard from '@/app/(main)/components/UserCard';
+import TicketUserCard from '@/app/(main)/components/TicketUserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
@@ -75,7 +75,7 @@ export default async function TicketDetails({
   if (userTicket) {
     const { data: requestorData } = await supabase
       .from('users')
-      .select()
+      .select('*')
       .eq('user_id', userTicket.requestor_user_id)
       .single();
     requestor = requestorData;
@@ -154,7 +154,7 @@ export default async function TicketDetails({
               <Col xs={12} className={styles.headerCardMain}>
                 <Image
                   src={requestor?.profile_photo_url || imagePlaceholder}
-                  alt={`Profile picture for ${requestor?.first_name}`}
+                  alt={requestor?.first_name + ' ' + requestor?.last_name}
                   className={styles.profilePicture}
                   width={95}
                   height={95}
@@ -219,12 +219,10 @@ export default async function TicketDetails({
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
                   {sortedStoreAdminsList.map((storeAdmin) => (
-                    <UserCard
-                      className={styles.userCard}
-                      noBottomMargin
+                    <TicketUserCard
                       user={storeAdmin}
                       key={storeAdmin.user_id}
-                    ></UserCard>
+                    ></TicketUserCard>
                   ))}
                 </div>
               )}

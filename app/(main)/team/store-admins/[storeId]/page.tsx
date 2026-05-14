@@ -1,8 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import DeleteStoreAdminButton from '@/app/(main)/team/store-admins/[storeId]/components/DeleteStoreAdminButton';
 import AddAdminSearch from '@/app/(main)/team/store-admins/[storeId]/components/AddAdminSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import UserCard from '@/app/(main)/components/UserCard';
+import AddAdminCard from '@/app/(main)/team/store-admins/[storeId]/components/AddAdminCard';
 
 export default async function StoreAdminPage({
   params,
@@ -105,22 +104,24 @@ export default async function StoreAdminPage({
       {/* viewing store admins */}
       <div>
         <h2>Current Admins</h2>
-        {admins?.length ? (
-          admins.map((admin) => {
-            const user = admin.users;
-            return (
-              <div key={admin.store_admin_id} style={{ marginBottom: '40px' }}>
-                <UserCard user={user} noBottomMargin></UserCard>
-                {/* removing store admins if eligible role */}
-                {canChangeAdmins && (
-                  <DeleteStoreAdminButton storeAdminId={admin.store_admin_id} />
-                )}
-              </div>
-            );
-          })
-        ) : (
-          <div>No admins found.</div>
-        )}
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
+          {admins?.length ? (
+            admins.map((admin) => {
+              const user = admin.users;
+              return (
+                <div key={admin.store_admin_id}>
+                  <AddAdminCard
+                    user={user}
+                    showRemove={canChangeAdmins}
+                    storeAdminId={admin.store_admin_id}
+                  ></AddAdminCard>
+                </div>
+              );
+            })
+          ) : (
+            <div>No admins found.</div>
+          )}
+        </div>
       </div>
     </div>
   );

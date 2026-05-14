@@ -135,6 +135,19 @@ Table {
 }
 
 /* ── buttons ── */
+.btn-outline-danger.btn-remove {
+  background-color: #ffefef;
+  border-color: #c53030;
+  color: #c53030;
+}
+
+.btn-outline-danger.btn-remove:hover,
+.btn-outline-danger.btn-remove:active,
+.btn-outline-danger.btn-remove:focus {
+  background-color: #f1c9c9;
+  border-color: #c53030;
+  color: #c53030;
+}
 
 .btn-submit {
   display: inline-flex;
