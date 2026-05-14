@@ -94,7 +94,7 @@ export default function SignInPage() {
             </Link>
             <div className={'submit-button-row'}>
               <button type="submit" className={'btn-submit auth'}>
-                Sign in
+                Sign In
               </button>
             </div>
           </div>
