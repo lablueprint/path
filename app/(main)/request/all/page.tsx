@@ -177,18 +177,20 @@ export default async function RequestAllStoresPage({
                 {storeItems.length > 0 ? (
                   <div>
                     <h3>In-Stock Items</h3>
-                    {storeItems.map((item) => (
-                      <ItemCard
-                        key={item.store_item_id}
-                        id={item.store_item_id}
-                        item={item.inventory_items.name}
-                        subcategory={item.inventory_items.subcategories.name}
-                        category={
-                          item.inventory_items.subcategories.categories.name
-                        }
-                        photoUrl={item.inventory_items.photo_url}
-                      />
-                    ))}
+                    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+                      {storeItems.map((item) => (
+                        <ItemCard
+                          key={item.store_item_id}
+                          id={item.store_item_id}
+                          item={item.inventory_items.name}
+                          subcategory={item.inventory_items.subcategories.name}
+                          category={
+                            item.inventory_items.subcategories.categories.name
+                          }
+                          photoUrl={item.inventory_items.photo_url}
+                        />
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <p>No available items in this store.</p>

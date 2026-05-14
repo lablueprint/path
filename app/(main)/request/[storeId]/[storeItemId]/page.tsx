@@ -18,15 +18,11 @@ export default async function RequestStoreItemPage({
   const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
-  const [
-    { data: itemData, error: itemError },
-    { data: storeData, error: storeError },
-  ] = await Promise.all([
-    supabase
-      .from('store_items')
-      .select(
-        `
-          store_id
+  const { data: itemData, error: itemError } = await supabase
+    .from('store_items')
+    .select(
+      `
+          stores(store_id, name),
           store_item_id,
           quantity_available,
           inventory_items(name, description, photo_url,
@@ -35,53 +31,52 @@ export default async function RequestStoreItemPage({
             )
           )
         `,
-      )
-      .eq('store_item_id', storeItemId)
-      .single()
-      .overrideTypes<
-        {
+    )
+    .eq('store_item_id', storeItemId)
+    .single()
+    .overrideTypes<
+      {
+        stores: {
           store_id: string;
-          store_item_id: string;
-          quantity_available: number;
-          inventory_items: {
+          name: string;
+        };
+        store_item_id: string;
+        quantity_available: number;
+        inventory_items: {
+          name: string;
+          description: string;
+          photo_url: string | null;
+          subcategories: {
             name: string;
-            description: string;
-            photo_url: string | null;
-            subcategories: {
+            categories: {
               name: string;
-              categories: {
-                name: string;
-              };
             };
           };
-        },
-        { merge: false }
-      >(),
-    supabase
-      .from('stores')
-      .select('name')
-      .eq('store_id', storeId)
-      .single()
-      .overrideTypes<{ name: string }, { merge: false }>(),
-  ]);
+        };
+      },
+      { merge: false }
+    >();
 
-  if (itemError || !itemData || storeError || !storeData) {
-    console.error('Error fetching request page data:', itemError || storeError);
+  if (itemError || !itemData) {
+    console.error('Error fetching request page data:', itemError);
     return <div>Failed to load data.</div>;
   }
+
+  const storeName = storeId == 'all' ? 'All Stores' : itemData.stores.name;
 
   return (
     <div>
       <Breadcrumbs
         labelMap={{
           request: 'Request Inventory',
-          [`/request/${storeId}`]: storeData.name,
+          [`/request/${storeId}`]: `${storeName}`,
           [`/request/${storeId}/${storeItemId}`]: itemData.inventory_items.name,
         }}
       />
       <h1>
         <span>Requesting from </span>
-        {storeData?.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+        {itemData.stores.name}{' '}
+        <Image src={pinIcon} height={32} alt="Pin icon" />
       </h1>
       <Card className="form-card">
         <div className="card-body">
@@ -134,7 +129,7 @@ export default async function RequestStoreItemPage({
                 )}
               </div>
               <AddInStockToCartForm
-                storeId={storeId}
+                storeId={itemData.stores.store_id}
                 storeItemId={storeItemId}
               />
             </Col>

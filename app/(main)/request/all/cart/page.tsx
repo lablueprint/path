@@ -12,6 +12,9 @@ import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 type DraftTicket = {
   ticket_id: string;
   store_id: string;
+  ticket_items: {
+    count: number;
+  }[];
 };
 
 export default async function AllCartsPage({
@@ -43,18 +46,43 @@ export default async function AllCartsPage({
     return <div>Failed to load stores.</div>;
   }
 
+  const sortedStores = stores.sort((a, b) => a.name.localeCompare(b.name));
+
   // Query all draft tickets for the current user, then index them by store.
   const { data: draftTickets, error: ticketError } = await supabase
     .from('tickets')
-    .select('ticket_id, store_id')
+    .select('ticket_id, store_id, ticket_items(count)')
     .eq('requestor_user_id', user.id)
     .eq('status', 'draft');
 
   if (ticketError || !draftTickets) {
-    console.error('Error fetching draft tickets:', ticketError);
     return (
       <div>
+        <Breadcrumbs
+          labelMap={{
+            request: 'Request Inventory',
+            all: 'All Stores',
+            cart: 'All Carts',
+          }}
+        />
         <h1>All Carts</h1>
+        {sortedStores.map((store) => {
+          return (
+            <Accordion key={store.store_id}>
+              <AccordionItem eventKey={store.store_id}>
+                <AccordionHeader>{store.name}</AccordionHeader>
+                <AccordionBody>
+                  <div className={styles.itemsCard}>
+                    <div className={styles.itemsCardHeader}>
+                      <h1>ITEMS</h1>
+                      <h2>0 in-stock · 0 out-of-stock</h2>
+                    </div>
+                  </div>
+                </AccordionBody>
+              </AccordionItem>
+            </Accordion>
+          );
+        })}
         <div className={styles.itemsCard}>
           <div className={styles.itemsCardHeader}>
             <h1>ITEMS</h1>
@@ -72,8 +100,6 @@ export default async function AllCartsPage({
     },
     {},
   );
-
-  const sortedStores = stores.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div>
@@ -104,7 +130,9 @@ export default async function AllCartsPage({
                 {draftTicket ? (
                   <div>
                     <TicketItemsList ticketId={draftTicket.ticket_id} />
-                    <SubmitTicketButton ticketId={draftTicket.ticket_id} />
+                    {draftTicket.ticket_items[0].count > 0 ? (
+                      <SubmitTicketButton ticketId={draftTicket.ticket_id} />
+                    ) : null}
                   </div>
                 ) : (
                   <div className={styles.itemsCard}>

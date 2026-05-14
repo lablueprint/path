@@ -51,6 +51,12 @@ export default async function CartPage({
   if (ticketError || !ticket) {
     return (
       <div>
+        <Breadcrumbs
+          labelMap={{
+            request: 'Request Inventory',
+            [`/request/${storeId}`]: store.name,
+          }}
+        />
         <h1>Cart</h1>
         {showSuccess && (
           <div>
@@ -109,16 +115,18 @@ export default async function CartPage({
         }}
       />
       <h1>Cart</h1>
-      <div>
-        <p>Ticket Destination Store: </p>
-        <TicketDestStoreDropdown
-          ticketId={ticket.ticket_id}
-          currentDestStore={(currentDestStore as Store) || null}
-          destStoreOptions={(destStoreOptions ?? []).map((store) => ({
-            store,
-          }))}
-        />
-      </div>
+      {hasItems ? (
+        <div>
+          <p>Ticket Destination Store: </p>
+          <TicketDestStoreDropdown
+            ticketId={ticket.ticket_id}
+            currentDestStore={(currentDestStore as Store) || null}
+            destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+              store,
+            }))}
+          />
+        </div>
+      ) : null}
       {showSuccess && (
         <div>
           <p>Ticket submitted successfully!</p>
@@ -127,7 +135,7 @@ export default async function CartPage({
       )}
       <div>
         <TicketItemsList ticketId={ticket.ticket_id} />
-        <SubmitTicketButton ticketId={ticket.ticket_id} />
+        {hasItems ? <SubmitTicketButton ticketId={ticket.ticket_id} /> : null}
       </div>
     </div>
   );
