@@ -126,7 +126,9 @@ export default function AddStoreForm() {
           </div>
 
           <div className="mb-3">
-            <label className="form-label field-label">Store street address</label>
+            <label className="form-label field-label">
+              Store street address
+            </label>
             <input
               {...register('storeStreetAddress')}
               className="form-control"

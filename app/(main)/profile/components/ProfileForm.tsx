@@ -148,33 +148,37 @@ export default function ProfileForm({ user }: { user: User }) {
     <div className={styles.card}>
       <div className={styles.cardBody}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2 className={isEditing ? styles.userInfoTextEdit : styles.userInfoText}>
+          <h2
+            className={
+              isEditing ? styles.userInfoTextEdit : styles.userInfoText
+            }
+          >
             User Information
           </h2>
 
           {isEditing ? (
-              <div className={styles.avatarCircleEdit}>
-                <PhotoUpload
-                  variant="circle"
-                  ref={photoUploadRef}
-                  id="photo-upload-input"
-                  initialPhotoUrl={photoUrl}
-                  previewUrl={previewUrl}
-                  isPendingDelete={isPendingDelete}
-                  onFileSelect={handleFileSelect}
-                  onRemove={handleRemovePhoto}
-                />
-              </div>
+            <div className={styles.avatarCircleEdit}>
+              <PhotoUpload
+                variant="circle"
+                ref={photoUploadRef}
+                id="photo-upload-input"
+                initialPhotoUrl={photoUrl}
+                previewUrl={previewUrl}
+                isPendingDelete={isPendingDelete}
+                onFileSelect={handleFileSelect}
+                onRemove={handleRemovePhoto}
+              />
+            </div>
           ) : (
-              <div className={styles.avatarCircle}>
-                <Image
-                  src={photoUrl || defaultProfilePhoto.src}
-                  alt="Profile photo"
-                  width={96}
-                  height={96}
-                  unoptimized
-                />
-              </div>
+            <div className={styles.avatarCircle}>
+              <Image
+                src={photoUrl || defaultProfilePhoto.src}
+                alt="Profile photo"
+                width={96}
+                height={96}
+                unoptimized
+              />
+            </div>
           )}
 
           <div className={styles.fieldGroup}>
