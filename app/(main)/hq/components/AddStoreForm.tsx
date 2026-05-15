@@ -99,7 +99,7 @@ export default function AddStoreForm() {
     <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
+          <div>
             <Image
               src={displayImage}
               alt="Store photo"
