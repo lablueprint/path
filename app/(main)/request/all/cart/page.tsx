@@ -10,6 +10,7 @@ import AccordionItem from 'react-bootstrap/AccordionItem';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 import accordionStyles from '@/app/(main)/request/all/Accordion.module.css';
+import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
 type DraftTicket = {
   ticket_id: string;
@@ -162,6 +163,8 @@ export default async function AllCartsPage({
                     </div>
                   </div>
                 )}
+                <h3>Out-of-Stock Request</h3>
+                <AddOutOfStockToCartForm storeId={store.store_id} />
               </AccordionBody>
             </AccordionItem>
           </Accordion>

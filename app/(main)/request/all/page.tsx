@@ -2,7 +2,6 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import Link from 'next/link';
-import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
@@ -173,8 +172,6 @@ export default async function RequestAllStoresPage({
             <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
               <AccordionHeader className={accordionStyles.accordionHeader}>{store.name}</AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
-                <h3>Out-of-Stock Request</h3>
-                <AddOutOfStockToCartForm storeId={store.store_id} />
                 {storeItems.length > 0 ? (
                   <div>
                     <h3>In-Stock Items</h3>
