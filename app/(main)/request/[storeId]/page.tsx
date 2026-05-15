@@ -3,7 +3,6 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
-import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 import styles from '@/app/(main)/request/Cart.module.css';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
@@ -152,8 +151,6 @@ export default async function RequestStorePage({
           })) || []
         }
       />
-      <h2>Out-of-Stock Request</h2>
-      <AddOutOfStockToCartForm storeId={storeId} />
       <h2>In-Stock Items</h2>
       {items && items.length > 0 ? (
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
