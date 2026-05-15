@@ -103,6 +103,7 @@ export default function AddStoreForm() {
               alignItems: 'flex-start',
               gap: '3rem',
               marginBottom: '40px',
+              flexWrap: 'wrap',
             }}
           >
             <div style={{ width: '200px', height: '210px', flexShrink: 0 }}>
@@ -114,7 +115,7 @@ export default function AddStoreForm() {
               />
             </div>
 
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div className="mb-3">
                 <label className="form-label field-label">Store name</label>
                 <input {...register('storeName')} className="form-control" />
