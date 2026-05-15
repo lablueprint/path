@@ -121,8 +121,13 @@ export default async function AllCartsPage({
 
         return (
           <Accordion key={store.store_id}>
-            <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
-              <AccordionHeader className={accordionStyles.accordionHeader}>{store.name}</AccordionHeader>
+            <AccordionItem
+              eventKey={store.store_id}
+              className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+            >
+              <AccordionHeader className={accordionStyles.accordionHeader}>
+                {store.name}
+              </AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 <div>
                   <p>Ticket Destination Store: </p>
@@ -151,20 +156,28 @@ export default async function AllCartsPage({
                 {draftTicket ? (
                   <div>
                     <TicketItemsList ticketId={draftTicket.ticket_id} />
+                    <div>
+                      <h3>Out-of-Stock Request</h3>
+                      <AddOutOfStockToCartForm storeId={store.store_id} />
+                    </div>
                     {draftTicket.ticket_items[0].count > 0 ? (
                       <SubmitTicketButton ticketId={draftTicket.ticket_id} />
                     ) : null}
                   </div>
                 ) : (
-                  <div className={styles.itemsCard}>
-                    <div className={styles.itemsCardHeader}>
-                      <h1>ITEMS</h1>
-                      <h2>0 in-stock · 0 out-of-stock</h2>
+                  <div>
+                    <div className={styles.itemsCard}>
+                      <div className={styles.itemsCardHeader}>
+                        <h1>ITEMS</h1>
+                        <h2>0 in-stock · 0 out-of-stock</h2>
+                      </div>
+                    </div>
+                    <div>
+                      <h3>Out-of-Stock Request</h3>
+                      <AddOutOfStockToCartForm storeId={store.store_id} />
                     </div>
                   </div>
                 )}
-                <h3>Out-of-Stock Request</h3>
-                <AddOutOfStockToCartForm storeId={store.store_id} />
               </AccordionBody>
             </AccordionItem>
           </Accordion>

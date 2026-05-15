@@ -27,7 +27,7 @@ export default function SubmitTicketButton({ ticketId }: { ticketId: string }) {
 
   return (
     <div>
-      <button type="button" onClick={handleSubmit} disabled={isPending} style={{marginBottom: '1rem'}}>
+      <button type="button" onClick={handleSubmit} disabled={isPending}>
         {isPending ? 'Submitting...' : 'Submit ticket'}
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
