@@ -1,8 +1,62 @@
-<h2>Confirm sign-up</h2>
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #f5f7fa;
+        color: #000000;
+        font-family: 'Montserrat', sans-serif;
+      }
 
-<p>Follow this link to confirm your sign-up:</p>
-<p>
-  <a href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=email"
-    >Confirm sign-up</a
-  >
-</p>
+      .email-page {
+        padding: 3rem 3rem;
+        background: #f5f7fa;
+      }
+
+      .email-card {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 32px;
+        border-radius: 5px;
+        background: #ffffff;
+      }
+
+      .email-logo {
+        display: block;
+        width: 160px;
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 24px;
+      }
+
+      h2 {
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-weight: 400;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-page">
+      <div class="email-card">
+        <img class="email-logo" src="{{ .SiteURL }}/path.png" alt="PATH logo" />
+        <h2>Confirm sign-up</h2>
+
+        <p>Follow this link to confirm your sign-up:</p>
+        <p>
+          <a href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=email"
+            >Confirm sign-up</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
