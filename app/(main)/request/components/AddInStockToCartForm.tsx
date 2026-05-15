@@ -41,17 +41,9 @@ export default function AddInStockToCartForm({
         />
       </Form.Group>
 
-<<<<<<< HEAD:app/(main)/request/[storeId]/[storeItemId]/components/AddInStockToCartForm.tsx
         <button type="submit" className="btn-submit">
           Add to Cart
         </button>
       </Form>
-    </div>
-=======
-      <Button type="submit" className="align-self-start">
-        Add to Cart
-      </Button>
-    </Form>
->>>>>>> origin/main:app/(main)/request/components/AddInStockToCartForm.tsx
   );
 }
