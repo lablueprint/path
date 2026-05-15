@@ -8,6 +8,7 @@ import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 
 type DraftTicket = {
   ticket_id: string;
@@ -20,7 +21,7 @@ type DraftTicket = {
 export default async function AllCartsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ submitted?: string; ticketId?: string }>;
+  searchParams: Promise<{ submitted?: string; ticketId: string }>;
 }) {
   const { submitted, ticketId } = await searchParams;
   const showSuccess = submitted === '1' && !!ticketId;
@@ -38,7 +39,7 @@ export default async function AllCartsPage({
   // Fetch stores
   const { data: stores, error: storesError } = await supabase
     .from('stores')
-    .select('store_id, name')
+    .select('store_id, name, street_address')
     .order('name');
 
   if (storesError || !stores) {
@@ -119,6 +120,22 @@ export default async function AllCartsPage({
             <AccordionItem eventKey={store.store_id}>
               <AccordionHeader>{store.name}</AccordionHeader>
               <AccordionBody>
+                <div>
+                  <p>Ticket Destination Store: </p>
+                  <TicketDestStoreDropdown
+                    ticketId={ticketId}
+                    currentDestStore={store.store_id}
+                    destStoreOptions={stores
+                      .filter((s) => s.store_id !== store.store_id)
+                      .map((s) => ({
+                        store: {
+                          store_id: s.store_id,
+                          name: s.name,
+                          street_address: s.street_address,
+                        },
+                      }))}
+                  />
+                </div>
                 {showSuccess && (
                   <div>
                     <p>Ticket submitted successfully!</p>
