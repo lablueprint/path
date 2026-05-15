@@ -15,7 +15,7 @@
 }
 
 .userInfoTextEdit {
-  margin-top: 60px;
+  margin-top: 30px;
   margin-bottom: 20px;
 }
 
@@ -38,8 +38,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -300px;
-  margin-bottom: 40px;
+  margin-top: -270px;
+  margin-bottom: 65px;
 }
 
 .fieldGroup {

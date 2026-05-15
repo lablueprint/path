@@ -85,5 +85,9 @@
 .removeButton:hover {
   background: #ac1c1c;
   transition: background 0.2s ease;
+}
 
+.removeButtonCircle {
+  top: 15px;
+  right: 10px;
 }
