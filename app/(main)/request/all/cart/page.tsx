@@ -9,6 +9,7 @@ import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
+import accordionStyles from '@/app/(main)/request/all/Accordion.module.css';
 
 type DraftTicket = {
   ticket_id: string;
@@ -70,9 +71,11 @@ export default async function AllCartsPage({
         {sortedStores.map((store) => {
           return (
             <Accordion key={store.store_id}>
-              <AccordionItem eventKey={store.store_id}>
-                <AccordionHeader>{store.name}</AccordionHeader>
-                <AccordionBody>
+              <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
+                <AccordionHeader className={accordionStyles.accordionHeader}>
+                  {store.name}
+                </AccordionHeader>
+                <AccordionBody className={accordionStyles.accordionBodySpacing}>
                   <div className={styles.itemsCard}>
                     <div className={styles.itemsCardHeader}>
                       <h1>ITEMS</h1>
@@ -117,9 +120,9 @@ export default async function AllCartsPage({
 
         return (
           <Accordion key={store.store_id}>
-            <AccordionItem eventKey={store.store_id}>
-              <AccordionHeader>{store.name}</AccordionHeader>
-              <AccordionBody>
+            <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
+              <AccordionHeader className={accordionStyles.accordionHeader}>{store.name}</AccordionHeader>
+              <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 <div>
                   <p>Ticket Destination Store: </p>
                   <TicketDestStoreDropdown

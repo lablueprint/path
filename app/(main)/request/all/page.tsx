@@ -11,6 +11,7 @@ import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import styles from '@/app/(main)/request/Cart.module.css';
 import Image from 'next/image';
 import cartIcon from '@/public/cart-icon.svg';
+import accordionStyles from '@/app/(main)/request/all/Accordion.module.css';
 
 type SearchParams = {
   query?: string;
@@ -169,9 +170,9 @@ export default async function RequestAllStoresPage({
         const storeItems = itemsByStore.get(store.store_id) || [];
         return (
           <Accordion key={store.store_id}>
-            <AccordionItem eventKey={store.store_id}>
-              <AccordionHeader>{store.name}</AccordionHeader>
-              <AccordionBody>
+            <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
+              <AccordionHeader className={accordionStyles.accordionHeader}>{store.name}</AccordionHeader>
+              <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 <h3>Out-of-Stock Request</h3>
                 <AddOutOfStockToCartForm storeId={store.store_id} />
                 {storeItems.length > 0 ? (
