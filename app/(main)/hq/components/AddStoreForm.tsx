@@ -3,11 +3,10 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { useState, useRef } from 'react';
 import { createStore, updateStore } from '@/app/actions/store';
-import { Form, Card, Container } from 'react-bootstrap';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import Image from 'next/image';
-import defaultStorePhoto from '@/public/default-store-photo.png';
+import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 type FormValues = {
   storeName: string;
@@ -119,7 +118,7 @@ export default function AddStoreForm() {
                 alt="Profile photo"
                 width={64}
                 height={64}
-                style={{ objectFit: 'cover', marginBottom: '10px' }}
+                className="photo"
                 unoptimized
               />
 
@@ -157,10 +156,10 @@ export default function AddStoreForm() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div className="button-spacing">
             {bothFilled && (
               <button type="submit" disabled={isSaving} className="btn-submit">
-                Save
+                {isSaving ? 'Saving...' : 'Save'}
               </button>
             )}
 

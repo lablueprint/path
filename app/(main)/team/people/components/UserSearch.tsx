@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Form, Row, Col, Button } from 'react-bootstrap';
 
 type Role = {
   name: string;
@@ -63,27 +64,55 @@ export default function UserSearch({ roles }: Props) {
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
   }
 
+  // sort roles by roleOrder, with any roles not in the list appearing at the end
+  function formatRole(role: string) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  }
+  const roleOrder = ['Owner', 'Superadmin', 'Admin', 'Requestor', 'Default'];
+  const sortedRoles = [...roles].sort((a, b) => {
+    const aIndex = roleOrder.indexOf(formatRole(a.name));
+    const bIndex = roleOrder.indexOf(formatRole(b.name));
+    return (
+      (aIndex === -1 ? roleOrder.length : aIndex) -
+      (bIndex === -1 ? roleOrder.length : bIndex)
+    );
+  });
+
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <input
+    <div className="search-filter-wrapper">
+      <Form.Control
+        type="text"
+        placeholder="Search users..."
+        className="search-bar"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Search users"
       />
 
-      <select
-        value={searchParams.get('role') ?? ''}
-        onChange={(e) => handleRoleChange(e.target.value)}
-      >
-        <option value="">All roles</option>
-        {roles.map((role) => (
-          <option key={role.role_id} value={String(role.role_id)}>
-            {role.name}
-          </option>
-        ))}
-      </select>
-
-      <button onClick={handleClearFilters}>Clear filters</button>
+      <Row className="g-2">
+        <Col xs="auto">
+          <Form.Select
+            value={searchParams.get('role') ?? ''}
+            onChange={(e) => handleRoleChange(e.target.value)}
+          >
+            <option value="">All Roles</option>
+            {sortedRoles.map((role) => (
+              <option key={role.role_id} value={String(role.role_id)}>
+                {role.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
+        <Col xs="auto">
+          {/* Clear button */}
+          <Button
+            type="button"
+            className="search-filter-clear"
+            onClick={handleClearFilters}
+          >
+            Clear Filters
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }
