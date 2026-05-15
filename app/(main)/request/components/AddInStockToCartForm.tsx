@@ -41,9 +41,9 @@ export default function AddInStockToCartForm({
         />
       </Form.Group>
 
-      <Button type="submit" className="align-self-start">
+      <button type="submit" className="btn-submit">
         Add to Cart
-      </Button>
+      </button>
     </Form>
   );
 }

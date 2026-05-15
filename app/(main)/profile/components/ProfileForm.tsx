@@ -6,7 +6,9 @@ import { updateUser } from '@/app/actions/user';
 import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultProfilePhoto from '@/public/image-placeholder.svg';
+import styles from '@/app/(main)/components/ProfilePage.module.css';
+import Image from 'next/image';
+import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
 
 type ProfileFormValues = {
   email: string;
@@ -32,7 +34,7 @@ export default function ProfileForm({ user }: { user: User }) {
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<ProfileFormValues>({
     defaultValues: {
       firstName: user.first_name,
@@ -142,26 +144,31 @@ export default function ProfileForm({ user }: { user: User }) {
     }
   };
 
-  const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
-
   return (
     <div className={styles.card}>
       <div className={styles.cardBody}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2 className={styles.userInfoText}>User Information</h2>
+          <h2
+            className={
+              isEditing ? styles.userInfoTextEdit : styles.userInfoText
+            }
+          >
+            User Information
+          </h2>
 
-          {/* ↓ plain circle in view mode, full PhotoUpload in edit mode */}
           {isEditing ? (
-            <PhotoUpload
-              variant="circle"
-              ref={photoUploadRef}
-              id="photo-upload-input"
-              initialPhotoUrl={photoUrl}
-              previewUrl={previewUrl}
-              isPendingDelete={isPendingDelete}
-              onFileSelect={handleFileSelect}
-              onRemove={handleRemovePhoto}
-            />
+            <div className={styles.avatarCircleEdit}>
+              <PhotoUpload
+                variant="circle"
+                ref={photoUploadRef}
+                id="photo-upload-input"
+                initialPhotoUrl={photoUrl}
+                previewUrl={previewUrl}
+                isPendingDelete={isPendingDelete}
+                onFileSelect={handleFileSelect}
+                onRemove={handleRemovePhoto}
+              />
+            </div>
           ) : (
             <div className={styles.avatarCircle}>
               <Image

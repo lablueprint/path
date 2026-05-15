@@ -15,8 +15,6 @@ type FormValues = {
 
 export default function AddStoreForm() {
   const [isSaving, setIsSaving] = useState(false);
-
-  // previewUrl represents the locally selected file for the UI
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -30,14 +28,8 @@ export default function AddStoreForm() {
     },
   });
 
-  const storeName = useWatch({
-    control,
-    name: 'storeName',
-  });
-  const storeStreetAddress = useWatch({
-    control,
-    name: 'storeStreetAddress',
-  });
+  const storeName = useWatch({ control, name: 'storeName' });
+  const storeStreetAddress = useWatch({ control, name: 'storeStreetAddress' });
 
   const bothFilled =
     storeName.trim().length > 0 && storeStreetAddress.trim().length > 0;
@@ -45,14 +37,12 @@ export default function AddStoreForm() {
     storeName.trim().length > 0 || storeStreetAddress.trim().length > 0;
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024; // 200 KB in bytes
+    const maxSize = 200 * 1024;
     if (file.size > maxSize) {
       alert('File is too large. Please select an image under 200 KB.');
       return;
     }
-    // Create a temporary local blob URL for immediate UI feedback
-    const preview = URL.createObjectURL(file);
-    setPreviewUrl(preview);
+    setPreviewUrl(URL.createObjectURL(file));
     setSelectedFile(file);
   };
 
@@ -75,7 +65,6 @@ export default function AddStoreForm() {
       const store_id = store.data.store_id;
       let finalPhotoUrl = defaultStorePhoto.src;
 
-      // upload photo
       if (selectedFile) {
         const { error: uploadError } = await supabase.storage
           .from('store_photos')
@@ -92,7 +81,7 @@ export default function AddStoreForm() {
           await updateStore(store_id, { photo_url: finalPhotoUrl });
         }
       }
-      // reset all fields
+
       reset({ storeName: '', storeStreetAddress: '' });
       setSelectedFile(null);
       setPreviewUrl(null);
@@ -104,7 +93,6 @@ export default function AddStoreForm() {
     }
   };
 
-  // Determine image to show the user
   const displayImage = previewUrl || defaultStorePhoto.src;
 
   return (
@@ -112,38 +100,29 @@ export default function AddStoreForm() {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <div className="mb-3">
-              <Image
-                src={displayImage}
-                alt="Profile photo"
-                width={64}
-                height={64}
-                className="photo"
-                unoptimized
-              />
+            <Image
+              src={displayImage}
+              alt="Store photo"
+              width={64}
+              height={64}
+              className="photo"
+              unoptimized
+            />
+            {displayImage !== defaultStorePhoto.src && (
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                className="btn-cancel"
+              >
+                Remove
+              </button>
+            )}
+            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          </div>
 
-              {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
-              {displayImage !== defaultStorePhoto.src && (
-                <button
-                  type="button"
-                  onClick={handleRemovePhoto}
-                  className="btn-cancel"
-                >
-                  Remove
-                </button>
-              )}
-
-              <br />
-              <PhotoUpload
-                ref={photoUploadRef}
-                onFileSelect={handleFileSelect}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label field-label">Store name</label>
-              <input {...register('storeName')} className="form-control" />
-            </div>
+          <div className="mb-3">
+            <label className="form-label field-label">Store name</label>
+            <input {...register('storeName')} className="form-control" />
           </div>
 
           <div className="mb-3">
@@ -162,7 +141,6 @@ export default function AddStoreForm() {
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
             )}
-
             {eitherFilled && (
               <button
                 type="button"
@@ -171,7 +149,7 @@ export default function AddStoreForm() {
                 onClick={() => {
                   reset({ storeName: '', storeStreetAddress: '' });
                   setSelectedFile(null);
-                  setPreviewUrl(defaultStorePhoto.src);
+                  setPreviewUrl(null);
                   photoUploadRef.current?.resetFile();
                 }}
               >

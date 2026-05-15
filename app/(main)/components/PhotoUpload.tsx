@@ -2,7 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Image from 'next/image';
-import imagePlaceholder from '@/public/image-placeholder.svg';
+import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
 import uploadPhotoIcon from '@/public/image-upload.svg';
 import styles from './PhotoUpload.module.css';
 
@@ -58,10 +58,10 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
     };
 
     const displayImage = isPendingDelete
-      ? imagePlaceholder.src
-      : previewUrl || initialPhotoUrl || imagePlaceholder.src;
+      ? defaultProfilePhoto.src
+      : previewUrl || initialPhotoUrl || defaultProfilePhoto.src;
 
-    const hasPhoto = displayImage !== imagePlaceholder.src;
+    const hasPhoto = displayImage !== defaultProfilePhoto.src;
 
     return (
       <div className={styles.wrapper}>
@@ -106,16 +106,25 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
           )}
         </label>
 
-        {!isPendingDelete && hasPhoto && (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="btn-remove"
-            style={{ marginTop: 15 }}
-          >
-            Remove
-          </button>
-        )}
+        <div
+          style={{
+            height: 56,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {!isPendingDelete && hasPhoto && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className="btn-remove"
+              style={{ marginTop: 10 }}
+            >
+              Remove
+            </button>
+          )}
+        </div>
 
         <input
           ref={inputRef}

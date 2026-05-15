@@ -1,30 +1,7 @@
-.fieldGroup {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 16px;
-}
-
-.buttonRow {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-}
-
 .card {
   border: none;
   border-radius: 5px;
-  padding: 0;
   background: #fff;
-  margin-top: 00px; /* whatever you need */
-}
-
-.userInfoText {
-  margin-top: 70px;
-  margin-bottom: 10px;
-}
-
-.userInfoTextRead {
-  margin-top: 0px;
 }
 
 .cardBody {
@@ -32,95 +9,22 @@
   margin-top: 50px;
 }
 
-.input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 5px;
-  font-family: inherit;
-  font-size: 1rem;
-  color: #2d3748;
-  background: #fff;
-  outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+.userInfoText {
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
-.input:focus {
-  border-color: #3182ce;
-  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
-}
-
-/* ProfilePage.module.css */
-.cardHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.fieldValue {
-  margin: 4px 0 0;
-  font-size: 1rem;
-  color: var(--color-text-primary); /* match your design tokens */
-}
-
-/* ProfilePage.module.css */
-.photoPreview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -310px;
-}
-
-.photoPreview img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Read-only specific overrides */
-.userInfoTextReadOnly {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
-
-.cardHeaderReadOnly {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-/* ProfilePage.module.css */
-.photoPreview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -310px; /* same as .circle in PhotoUpload */
-  margin-bottom: 0;
-}
-
-.photoPreview img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.fieldValue {
-  margin: 4px 0 0;
-  font-size: 1rem;
-  color: #2d3748;
+.userInfoTextEdit {
+  margin-top: 60px;
+  margin-bottom: 20px;
 }
 
 .avatarCircle {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -310px;
-  margin-bottom: 110px;
+  margin-top: -270px;
+  margin-bottom: 65px;
 }
 
 .avatarCircle img {
@@ -128,6 +32,20 @@
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.avatarCircleEdit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -300px;
+  margin-bottom: 40px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .profileLabel {
