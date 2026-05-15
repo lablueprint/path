@@ -27,7 +27,7 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   };
 
   return (
-    <button type="button" onClick={handleDeletion} className="btn-remove">
+    <button type="button" onClick={handleDeletion} className="btn-remove" style={{ marginTop: 20}}>
       Remove store
     </button>
   );

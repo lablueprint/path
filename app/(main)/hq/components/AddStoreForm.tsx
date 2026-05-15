@@ -97,8 +97,8 @@ export default function AddStoreForm() {
     <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.layout}>
-            <div className={styles.photoColumn}>
+          <div className="row g-5 align-items-start">
+            <div className="col-auto" style={{ width: '250px' }}>
               <PhotoUpload
                 ref={photoUploadRef}
                 onFileSelect={handleFileSelect}
@@ -107,7 +107,7 @@ export default function AddStoreForm() {
               />
             </div>
 
-            <div className={styles.fieldsColumn}>
+            <div className="col">
               <div className="mb-3">
                 <label className="form-label field-label">Store name</label>
                 <input {...register('storeName')} className="form-control" />
