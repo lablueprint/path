@@ -2,7 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Image from 'next/image';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
 import uploadPhotoIcon from '@/public/image-upload.svg';
 import styles from './PhotoUpload.module.css';
 

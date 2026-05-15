@@ -8,7 +8,7 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/components/ProfilePage.module.css';
 import Image from 'next/image';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
 
 type ProfileFormValues = {
   email: string;
@@ -34,7 +34,7 @@ export default function ProfileForm({ user }: { user: User }) {
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<ProfileFormValues>({
     defaultValues: {
       firstName: user.first_name,
