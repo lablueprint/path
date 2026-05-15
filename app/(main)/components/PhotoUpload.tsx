@@ -2,7 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Image from 'next/image';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 import uploadPhotoIcon from '@/public/image-upload.svg';
 import styles from './PhotoUpload.module.css';
 
@@ -58,10 +58,10 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
     };
 
     const displayImage = isPendingDelete
-      ? defaultProfilePhoto.src
-      : previewUrl || initialPhotoUrl || defaultProfilePhoto.src;
+      ? imagePlaceholder.src
+      : previewUrl || initialPhotoUrl || imagePlaceholder.src;
 
-    const hasPhoto = displayImage !== defaultProfilePhoto.src;
+    const hasPhoto = displayImage !== imagePlaceholder.src;
 
     return (
       <div className={styles.wrapper}>
