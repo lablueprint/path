@@ -17,7 +17,14 @@ export default function IncomingTicketsList({
   tickets,
 }: IncomingTicketsListProps) {
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
-  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled', 'Approved'];
+  const statusOptions = [
+    'All',
+    'Requested',
+    'Ready',
+    'Rejected',
+    'Fulfilled',
+    'Approved',
+  ];
 
   // Filter tickets to only show tickets with the selected status
   const filteredTickets =

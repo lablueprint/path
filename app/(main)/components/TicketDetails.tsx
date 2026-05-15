@@ -12,7 +12,13 @@ import imagePlaceholder from '@/public/image-placeholder.svg';
 import { Store } from '@/app/types/store';
 import TicketDestStoreDropdown from './TicketDestStoreDropdown';
 
-type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled' | 'approved';
+type TicketStatus =
+  | 'draft'
+  | 'requested'
+  | 'ready'
+  | 'rejected'
+  | 'fulfilled'
+  | 'approved';
 
 export default async function TicketDetails({
   ticketId,
