@@ -3,7 +3,8 @@ create type ticket_status as enum(
   'requested',
   'ready',
   'rejected',
-  'fulfilled'
+  'fulfilled',
+  'approved'
 );
 
 create table tickets (
