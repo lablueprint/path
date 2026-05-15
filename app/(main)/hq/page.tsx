@@ -27,6 +27,10 @@ export default async function HqPage() {
     console.error('Error fetching stores:', storesErr);
   }
 
+  const sortedDonations = [...data].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
+
   const stores = storesData || [];
 
   return (
@@ -35,16 +39,16 @@ export default async function HqPage() {
       <h2>Donations</h2>
       <h3>Recent Donations</h3>
       <Table borderless>
-        <thead>
+        <thead className="table-header">
           <tr>
-            <th className={`w-20`}>Receiver</th>
-            <th className={`w-20`}>Store</th>
-            <th className={`w-30`}>Items Donated</th>
-            <th className={`w-30`}>Date Submitted</th>
+            <th>Receiver</th>
+            <th>Store</th>
+            <th>Items Donated</th>
+            <th>Date Submitted</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {sortedDonations.map((item) => (
             <tr key={item.donation_id}>
               <td>
                 {item.receiver_first_name} {item.receiver_last_name}

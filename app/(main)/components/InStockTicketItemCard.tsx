@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { updateTicketItemQuantity } from '@/app/actions/ticket';
 import styles from '@/app/(main)/components/InStockTicketItemCard.module.css';
 import Image from 'next/image';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -55,7 +56,7 @@ export default function InStockTicketItemCard({
     <div className={styles.itemCard}>
       <Image
         className={styles.itemImage}
-        src={'/placeholder-item-picture.jpeg'}
+        src={photoUrl || imagePlaceholder}
         alt={`Picture of ${itemName}`}
         width={77}
         height={77}
@@ -74,7 +75,6 @@ export default function InStockTicketItemCard({
           </p>
         </div>
       </div>
-      {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
       <div className={styles.numericalDescriptors}>
         <div className={styles.quantityCard}>Qty: {quantityAvailable}</div>
         <div className={styles.availabilityCard}>
