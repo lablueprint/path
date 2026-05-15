@@ -5,12 +5,13 @@ set
   search_path = '' as $$
 begin
 
-  insert into public.users (user_id, first_name, last_name, email)
+  insert into public.users (user_id, first_name, last_name, email, phone)
   values (
     new.id,
     new.raw_user_meta_data ->> 'first_name',
     new.raw_user_meta_data ->> 'last_name',
-    new.email
+    new.email,
+    new.raw_user_meta_data ->> 'phone'
   );
 
   insert into public.user_roles(user_id, role_id)

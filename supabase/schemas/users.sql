@@ -9,6 +9,7 @@ create table users (
   ) stored,
   email text,
   profile_photo_url text,
+  phone text,
   constraint fk_auth_users foreign key (user_id) references auth.users (id) on delete cascade
 );
 
