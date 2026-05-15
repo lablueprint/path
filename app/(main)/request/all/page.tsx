@@ -169,8 +169,13 @@ export default async function RequestAllStoresPage({
         const storeItems = itemsByStore.get(store.store_id) || [];
         return (
           <Accordion key={store.store_id}>
-            <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
-              <AccordionHeader className={accordionStyles.accordionHeader}>{store.name}</AccordionHeader>
+            <AccordionItem
+              eventKey={store.store_id}
+              className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+            >
+              <AccordionHeader className={accordionStyles.accordionHeader}>
+                {store.name}
+              </AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 {storeItems.length > 0 ? (
                   <div>

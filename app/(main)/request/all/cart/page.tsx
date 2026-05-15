@@ -72,7 +72,10 @@ export default async function AllCartsPage({
         {sortedStores.map((store) => {
           return (
             <Accordion key={store.store_id}>
-              <AccordionItem eventKey={store.store_id} className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}>
+              <AccordionItem
+                eventKey={store.store_id}
+                className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+              >
                 <AccordionHeader className={accordionStyles.accordionHeader}>
                   {store.name}
                 </AccordionHeader>

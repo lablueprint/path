@@ -1,18 +1,18 @@
 .accordionSpacing {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .accordionBody {
-    background-color: transparent;
-    border: none;
+  background-color: transparent;
+  border: none;
 }
 
-.accordionHeader :global(.accordion-button){
-    box-shadow: none;
-    border: none;
+.accordionHeader :global(.accordion-button) {
+  box-shadow: none;
+  border: none;
 }
 
 .accordionBodySpacing {
-    padding-left: 0;
-    padding-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
