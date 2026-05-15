@@ -30,7 +30,7 @@ insert into
       current_timestamp,
       '{"provider":"email","providers":["email"]}',
       (
-        '{"first_name": "First' || i || '", "last_name": "Last' || i || '", "phone": "0000000000"}')::jsonb,
+        '{"first_name": "First' || i || '", "last_name": "Last' || i || '", "phone": "0000000000"}'
       )::jsonb,
       current_timestamp,
       current_timestamp,
@@ -74,7 +74,9 @@ values
     current_timestamp,
     current_timestamp,
     '{"provider":"email","providers":["email"]}',
-    ('{"first_name": "First9", "last_name": "Last9", "phone": "9999999999"}')::jsonb,
+    (
+      '{"first_name": "First9", "last_name": "Last9", "phone": "9999999999"}'
+    )::jsonb,
     current_timestamp,
     current_timestamp,
     '',
