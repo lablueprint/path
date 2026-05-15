@@ -144,59 +144,75 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
     //   </div>
     // );
     return (
-  <div className={styles.wrapper}>
-    <div style={{ position: 'relative', width: variant === 'circle' ? '200px' : '100%' }}>
-      <label
-        htmlFor={id}
-        className={[
-          styles.container,
-          styles[variant],
-          isDragging ? styles.dragging : '',
-          hasPhoto ? styles.hasPhoto : '',
-        ].join(' ')}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        {hasPhoto ? (
-          <Image
-            src={displayImage}
-            alt="Profile photo"
-            width={200}
-            height={200}
-            style={{ objectFit: 'cover' }}
-            unoptimized
-          />
-        ) : (
-          <div className={styles.placeholder} style={{ width: '100%', height: '100%' }}>
-            <img src={uploadPhotoIcon.src} alt="Upload photo" style={{ width: 32, height: 32 }} />
-            <span className={styles.photoPlaceholderText}>
-              Drag and drop file here or <u>Browse</u>
-            </span>
-          </div>
-        )}
-      </label>
+      <div className={styles.wrapper}>
+        <div
+          style={{
+            position: 'relative',
+            width: variant === 'circle' ? '200px' : '100%',
+          }}
+        >
+          <label
+            htmlFor={id}
+            className={[
+              styles.container,
+              styles[variant],
+              isDragging ? styles.dragging : '',
+              hasPhoto ? styles.hasPhoto : '',
+            ].join(' ')}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {hasPhoto ? (
+              <Image
+                src={displayImage}
+                alt="Profile photo"
+                width={200}
+                height={200}
+                style={{ objectFit: 'cover' }}
+                unoptimized
+              />
+            ) : (
+              <div
+                className={styles.placeholder}
+                style={{ width: '100%', height: '100%' }}
+              >
+                <img
+                  src={uploadPhotoIcon.src}
+                  alt="Upload photo"
+                  style={{ width: 32, height: 32 }}
+                />
+                <span className={styles.photoPlaceholderText}>
+                  Drag and drop file here or <u>Browse</u>
+                </span>
+              </div>
+            )}
+          </label>
 
-      {!isPendingDelete && hasPhoto && (
-        <button 
-        type="button" 
-        onClick={onRemove} 
-        className={[styles.removeButton, variant === 'circle' ? styles.removeButtonCircle : ''].join(' ')}>
-          —
-        </button>
-      )}
-    </div>
+          {!isPendingDelete && hasPhoto && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className={[
+                styles.removeButton,
+                variant === 'circle' ? styles.removeButtonCircle : '',
+              ].join(' ')}
+            >
+              —
+            </button>
+          )}
+        </div>
 
-    <input
-      ref={inputRef}
-      id={id}
-      type="file"
-      accept="image/*"
-      onChange={handleFileChange}
-      style={{ display: 'none' }}
-    />
-  </div>
-);
+        <input
+          ref={inputRef}
+          id={id}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </div>
+    );
   },
 );
 

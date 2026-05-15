@@ -136,48 +136,54 @@ export default function EditStoreForm({ store }: { store: Store }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form-card">
       <div className="card-body">
-        <div  className={styles.layout}>
+        <div className={styles.layout}>
           <div className={styles.photoColumn}>
-          <PhotoUpload
-            ref={photoUploadRef}
-            onFileSelect={handleFileSelect}
-            previewUrl={previewUrl}
-            initialPhotoUrl={photoUrl}
-            isPendingDelete={isPendingDelete}
-            onRemove={handleRemovePhoto}
-          />
-        </div>
-
-      <div className={styles.fieldsColumn}>
-        <div className="mb-3">
-          <label className="form-label field-label">Store name</label>
-          <input {...register('name')} className="form-control" />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label field-label">Store street address</label>
-          <input {...register('street_address')} className="form-control" />
-        </div>
-
-        {hasDirtyTextOrImage && (
-          <div className="button-spacing">
-            <button type="submit" disabled={isSaving} className="btn-submit">
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={onCancel}
-              disabled={isSaving}
-            >
-              Cancel
-            </button>
+            <PhotoUpload
+              ref={photoUploadRef}
+              onFileSelect={handleFileSelect}
+              previewUrl={previewUrl}
+              initialPhotoUrl={photoUrl}
+              isPendingDelete={isPendingDelete}
+              onRemove={handleRemovePhoto}
+            />
           </div>
-        )}
+
+          <div className={styles.fieldsColumn}>
+            <div className="mb-3">
+              <label className="form-label field-label">Store name</label>
+              <input {...register('name')} className="form-control" />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label field-label">
+                Store street address
+              </label>
+              <input {...register('street_address')} className="form-control" />
+            </div>
+
+            {hasDirtyTextOrImage && (
+              <div className="button-spacing">
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="btn-submit"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
+
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={onCancel}
+                  disabled={isSaving}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      </div>
-       </div>
     </form>
   );
 }
