@@ -106,16 +106,25 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
           )}
         </label>
 
-        {!isPendingDelete && hasPhoto && (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="btn-remove"
-            style={{ marginTop: 15 }}
-          >
-            Remove
-          </button>
-        )}
+        <div
+          style={{
+            height: 56,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {!isPendingDelete && hasPhoto && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className="btn-remove"
+              style={{ marginTop: 10 }}
+            >
+              Remove
+            </button>
+          )}
+        </div>
 
         <input
           ref={inputRef}

@@ -57,7 +57,7 @@ export default function UpdatePasswordForm() {
     <div>
       <div style={{ padding: '40px' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2>Privacy</h2>
+          <h2>Change Password</h2>
           <label className="field-label">New password</label>
           <input
             className="form-control"
