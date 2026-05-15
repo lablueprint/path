@@ -18,6 +18,7 @@ export default function UsersList({
     last_name: string;
     role: string;
     email: string;
+    phone: string;
     profile_photo_url: string | null;
   }[];
 }) {

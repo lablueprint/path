@@ -29,7 +29,7 @@ export default function AddAdminSearch({
 
       const { data, error } = await supabase
         .from('users')
-        .select('user_id, first_name, last_name, email, profile_photo_url')
+        .select('user_id, first_name, last_name, email, profile_photo_url, phone')
         .ilike('full_name', `%${d}%`);
       if (error) {
         console.error('Error searching for admins:', error);
