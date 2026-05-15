@@ -12,7 +12,7 @@ import imagePlaceholder from '@/public/image-placeholder.svg';
 import { Store } from '@/app/types/store';
 import TicketDestStoreDropdown from './TicketDestStoreDropdown';
 
-type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
+type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled' | 'approved';
 
 export default async function TicketDetails({
   ticketId,
@@ -85,6 +85,8 @@ export default async function TicketDetails({
     switch (status) {
       case 'requested':
         return ['requested'];
+      case 'approved':
+        return ['approved'];
       case 'ready':
         return ['ready', 'fulfilled'];
       case 'rejected':
@@ -99,11 +101,13 @@ export default async function TicketDetails({
   const getIncomingStatusOptions = (status: TicketStatus): TicketStatus[] => {
     switch (status) {
       case 'requested':
-        return ['requested', 'ready', 'rejected'];
+        return ['requested', 'approved', 'rejected'];
+      case 'approved':
+        return ['requested', 'approved', 'rejected', 'ready'];
       case 'ready':
-        return ['requested', 'ready', 'rejected', 'fulfilled'];
+        return ['requested', 'approved', 'rejected', 'ready', 'fulfilled'];
       case 'rejected':
-        return ['requested', 'ready', 'rejected', 'fulfilled'];
+        return ['requested', 'approved', 'rejected'];
       case 'fulfilled':
         return ['fulfilled'];
       default:

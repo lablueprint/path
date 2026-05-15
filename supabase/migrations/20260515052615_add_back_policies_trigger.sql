@@ -6,6 +6,8 @@ alter table "public"."tickets" alter column status type "public"."ticket_status"
 
 drop type "public"."ticket_status__old_version_to_be_dropped";
 
+CREATE UNIQUE INDEX uq_requestor_user_id_store_id_draft ON public.tickets USING btree (requestor_user_id, store_id) WHERE (status = 'draft'::public.ticket_status);
+
 
   create policy "auth can delete tickets if requestor_user_id or >= superadmin"
   on "public"."tickets"

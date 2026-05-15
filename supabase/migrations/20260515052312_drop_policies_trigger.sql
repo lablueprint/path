@@ -8,4 +8,6 @@ drop policy "auth can read tickets if requestor_user_id or can_manage_store" on 
 
 drop policy "auth can update tickets if requestor_user_id or can_manage_stor" on "public"."tickets";
 
+drop index if exists "public"."uq_requestor_user_id_store_id_draft";
+
 
