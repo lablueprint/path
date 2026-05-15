@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import Image from 'next/image';
+import styles from '@/app/(main)/components/StoreForm.module.css';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 type FormValues = {
@@ -97,16 +97,8 @@ export default function AddStoreForm() {
     <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '3rem',
-              marginBottom: '40px',
-              flexWrap: 'wrap',
-            }}
-          >
-            <div style={{ width: '200px', height: '210px', flexShrink: 0 }}>
+          <div className={styles.layout}>
+            <div className={styles.photoColumn}>
               <PhotoUpload
                 ref={photoUploadRef}
                 onFileSelect={handleFileSelect}
@@ -115,7 +107,7 @@ export default function AddStoreForm() {
               />
             </div>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div className={styles.fieldsColumn}>
               <div className="mb-3">
                 <label className="form-label field-label">Store name</label>
                 <input {...register('storeName')} className="form-control" />

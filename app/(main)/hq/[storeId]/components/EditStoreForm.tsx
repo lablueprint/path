@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import styles from '@/app/(main)/components/StoreForm.module.css';
 
 type FormValues = {
   name: string;
@@ -130,39 +131,24 @@ export default function EditStoreForm({ store }: { store: Store }) {
     }
   };
 
-  const displayImage = isPendingDelete
-    ? defaultStorePhoto.src
-    : previewUrl || photoUrl || defaultStorePhoto.src;
-
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form-card">
       <div className="card-body">
-        <div className="mb-3">
-          <Image
-            src={displayImage}
-            alt="Store photo"
-            width={64}
-            height={64}
-            className="photo"
-            unoptimized
+        <div  className={styles.layout}>
+          <div className={styles.photoColumn}>
+          <PhotoUpload
+            ref={photoUploadRef}
+            onFileSelect={handleFileSelect}
+            previewUrl={previewUrl}
+            initialPhotoUrl={photoUrl}
+            isPendingDelete={isPendingDelete}
+            onRemove={handleRemovePhoto}
           />
-
-          {!isPendingDelete && displayImage !== defaultStorePhoto.src && (
-            <button
-              type="button"
-              onClick={handleRemovePhoto}
-              className="btn-cancel"
-            >
-              Remove
-            </button>
-          )}
-
-          <br />
-          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
         </div>
 
+      <div className={styles.fieldsColumn}>
         <div className="mb-3">
           <label className="form-label field-label">Store name</label>
           <input {...register('name')} className="form-control" />
@@ -190,6 +176,8 @@ export default function EditStoreForm({ store }: { store: Store }) {
           </div>
         )}
       </div>
+      </div>
+       </div>
     </form>
   );
 }

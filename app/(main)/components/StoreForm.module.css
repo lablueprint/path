@@ -1,0 +1,18 @@
+.layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.photoColumn {
+  width: 200px;
+  height: 210px;
+  flex-shrink: 0;
+}
+
+.fieldsColumn {
+  flex: 1;
+  min-width: 0;
+}
