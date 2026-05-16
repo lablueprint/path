@@ -1,3 +1,4 @@
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import LightweightDonationForm from '@/app/(main)/home/donate/components/LightweightDonationForm';
 import { createClient } from '@/app/lib/supabase/server-client';
 import { notFound } from 'next/navigation';
@@ -34,5 +35,15 @@ export default async function DonationPage() {
 
   if (userError) return notFound();
 
-  return <LightweightDonationForm stores={stores || []} user={userData} />;
+  return (
+    <div>
+      <Breadcrumbs
+        labelMap={{
+          home: 'Home',
+          donate: 'Donate',
+        }}
+      />
+      <LightweightDonationForm stores={stores || []} user={userData} />
+    </div>
+  );
 }

@@ -7,7 +7,7 @@ import { updateUser } from '@/app/actions/user';
 import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultProfilePhoto from '@/public/default-profile-picture.png';
+import defaultProfilePhoto from '@/public/image-placeholder.svg';
 
 type ProfileFormValues = {
   email: string;

@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import styles from '@/app/(main)/incoming-tickets/[storeId]/components/Ticket.module.css';
+import styles from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicket.module.css';
 
 type IncomingTicketCardProps = {
   ticketId: string;

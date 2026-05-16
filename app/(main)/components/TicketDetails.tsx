@@ -1,13 +1,16 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
-import UserCard from '@/app/(main)/components/UserCard';
+import TicketUserCard from '@/app/(main)/components/TicketUserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
-import { Card } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
+import imagePlaceholder from '@/public/image-placeholder.svg';
+import { Store } from '@/app/types/store';
+import TicketDestStoreDropdown from './TicketDestStoreDropdown';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 
@@ -24,8 +27,8 @@ export default async function TicketDetails({
     .from('tickets')
     .select(
       `
-        store_id, ticket_id, requestor_user_id, status, date_submitted,
-        stores (
+        store_id, ticket_id, requestor_user_id, status, date_submitted, dest_store_id,
+        stores!fk_stores (
           name,
           street_address
         )
@@ -65,11 +68,14 @@ export default async function TicketDetails({
       .map((storeAdmin) => storeAdmin.users as unknown as User)
       .filter(Boolean);
   }
+  const sortedStoreAdminsList = [...storeAdminsList].sort((a, b) =>
+    a.first_name.localeCompare(b.first_name),
+  );
 
   if (userTicket) {
     const { data: requestorData } = await supabase
       .from('users')
-      .select()
+      .select('*')
       .eq('user_id', userTicket.requestor_user_id)
       .single();
     requestor = requestorData;
@@ -118,41 +124,65 @@ export default async function TicketDetails({
     return `${month}-${day}-${year}`;
   };
 
+  // If ticket exists, query for dest store options
+  const { data: destStoreOptions, error: destStoreOptionsError } =
+    await supabase
+      .from('stores')
+      .select('store_id, name, street_address')
+      .neq('store_id', userTicket.store_id);
+  if (destStoreOptionsError) {
+    console.error(
+      'Error fetching destination store options:',
+      destStoreOptionsError,
+    );
+  }
+
+  // If ticket exists, query for current dest store
+  const { data: currentDestStore } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', userTicket.dest_store_id)
+    .single();
+
   return (
     <div>
       {userTicket ? (
         <div>
           {/*Header Card*/}
           <Card className={styles.headerCard}>
-            <Image
-              src={
-                requestor?.profile_photo_url || '/default-profile-picture.png'
-              }
-              alt={`Profile picture for ${requestor?.first_name}`}
-              className={styles.profilePicture}
-              width={95}
-              height={95}
-              unoptimized
-            ></Image>
-            <div className={styles.headerCardText}>
-              <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
-              <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
-              <h2>Ticket #{userTicket.ticket_id}</h2>
-            </div>
-            {!outgoing ? (
-              <Button
-                as="a"
-                className={styles.contactButton}
-                href={
-                  requestor?.email ? `mailto:${requestor.email}` : undefined
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                disabled={!requestor?.email}
-              >
-                Contact
-              </Button>
-            ) : null}
+            <Row className={styles.headerCardRow}>
+              <Col xs={12} className={styles.headerCardMain}>
+                <Image
+                  src={requestor?.profile_photo_url || imagePlaceholder}
+                  alt={requestor?.first_name + ' ' + requestor?.last_name}
+                  className={styles.profilePicture}
+                  width={95}
+                  height={95}
+                  unoptimized
+                ></Image>
+                <div className={styles.headerCardText}>
+                  <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
+                  <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
+                  <h2>Ticket #{userTicket.ticket_id}</h2>
+                </div>
+              </Col>
+              {!outgoing ? (
+                <Col xs={12} className={styles.headerCardContact}>
+                  <Button
+                    as="a"
+                    className={styles.contactButton}
+                    href={
+                      requestor?.email ? `mailto:${requestor.email}` : undefined
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    disabled={!requestor?.email}
+                  >
+                    Contact
+                  </Button>
+                </Col>
+              ) : null}
+            </Row>
           </Card>
 
           <div>
@@ -163,25 +193,36 @@ export default async function TicketDetails({
               statusOptions={statusOptions}
             />
           </div>
+          <div>
+            <p>Ticket Destination Store: </p>
+            <TicketDestStoreDropdown
+              ticketId={ticketId}
+              currentDestStore={(currentDestStore as Store) || null}
+              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                store,
+              }))}
+            />
+          </div>
 
           <DeleteTicketButton ticketId={userTicket.ticket_id} />
 
-          <div className={styles.ticketContentLayout}>
-            <div className={styles.ticketContentLeft}>
+          <Row className={styles.ticketContentLayout}>
+            <Col xs={12} className={styles.ticketContentMain}>
               <TicketItemsList ticketId={userTicket.ticket_id} />
-            </div>
+            </Col>
 
-            <div className={styles.ticketContentRight}>
+            <Col
+              xs={12}
+              className={`${styles.ticketContentSide} ${styles.ticketContentRight}`}
+            >
               {outgoing && (
                 <div className={styles.adminCard}>
                   <h2>CONTACT STORE ADMINS</h2>
-                  {storeAdminsList.map((storeAdmin) => (
-                    <UserCard
-                      className={styles.userCard}
-                      noBottomMargin
+                  {sortedStoreAdminsList.map((storeAdmin) => (
+                    <TicketUserCard
                       user={storeAdmin}
                       key={storeAdmin.user_id}
-                    ></UserCard>
+                    ></TicketUserCard>
                   ))}
                 </div>
               )}
@@ -197,8 +238,8 @@ export default async function TicketDetails({
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
       ) : (
         <p>No ticket found.</p>

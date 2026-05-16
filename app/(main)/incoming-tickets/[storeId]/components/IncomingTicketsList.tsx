@@ -1,7 +1,7 @@
 'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
 import { useState } from 'react';
-import styles from '@/app/(main)/incoming-tickets/[storeId]/components/Ticket.module.css';
+import styles from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicket.module.css';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -26,6 +26,9 @@ export default function IncomingTicketsList({
       : tickets.filter(
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
 
   return (
     <div>
@@ -64,7 +67,7 @@ export default function IncomingTicketsList({
             </thead>
             <tbody>
               {/* Map the list of tickets to IncomingTicketCard components */}
-              {filteredTickets.map((ticket) => (
+              {sortedFilteredTickets.map((ticket) => (
                 <IncomingTicketCard
                   key={ticket.id}
                   ticketId={ticket.id}
