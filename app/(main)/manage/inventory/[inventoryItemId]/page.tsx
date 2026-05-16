@@ -68,7 +68,7 @@ export default async function InventoryItemPage({
 
   const item = {
     inventory_item_id: data.inventory_item_id,
-    subcategory_id: Number(data.subcategory_id),
+    subcategory_id: data.subcategory_id,
     name: data.name,
     description: data.description,
     photo_url: data.photo_url,

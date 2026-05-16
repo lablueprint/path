@@ -10,11 +10,6 @@ import {
   createSubcategory,
 } from '@/app/actions/inventory';
 
-type Subcategory = {
-  subcategory_id: number;
-  name: string;
-};
-
 type Category = {
   category_id: number;
   name: string;
