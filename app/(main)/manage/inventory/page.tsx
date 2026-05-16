@@ -1,7 +1,7 @@
 import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
-import EditCategories from './add/components/EditCategories';
+import EditCategories from '@/app/(main)/manage/inventory/add/components/EditCategories';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
