@@ -3,6 +3,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 import EditCategories from './add/components/EditCategories';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -86,21 +87,28 @@ export default async function InventoryPage({
     return <div>Failed to load categories.</div>;
   }
 
-  const items = itemsData?.map((item) => ({
-    id: item.inventory_item_id,
-    item: item.name,
-    photoUrl: item.photo_url,
-    subcategory: item.subcategories.name,
-    category: item.subcategories.categories.name,
-  }));
+  const items = itemsData
+    ?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    .map((item) => ({
+      id: item.inventory_item_id,
+      item: item.name,
+      photoUrl: item.photo_url,
+      subcategory: item.subcategories.name,
+      category: item.subcategories.categories.name,
+    }));
 
   return (
     <div>
-      <h1>Inventory Library</h1>
-
-      <Link href="/manage/inventory/add">
-        <p>Add inventory item</p>
-      </Link>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+        }}
+      />
+      <div className="page-header">
+        <h1>Inventory Library</h1>
+        <Link href="/manage/inventory/add">Add inventory item</Link>
+      </div>
 
       <ItemSearch
         categories={
@@ -120,17 +128,19 @@ export default async function InventoryPage({
 
       <h2>Items</h2>
       {items && items.length > 0 ? (
-        items.map((item) => (
-          <div key={item.id}>
-            <ItemCard
-              id={item.id}
-              item={item.item}
-              photoUrl={item.photoUrl}
-              subcategory={item.subcategory}
-              category={item.category}
-            />
-          </div>
-        ))
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+          {items.map((item) => (
+            <div key={item.id} className="col">
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                photoUrl={item.photoUrl}
+                subcategory={item.subcategory}
+                category={item.category}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
         <p>No items found.</p>
       )}

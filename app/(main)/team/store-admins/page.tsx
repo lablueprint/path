@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function StoreAdminsPage() {
   const supabase = await createClient();
@@ -15,6 +16,12 @@ export default async function StoreAdminsPage() {
 
   return (
     <div>
+      <Breadcrumbs
+        labelMap={{
+          '/team': 'Team',
+          '/team/store-admins': 'Store Admins',
+        }}
+      />
       <h1>Store Admins</h1>
       {stores.length > 0 ? (
         <StoresList stores={stores} />

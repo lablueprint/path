@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { createStoreAdmin } from '@/app/actions/store';
 import { User } from '@/app/types/user';
-import UserCard from '@/app/(main)/components/UserCard';
+import { Form, ListGroup } from 'react-bootstrap';
 
 const supabase = createClient();
 
@@ -50,30 +50,30 @@ export default function AddAdminSearch({
   return (
     <div>
       {/* searching */}
-      <div style={{ marginBottom: '20px' }}>
-        <label>Find users by name</label>
-        <input
-          id="search"
-          placeholder="Search..."
+      <div className="search-filter-wrapper">
+        <Form.Control
+          type="text"
+          placeholder="Search users..."
+          className="search-bar"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
       {/* search results */}
-      {searchData.map((u) => (
-        <div key={u.user_id} style={{ marginBottom: '40px' }}>
-          <UserCard user={u} noBottomMargin></UserCard>
-          <button
-            type="button"
+      <ListGroup>
+        {searchData.map((u) => (
+          <ListGroup.Item
+            key={u.user_id}
+            action
             onClick={() =>
               createStoreAdmin({ user_id: u.user_id, store_id: storeId })
             }
           >
-            Add admin
-          </button>
-        </div>
-      ))}
+            {u.first_name}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
     </div>
   );
 }

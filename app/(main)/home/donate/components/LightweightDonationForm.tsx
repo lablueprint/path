@@ -8,11 +8,18 @@ import { Form, Container, Card, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
 import styles from '@/app/(main)/components/DonationForm.module.css';
+import type { User } from '@/app/types/user';
 
 const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
   (props, ref) => <Form.Control {...props} ref={ref} />,
 );
+
 BootstrapInput.displayName = 'BootstrapInput';
+
+type Props = {
+  stores: { name: string; street_address: string }[];
+  user: User;
+};
 
 type FormData = {
   donor_type?: 'individual' | 'business';
@@ -34,9 +41,9 @@ type FormData = {
   items_donated: string;
 };
 
-export default function LightweightDonationForm() {
+export default function LightweightDonationForm({ stores, user }: Props) {
   const [showSuccess, setShowSuccess] = useState(false);
-  const [resetKey, setResetKey] = useState(0); // For resetting estimated value
+  const [resetKey, setResetKey] = useState(0);
 
   const {
     register,
@@ -50,6 +57,11 @@ export default function LightweightDonationForm() {
       donor_type: undefined,
       phone: '',
       estimated_value: '',
+      receiving_site: 'None',
+
+      receive_emails: false,
+      receive_mailings: false,
+      remain_anonymous: false,
     },
   });
 
@@ -58,8 +70,21 @@ export default function LightweightDonationForm() {
     name: 'donor_type',
   });
 
+  const storeNames = stores.map((store) => store.name);
+  const receivingSiteOptions = ['None', ...storeNames];
+
   const onSubmit = async (data: FormData) => {
     setShowSuccess(false);
+
+    const finalReceivingSite =
+      data.receiving_site === 'None' || !data.receiving_site
+        ? 'Headquarters'
+        : data.receiving_site;
+
+    const matchedStore = stores.find(
+      (store) => store.name === finalReceivingSite,
+    );
+    const finalStoreAddress = matchedStore ? matchedStore.street_address : '';
 
     const donation: DonationInsert = {
       donor_is_individual: data.donor_type === 'individual',
@@ -87,10 +112,14 @@ export default function LightweightDonationForm() {
 
       estimated_value:
         parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) || 0,
+
       items_donated: data.items_donated,
 
-      receiver_first_name: 'FIRST-NAME',
-      receiver_last_name: 'LAST-NAME',
+      store_name: finalReceivingSite,
+      store_street_address: finalStoreAddress,
+
+      receiver_first_name: user.first_name,
+      receiver_last_name: user.last_name,
     };
 
     const result = await createDonation(donation);
@@ -98,6 +127,7 @@ export default function LightweightDonationForm() {
     if (result.success) {
       setShowSuccess(true);
       setResetKey((k) => k + 1);
+
       reset({
         donor_type: undefined,
         individual_name: '',
@@ -106,13 +136,14 @@ export default function LightweightDonationForm() {
         email: '',
         phone: '',
         address: '',
-        receiving_site: '',
+        receiving_site: 'None',
         receive_emails: false,
         receive_mailings: false,
         remain_anonymous: false,
         estimated_value: '',
         items_donated: '',
       });
+
       clearErrors();
     } else {
       console.error('Failed to create donation:', result.error);
@@ -121,32 +152,30 @@ export default function LightweightDonationForm() {
 
   return (
     <Container className={styles.formContainer}>
-      <Card className={styles.formCard}>
+      <Card className="form-card">
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.formBody}>
             <div className={styles.formSection}>
-              <h1 className={styles.formTitle1}>Store Information</h1>
+              <h1 className="form-title-1">Store Information</h1>
               <Form.Group
                 controlId="receiving_site"
                 className={styles.receivingSiteGroup}
               >
-                <Form.Label className={styles.fieldLabel}>
-                  Receiving site
-                </Form.Label>
-                <Form.Select {...register('receiving_site')} defaultValue="">
-                  <option value="" disabled>
-                    Select a receiving site
-                  </option>
-                  <option value="path-site-1">PATH site 1</option>
-                  <option value="path-site-2">PATH site 2</option>
-                  <option value="path-site-3">PATH site 3</option>
+                <Form.Label className="field-label">Receiving site</Form.Label>
+
+                <Form.Select {...register('receiving_site')}>
+                  {receivingSiteOptions.map((site) => (
+                    <option key={site} value={site}>
+                      {site}
+                    </option>
+                  ))}
                 </Form.Select>
               </Form.Group>
             </div>
 
-            <h1 className={styles.formTitle2}>Donor Information</h1>
+            <h1 className="form-title-2">Donor Information</h1>
 
-            <Form.Group>
+            <Form.Group key={resetKey}>
               <div className={styles.radioRow}>
                 <Form.Check
                   type="radio"
@@ -157,6 +186,7 @@ export default function LightweightDonationForm() {
                     required: 'Please select a donor type',
                   })}
                 />
+
                 <Form.Check
                   type="radio"
                   label="Business"
@@ -167,6 +197,7 @@ export default function LightweightDonationForm() {
                   })}
                 />
               </div>
+
               {errors.donor_type && (
                 <Form.Text className={styles.errorText}>
                   {errors.donor_type.message}
@@ -180,15 +211,17 @@ export default function LightweightDonationForm() {
                   <div>
                     {donorType === 'individual' && (
                       <Form.Group controlId="individual_name">
-                        <Form.Label className={styles.fieldLabel}>
+                        <Form.Label className="field-label">
                           Individual Name
                         </Form.Label>
+
                         <Form.Control
                           {...register('individual_name', {
                             required: 'Individual name is required',
                           })}
                           isInvalid={!!errors.individual_name}
                         />
+
                         <Form.Control.Feedback type="invalid">
                           {errors.individual_name?.message}
                         </Form.Control.Feedback>
@@ -198,30 +231,34 @@ export default function LightweightDonationForm() {
                     {donorType === 'business' && (
                       <div className={styles.businessFields}>
                         <Form.Group controlId="business_name">
-                          <Form.Label className={styles.fieldLabel}>
+                          <Form.Label className="field-label">
                             Business Name
                           </Form.Label>
+
                           <Form.Control
                             {...register('business_name', {
                               required: 'Business name is required',
                             })}
                             isInvalid={!!errors.business_name}
                           />
+
                           <Form.Control.Feedback type="invalid">
                             {errors.business_name?.message}
                           </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group controlId="business_contact_name">
-                          <Form.Label className={styles.fieldLabel}>
+                          <Form.Label className="field-label">
                             Business Contact Name
                           </Form.Label>
+
                           <Form.Control
                             {...register('business_contact_name', {
                               required: 'Business contact name is required',
                             })}
                             isInvalid={!!errors.business_contact_name}
                           />
+
                           <Form.Control.Feedback type="invalid">
                             {errors.business_contact_name?.message}
                           </Form.Control.Feedback>
@@ -232,15 +269,17 @@ export default function LightweightDonationForm() {
 
                   <div>
                     <Form.Group controlId="address">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Street Address
                       </Form.Label>
+
                       <Form.Control
                         {...register('address', {
                           required: 'Street address is required',
                         })}
                         isInvalid={!!errors.address}
                       />
+
                       <Form.Control.Feedback type="invalid">
                         {errors.address?.message}
                       </Form.Control.Feedback>
@@ -251,9 +290,10 @@ export default function LightweightDonationForm() {
                 <div className={styles.twoColRow}>
                   <div>
                     <Form.Group controlId="email">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Email
                       </Form.Label>
+
                       <Form.Control
                         type="email"
                         {...register('email', {
@@ -265,6 +305,7 @@ export default function LightweightDonationForm() {
                         })}
                         isInvalid={!!errors.email}
                       />
+
                       <Form.Control.Feedback type="invalid">
                         {errors.email?.message}
                       </Form.Control.Feedback>
@@ -273,15 +314,17 @@ export default function LightweightDonationForm() {
 
                   <div>
                     <Form.Group controlId="phone">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Phone Number (Optional)
                       </Form.Label>
+
                       <Controller
                         name="phone"
                         control={control}
                         rules={{
                           validate: (value) => {
                             const digits = value?.replace(/\D/g, '');
+
                             return (
                               !digits ||
                               digits.length === 10 ||
@@ -304,6 +347,7 @@ export default function LightweightDonationForm() {
                           />
                         )}
                       />
+
                       {errors.phone && (
                         <Form.Text className={styles.errorText}>
                           {errors.phone.message}
@@ -320,12 +364,14 @@ export default function LightweightDonationForm() {
                     id="receive_emails"
                     {...register('receive_emails')}
                   />
+
                   <Form.Check
                     type="checkbox"
                     label="Donor receive mailings?"
                     id="receive_mailings"
                     {...register('receive_mailings')}
                   />
+
                   <Form.Check
                     type="checkbox"
                     label="Donor remain anonymous?"
@@ -336,22 +382,27 @@ export default function LightweightDonationForm() {
               </>
             )}
 
-            <h1 className={styles.formTitle2}>Donation Information</h1>
+            <h1 className="form-title-2">Donation Information</h1>
 
             <Form.Group controlId="estimated_value">
-              <Form.Label className={styles.fieldLabel}>
+              <Form.Label className="field-label">
                 Estimated value (USD)
               </Form.Label>
+
               <Controller
                 key={resetKey}
                 name="estimated_value"
                 control={control}
                 rules={{
                   required: 'Estimated donation value is required',
+
                   validate: (value) => {
                     if (!value) return true;
+
                     const cleanValue = String(value).replace(/[^0-9.]/g, '');
+
                     const num = parseFloat(cleanValue);
+
                     return num > 0 || 'Please enter a valid donation amount';
                   },
                 }}
@@ -373,20 +424,20 @@ export default function LightweightDonationForm() {
                   />
                 )}
               />
+
               <Form.Control.Feedback type="invalid">
                 {errors.estimated_value?.message}
               </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group controlId="items_donated">
-              <Form.Label className={styles.fieldLabel}>
-                Items donated
-              </Form.Label>
+              <Form.Label className="field-label">Items donated</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Describe the items you are donating"
                 {...register('items_donated', {
                   required: 'Please enter the items you are donating',
+
                   maxLength: {
                     value: 500,
                     message: 'Items description cannot exceed 500 characters',
@@ -394,13 +445,14 @@ export default function LightweightDonationForm() {
                 })}
                 isInvalid={!!errors.items_donated}
               />
+
               <Form.Control.Feedback type="invalid">
                 {errors.items_donated?.message}
               </Form.Control.Feedback>
             </Form.Group>
 
             <div className={styles.submitButtonRow}>
-              <button type="submit" className={styles.submitButton}>
+              <button type="submit" className="btn-submit">
                 Submit
               </button>
             </div>

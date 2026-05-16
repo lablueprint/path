@@ -1,0 +1,42 @@
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+.photoFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.photoImage {
+  object-fit: cover;
+}
+
+.fieldLabel {
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+}
+
+.fieldValue {
+  margin: 0;
+}
+
+.inStock {
+  margin: 0;
+  font-weight: 700;
+  color: #24704a;
+}
+
+.outOfStock {
+  margin: 0;
+  font-weight: 700;
+  color: #c53030;
+}
+
+.quantityInput {
+  max-width: 10rem;
+}

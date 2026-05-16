@@ -36,4 +36,4 @@ with
   check (false);
 
 -- Auth user can delete entry if private.can_manage_store(store_id) returns true
-create policy "all authenticated users can delete" on public.store_admins for delete to authenticated using (private.can_manage_store (store_id));
+create policy "auth can delete store_admins if can_manage_store" on public.store_admins for delete to authenticated using (private.can_manage_store (store_id));
