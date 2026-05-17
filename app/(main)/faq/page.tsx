@@ -1,53 +1,56 @@
-import styles from './FaqPage.module.css';
+import styles from '@/app/(main)/faq/FaqPage.module.css';
 
 const roleCards = [
   {
     title: 'Default User',
     description:
-      'Assigned automatically to all new accounts. Default users can view home page and submit donation forms.',
+      'Assigned automatically to all new accounts. Can view home page and submit Gift-in-Kind receipts.',
   },
   {
     title: 'Requestor',
     description:
-      'Can browse stores and submit item requests (tickets). Requestors can view team directory and edit their own profile.',
+      'Can browse stores, submit item requests (tickets), view team directory, and edit their own profile.',
   },
   {
     title: 'Store Admin',
     description:
-      'Manages one or more specific stores. Can handle incoming tickets and update inventory for their assigned store(s).',
+      'Manages one or more specific stores. Can process tickets, update inventory, and manage store admins for their assigned store(s). Can view global inventory library and categories. Can manage requestors.',
   },
   {
-    title: 'Super Admin',
+    title: 'Superadmin',
     description:
-      'Has visibility across all stores. Can manage stores, categories, and donation records. Cannot manage other Superadmins or the Owner.',
+      'Manages all stores. Can edit global inventory library and categories. Can view and export Gift-in-Kind receipts.',
   },
   {
     title: 'Owner',
-    description:
-      'The highest privilege level. Full access to all features, all stores, and all user management including Superadmins.',
+    description: 'The highest privilege level. Can manage superadmins.',
   },
 ];
 
 const statusCards = [
   {
     title: 'Requested',
+    description: 'Your ticket has been submitted for a store admin to review.',
+  },
+  {
+    title: 'Approved',
     description:
-      'Your request has been submitted and is waiting for a store admin to review it.',
+      'A store admin has reviewed and approved your ticket. The items are being prepared for pickup or delivery.',
   },
   {
     title: 'Ready',
     description:
-      'The store admin has reviewed your ticket and the items are being prepared or set aside for pickup or delivery.',
+      'The items in your ticket have been prepared for pickup or delivery.',
   },
   {
     title: 'Fulfilled',
     description:
-      'Your request has been fully completed. All items have been provided. No further action is needed.',
+      'Your request has been fully completed. The items have been picked up or delivered. No further action is needed.',
   },
   {
     title: 'Rejected',
     description:
-      'The store admin was unable to fulfill this request. This may be due to stock availability or other constraints.',
+      'A store admin was unable to fulfill your request. This may be due to stock availability or other constraints.',
   },
 ];
 
@@ -72,34 +75,35 @@ function FaqCard({
 
 export default function FaqPage() {
   return (
-    <div className={styles.page}>
-      <h1 className={styles.pageTitle}>FAQ</h1>
-
-      <div className={styles.offsetContent}>
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Roles &amp; Permissions</h2>
+    <div>
+      <h1>FAQ</h1>
+      <div className={styles.content}>
+        <section>
+          <h2>Roles &amp; Permissions</h2>
           <p className={styles.sectionDescription}>
-            Roles determine what pages you can access and what actions you can take. Higher roles inherit all permissions from roles below them.
+            Roles determine what pages you can access and what actions you can
+            take. Higher roles inherit all permissions from roles below them.
           </p>
 
-          <div className="row g-4">
+          <div className="row row-cols-1 row-cols-sm-2 g-5">
             {roleCards.map((card) => (
-              <div key={card.title} className="col-12 col-xl-6">
+              <div key={card.title}>
                 <FaqCard {...card} />
               </div>
             ))}
           </div>
         </section>
 
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Ticket Statuses</h2>
+        <section>
+          <h2>Ticket Statuses</h2>
           <p className={styles.sectionDescription}>
-            Once a ticket is submitted, tickets move through the following statuses as store admins review and fulfill them.
+            Once a ticket is submitted, tickets move through the following
+            statuses as store admins review and fulfill them.
           </p>
 
-          <div className="row g-4">
+          <div className="row row-cols-1 row-cols-sm-2 g-5">
             {statusCards.map((card) => (
-              <div key={card.title} className="col-12 col-xl-6">
+              <div key={card.title}>
                 <FaqCard {...card} />
               </div>
             ))}
