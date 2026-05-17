@@ -1,6 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import Dropdown from '@/app/(main)/team/people/[userId]/components/Dropdown';
+import Dropdown from '@/app/(main)/administration/members/[userId]/components/Dropdown';
 import Image from 'next/image';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import imagePlaceholder from '@/public/image-placeholder.svg';
@@ -39,9 +39,7 @@ export default async function TeamProfilePage({
     <div>
       <Breadcrumbs
         labelMap={{
-          '/team': 'Team',
-          '/team/people': 'People',
-          [`/team/people/${userId}`]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
+          [`/administration/members/${userId}`]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
         }}
       />
       <h1>Profile</h1>

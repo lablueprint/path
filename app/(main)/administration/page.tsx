@@ -26,7 +26,7 @@ export default async function AdministrationPage() {
           ) && (
             <ActionButton
               text="Members"
-              url="/team/people"
+              url="/administration/members"
               icon={membersIcon}
             />
           )}

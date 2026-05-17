@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from '@/app/(main)/team/people/components/UsersList.module.css';
+import styles from '@/app/(main)/administration/members/components/UsersList.module.css';
 import { Table } from 'react-bootstrap';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 import { useState } from 'react';
