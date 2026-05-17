@@ -1,17 +1,13 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import styles from '@/app/(main)/components/Card.module.css';
-import cardStyles from './AddItemCard.module.css';
 import Image from 'next/image';
 import defaultItemPhoto from '@/public/image-placeholder.svg';
 import { useFormContext } from 'react-hook-form';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 
 type ItemCardProps = {
-  id: string;
   index: number;
   photoUrl: string | null;
   item: string;
@@ -22,7 +18,6 @@ type ItemCardProps = {
 };
 
 export default function AddItemCard({
-  id,
   index,
   photoUrl,
   item,
@@ -31,15 +26,13 @@ export default function AddItemCard({
   description,
   onRemove,
 }: ItemCardProps) {
-  const pathname = usePathname();
   const {
     register,
-    control,
     formState: { errors },
   } = useFormContext<CombinedFormData>();
 
   return (
-    <Link className={styles.cardLink} href={`${pathname}/${id}`}>
+    <div>
       <div className={styles.card}>
         <div className={styles.imageContainer}>
           <Image
@@ -51,15 +44,20 @@ export default function AddItemCard({
           />
         </div>
         <div className={styles.cardBody}>
-          <p className={styles.name}>{item}</p>
-          <div className={cardStyles.container}>
+          <div className={styles.cardTextGroup}>
+            <p className={styles.name}>{item}</p>
             <p className={styles.cardText}>{category}</p>
             <p className={styles.cardText}>↳ {subcategory}</p>
           </div>
-          <p className={cardStyles.label}>Description: </p>
-          <p className={styles.cardText}> {description}</p>
-          <Form.Group controlId={`quantity-${index}`}>
-            <Form.Label className={cardStyles.label}>Quantity</Form.Label>
+          <div className={styles.cardTextGroup}>
+            <p className={styles.name}>Description</p>
+            <p className={styles.cardText}> {description}</p>
+          </div>
+          <Form.Group
+            controlId={`quantity-${index}`}
+            className={styles.cardTextGroup}
+          >
+            <Form.Label className={styles.name}>Quantity</Form.Label>
             <Form.Control
               type="number"
               placeholder="Quantity to add"
@@ -78,8 +76,10 @@ export default function AddItemCard({
               {errors.items?.[index]?.quantity?.message}
             </Form.Control.Feedback>
           </Form.Group>
-          <button
+          <Button
             type="button"
+            variant="outline-danger"
+            className="btn-remove"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -87,9 +87,9 @@ export default function AddItemCard({
             }}
           >
             Remove
-          </button>
+          </Button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

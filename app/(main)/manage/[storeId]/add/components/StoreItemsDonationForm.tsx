@@ -11,7 +11,6 @@ import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
 import { Form } from 'react-bootstrap';
-import styles from './StoreItemsDonationForm.module.css';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -188,7 +187,7 @@ export default function StoreItemsDonationForm({
       <h2>Add Items</h2>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <div className={styles.checkboxRow}>
+          <div className="checkbox-row">
             <Form.Check
               type="checkbox"
               id="addInventoryItems"
@@ -199,7 +198,7 @@ export default function StoreItemsDonationForm({
             <Form.Check
               type="checkbox"
               id="giftInKind"
-              label="Gift in Donation"
+              label="Gift-in-Kind Donation"
               value="giftInKind"
               {...methods.register('itemSettings')}
             />

@@ -8,7 +8,7 @@ import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultItemPhoto from '@/public/image-placeholder.svg';
 import { Form } from 'react-bootstrap';
 import donationStyles from '@/app/(main)/components/DonationForm.module.css';
-import styles from './AddInventoryItemForm.module.css';
+import styles from '@/app/(main)/manage/components/AddInventoryItemForm.module.css';
 
 export type Inputs = {
   name: string;

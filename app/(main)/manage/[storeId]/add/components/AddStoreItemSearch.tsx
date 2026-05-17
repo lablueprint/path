@@ -15,9 +15,8 @@ import AddInventoryItemForm, {
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
 import { Form, Container, Card } from 'react-bootstrap';
-import AddItemCard from './AddItemCard';
+import AddItemCard from '@/app/(main)/manage/[storeId]/add/components/AddItemCard';
 import donationStyles from '@/app/(main)/components/DonationForm.module.css';
-import searchStyles from './AddStoreItemSearch.module.css';
 import { ListGroup } from 'react-bootstrap';
 
 type ItemWithNames = InventoryItem & {
@@ -185,10 +184,10 @@ export default function AddStoreItemSearch({
           <Card.Body>
             <div className={donationStyles.formBody}>
               <Form.Group>
-                <div className={donationStyles.radioRow}>
+                <div className="radio-row">
                   <Form.Check
                     type="radio"
-                    label="Search for existing item in inventory"
+                    label="Search for Existing Item"
                     value="existing"
                     id="inventory-existing"
                     name="inventoryType"
@@ -196,7 +195,7 @@ export default function AddStoreItemSearch({
                   />
                   <Form.Check
                     type="radio"
-                    label="Create new item"
+                    label="Create New Item"
                     value="new"
                     id="inventory-new"
                     name="inventoryType"
@@ -216,13 +215,12 @@ export default function AddStoreItemSearch({
                     />
                   </div>
                   {results.length > 0 && (
-                    <ListGroup className={searchStyles.results}>
+                    <ListGroup>
                       {results?.map((item) => (
                         <ListGroup.Item
                           key={item.inventory_item_id}
                           action
                           type="button"
-                          className={searchStyles.item}
                           onClick={() => handleSelect(item)}
                         >
                           {item.name}
@@ -264,7 +262,6 @@ export default function AddStoreItemSearch({
           {fields.map((field, idx) => (
             <div key={field.id}>
               <AddItemCard
-                id={selectedItems[idx]?.inventory_item_id}
                 index={idx}
                 photoUrl={selectedItems[idx]?.photo_url ?? null}
                 item={selectedItems[idx]?.name}
