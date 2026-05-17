@@ -242,11 +242,11 @@ export async function addToCart(
       return { success: false, data: null, error: itemError.message };
     }
 
-    return { success: true, data: ticketItem };
-  }
+    revalidatePath(`/request/${storeId}/cart`);
+    revalidatePath(`/request/all/cart`);
 
-  // If description is provided
-  if (description) {
+    return { success: true, data: ticketItem };
+  } else if (description) {
     // Create a ticket item in ticket_items
     const { data: ticketItem, error: itemError } = await supabase
       .from('ticket_items')
@@ -262,10 +262,13 @@ export async function addToCart(
       return { success: false, data: null, error: itemError.message };
     }
 
+    revalidatePath(`/request/${storeId}/cart`);
+    revalidatePath(`/request/all/cart`);
+
     return { success: true, data: ticketItem };
   }
 
-  return { success: true, data: ticket };
+  return { success: true, data: null };
 }
 
 export async function updateTicketDestStore(

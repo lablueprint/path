@@ -1,7 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
-import Link from 'next/link';
 import styles from '@/app/(main)/request/CartPage.module.css';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
@@ -20,13 +19,7 @@ type DraftTicket = {
   }[];
 };
 
-export default async function AllCartsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ submitted?: string; ticketId: string }>;
-}) {
-  const { submitted, ticketId } = await searchParams;
-  const showSuccess = submitted === '1' && !!ticketId;
+export default async function AllCartsPage() {
   const supabase = await createClient();
 
   // Get the current user
@@ -132,30 +125,6 @@ export default async function AllCartsPage({
                 {store.name}
               </AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
-                <div>
-                  <p>Ticket Destination Store: </p>
-                  <TicketDestStoreDropdown
-                    ticketId={ticketId}
-                    currentDestStore={store.store_id}
-                    destStoreOptions={stores
-                      .filter((s) => s.store_id !== store.store_id)
-                      .map((s) => ({
-                        store: {
-                          store_id: s.store_id,
-                          name: s.name,
-                          street_address: s.street_address,
-                        },
-                      }))}
-                  />
-                </div>
-                {showSuccess && (
-                  <div>
-                    <p>Ticket submitted successfully!</p>
-                    <Link href={`/outgoing-tickets/${ticketId}`}>
-                      Go to ticket
-                    </Link>
-                  </div>
-                )}
                 {draftTicket ? (
                   <div>
                     <TicketItemsList ticketId={draftTicket.ticket_id} />
@@ -164,7 +133,23 @@ export default async function AllCartsPage({
                       <AddOutOfStockToCartForm storeId={store.store_id} />
                     </div>
                     {draftTicket.ticket_items[0].count > 0 ? (
-                      <SubmitTicketButton ticketId={draftTicket.ticket_id} />
+                      <div>
+                        <p>Ticket Destination Store: </p>
+                        <TicketDestStoreDropdown
+                          ticketId={draftTicket.ticket_id}
+                          currentDestStore={store.store_id}
+                          destStoreOptions={stores
+                            .filter((s) => s.store_id !== store.store_id)
+                            .map((s) => ({
+                              store: {
+                                store_id: s.store_id,
+                                name: s.name,
+                                street_address: s.street_address,
+                              },
+                            }))}
+                        />
+                        <SubmitTicketButton ticketId={draftTicket.ticket_id} />
+                      </div>
                     ) : null}
                   </div>
                 ) : (
