@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 import { Store } from '@/app/types/store';
-import TicketDestStoreDropdown from './TicketDestStoreDropdown';
+import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 
 type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
 

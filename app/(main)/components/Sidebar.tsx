@@ -35,6 +35,27 @@ export default async function Sidebar() {
 
   const sidebarGroups = [
     {
+      heading: 'General',
+      links: [
+        {
+          label: 'FAQ',
+          href: '/faq',
+          allowedRoles: [
+            'default',
+            'requestor',
+            'admin',
+            'superadmin',
+            'owner',
+          ],
+        },
+        {
+          label: 'Administration',
+          href: '/administration',
+          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
+        },
+      ],
+    },
+    {
       heading: 'Requesting',
       links: [
         {
@@ -43,7 +64,7 @@ export default async function Sidebar() {
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
         {
-          label: 'Outgoing Tickets',
+          label: 'My Tickets',
           href: '/outgoing-tickets',
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
@@ -58,7 +79,7 @@ export default async function Sidebar() {
           allowedRoles: ['admin', 'superadmin', 'owner'],
         },
         {
-          label: 'Incoming Tickets',
+          label: 'Store Tickets',
           href: '/incoming-tickets',
           allowedRoles: ['admin', 'superadmin', 'owner'],
         },

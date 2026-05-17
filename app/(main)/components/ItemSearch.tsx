@@ -6,12 +6,12 @@ import { Form, Row, Col, Button } from 'react-bootstrap';
 
 type category = {
   name: string;
-  id: string;
+  id: number;
 };
 type subcategories = {
   name: string;
-  id: string;
-  category_id: string;
+  id: number;
+  category_id: number;
 };
 type Props = {
   categories: category[];

@@ -16,7 +16,7 @@ h1 {
 }
 
 h2 {
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.5rem;
 }
 
@@ -224,7 +224,12 @@ Table {
 
 .radio-row {
   display: flex;
-  gap: 24px;
+  gap: 2rem;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 2rem;
 }
 
 .two-col-row {
@@ -360,6 +365,31 @@ Table {
 /* search bar layout */
 .search-filter-wrapper {
   margin-bottom: 1rem;
+}
+
+/* clear filter button styling */
+.btn-primary.search-filter-clear {
+  padding-left: 2.25rem;
+  background: #fff url('/filter-icon.svg') no-repeat left 0.75rem center / 1rem;
+  border-color: #dee2e6;
+  color: #000;
+}
+
+.btn-primary.search-filter-clear:hover {
+  background: #dee2e6 url('/filter-icon.svg') no-repeat left 0.75rem center /
+    1rem;
+  border-color: #dee2e6;
+  color: #000;
+}
+
+.search-bar {
+  background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* search bar layout */
+.search-filter-wrapper {
+  margin-bottom: 0.5rem;
 }
 
 /* clear filter button styling */

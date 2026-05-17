@@ -6,17 +6,13 @@ import { createClient } from '@/app/lib/supabase/server-client';
 export async function createDonation(data: DonationInsert) {
   const supabase = await createClient();
 
-  const { data: entry, error: err } = await supabase
-    .from('donations')
-    .insert(data)
-    .select() // after inserting, return full new row
-    .single(); // expect just one row, if more or less, throw an error
+  const { error: err } = await supabase.from('donations').insert(data);
 
   if (err) {
     console.error('Error creating donation:', err);
-    return { success: false, data: null, error: err.message };
+    return { success: false, error: err.message };
   }
-  return { success: true, data: entry as Donation }; // return the row that was created
+  return { success: true }; // return the row that was created
 }
 
 // deletes donation based on donation_id
