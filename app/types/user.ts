@@ -9,7 +9,7 @@ export type User = {
   first_name: string;
   last_name: string;
   email: string;
-  phone: string | null;
+  phone: string;
   profile_photo_url: string | null;
 };
 
