@@ -87,6 +87,7 @@ enabled = true
 sql_paths = [
   "./seeds/roles.sql",
   "./seeds/auth.sql",
+  "./seeds/users.sql",
   "./seeds/user_roles.sql",
   "./seeds/categories.sql",
   "./seeds/subcategories.sql",
@@ -158,17 +159,19 @@ file_size_limit = "50MiB"
 public = true
 file_size_limit = "200KB"
 allowed_mime_types = ["image/png", "image/jpeg"]
+objects_path = "./seeds/images/profile_photos"
 
 [storage.buckets.inventory_item_photos]
 public = true
 file_size_limit = "200KB"
 allowed_mime_types = ["image/png", "image/jpeg"]
+objects_path = "./seeds/images/inventory_item_photos"
 
 [storage.buckets.store_photos]
 public = true
 file_size_limit = "200KB"
 allowed_mime_types = ["image/png", "image/jpeg"]
-
+objects_path = "./seeds/images/store_photos"
 
 [auth]
 enabled = true
