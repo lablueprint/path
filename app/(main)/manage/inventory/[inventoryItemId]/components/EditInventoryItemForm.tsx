@@ -223,66 +223,75 @@ export default function EditInventoryItemForm({
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Image
-          src={displayImage}
-          alt="Item photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
+      <form onSubmit={handleSubmit(onSubmit)} className="form-card">
+        <div className="card-body">
+          <div className="mb-3">
+            <Image
+              src={displayImage}
+              alt="Item photo"
+              width={64}
+              height={64}
+              className="photo"
+              unoptimized
+            />
 
-        {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
-          <button type="button" onClick={handleRemovePhoto}>
-            Remove
-          </button>
-        )}
+            {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                className="btn-cancel"
+              >
+                Remove
+              </button>
+            )}
 
-        <br />
-        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-        <br />
-
-        <label>
-          Inventory item name
-          <input
-            type="text"
-            {...register('name', { required: 'Item name is required.' })}
-          />
-        </label>
-        {errors.name && <p role="alert">{errors.name.message}</p>}
-        <br />
-
-        <label>
-          Description
-          <input
-            type="text"
-            {...register('description', {
-              required: 'Description is required.',
-            })}
-          />
-        </label>
-        {errors.description && <p role="alert">{errors.description.message}</p>}
-        <br />
-
-        <label>
-          Category
-          <select {...categoryField}>
-            <option value="">None</option>
-            {initialCategories.map((category) => (
-              <option key={category.category_id} value={category.category_id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        {!!selectedCategory && (
-          <>
             <br />
-            <label>
-              Subcategory
+            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label field-label">
+              Inventory item name
+            </label>
+            <input
+              type="text"
+              {...register('name', { required: 'Item name is required.' })}
+              className="form-control"
+            />
+            {errors.name && <p role="alert">{errors.name.message}</p>}
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label field-label">Description</label>
+            <input
+              type="text"
+              {...register('description', {
+                required: 'Description is required.',
+              })}
+              className="form-control"
+            />
+            {errors.description && (
+              <p role="alert">{errors.description.message}</p>
+            )}
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label field-label">Category</label>
+            <select className="form-select" {...categoryField}>
+              <option value="">None</option>
+              {initialCategories.map((category) => (
+                <option key={category.category_id} value={category.category_id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {!!selectedCategory && (
+            <div className="mb-3">
+              <label className="form-label field-label">Subcategory</label>
               <select
+                className="form-select"
                 {...register('selectedSubcategory', {
                   required: 'Subcategory is required.',
                   onChange: () => trigger('selectedSubcategory'),
@@ -298,28 +307,32 @@ export default function EditInventoryItemForm({
                   </option>
                 ))}
               </select>
-            </label>
-            {errors.selectedSubcategory && (
-              <p role="alert">{errors.selectedSubcategory.message}</p>
-            )}
-          </>
-        )}
+              {errors.selectedSubcategory && (
+                <p role="alert">{errors.selectedSubcategory.message}</p>
+              )}
+            </div>
+          )}
 
-        {hasDirtyTextOrImage && (
-          <>
-            <br />
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Save'}
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-          </>
-        )}
+          {hasDirtyTextOrImage && (
+            <div className="button-spacing">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-submit"
+              >
+                {isSubmitting ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

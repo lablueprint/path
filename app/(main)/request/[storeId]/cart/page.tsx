@@ -1,8 +1,11 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
-import SubmitTicketButton from '@/app/(main)/request/[storeId]/cart/components/SubmitTicketButton';
+import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
+import styles from '@/app/(main)/request/CartPage.module.css';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
+import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
+import { Store } from '@/app/types/store';
 
 export default async function CartPage({
   params,
@@ -48,6 +51,12 @@ export default async function CartPage({
   if (ticketError || !ticket) {
     return (
       <div>
+        <Breadcrumbs
+          labelMap={{
+            request: 'Request Inventory',
+            [`/request/${storeId}`]: store.name,
+          }}
+        />
         <h1>Cart</h1>
         {showSuccess && (
           <div>
@@ -55,7 +64,12 @@ export default async function CartPage({
             <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
           </div>
         )}
-        <div>No items found in cart.</div>
+        <div className={styles.itemsCard}>
+          <div className={styles.itemsCardHeader}>
+            <h1>ITEMS</h1>
+            <h2>0 in-stock · 0 out-of-stock</h2>
+          </div>
+        </div>
       </div>
     );
   }
@@ -72,6 +86,26 @@ export default async function CartPage({
 
   const hasItems = ticketItems && ticketItems.length > 0;
 
+  // If ticket exists, query for dest store options
+  const { data: destStoreOptions, error: destStoreOptionsError } =
+    await supabase
+      .from('stores')
+      .select('store_id, name, street_address')
+      .neq('store_id', storeId);
+  if (destStoreOptionsError) {
+    console.error(
+      'Error fetching destination store options:',
+      destStoreOptionsError,
+    );
+  }
+
+  // If ticket exists, query for current dest store
+  const { data: currentDestStore } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', ticket.dest_store_id)
+    .single();
+
   return (
     <div>
       <Breadcrumbs
@@ -81,20 +115,28 @@ export default async function CartPage({
         }}
       />
       <h1>Cart</h1>
+      {hasItems ? (
+        <div>
+          <p>Ticket Destination Store: </p>
+          <TicketDestStoreDropdown
+            ticketId={ticket.ticket_id}
+            currentDestStore={(currentDestStore as Store) || null}
+            destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+              store,
+            }))}
+          />
+        </div>
+      ) : null}
       {showSuccess && (
         <div>
           <p>Ticket submitted successfully!</p>
           <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
         </div>
       )}
-      {hasItems ? (
-        <>
-          <TicketItemsList ticketId={ticket.ticket_id} />
-          <SubmitTicketButton ticketId={ticket.ticket_id} />
-        </>
-      ) : (
-        <div>No items found in cart.</div>
-      )}
+      <div>
+        <TicketItemsList ticketId={ticket.ticket_id} />
+        {hasItems ? <SubmitTicketButton ticketId={ticket.ticket_id} /> : null}
+      </div>
     </div>
   );
 }

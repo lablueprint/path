@@ -64,6 +64,20 @@ export default function UserSearch({ roles }: Props) {
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
   }
 
+  // sort roles by roleOrder, with any roles not in the list appearing at the end
+  function formatRole(role: string) {
+    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  }
+  const roleOrder = ['Owner', 'Superadmin', 'Admin', 'Requestor', 'Default'];
+  const sortedRoles = [...roles].sort((a, b) => {
+    const aIndex = roleOrder.indexOf(formatRole(a.name));
+    const bIndex = roleOrder.indexOf(formatRole(b.name));
+    return (
+      (aIndex === -1 ? roleOrder.length : aIndex) -
+      (bIndex === -1 ? roleOrder.length : bIndex)
+    );
+  });
+
   return (
     <div className="search-filter-wrapper">
       <Form.Control
@@ -81,7 +95,7 @@ export default function UserSearch({ roles }: Props) {
             onChange={(e) => handleRoleChange(e.target.value)}
           >
             <option value="">All Roles</option>
-            {roles.map((role) => (
+            {sortedRoles.map((role) => (
               <option key={role.role_id} value={String(role.role_id)}>
                 {role.name}
               </option>

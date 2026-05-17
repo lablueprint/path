@@ -1,8 +1,8 @@
 import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
+import EditCategories from '@/app/(main)/manage/inventory/add/components/EditCategories';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
-import styles from '@/app/(main)/manage/inventory/InventoryPage.module.css';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
@@ -18,14 +18,16 @@ export default async function InventoryPage({
 }) {
   const supabase = await createClient();
 
-  // Don't need to fetch categories as it is done later
-  // Fetch subcategories
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const role = claimsData?.claims?.user_role;
+
   const { data: subcategories } = await supabase
     .from('subcategories')
     .select('subcategory_id, name, category_id')
     .order('name');
 
   const { query, category, subcategory } = await searchParams;
+
   let filteredItems = supabase
     .from('inventory_items')
     .select(
@@ -70,11 +72,11 @@ export default async function InventoryPage({
     .order('name', { referencedTable: 'subcategories', ascending: true })
     .overrideTypes<
       {
-        category_id: string;
+        category_id: number;
         name: string;
         subcategories: {
           name: string;
-          subcategory_id: string;
+          subcategory_id: number;
         }[];
       }[],
       { merge: false }
@@ -103,7 +105,7 @@ export default async function InventoryPage({
           inventory: 'Inventory Library',
         }}
       />
-      <div className={styles.pageHeader}>
+      <div className="page-header">
         <h1>Inventory Library</h1>
         <Link href="/manage/inventory/add">Add inventory item</Link>
       </div>
@@ -144,9 +146,10 @@ export default async function InventoryPage({
       )}
 
       <h2>Categories</h2>
-      <ul>
-        {categories && categories.length > 0 ? (
-          categories.map((cat) => (
+
+      {role === 'admin' && (
+        <ul>
+          {categories?.map((cat) => (
             <li key={cat.category_id}>
               {cat.name}
               <ul>
@@ -155,11 +158,13 @@ export default async function InventoryPage({
                 ))}
               </ul>
             </li>
-          ))
-        ) : (
-          <p>No categories found.</p>
-        )}
-      </ul>
+          ))}
+        </ul>
+      )}
+
+      {(role === 'superadmin' || role === 'owner') && (
+        <EditCategories categories={categories} />
+      )}
     </div>
   );
 }

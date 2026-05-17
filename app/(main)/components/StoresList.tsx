@@ -11,6 +11,8 @@ import defaultStorePhoto from '@/public/image-placeholder.svg';
 export default function StoresList({ stores }: { stores: Store[] }) {
   const [view, setView] = useState<ViewMode>('grid');
 
+  const sortedStores = [...stores].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div>
       <div className={styles.header}>
@@ -18,7 +20,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
       </div>
       {view === 'grid' ? (
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
-          {stores?.map((store) => (
+          {sortedStores?.map((store) => (
             <div key={store.store_id} className="col">
               <StoreCard store={store} />
             </div>
@@ -33,7 +35,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
             </tr>
           </thead>
           <tbody>
-            {stores?.map((store) => (
+            {sortedStores?.map((store) => (
               <tr className={styles.tableRow} key={store.store_id}>
                 <td>
                   <div className={styles.nameCell}>

@@ -46,7 +46,7 @@ export default async function TeamProfilePage({
 
       <Image
         src={user.profile_photo_url || imagePlaceholder}
-        alt={`Profile picture for ${user.first_name}`}
+        alt={user.first_name + ' ' + user.last_name}
         height={64}
         width={64}
         unoptimized
