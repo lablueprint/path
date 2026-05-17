@@ -155,16 +155,16 @@ Table {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: none;
+  border: 1px solid #3182ce;
   border-radius: 5px;
-  background: #2d3748;
+  background: #3182ce;
   color: #fff;
   font-weight: 400;
   cursor: pointer;
 }
 
 .btn-submit:hover {
-  background: #4a5568;
+  background: #2473bc;
   transition: background 0.2s ease;
 }
 
@@ -189,6 +189,32 @@ Table {
 .btn-cancel:hover {
   background: #ededed;
   transition: background 0.2s ease;
+}
+
+.btn-remove {
+  display: inline-flex;
+  padding: 8px 40px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #c53030;
+  border-radius: 5px;
+  background: #ffefef;
+  color: #c53030;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  background: #fbe0e0;
+  transition: background 0.2s ease;
+}
+
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 .form-body {
@@ -395,4 +421,5 @@ Table {
 .button-spacing {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }

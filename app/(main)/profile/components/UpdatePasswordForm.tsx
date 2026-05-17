@@ -16,6 +16,7 @@ export default function UpdatePasswordForm() {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
+    mode: 'onChange',
     defaultValues: {
       newPassword: '',
       newPasswordConfirmation: '',
@@ -53,44 +54,69 @@ export default function UpdatePasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>New password</label>
-      <input
-        type="password"
-        {...register('newPassword', {
-          minLength: 8,
-          pattern:
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        })}
-      />
-      {errors.newPassword && (
-        <p role="alert">
-          Password must be at least 8 characters and include an uppercase
-          letter, a lowercase letter, a number, and a symbol.
-        </p>
-      )}
-      <br />
-      <label>Confirm new password</label>
-      <input type="password" {...register('newPasswordConfirmation')} />
+    <div className="form-card">
+      <div className="card-body">
+        <form onSubmit={handleSubmit(onSubmit)} className="form-body">
+          <h2>Change Password</h2>
+          <div>
+            <label className="field-label">New password</label>
+            <input
+              className="form-control"
+              type="password"
+              {...register('newPassword', {
+                minLength: 8,
+                pattern:
+                  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+              })}
+            />
+            <div>
+              {errors.newPassword && (
+                <p role="alert">
+                  Password must be at least 8 characters and include an
+                  uppercase letter, a lowercase letter, a number, and a symbol.
+                </p>
+              )}
+            </div>
+          </div>
+          <div>
+            <label className="field-label">Confirm new password</label>
+            <input
+              className="form-control"
+              type="password"
+              {...register('newPasswordConfirmation')}
+            />
+            <div>
+              {newPasswordConfirmation.length > 0 && !passwordsMatch && (
+                <p role="alert">Passwords do not match.</p>
+              )}
+            </div>
+          </div>
 
-      {newPasswordConfirmation.length > 0 && !passwordsMatch && (
-        <p role="alert">Passwords do not match.</p>
-      )}
-      <br />
-      {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
-        <button
-          type="button"
-          onClick={() =>
-            reset({
-              newPassword: '',
-              newPasswordConfirmation: '',
-            })
-          }
-        >
-          Cancel
-        </button>
-      )}
-      {passwordsMatch && <button type="submit">Save</button>}
-    </form>
+          {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+            <div className="btn-row">
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={() =>
+                  reset({
+                    newPassword: '',
+                    newPasswordConfirmation: '',
+                  })
+                }
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+          {passwordsMatch && (
+            <div className="btn-row">
+              <button className="btn-submit" type="submit">
+                Save
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
   );
 }
