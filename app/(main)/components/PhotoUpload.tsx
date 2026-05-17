@@ -2,9 +2,9 @@
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Image from 'next/image';
-import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
+import defaultProfilePhoto from '@/public/image-placeholder.svg';
 import uploadPhotoIcon from '@/public/image-upload.svg';
-import styles from './PhotoUpload.module.css';
+import styles from '@/app/(main)/components/PhotoUpload.module.css';
 
 type PhotoUploadProps = {
   variant?: 'circle' | 'rectangle';
@@ -63,145 +63,58 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
 
     const hasPhoto = displayImage !== defaultProfilePhoto.src;
 
-    // return (
-    //   <div className={styles.wrapper}>
-    //     <div style={{ position: 'relative', width: '100%' }}>
-    //       <label
-    //         htmlFor={id}
-    //         className={[
-    //           styles.container,
-    //           styles[variant],
-    //           isDragging ? styles.dragging : '',
-    //           hasPhoto ? styles.hasPhoto : '',
-    //         ].join(' ')}
-    //         onDragOver={handleDragOver}
-    //         onDragLeave={handleDragLeave}
-    //         onDrop={handleDrop}
-    //       >
-    //         {hasPhoto ? (
-    //           <Image
-    //             src={displayImage}
-    //             alt="Profile photo"
-    //             width={200}
-    //             height={200}
-    //             style={{ objectFit: 'cover' }}
-    //             unoptimized
-    //           />
-    //         ) : (
-    //           <div
-    //             className={styles.placeholder}
-    //             style={{ width: '100%', height: '100%' }}
-    //           >
-    //             <img
-    //               src={uploadPhotoIcon.src}
-    //               alt="Upload photo"
-    //               style={{ width: 32, height: 32 }}
-    //             />
-    //             <span className={styles.photoPlaceholderText}>
-    //               Drag and drop file here or <u>Browse</u>
-    //             </span>
-    //           </div>
-    //         )}
-    //       </label>
-
-    //       {variant === 'rectangle' && !isPendingDelete && hasPhoto && (
-    //         <button
-    //           type="button"
-    //           onClick={onRemove}
-    //           className={styles.removeButton}
-    //         >
-    //           —
-    //         </button>
-    //       )}
-    //     </div>
-
-    //     {/* circle variant keep the reserved-space remove button */}
-    //     {variant === 'circle' && (
-    //       <div
-    //         style={{
-    //           height: 56,
-    //           display: 'flex',
-    //           alignItems: 'center',
-    //           justifyContent: 'center',
-    //         }}
-    //       >
-    //         {!isPendingDelete && hasPhoto && (
-    //           <button type="button" onClick={onRemove} className="btn-remove">
-    //             Remove
-    //           </button>
-    //         )}
-    //       </div>
-    //     )}
-
-    //     <input
-    //       ref={inputRef}
-    //       id={id}
-    //       type="file"
-    //       accept="image/*"
-    //       onChange={handleFileChange}
-    //       style={{ display: 'none' }}
-    //     />
-    //   </div>
-    // );
     return (
       <div className={styles.wrapper}>
-        <div
-          style={{
-            position: 'relative',
-            width: variant === 'circle' ? '200px' : '100%',
-          }}
+        <label
+          htmlFor={id}
+          className={[
+            styles.container,
+            styles[variant],
+            isDragging ? styles.dragging : '',
+            hasPhoto ? styles.hasPhoto : '',
+          ].join(' ')}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
         >
-          <label
-            htmlFor={id}
-            className={[
-              styles.container,
-              styles[variant],
-              isDragging ? styles.dragging : '',
-              hasPhoto ? styles.hasPhoto : '',
-            ].join(' ')}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            {hasPhoto ? (
+          {hasPhoto ? (
+            <Image
+              src={displayImage}
+              alt="Profile photo"
+              width={200}
+              height={200}
+              style={{ objectFit: 'cover' }}
+              unoptimized
+            />
+          ) : (
+            <div className={styles.placeholder}>
               <Image
-                src={displayImage}
-                alt="Profile photo"
-                width={200}
-                height={200}
-                style={{ objectFit: 'cover' }}
+                src={uploadPhotoIcon.src}
+                alt="Upload photo"
+                width={32}
+                height={32}
+                className={styles.placeholderImage}
                 unoptimized
               />
-            ) : (
-              <div
-                className={styles.placeholder}
-                style={{ width: '100%', height: '100%' }}
-              >
-                <img
-                  src={uploadPhotoIcon.src}
-                  alt="Upload photo"
-                  style={{ width: 32, height: 32 }}
-                />
-                <span className={styles.photoPlaceholderText}>
-                  Drag and drop file here or <u>Browse</u>
-                </span>
-              </div>
-            )}
-          </label>
-
-          {!isPendingDelete && hasPhoto && (
-            <button
-              type="button"
-              onClick={onRemove}
-              className={[
-                styles.removeButton,
-                variant === 'circle' ? styles.removeButtonCircle : '',
-              ].join(' ')}
-            >
-              —
-            </button>
+              <span className={styles.photoPlaceholderText}>
+                Drag and drop file here or <u>browse</u>
+              </span>
+            </div>
           )}
-        </div>
+        </label>
+
+        {!isPendingDelete && hasPhoto && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className={[
+              styles.removeButton,
+              variant === 'circle' ? styles.removeButtonCircle : '',
+            ].join(' ')}
+          >
+            —
+          </button>
+        )}
 
         <input
           ref={inputRef}

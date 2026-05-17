@@ -5,7 +5,6 @@ import { useState, useRef } from 'react';
 import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import styles from '@/app/(main)/components/StoreForm.module.css';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 type FormValues = {

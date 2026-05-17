@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
 import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
 import MobileSidebar from '@/app/(main)/components/MobileSidebar';
-import imagePlaceholder from '@/public/profile-image-placeholder.png';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 import pathLogo from '@/public/path.png';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';

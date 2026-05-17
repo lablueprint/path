@@ -1,6 +1,5 @@
 'use client';
 
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { addToCart } from '@/app/actions/ticket';
 import styles from '@/app/(main)/request/[storeId]/[storeItemId]/RequestStoreItemPage.module.css';
@@ -41,7 +40,7 @@ export default function AddInStockToCartForm({
         />
       </Form.Group>
 
-      <button type="submit" className="btn-submit">
+      <button type="submit" className="align-self-start btn-submit">
         Add to Cart
       </button>
     </Form>

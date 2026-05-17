@@ -212,8 +212,9 @@ Table {
 
 .btn-row {
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 .form-body {

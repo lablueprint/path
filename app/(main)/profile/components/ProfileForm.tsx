@@ -6,9 +6,9 @@ import { updateUser } from '@/app/actions/user';
 import { useState, useRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import styles from '@/app/(main)/components/ProfilePage.module.css';
+import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
-import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
+import defaultProfilePhoto from '@/public/image-placeholder.svg';
 
 type ProfileFormValues = {
   email: string;
@@ -147,15 +147,7 @@ export default function ProfileForm({ user }: { user: User }) {
   return (
     <div className={styles.card}>
       <div className={styles.cardBody}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <h2
-            className={
-              isEditing ? styles.userInfoTextEdit : styles.userInfoText
-            }
-          >
-            User Information
-          </h2>
-
+        <form onSubmit={handleSubmit(onSubmit)} className="form-body">
           {isEditing ? (
             <div className={styles.avatarCircleEdit}>
               <PhotoUpload
@@ -180,8 +172,9 @@ export default function ProfileForm({ user }: { user: User }) {
               />
             </div>
           )}
+          <h2>User Information</h2>
 
-          <div className={styles.fieldGroup}>
+          <div>
             <div className="two-col-row">
               <div>
                 <label className={styles.profileLabel}>First name</label>
@@ -223,7 +216,7 @@ export default function ProfileForm({ user }: { user: User }) {
             </div>
           </div>
 
-          <div className={styles.fieldGroup}>
+          <div>
             <label className={styles.profileLabel}>Email</label>
             {isEditing ? (
               <>
@@ -256,14 +249,8 @@ export default function ProfileForm({ user }: { user: User }) {
             </div>
           )}
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            {!isEditing && (
+          {!isEditing && (
+            <div className="btn-row">
               <button
                 type="button"
                 className="btn-cancel"
@@ -271,8 +258,8 @@ export default function ProfileForm({ user }: { user: User }) {
               >
                 Edit
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
