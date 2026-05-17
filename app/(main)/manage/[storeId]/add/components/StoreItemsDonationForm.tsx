@@ -67,14 +67,30 @@ export default function StoreItemsDonationForm({
   const isInventorySelected =
     itemSettingsSelected.includes('addInventoryItems');
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
+  const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
   useEffect(() => {
     if (isGiftSelected && isInventorySelected) {
-      const itemsString = autoFillItems.map((item) => item.name).join(', ');
-      methods.setValue('items_donated', itemsString);
+      // Only run the sync logic if there are actually items to fill
+      if (autoFillItems.length > 0) {
+        const itemsString = autoFillItems.map((item) => item.name).join(', ');
+
+        methods.setValue('items_donated', itemsString, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
+      } else {
+        // If autoFillItems is empty, reset the field value silently
+        methods.setValue('items_donated', '', {
+          shouldValidate: false,
+          shouldDirty: false,
+          shouldTouch: false,
+        });
+      }
     }
   }, [isGiftSelected, isInventorySelected, autoFillItems, methods]);
   const onSubmit = async (data: CombinedFormData) => {
@@ -159,6 +175,7 @@ export default function StoreItemsDonationForm({
           items_donated: '',
           items: [],
         });
+        setSelectedItems([]);
         setAutoFillItems([]);
         methods.clearErrors();
       }
@@ -200,7 +217,11 @@ export default function StoreItemsDonationForm({
 
           {itemSettingsSelected?.includes('addInventoryItems') && (
             <>
-              <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
+              <AddStoreItemSearch
+                setAutoFillItems={setAutoFillItems}
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems}
+              />
               {/* add autofillitems connection pass in prop to storeitemsform */}
               <button type="submit" className="btn-submit">
                 Submit

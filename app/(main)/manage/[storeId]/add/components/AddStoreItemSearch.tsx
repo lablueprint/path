@@ -29,8 +29,12 @@ const supabase = createClient();
 
 export default function AddStoreItemSearch({
   setAutoFillItems,
+  selectedItems,
+  setSelectedItems,
 }: {
   setAutoFillItems: (items: ItemWithNames[]) => void;
+  selectedItems: ItemWithNames[];
+  setSelectedItems: React.Dispatch<React.SetStateAction<ItemWithNames[]>>;
 }) {
   const methods = useFormContext<CombinedFormData>();
   const { fields, append, remove } = useFieldArray({
@@ -39,7 +43,6 @@ export default function AddStoreItemSearch({
   });
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const createItemMethods = useForm<Inputs>();
 
