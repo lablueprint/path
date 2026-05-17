@@ -52,7 +52,7 @@ export default async function IncomingTicketsStorePage({
     .from('tickets')
     .select('*, users(*)')
     .eq('store_id', storeId)
-    .in('status', ['requested', 'ready', 'rejected', 'fulfilled']);
+    .in('status', ['requested', 'approved', 'ready', 'rejected', 'fulfilled']);
 
   if (ticketsError) {
     console.error('Error fetching tickets:', ticketsError);
