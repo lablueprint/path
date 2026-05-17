@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
 import styles from '@/app/(main)/components/Sidebar.module.css';
-import imagePlaceholder from '@/public/profile-image-placeholder.png';
+import imagePlaceholder from '@/public/image-placeholder.svg';
 import pathLogo from '@/public/path.png';
 
 type SidebarGroup = {

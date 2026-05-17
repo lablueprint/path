@@ -2,34 +2,29 @@
   border: none;
   border-radius: 5px;
   background: #fff;
+  margin-top: 8.25rem;
 }
 
 .cardBody {
   padding: 40px;
+  padding-top: 6.25rem;
   margin-top: 50px;
 }
 
 .userInfoText {
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
-
-.userInfoTextEdit {
-  margin-top: 60px;
-  margin-bottom: 20px;
+  margin-top: 1.25rem;
 }
 
 .avatarCircle {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -270px;
-  margin-bottom: 65px;
+  margin-top: -12.5rem;
 }
 
 .avatarCircle img {
-  width: 200px;
-  height: 200px;
+  width: 12.5rem;
+  height: 12.5rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -38,8 +33,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -300px;
-  margin-bottom: 40px;
+  margin-top: -12.5rem;
 }
 
 .fieldGroup {

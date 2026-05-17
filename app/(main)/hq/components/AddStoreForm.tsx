@@ -5,7 +5,6 @@ import { useState, useRef } from 'react';
 import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import Image from 'next/image';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
 
 type FormValues = {
@@ -99,31 +98,21 @@ export default function AddStoreForm() {
     <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Image
-              src={displayImage}
-              alt="Store photo"
-              width={64}
-              height={64}
-              className="photo"
-              unoptimized
-            />
-            {displayImage !== defaultStorePhoto.src && (
-              <button
-                type="button"
-                onClick={handleRemovePhoto}
-                className="btn-cancel"
-              >
-                Remove
-              </button>
-            )}
-            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-          </div>
+          <div className="row g-5 align-items-start">
+            <div className="col-auto" style={{ width: '250px' }}>
+              <PhotoUpload
+                ref={photoUploadRef}
+                onFileSelect={handleFileSelect}
+                previewUrl={previewUrl}
+                onRemove={handleRemovePhoto}
+              />
+            </div>
 
-          <div className="mb-3">
-            <label className="form-label field-label">Store name</label>
-            <input {...register('storeName')} className="form-control" />
-          </div>
+            <div className="col">
+              <div className="mb-3">
+                <label className="form-label field-label">Store name</label>
+                <input {...register('storeName')} className="form-control" />
+              </div>
 
           <div className="mb-3">
             <label className="form-label field-label">

@@ -54,48 +54,46 @@ export default function UpdatePasswordForm() {
   };
 
   return (
-    <div>
-      <div style={{ padding: '40px' }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="form-card">
+      <div className="card-body">
+        <form onSubmit={handleSubmit(onSubmit)} className="form-body">
           <h2>Change Password</h2>
-          <label className="field-label">New password</label>
-          <input
-            className="form-control"
-            type="password"
-            {...register('newPassword', {
-              minLength: 8,
-              pattern:
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-            })}
-          />
-          <div style={{ minHeight: '24px', marginTop: 4, marginBottom: 12 }}>
-            {errors.newPassword && (
-              <p
-                role="alert"
-                style={{ color: '#dc2626', marginTop: 5, fontSize: 14 }}
-              >
-                Password must be at least 8 characters and include an uppercase
-                letter, a lowercase letter, a number, and a symbol.
-              </p>
-            )}
+          <div>
+            <label className="field-label">New password</label>
+            <input
+              className="form-control"
+              type="password"
+              {...register('newPassword', {
+                minLength: 8,
+                pattern:
+                  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+              })}
+            />
+            <div>
+              {errors.newPassword && (
+                <p role="alert">
+                  Password must be at least 8 characters and include an
+                  uppercase letter, a lowercase letter, a number, and a symbol.
+                </p>
+              )}
+            </div>
+          </div>
+          <div>
+            <label className="field-label">Confirm new password</label>
+            <input
+              className="form-control"
+              type="password"
+              {...register('newPasswordConfirmation')}
+            />
+            <div>
+              {newPasswordConfirmation.length > 0 && !passwordsMatch && (
+                <p role="alert">Passwords do not match.</p>
+              )}
+            </div>
           </div>
 
-          <label className="field-label">Confirm new password</label>
-          <input
-            className="form-control"
-            type="password"
-            {...register('newPasswordConfirmation')}
-          />
-          <div style={{ minHeight: '24px', marginTop: 4, marginBottom: 12 }}>
-            {newPasswordConfirmation.length > 0 && !passwordsMatch && (
-              <p role="alert" style={{ color: '#dc2626', fontSize: 14 }}>
-                Passwords do not match.
-              </p>
-            )}
-          </div>
-
-          <div className="btn-row" style={{ minHeight: '40px' }}>
-            {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+          {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+            <div className="btn-row">
               <button
                 type="button"
                 className="btn-cancel"
@@ -108,17 +106,15 @@ export default function UpdatePasswordForm() {
               >
                 Cancel
               </button>
-            )}
-            {passwordsMatch && (
-              <button
-                className="btn-submit"
-                type="submit"
-                style={{ visibility: passwordsMatch ? 'visible' : 'hidden' }}
-              >
+            </div>
+          )}
+          {passwordsMatch && (
+            <div className="btn-row">
+              <button className="btn-submit" type="submit">
                 Save
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </form>
       </div>
     </div>

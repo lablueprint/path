@@ -2,9 +2,9 @@
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Image from 'next/image';
-import defaultProfilePhoto from '@/public/profile-image-placeholder.png';
+import defaultProfilePhoto from '@/public/image-placeholder.svg';
 import uploadPhotoIcon from '@/public/image-upload.svg';
-import styles from './PhotoUpload.module.css';
+import styles from '@/app/(main)/components/PhotoUpload.module.css';
 
 type PhotoUploadProps = {
   variant?: 'circle' | 'rectangle';
@@ -83,48 +83,38 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
               alt="Profile photo"
               width={200}
               height={200}
-              style={{
-                objectFit: 'cover',
-              }}
+              style={{ objectFit: 'cover' }}
               unoptimized
             />
           ) : (
-            <div
-              className={styles.placeholder}
-              style={{ width: '100%', height: '100%' }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className={styles.placeholder}>
+              <Image
                 src={uploadPhotoIcon.src}
                 alt="Upload photo"
-                style={{ width: 32, height: 32 }}
+                width={32}
+                height={32}
+                className={styles.placeholderImage}
+                unoptimized
               />
               <span className={styles.photoPlaceholderText}>
-                Drag and drop file here or <u>Browse</u>
+                Drag and drop file here or <u>browse</u>
               </span>
             </div>
           )}
         </label>
 
-        <div
-          style={{
-            height: 56,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {!isPendingDelete && hasPhoto && (
-            <button
-              type="button"
-              onClick={onRemove}
-              className="btn-remove"
-              style={{ marginTop: 10 }}
-            >
-              Remove
-            </button>
-          )}
-        </div>
+        {!isPendingDelete && hasPhoto && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className={[
+              styles.removeButton,
+              variant === 'circle' ? styles.removeButtonCircle : '',
+            ].join(' ')}
+          >
+            —
+          </button>
+        )}
 
         <input
           ref={inputRef}
