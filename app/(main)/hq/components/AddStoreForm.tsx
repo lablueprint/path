@@ -92,8 +92,6 @@ export default function AddStoreForm() {
     }
   };
 
-  const displayImage = previewUrl || defaultStorePhoto.src;
-
   return (
     <div className="form-card">
       <div className="card-body">
@@ -114,37 +112,43 @@ export default function AddStoreForm() {
                 <input {...register('storeName')} className="form-control" />
               </div>
 
-          <div className="mb-3">
-            <label className="form-label field-label">
-              Store street address
-            </label>
-            <input
-              {...register('storeStreetAddress')}
-              className="form-control"
-            />
-          </div>
+              <div className="mb-3">
+                <label className="form-label field-label">
+                  Store street address
+                </label>
+                <input
+                  {...register('storeStreetAddress')}
+                  className="form-control"
+                />
+              </div>
 
-          <div className="button-spacing">
-            {bothFilled && (
-              <button type="submit" disabled={isSaving} className="btn-submit">
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
-            )}
-            {eitherFilled && (
-              <button
-                type="button"
-                className="btn-cancel"
-                disabled={isSaving}
-                onClick={() => {
-                  reset({ storeName: '', storeStreetAddress: '' });
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                  photoUploadRef.current?.resetFile();
-                }}
-              >
-                Cancel
-              </button>
-            )}
+              <div className="button-spacing">
+                {eitherFilled && (
+                  <button
+                    type="button"
+                    className="btn-cancel"
+                    disabled={isSaving}
+                    onClick={() => {
+                      reset({ storeName: '', storeStreetAddress: '' });
+                      setSelectedFile(null);
+                      setPreviewUrl(null);
+                      photoUploadRef.current?.resetFile();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
+                {bothFilled && (
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="btn-submit"
+                  >
+                    {isSaving ? 'Saving...' : 'Save'}
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </form>
       </div>

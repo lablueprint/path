@@ -72,7 +72,7 @@ export default function Dropdown({
       </select>
       <div className="btn-row">
         <button className="btn-submit" type="submit">
-          Update role
+          Save
         </button>
       </div>
     </form>

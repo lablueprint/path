@@ -1,8 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Dropdown from '@/app/(main)/team/people/[userId]/components/Dropdown';
 import Image from 'next/image';
-import styles from '@/app/(main)/components/ProfilePage.module.css';
+import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 
 export default async function TeamProfilePage({
@@ -36,14 +35,11 @@ export default async function TeamProfilePage({
   }
 
   return (
-    <div className="form-body">
+    <div>
       <h1>Profile</h1>
-      <div style={{ height: '50px' }} />
       {/* same styling as profile page */}
       <div className={styles.card}>
-        <div className={styles.cardBody}>
-          <h2 className={styles.userInfoText}>User Information</h2>
-
+        <div className={`form-body ${styles.cardBody}`}>
           <div className={styles.avatarCircle}>
             <Image
               src={user.profile_photo_url || imagePlaceholder}
@@ -53,8 +49,9 @@ export default async function TeamProfilePage({
               unoptimized
             />
           </div>
+          <h2>User Information</h2>
 
-          <div className={styles.fieldGroup}>
+          <div>
             <div className="two-col-row">
               <div>
                 <label className={styles.profileLabel}>First name</label>
@@ -67,12 +64,12 @@ export default async function TeamProfilePage({
             </div>
           </div>
 
-          <div className={styles.fieldGroup}>
+          <div>
             <label className={styles.profileLabel}>Email</label>
             <p className="form-control-plaintext">{user.email}</p>
           </div>
 
-          <div className={styles.fieldGroup}>
+          <div>
             <label className={styles.profileLabel}>Role</label>
             <Dropdown userId={userId} roleId={role?.role_id} />
           </div>
