@@ -2,7 +2,13 @@
 import { useState } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
 
-type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
+type TicketStatus =
+  | 'draft'
+  | 'requested'
+  | 'ready'
+  | 'rejected'
+  | 'fulfilled'
+  | 'approved';
 
 export default function TicketStatusDropdown({
   ticketId,
