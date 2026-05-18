@@ -83,16 +83,6 @@ export default async function Sidebar() {
           href: '/incoming-tickets',
           allowedRoles: ['admin', 'superadmin', 'owner'],
         },
-        {
-          label: 'Team',
-          href: '/team',
-          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
-        },
-        {
-          label: 'HQ',
-          href: '/hq',
-          allowedRoles: ['superadmin', 'owner'],
-        },
       ],
     },
   ];
