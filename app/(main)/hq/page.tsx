@@ -18,6 +18,12 @@ export default async function HqPage() {
     .from('stores')
     .select('store_id, name, street_address, photo_url');
 
+  if (storesData) {
+    console.log('Stores data:', storesData);
+  } else {
+    console.error('Error fetching stores:', storesErr);
+  }
+
   if (err) {
     console.error('Error fetching donations:', err);
     return <div>Failed to load data.</div>;

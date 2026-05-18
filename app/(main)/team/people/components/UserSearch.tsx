@@ -74,6 +74,7 @@ export default function UserSearch({ roles }: Props) {
       <select
         value={searchParams.get('role') ?? ''}
         onChange={(e) => handleRoleChange(e.target.value)}
+        className="form-select w-auto dropdown"
       >
         <option value="">All roles</option>
         {roles.map((role) => (

@@ -93,6 +93,7 @@ export default function ItemSearch({ categories, subcategories }: Props) {
       <select
         value={searchParams.get('category') ?? ''}
         onChange={(e) => handleCategoryChange(e.target.value)}
+        className="form-select w-auto dropdown"
       >
         <option value="">All categories</option>
         {categories.map((category) => (
@@ -107,6 +108,7 @@ export default function ItemSearch({ categories, subcategories }: Props) {
         <select
           value={searchParams.get('subcategory') ?? ''}
           onChange={(e) => handleSubcategoryChange(e.target.value)}
+          className="form-select w-auto dropdown"
         >
           <option value="">All subcategories</option>
           {filteredSubcategories.map((subcategory) => (

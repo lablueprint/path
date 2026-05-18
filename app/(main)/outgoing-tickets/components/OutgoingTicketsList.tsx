@@ -1,7 +1,7 @@
 'use client';
 import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
 import { useState } from 'react';
-import styles from '@/app/(main)/outgoing-tickets/components/OutgoingTicket.module.css';
+import { Table } from 'react-bootstrap';
 
 type Ticket = {
   ticket_id: string;
@@ -30,7 +30,7 @@ export default function OutgoingTicketsList({
       {/* Dropdown menu with status options */}
       <div className="d-flex justify-content-end">
         <select
-          className={`form-select w-auto ${styles.dropdown}`}
+          className="form-select w-auto dropdown"
           value={selectedStatus}
           onChange={(e) => setSelectedStatus(e.target.value)}
         >
@@ -43,16 +43,8 @@ export default function OutgoingTicketsList({
       </div>
 
       {filteredTickets.length > 0 ? (
-        <table
-          className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}
-        >
-          <colgroup>
-            <col className={styles.idCol} />
-            <col className={styles.storeCol} />
-            <col className={styles.statusCol} />
-            <col className={styles.dateCol} />
-          </colgroup>
-          <thead>
+        <Table>
+          <thead className="table-header">
             <tr>
               <th>ID</th>
               <th>STORE NAME</th>
@@ -71,7 +63,7 @@ export default function OutgoingTicketsList({
               />
             ))}
           </tbody>
-        </table>
+        </Table>
       ) : (
         <p>No tickets found.</p>
       )}

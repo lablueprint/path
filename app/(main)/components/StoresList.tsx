@@ -9,6 +9,7 @@ import ViewToggle, { ViewMode } from '@/app/(main)/components/ViewToggle';
 import Image from 'next/image';
 import styles from '@/app/(main)/components/StoresList.module.css';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
+import { Table } from 'react-bootstrap';
 
 export default function StoresList({ stores }: { stores: Store[] }) {
   const [view, setView] = useState<ViewMode>('grid');
@@ -27,8 +28,8 @@ export default function StoresList({ stores }: { stores: Store[] }) {
           ))}
         </Row>
       ) : (
-        <table className={styles.table}>
-          <thead className={styles.tableHeader}>
+        <Table borderless>
+          <thead className="table-header">
             <tr>
               <th>NAME</th>
               <th>ADDRESS</th>
@@ -36,7 +37,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
           </thead>
           <tbody>
             {stores?.map((store) => (
-              <tr className={styles.tableRow} key={store.store_id}>
+              <tr key={store.store_id}>
                 <td>
                   <div className={styles.nameCell}>
                     <Image
@@ -55,7 +56,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       )}
     </Container>
   );

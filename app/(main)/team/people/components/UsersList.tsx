@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from '@/app/(main)/team/people/components/UsersList.module.css';
 import { Table } from 'react-bootstrap';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 
@@ -21,7 +20,7 @@ export default function UsersList({
       <Table borderless>
         <thead className="table-header">
           <tr>
-            <th>Requestor</th>
+            <th>Team Member</th>
             <th>Role</th>
             <th>Email</th>
           </tr>
@@ -36,19 +35,19 @@ export default function UsersList({
                   height={32}
                   width={32}
                   unoptimized
-                  className={styles.userPfp}
+                  className="profilePicture"
                 />
                 <Link
                   key={user.user_id}
                   href={`/team/people/${user.user_id}`} // Where to navigate
-                  className={styles.userLink}
+                  className="userLink"
                 >
                   {user.first_name + ' ' + user.last_name}
                 </Link>
               </td>
-              <td className={styles.userRole}>{user.role}</td>
+              <td className="userRole">{user.role}</td>
               <td>
-                <a className={styles.userEmail} href={`mailto:${user.email}`}>
+                <a className="userEmail" href={`mailto:${user.email}`}>
                   {user.email}
                 </a>
               </td>

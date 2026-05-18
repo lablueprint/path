@@ -40,6 +40,7 @@ export default function TicketStatusDropdown({
       <select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
+        className="form-select w-auto dropdown"
       >
         {statusOptions.map((status) => (
           <option key={status} value={status}>
