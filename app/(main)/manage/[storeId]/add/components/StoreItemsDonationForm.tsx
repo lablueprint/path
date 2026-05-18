@@ -184,9 +184,11 @@ export default function StoreItemsDonationForm({
   };
   return (
     <div>
-      <h2>Add Items</h2>
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="content-body"
+        >
           <div className="checkbox-row">
             <Form.Check
               type="checkbox"
@@ -222,9 +224,11 @@ export default function StoreItemsDonationForm({
                 setSelectedItems={setSelectedItems}
               />
               {/* add autofillitems connection pass in prop to storeitemsform */}
-              <button type="submit" className="btn-submit">
-                Submit
-              </button>
+              <div>
+                <button type="submit" className="btn-submit">
+                  Submit
+                </button>
+              </div>
             </>
           )}
         </form>

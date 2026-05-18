@@ -4,7 +4,7 @@ import { forwardRef, useState } from 'react';
 import { DonationInsert } from '@/app/types/donation';
 import { useForm, useWatch, Controller } from 'react-hook-form';
 import { PatternFormat, NumericFormat } from 'react-number-format';
-import { Form, Container, Card, Alert } from 'react-bootstrap';
+import { Form, Card, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
 import styles from '@/app/(main)/components/DonationForm.module.css';
@@ -151,32 +151,27 @@ export default function LightweightDonationForm({ stores, user }: Props) {
   };
 
   return (
-    <Container className={styles.formContainer}>
+    <div>
+      <h1>Record Gift-in-Kind</h1>
       <Card className="form-card">
         <Card.Body>
-          <form onSubmit={handleSubmit(onSubmit)} className={styles.formBody}>
-            <div className={styles.formSection}>
-              <h1 className="form-title-1">Store Information</h1>
-              <Form.Group
-                controlId="receiving_site"
-                className={styles.receivingSiteGroup}
-              >
-                <Form.Label className="field-label">Receiving site</Form.Label>
+          <form onSubmit={handleSubmit(onSubmit)} className="form-body">
+            <p className="form-title">Store Information</p>
+            <Form.Group controlId="receiving_site">
+              <Form.Label className="field-label">Receiving Site</Form.Label>
+              <Form.Select {...register('receiving_site')}>
+                {receivingSiteOptions.map((site) => (
+                  <option key={site} value={site}>
+                    {site}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
 
-                <Form.Select {...register('receiving_site')}>
-                  {receivingSiteOptions.map((site) => (
-                    <option key={site} value={site}>
-                      {site}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </div>
-
-            <h1 className="form-title-2">Donor Information</h1>
+            <p className="form-title">Donor Information</p>
 
             <Form.Group key={resetKey}>
-              <div className={styles.radioRow}>
+              <div className="radio-row">
                 <Form.Check
                   type="radio"
                   label="Individual"
@@ -199,15 +194,15 @@ export default function LightweightDonationForm({ stores, user }: Props) {
               </div>
 
               {errors.donor_type && (
-                <Form.Text className={styles.errorText}>
+                <Form.Control.Feedback type="invalid">
                   {errors.donor_type.message}
-                </Form.Text>
+                </Form.Control.Feedback>
               )}
             </Form.Group>
 
             {donorType && (
               <>
-                <div className={styles.twoColRow}>
+                <div className="two-col-row">
                   <div>
                     {donorType === 'individual' && (
                       <Form.Group controlId="individual_name">
@@ -287,7 +282,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
                   </div>
                 </div>
 
-                <div className={styles.twoColRow}>
+                <div className="two-col-row">
                   <div>
                     <Form.Group controlId="email">
                       <Form.Label className="field-label">
@@ -349,9 +344,9 @@ export default function LightweightDonationForm({ stores, user }: Props) {
                       />
 
                       {errors.phone && (
-                        <Form.Text className={styles.errorText}>
+                        <Form.Control.Feedback type="invalid">
                           {errors.phone.message}
-                        </Form.Text>
+                        </Form.Control.Feedback>
                       )}
                     </Form.Group>
                   </div>
@@ -382,11 +377,11 @@ export default function LightweightDonationForm({ stores, user }: Props) {
               </>
             )}
 
-            <h1 className="form-title-2">Donation Information</h1>
+            <p className="form-title">Donation Information</p>
 
             <Form.Group controlId="estimated_value">
               <Form.Label className="field-label">
-                Estimated value (USD)
+                Estimated Value (USD)
               </Form.Label>
 
               <Controller
@@ -431,7 +426,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
             </Form.Group>
 
             <Form.Group controlId="items_donated">
-              <Form.Label className="field-label">Items donated</Form.Label>
+              <Form.Label className="field-label">Items Donated</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Describe the items you are donating"
@@ -451,7 +446,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <div className={styles.submitButtonRow}>
+            <div>
               <button type="submit" className="btn-submit">
                 Submit
               </button>
@@ -459,12 +454,12 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
             {showSuccess && (
               <Alert variant="success" className="mb-0">
-                Form submitted successfully! Thank you for your donation.
+                Form submitted successfully!
               </Alert>
             )}
           </form>
         </Card.Body>
       </Card>
-    </Container>
+    </div>
   );
 }

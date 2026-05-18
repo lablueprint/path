@@ -62,7 +62,13 @@ Table {
 }
 
 .main-container {
-  padding-top: calc(3rem + 3.875rem);
+  padding: calc(1.5rem + 3.875rem) 1.5rem 1.5rem 1.5rem;
+}
+
+@media (min-width: 576px) {
+  .main-container {
+    padding: calc(3rem + 3.875rem) 3rem 3rem 3rem;
+  }
 }
 
 @media (min-width: 992px) {
@@ -96,7 +102,7 @@ Table {
   padding: 1.5rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 576px) {
   .form-card .card-body {
     padding: 3rem;
   }
@@ -120,6 +126,12 @@ Table {
 }
 
 /* ── section headings ── */
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
 .form-title-1 {
   font-size: 1.5rem;
   line-height: 1.2;
@@ -223,6 +235,12 @@ Table {
   gap: 1.25rem;
 }
 
+.content-body {
+  gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .radio-row {
   display: flex;
   gap: 2rem;
@@ -235,13 +253,14 @@ Table {
 
 .two-col-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
 }
 
-@media (max-width: 600px) {
+@media (min-width: 768px) {
   .two-col-row {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
