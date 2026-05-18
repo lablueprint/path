@@ -17,13 +17,24 @@ export default function OutgoingTicketsList({
   tickets: Ticket[];
 }) {
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
-  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
+  const statusOptions = [
+    'All',
+    'Requested',
+    'Ready',
+    'Rejected',
+    'Fulfilled',
+    'Approved',
+  ];
   const filteredTickets =
     selectedStatus === 'All'
-      ? tickets
+      ? tickets.filter((ticket) => ticket.status !== 'draft')
       : tickets.filter(
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
+
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
 
   return (
     <div>
@@ -53,7 +64,7 @@ export default function OutgoingTicketsList({
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) => (
+            {sortedFilteredTickets.map((ticket) => (
               <OutgoingTicketCard
                 key={ticket.ticket_id}
                 ticketId={ticket.ticket_id}

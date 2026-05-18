@@ -56,7 +56,7 @@ export default function InStockTicketItemCard({
     <div className={styles.itemCard}>
       <Image
         className={styles.itemImage}
-        src={imagePlaceholder}
+        src={photoUrl || imagePlaceholder}
         alt={`Picture of ${itemName}`}
         width={77}
         height={77}
@@ -75,7 +75,6 @@ export default function InStockTicketItemCard({
           </p>
         </div>
       </div>
-      {photoUrl ? <p>Photo URL: {photoUrl}</p> : null}
       <div className={styles.numericalDescriptors}>
         <div className={styles.quantityCard}>Qty: {quantityAvailable}</div>
         <div className={styles.availabilityCard}>
@@ -94,10 +93,14 @@ export default function InStockTicketItemCard({
         </div>
         {errorMessage && <p role="alert">{errorMessage}</p>}
         {hasChanged && (
-          <>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </>
+          <div className="d-flex flex-wrap gap-2 mt-2">
+            <button className="btn-submit py-1 px-3" onClick={handleSave}>
+              Save
+            </button>
+            <button className="btn-cancel py-1 px-3" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
         )}
       </div>
     </div>

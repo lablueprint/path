@@ -17,14 +17,13 @@ export default async function InventoryPage({
 }) {
   const supabase = await createClient();
 
-  // Don't need to fetch categories as it is done later
-  // Fetch subcategories
   const { data: subcategories } = await supabase
     .from('subcategories')
     .select('subcategory_id, name, category_id')
     .order('name');
 
   const { query, category, subcategory } = await searchParams;
+
   let filteredItems = supabase
     .from('inventory_items')
     .select(
@@ -56,6 +55,7 @@ export default async function InventoryPage({
       }[],
       { merge: false }
     >();
+
   if (itemError) {
     console.error(itemError);
     return <div>Failed to load inventory items.</div>;
@@ -68,27 +68,30 @@ export default async function InventoryPage({
     .order('name', { referencedTable: 'subcategories', ascending: true })
     .overrideTypes<
       {
-        category_id: string;
+        category_id: number;
         name: string;
         subcategories: {
           name: string;
-          subcategory_id: string;
+          subcategory_id: number;
         }[];
       }[],
       { merge: false }
     >();
+
   if (error) {
     console.error(error);
     return <div>Failed to load categories.</div>;
   }
 
-  const items = itemsData?.map((item) => ({
-    id: item.inventory_item_id,
-    item: item.name,
-    photoUrl: item.photo_url,
-    subcategory: item.subcategories.name,
-    category: item.subcategories.categories.name,
-  }));
+  const items = itemsData
+    ?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    .map((item) => ({
+      id: item.inventory_item_id,
+      item: item.name,
+      photoUrl: item.photo_url,
+      subcategory: item.subcategories.name,
+      category: item.subcategories.categories.name,
+    }));
 
   return (
     <div>
@@ -98,11 +101,13 @@ export default async function InventoryPage({
           inventory: 'Inventory Library',
         }}
       />
-      <h1>Inventory Library</h1>
-      <Link href="/manage/inventory/add">
-        <p>Add inventory item</p>
-      </Link>
-      <div>
+      <div className="page-header">
+        <h1 className="mb-0">Inventory Library</h1>
+        <Link className="btn-submit" href="/manage/inventory/add">
+          Add Item
+        </Link>
+      </div>
+      <div className="content-body">
         <ItemSearch
           categories={
             categories?.map((cat) => ({
@@ -118,40 +123,24 @@ export default async function InventoryPage({
             })) || []
           }
         />
-      </div>
-      <h2>Items</h2>
-      {items && items.length > 0 ? (
-        items.map((item) => (
-          <div key={item.id}>
-            <ItemCard
-              id={item.id}
-              item={item.item}
-              photoUrl={item.photoUrl}
-              subcategory={item.subcategory}
-              category={item.category}
-            />
+        {items && items.length > 0 ? (
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+            {items.map((item) => (
+              <div key={item.id} className="col">
+                <ItemCard
+                  id={item.id}
+                  item={item.item}
+                  photoUrl={item.photoUrl}
+                  subcategory={item.subcategory}
+                  category={item.category}
+                />
+              </div>
+            ))}
           </div>
-        ))
-      ) : (
-        <p>No items found.</p>
-      )}
-      <h2>Categories</h2>
-      <ul>
-        {categories && categories.length > 0 ? (
-          categories.map((cat) => (
-            <li key={cat.category_id}>
-              {cat.name}
-              <ul>
-                {cat.subcategories?.map((sub) => (
-                  <li key={sub.subcategory_id}>{sub.name}</li>
-                ))}
-              </ul>
-            </li>
-          ))
         ) : (
-          <p>No categories found.</p>
+          <p>No items found.</p>
         )}
-      </ul>
+      </div>
     </div>
   );
 }

@@ -39,6 +39,7 @@ export default async function AddStoreItemsPage({
           add: 'Add Store Items',
         }}
       />
+      <h1>Add Store Items</h1>
       <StoreItemsDonationForm store={storeData} user={userData} />
     </div>
   );

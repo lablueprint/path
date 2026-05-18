@@ -1,0 +1,12 @@
+.nameField {
+  max-width: 600px;
+}
+
+.descriptionField {
+  max-width: 600px;
+  height: 120px;
+}
+
+.selectField {
+  max-width: 370px;
+}

@@ -1,11 +1,8 @@
 'use client';
 
-import { createDonation, deleteDonation } from '@/app/actions/donation';
-import { useState } from 'react';
+import { createDonation } from '@/app/actions/donation';
 
 export default function DonationsTestComponent() {
-  const [idToDelete, setIdToDelete] = useState('');
-
   const handleCreate = async () => {
     try {
       const result = await createDonation({
@@ -28,26 +25,8 @@ export default function DonationsTestComponent() {
       });
 
       console.log('Created donation:', result);
-
-      if (result.success && result.data) {
-        setIdToDelete(result.data.donation_id);
-      }
     } catch (err) {
       console.error('Create failed:', err);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!idToDelete) {
-      alert('Please enter a valid UUID to delete');
-      return;
-    }
-
-    try {
-      const result = await deleteDonation(idToDelete);
-      console.log('Deleted donation:', result);
-    } catch (err) {
-      console.error('Delete failed:', err);
     }
   };
 
@@ -55,9 +34,6 @@ export default function DonationsTestComponent() {
     <div style={{ padding: 20 }}>
       <h1>Test Donations</h1>
       <button onClick={handleCreate}>Create Donation</button>
-      <button onClick={handleDelete} style={{ marginLeft: 10 }}>
-        Delete Donation
-      </button>
     </div>
   );
 }
