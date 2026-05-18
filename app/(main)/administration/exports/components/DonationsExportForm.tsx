@@ -66,67 +66,69 @@ export default function Donations() {
   return (
     <Card className="form-card">
       <Card.Body>
-        <h2 className="form-title-1">Export Gift-in-Kind Records</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-body">
-            <Form.Group>
-              <div className="radio-row">
-                <Form.Check
-                  type="radio"
-                  label="All time"
-                  value="all"
-                  id="date-mode-all"
-                  {...register('dateMode')}
-                />
-                <Form.Check
-                  type="radio"
-                  label="Date range"
-                  value="range"
-                  id="date-mode-range"
-                  {...register('dateMode')}
-                />
-              </div>
-            </Form.Group>
-
-            {dateMode === 'range' && (
-              <div className="two-col-row">
-                <Form.Group controlId="startDate">
-                  <Form.Label className="field-label">Start date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    {...register('startDate', {
-                      required: 'Start date is required.',
-                    })}
-                    isInvalid={!!errors.startDate}
+        <div className="form-body">
+          <h2 className="form-title">Export Gift-in-Kind Records</h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-body">
+              <Form.Group>
+                <div className="radio-row">
+                  <Form.Check
+                    type="radio"
+                    label="All time"
+                    value="all"
+                    id="date-mode-all"
+                    {...register('dateMode')}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.startDate?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group controlId="endDate">
-                  <Form.Label className="field-label">End date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    {...register('endDate', {
-                      required: 'End date is required.',
-                    })}
-                    isInvalid={!!errors.endDate}
+                  <Form.Check
+                    type="radio"
+                    label="Date range"
+                    value="range"
+                    id="date-mode-range"
+                    {...register('dateMode')}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.endDate?.message}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </div>
-            )}
+                </div>
+              </Form.Group>
 
-            <div className="submit-button-row">
-              <button type="submit" className="btn-submit">
-                Export
-              </button>
+              {dateMode === 'range' && (
+                <div className="two-col-row">
+                  <Form.Group controlId="startDate">
+                    <Form.Label className="field-label">Start date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      {...register('startDate', {
+                        required: 'Start date is required.',
+                      })}
+                      isInvalid={!!errors.startDate}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.startDate?.message}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group controlId="endDate">
+                    <Form.Label className="field-label">End date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      {...register('endDate', {
+                        required: 'End date is required.',
+                      })}
+                      isInvalid={!!errors.endDate}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.endDate?.message}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </div>
+              )}
+
+              <div>
+                <button type="submit" className="btn-submit">
+                  Export
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </Card.Body>
     </Card>
   );

@@ -3,11 +3,8 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { Subcategory, Category } from '@/app/types/inventory';
 import { useFormContext } from 'react-hook-form';
 import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultItemPhoto from '@/public/image-placeholder.svg';
 import { Form } from 'react-bootstrap';
-import donationStyles from '@/app/(main)/components/DonationForm.module.css';
 import styles from '@/app/(main)/manage/components/AddInventoryItemForm.module.css';
 
 export type Inputs = {
@@ -111,12 +108,10 @@ export default function AddInventoryItemForm({
   }, [selectedCategory]);
 
   return (
-    <div className={donationStyles.formBody}>
+    <div className="form-body">
       {/* Item Title */}
       <Form.Group controlId="name">
-        <Form.Label className={donationStyles.fieldLabel}>
-          Item Title
-        </Form.Label>
+        <Form.Label>Item Title</Form.Label>
         <Form.Control
           type="text"
           className={styles.nameField}
@@ -129,33 +124,21 @@ export default function AddInventoryItemForm({
       </Form.Group>
       {/* Image */}
       <Form.Group controlId="image">
-        <Form.Label className={donationStyles.fieldLabel}>Image</Form.Label>
+        <Form.Label>Image</Form.Label>
         {/* placeholder for drag and drop */}
-        <div>
-          <Image
-            src={previewUrl || defaultItemPhoto}
-            alt="Item photo"
-            width={64}
-            height={64}
-            style={{ objectFit: 'cover' }}
-            unoptimized
+        <div style={{ width: '16rem' }}>
+          <PhotoUpload
+            ref={photoUploadRef}
+            onFileSelect={handleFileSelect}
+            previewUrl={previewUrl}
+            onRemove={handleRemovePhoto}
           />
-          {selectedFile && (
-            <button type="button" onClick={handleRemovePhoto}>
-              Remove
-            </button>
-          )}
-          <div>
-            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-          </div>
         </div>
       </Form.Group>
 
       {/* Description */}
       <Form.Group controlId="description">
-        <Form.Label className={donationStyles.fieldLabel}>
-          Description
-        </Form.Label>
+        <Form.Label>Description</Form.Label>
         <Form.Control
           as="textarea"
           className={styles.descriptionField}
@@ -169,7 +152,7 @@ export default function AddInventoryItemForm({
 
       {/* Category */}
       <Form.Group controlId="selectedCategory">
-        <Form.Label className={donationStyles.fieldLabel}>Category</Form.Label>
+        <Form.Label>Category</Form.Label>
         <Form.Select
           className={styles.selectField}
           {...register('selectedCategory', {
@@ -190,9 +173,7 @@ export default function AddInventoryItemForm({
       </Form.Group>
       {/* subcategory */}
       <Form.Group controlId="selectedSubcategory">
-        <Form.Label className={donationStyles.fieldLabel}>
-          Subcategory
-        </Form.Label>
+        <Form.Label>Subcategory</Form.Label>
         <Form.Select
           className={styles.selectField}
           {...register('selectedSubcategory', {

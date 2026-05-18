@@ -138,37 +138,40 @@ export default async function RequestStorePage({
         <span>Requesting from </span>
         {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
       </h1>
-      <ItemSearch
-        categories={
-          categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
-          []
-        }
-        subcategories={
-          subcategories?.map((sub) => ({
-            id: sub.subcategory_id,
-            name: sub.name,
-            category_id: sub.category_id,
-          })) || []
-        }
-      />
-      <h2>In-Stock Items</h2>
-      {items && items.length > 0 ? (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
-          {items.map((item) => (
-            <div key={item.id} className="col">
-              <ItemCard
-                id={item.id}
-                item={item.item}
-                subcategory={item.subcategory}
-                category={item.category}
-                photoUrl={item.photoUrl}
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>No available items found.</p>
-      )}
+      <div className="content-body">
+        <ItemSearch
+          categories={
+            categories?.map((cat) => ({
+              id: cat.category_id,
+              name: cat.name,
+            })) || []
+          }
+          subcategories={
+            subcategories?.map((sub) => ({
+              id: sub.subcategory_id,
+              name: sub.name,
+              category_id: sub.category_id,
+            })) || []
+          }
+        />
+        {items && items.length > 0 ? (
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+            {items.map((item) => (
+              <div key={item.id} className="col">
+                <ItemCard
+                  id={item.id}
+                  item={item.item}
+                  subcategory={item.subcategory}
+                  category={item.category}
+                  photoUrl={item.photoUrl}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No available items found.</p>
+        )}
+      </div>
       <Link href={`/request/${storeId}/cart`} className={styles.cartButton}>
         <Image src={cartIcon} height={32} alt="Cart icon" />
       </Link>

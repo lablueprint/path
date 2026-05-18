@@ -18,14 +18,18 @@ export default async function RequestPage() {
   return (
     <div>
       <h1>Request Inventory</h1>
-      <Link href="/request/all">
-        <p>All Stores</p>
-      </Link>
-      {stores.length > 0 ? (
-        <StoresList stores={stores} />
-      ) : (
-        <p>No stores found.</p>
-      )}
+      <div className="content-body">
+        <div>
+          <Link className="btn-submit" href="/request/all">
+            All Stores
+          </Link>
+        </div>
+        {stores.length > 0 ? (
+          <StoresList stores={stores} />
+        ) : (
+          <p>No stores found.</p>
+        )}
+      </div>
     </div>
   );
 }

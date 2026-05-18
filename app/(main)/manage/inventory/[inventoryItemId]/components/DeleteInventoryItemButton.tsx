@@ -23,8 +23,8 @@ export default function DeleteInventoryItemButton({
   }
 
   return (
-    <button type="button" onClick={handleDelete}>
-      Remove item
+    <button className="btn-remove" type="button" onClick={handleDelete}>
+      Remove
     </button>
   );
 }

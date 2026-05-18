@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { createStoreAdmin } from '@/app/actions/store';
 import { User } from '@/app/types/user';
-import { Form, ListGroup } from 'react-bootstrap';
+import { Form, ListGroup, Card } from 'react-bootstrap';
 
 const supabase = createClient();
 
@@ -50,32 +50,44 @@ export default function AddAdminSearch({
   }, [search, existingAdminUserIds]);
 
   return (
-    <div>
-      {/* searching */}
-      <div className="search-filter-wrapper">
-        <Form.Control
-          type="text"
-          placeholder="Search users..."
-          className="search-bar"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+    <Card className="form-card">
+      <Card.Body>
+        <div className="form-body">
+          <p className="form-title">Add New Admins</p>
+          {/* searching */}
+          <div>
+            <div className="search-filter-wrapper">
+              <Form.Control
+                type="text"
+                placeholder="Search users..."
+                className="search-bar"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
-      {/* search results */}
-      <ListGroup>
-        {searchData.map((u) => (
-          <ListGroup.Item
-            key={u.user_id}
-            action
-            onClick={() =>
-              createStoreAdmin({ user_id: u.user_id, store_id: storeId })
-            }
-          >
-            {u.first_name}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-    </div>
+            {/* search results */}
+            {searchData.length > 0 && (
+              <ListGroup>
+                {searchData.map((u) => (
+                  <ListGroup.Item
+                    key={u.user_id}
+                    action
+                    onClick={() =>
+                      createStoreAdmin({
+                        user_id: u.user_id,
+                        store_id: storeId,
+                      })
+                    }
+                  >
+                    {u.first_name}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            )}
+          </div>
+        </div>
+      </Card.Body>
+    </Card>
   );
 }

@@ -38,8 +38,12 @@ export default async function StoreDetailsPage({
         }}
       />
       <h1>{store.name}</h1>
-      <EditStoreForm store={store} />
-      <RemoveStoreButton storeId={store.store_id} />
+      <div className="content-body">
+        <EditStoreForm store={store} />
+        <div>
+          <RemoveStoreButton storeId={store.store_id} />
+        </div>
+      </div>
     </div>
   );
 }

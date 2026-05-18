@@ -28,15 +28,15 @@ export default async function PersonalProfilePage() {
   return (
     <div>
       <h1>Profile</h1>
-
-      <ProfileForm user={profile as User} />
-
-      <div className="mt-5">
+      <div className="content-body">
+        <div>
+          <ProfileForm user={profile as User} />
+        </div>
         <UpdatePasswordForm />
-      </div>
 
-      <div className="mt-5">
-        <SignOutButton />
+        <div>
+          <SignOutButton />
+        </div>
       </div>
     </div>
   );

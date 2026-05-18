@@ -102,12 +102,16 @@ export default async function InventoryItemPage({
         }}
       />
       <h1>{item.name}</h1>
-      <EditInventoryItemForm
-        item={item}
-        initialCategories={categoriesRes.data || []}
-        initialSubcategories={subcategoriesRes.data || []}
-      />
-      <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
+      <div className="content-body">
+        <EditInventoryItemForm
+          item={item}
+          initialCategories={categoriesRes.data || []}
+          initialSubcategories={subcategoriesRes.data || []}
+        />
+        <div>
+          <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
+        </div>
+      </div>
     </div>
   );
 }

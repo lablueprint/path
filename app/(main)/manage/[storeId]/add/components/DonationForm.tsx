@@ -3,7 +3,7 @@
 import { forwardRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat, NumericFormat } from 'react-number-format';
-import { Form, Container, Card } from 'react-bootstrap';
+import { Form, Card } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 import styles from '@/app/(main)/components/DonationForm.module.css';
@@ -29,14 +29,14 @@ export default function DonationForm({
   } = useFormContext<CombinedFormData>();
 
   return (
-    <Container className={styles.formContainer}>
+    <div>
       <Card className="form-card">
         <Card.Body>
-          <h1 className="form-title-1">Donor Information</h1>
-          <div className={styles.formBody}>
+          <div className="form-body">
+            <p className="form-title">Donor Information</p>
             {/* Donor Type */}
             <Form.Group>
-              <div className={styles.radioRow}>
+              <div className="radio-row">
                 <Form.Check
                   type="radio"
                   label="Individual"
@@ -57,21 +57,21 @@ export default function DonationForm({
                 />
               </div>
               {errors.donor_type && (
-                <Form.Text className={styles.errorText}>
+                <Form.Control.Feedback type="invalid">
                   {errors.donor_type.message}
-                </Form.Text>
+                </Form.Control.Feedback>
               )}
             </Form.Group>
 
             {donorType && (
               <>
                 {/* Name + Address (same row) */}
-                <div className={styles.twoColRow}>
+                <div className="two-col-row">
                   <div>
                     {/* Conditional Name Field: Individual */}
                     {donorType === 'individual' && (
                       <Form.Group controlId="individual_name">
-                        <Form.Label className={styles.fieldLabel}>
+                        <Form.Label className="field-label">
                           Individual Name
                         </Form.Label>
                         <Form.Control
@@ -90,7 +90,7 @@ export default function DonationForm({
                     {donorType === 'business' && (
                       <div className={styles.businessFields}>
                         <Form.Group controlId="business_name">
-                          <Form.Label className={styles.fieldLabel}>
+                          <Form.Label className="field-label">
                             Business Name
                           </Form.Label>
                           <Form.Control
@@ -105,7 +105,7 @@ export default function DonationForm({
                         </Form.Group>
 
                         <Form.Group controlId="business_contact_name">
-                          <Form.Label className={styles.fieldLabel}>
+                          <Form.Label className="field-label">
                             Business Contact Name
                           </Form.Label>
                           <Form.Control
@@ -125,7 +125,7 @@ export default function DonationForm({
                   <div>
                     {/* Street Address */}
                     <Form.Group controlId="address">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Street Address
                       </Form.Label>
                       <Form.Control
@@ -142,11 +142,11 @@ export default function DonationForm({
                 </div>
 
                 {/* Email + Phone (same row) */}
-                <div className={styles.twoColRow}>
+                <div className="two-col-row">
                   <div>
                     {/* Email */}
                     <Form.Group controlId="email">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Email
                       </Form.Label>
                       <Form.Control
@@ -169,7 +169,7 @@ export default function DonationForm({
                   <div>
                     {/* Phone */}
                     <Form.Group controlId="phone">
-                      <Form.Label className={styles.fieldLabel}>
+                      <Form.Label className="field-label">
                         Donor Phone Number (Optional)
                       </Form.Label>
                       <Controller
@@ -201,9 +201,9 @@ export default function DonationForm({
                         )}
                       />
                       {errors.phone && (
-                        <Form.Text className={styles.errorText}>
+                        <Form.Control.Feedback type="invalid">
                           {errors.phone.message}
-                        </Form.Text>
+                        </Form.Control.Feedback>
                       )}
                     </Form.Group>
                   </div>
@@ -233,14 +233,11 @@ export default function DonationForm({
               </>
             )}
 
-            <h1 className="form-title-2">Donation Information</h1>
+            <p className="form-title">Donation Information</p>
 
             {/* Estimated Value */}
-            <Form.Group
-              controlId="estimated_value"
-              className={styles.estimatedValueField}
-            >
-              <Form.Label className={styles.fieldLabel}>
+            <Form.Group controlId="estimated_value">
+              <Form.Label className="field-label">
                 Estimated value (USD)
               </Form.Label>
               <Controller
@@ -285,9 +282,7 @@ export default function DonationForm({
 
             {/* Items Donated */}
             <Form.Group controlId="items_donated">
-              <Form.Label className={styles.fieldLabel}>
-                Items donated
-              </Form.Label>
+              <Form.Label className="field-label">Items donated</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Describe the items you are donating"
@@ -307,7 +302,7 @@ export default function DonationForm({
             </Form.Group>
 
             {showSubmitButton && (
-              <div className={styles.submitButtonRow}>
+              <div>
                 <button type="submit" className="btn-submit">
                   Submit
                 </button>
@@ -316,6 +311,6 @@ export default function DonationForm({
           </div>
         </Card.Body>
       </Card>
-    </Container>
+    </div>
   );
 }

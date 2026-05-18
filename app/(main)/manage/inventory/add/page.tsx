@@ -82,17 +82,27 @@ export default function AddInventoryItemPage() {
           add: 'Add Inventory Item',
         }}
       />
-
       <h1>Add Inventory Item</h1>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <AddInventoryItemForm
-            selectedFile={selectedFile}
-            onFileChange={setSelectedFile}
-          />
-          <button type="submit">Submit</button>
-        </form>
-      </FormProvider>
+      <div className="form-card">
+        <div className="card-body">
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="form-body"
+            >
+              <AddInventoryItemForm
+                selectedFile={selectedFile}
+                onFileChange={setSelectedFile}
+              />
+              <div>
+                <button className="btn-submit" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </FormProvider>
+        </div>
+      </div>
     </div>
   );
 }

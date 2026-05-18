@@ -81,9 +81,9 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
             <Image
               src={displayImage}
               alt="Profile photo"
-              width={200}
-              height={200}
-              style={{ objectFit: 'cover' }}
+              width={256}
+              height={256}
+              objectFit={'cover'}
               unoptimized
             />
           ) : (

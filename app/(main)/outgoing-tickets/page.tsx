@@ -27,7 +27,7 @@ export default async function OutgoingTicketsPage() {
 
   return (
     <div>
-      <h1>Outgoing Tickets</h1>
+      <h1>My Tickets</h1>
       <OutgoingTicketsList tickets={userTickets}></OutgoingTicketsList>
     </div>
   );

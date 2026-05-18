@@ -1,7 +1,6 @@
 import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
-import EditCategories from '@/app/(main)/manage/inventory/add/components/EditCategories';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
@@ -17,9 +16,6 @@ export default async function InventoryPage({
   searchParams: Promise<SearchParams>;
 }) {
   const supabase = await createClient();
-
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const role = claimsData?.claims?.user_role;
 
   const { data: subcategories } = await supabase
     .from('subcategories')
@@ -106,65 +102,45 @@ export default async function InventoryPage({
         }}
       />
       <div className="page-header">
-        <h1>Inventory Library</h1>
-        <Link href="/manage/inventory/add">Add inventory item</Link>
+        <h1 className="mb-0">Inventory Library</h1>
+        <Link className="btn-submit" href="/manage/inventory/add">
+          Add Item
+        </Link>
       </div>
-
-      <ItemSearch
-        categories={
-          categories?.map((cat) => ({
-            id: cat.category_id,
-            name: cat.name,
-          })) || []
-        }
-        subcategories={
-          subcategories?.map((sub) => ({
-            id: sub.subcategory_id,
-            name: sub.name,
-            category_id: sub.category_id,
-          })) || []
-        }
-      />
-
-      <h2>Items</h2>
-      {items && items.length > 0 ? (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
-          {items.map((item) => (
-            <div key={item.id} className="col">
-              <ItemCard
-                id={item.id}
-                item={item.item}
-                photoUrl={item.photoUrl}
-                subcategory={item.subcategory}
-                category={item.category}
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>No items found.</p>
-      )}
-
-      <h2>Categories</h2>
-
-      {role === 'admin' && (
-        <ul>
-          {categories?.map((cat) => (
-            <li key={cat.category_id}>
-              {cat.name}
-              <ul>
-                {cat.subcategories?.map((sub) => (
-                  <li key={sub.subcategory_id}>{sub.name}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {(role === 'superadmin' || role === 'owner') && (
-        <EditCategories categories={categories} />
-      )}
+      <div className="content-body">
+        <ItemSearch
+          categories={
+            categories?.map((cat) => ({
+              id: cat.category_id,
+              name: cat.name,
+            })) || []
+          }
+          subcategories={
+            subcategories?.map((sub) => ({
+              id: sub.subcategory_id,
+              name: sub.name,
+              category_id: sub.category_id,
+            })) || []
+          }
+        />
+        {items && items.length > 0 ? (
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+            {items.map((item) => (
+              <div key={item.id} className="col">
+                <ItemCard
+                  id={item.id}
+                  item={item.item}
+                  photoUrl={item.photoUrl}
+                  subcategory={item.subcategory}
+                  category={item.category}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No items found.</p>
+        )}
+      </div>
     </div>
   );
 }

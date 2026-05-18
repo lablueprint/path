@@ -97,7 +97,7 @@ export default function AddStoreForm() {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="row g-5 align-items-start">
-            <div className="col-auto" style={{ width: '250px' }}>
+            <div className="col-auto" style={{ width: '16rem' }}>
               <PhotoUpload
                 ref={photoUploadRef}
                 onFileSelect={handleFileSelect}
