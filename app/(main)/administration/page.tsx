@@ -3,6 +3,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import membersIcon from '@/public/action-buttons/members.svg';
 import storesIcon from '@/public/action-buttons/stores.svg';
 import exportsIcon from '@/public/action-buttons/exports.svg';
+import storeAdminsIcon from '@/public/action-buttons/store-admins.svg';
 
 export default async function AdministrationPage() {
   const supabase = await createClient();
@@ -33,12 +34,29 @@ export default async function AdministrationPage() {
         </div>
         <div className="col">
           {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
-            <ActionButton text="Stores" url="/hq" icon={storesIcon} />
+            <ActionButton
+              text="Store Admins"
+              url="/administration/store-admins"
+              icon={storeAdminsIcon}
+            />
           )}
         </div>
         <div className="col">
           {['superadmin', 'owner'].includes(userRole ?? '') && (
-            <ActionButton text="Exports" url="/hq" icon={exportsIcon} />
+            <ActionButton
+              text="Stores"
+              url="/administration/stores"
+              icon={storesIcon}
+            />
+          )}
+        </div>
+        <div className="col">
+          {['superadmin', 'owner'].includes(userRole ?? '') && (
+            <ActionButton
+              text="Exports"
+              url="/administration/exports"
+              icon={exportsIcon}
+            />
           )}
         </div>
       </div>

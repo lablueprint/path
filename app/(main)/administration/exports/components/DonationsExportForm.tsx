@@ -66,7 +66,7 @@ export default function Donations() {
   return (
     <Card className="form-card">
       <Card.Body>
-        <h2 className="form-title-1">Export Donations</h2>
+        <h2 className="form-title-1">Export Gift-in-Kind Records</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-body">
             <Form.Group>

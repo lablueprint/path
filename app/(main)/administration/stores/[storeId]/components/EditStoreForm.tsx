@@ -6,7 +6,7 @@ import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import styles from '@/app/(main)/hq/[storeId]/components/EditStoreForm.module.css';
+import styles from '@/app/(main)/administration/stores/[storeId]/components/EditStoreForm.module.css';
 
 type FormValues = {
   name: string;

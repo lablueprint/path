@@ -1,13 +1,15 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
+import AddStoreForm from '@/app/(main)/administration/stores/components/AddStoreForm';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
-export default async function StoreAdminsPage() {
+export default async function HqPage() {
   const supabase = await createClient();
 
   const { data: storesData, error: storesErr } = await supabase
     .from('stores')
-    .select('*');
+    .select('store_id, name, street_address, photo_url');
+
   if (storesErr) {
     console.error('Error fetching stores:', storesErr);
   }
@@ -16,13 +18,10 @@ export default async function StoreAdminsPage() {
 
   return (
     <div>
-      <Breadcrumbs
-        labelMap={{
-          '/team': 'Team',
-          '/team/store-admins': 'Store Admins',
-        }}
-      />
-      <h1>Store Admins</h1>
+      <Breadcrumbs />
+      <h1>Stores</h1>
+      <AddStoreForm />
+      <h3>Edit Stores</h3>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (

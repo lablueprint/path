@@ -1,7 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import AddAdminSearch from '@/app/(main)/team/store-admins/[storeId]/components/AddAdminSearch';
+import AddAdminSearch from '@/app/(main)/administration/store-admins/[storeId]/components/AddAdminSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import AddAdminCard from '@/app/(main)/team/store-admins/[storeId]/components/AddAdminCard';
+import AddAdminCard from '@/app/(main)/administration/store-admins/[storeId]/components/AddAdminCard';
 
 export default async function StoreAdminPage({
   params,
@@ -81,9 +81,8 @@ export default async function StoreAdminPage({
     <div>
       <Breadcrumbs
         labelMap={{
-          '/team': 'Team',
-          '/team/store-admins': 'Store Admins',
-          [`/team/store-admins/${storeId}`]: store_data?.name ?? 'Store',
+          [`/administration/store-admins/${storeId}`]:
+            store_data?.name ?? 'Store',
         }}
       />
       <div>
