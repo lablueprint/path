@@ -77,7 +77,7 @@ export default function FaqPage() {
   return (
     <div>
       <h1>FAQ</h1>
-      <div className={styles.content}>
+      <div className="content-body">
         <section>
           <h2>Roles &amp; Permissions</h2>
           <p className={styles.sectionDescription}>

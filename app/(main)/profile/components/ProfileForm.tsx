@@ -145,7 +145,7 @@ export default function ProfileForm({ user }: { user: User }) {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={`form-card ${styles.card}`}>
       <div className={styles.cardBody}>
         <form onSubmit={handleSubmit(onSubmit)} className="form-body">
           {isEditing ? (
@@ -172,12 +172,12 @@ export default function ProfileForm({ user }: { user: User }) {
               />
             </div>
           )}
-          <h2>User Information</h2>
+          <p className="form-title">User Information</p>
 
           <div>
             <div className="two-col-row">
               <div>
-                <label className={styles.profileLabel}>First name</label>
+                <label className={styles.profileLabel}>First Name</label>
                 {isEditing ? (
                   <>
                     <input
@@ -196,7 +196,7 @@ export default function ProfileForm({ user }: { user: User }) {
               </div>
 
               <div>
-                <label className={styles.profileLabel}>Last name</label>
+                <label className={styles.profileLabel}>Last Name</label>
                 {isEditing ? (
                   <>
                     <input
