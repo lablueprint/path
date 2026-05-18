@@ -129,47 +129,49 @@ export default async function ManageStorePage({
         }}
       />
       <div className="page-header">
-        <h1>
+        <h1 className="mb-0">
           <span>Managing </span>
           {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
         </h1>
-        <Link href={`/manage/${storeId}/add`}>Add and/or donate</Link>
+        <Link className="btn-submit" href={`/manage/${storeId}/add`}>
+          Add Items
+        </Link>
       </div>
+      <div className="content-body">
+        <ItemSearch
+          categories={
+            categories?.map((cat) => ({
+              id: cat.category_id,
+              name: cat.name,
+            })) || []
+          }
+          subcategories={
+            subcategories?.map((sub) => ({
+              id: sub.subcategory_id,
+              name: sub.name,
+              category_id: sub.category_id,
+            })) || []
+          }
+        />
 
-      <ItemSearch
-        categories={
-          categories?.map((cat) => ({
-            id: cat.category_id,
-            name: cat.name,
-          })) || []
-        }
-        subcategories={
-          subcategories?.map((sub) => ({
-            id: sub.subcategory_id,
-            name: sub.name,
-            category_id: sub.category_id,
-          })) || []
-        }
-      />
-
-      <h2>Items</h2>
-      {items && items.length > 0 ? (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
-          {items.map((item) => (
-            <div key={item.id} className="col">
-              <ItemCard
-                id={item.id}
-                item={item.item}
-                photoUrl={item.photoUrl}
-                subcategory={item.subcategory}
-                category={item.category}
-              />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>No items found.</p>
-      )}
+        {items && items.length > 0 ? (
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+            {items.map((item) => (
+              <div key={item.id} className="col">
+                <ItemCard
+                  id={item.id}
+                  item={item.item}
+                  photoUrl={item.photoUrl}
+                  subcategory={item.subcategory}
+                  category={item.category}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No items found.</p>
+        )}
+      </div>
     </div>
   );
 }

@@ -49,14 +49,21 @@ export default async function ManagePage() {
   return (
     <div>
       <h1>Manage Inventory</h1>
-      <Link href="/manage/inventory">
-        <p>Inventory Library</p>
-      </Link>
-      {stores.length > 0 ? (
-        <StoresList stores={stores} />
-      ) : (
-        <p>No stores found.</p>
-      )}
+      <div className="content-body">
+        <span className="link-btn-row">
+          <Link className="btn-submit" href="/manage/inventory">
+            Inventory Library
+          </Link>
+          <Link className="btn-submit" href="/manage/categories">
+            Item Categories
+          </Link>
+        </span>
+        {stores.length > 0 ? (
+          <StoresList stores={stores} />
+        ) : (
+          <p>No stores found.</p>
+        )}
+      </div>
     </div>
   );
 }
