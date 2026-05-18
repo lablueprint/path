@@ -35,7 +35,7 @@ export default function UsersList({
                   height={32}
                   width={32}
                   unoptimized
-                  className="profile-picture"
+                  className="rounded-circle me-2"
                 />
                 <Link
                   key={user.user_id}

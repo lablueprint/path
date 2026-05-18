@@ -100,9 +100,3 @@ Table {
   color: #000000;
   cursor: pointer;
 }
-
-/*Used in UserList and StoresList to align picture */
-.profile-picture {
-  margin-right: 10px;
-  border-radius: 50%;
-}

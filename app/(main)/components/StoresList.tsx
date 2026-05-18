@@ -45,7 +45,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
                       alt={`${store.name} photo`}
                       width={32}
                       height={32}
-                      className="profile-picture"
+                      className="rounded-circle me-2"
                       unoptimized
                     />
 
