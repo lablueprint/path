@@ -104,6 +104,7 @@ Table {
 /*Used in UserList and StoresList to align picture */
 .profilePicture {
   margin-right: 10px;
+  border-radius: 50%;
 }
 
 /* Used in UserList to convert role names to uppercase*/

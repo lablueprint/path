@@ -39,20 +39,20 @@ export default function StoresList({ stores }: { stores: Store[] }) {
             {stores?.map((store) => (
               <tr key={store.store_id}>
                 <td>
-                  <div className={styles.nameCell}>
+                  <div>
                     <Image
                       src={store.photo_url || defaultStorePhoto}
                       alt={`${store.name} photo`}
                       width={32}
                       height={32}
-                      className={styles.storePhoto}
+                      className="profilePicture"
                       unoptimized
                     />
 
-                    <span className={styles.name}>{store.name}</span>
+                    <span>{store.name}</span>
                   </div>
                 </td>
-                <td className={styles.address}>{store.street_address}</td>
+                <td>{store.street_address}</td>
               </tr>
             ))}
           </tbody>
