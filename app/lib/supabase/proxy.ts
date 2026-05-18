@@ -58,10 +58,27 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/home';
     return NextResponse.redirect(url);
   }
-  // TODO: restrict access to /home
   // Restrict access to specific pages
   if (
-    ['/profile', '/request', '/outgoing-tickets', '/team'].some((path) =>
+    ['/home', '/profile', '/faq'].some((path) =>
+      request.nextUrl.pathname.startsWith(path),
+    )
+  ) {
+    const allowedRoles = [
+      'default',
+      'requestor',
+      'admin',
+      'superadmin',
+      'owner',
+    ];
+    if (!user || !allowedRoles.includes(user.user_role)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/home';
+      return NextResponse.redirect(url);
+    }
+  }
+  if (
+    ['/request', '/outgoing-tickets', '/administration'].some((path) =>
       request.nextUrl.pathname.startsWith(path),
     )
   ) {
@@ -78,14 +95,6 @@ export async function updateSession(request: NextRequest) {
     )
   ) {
     const allowedRoles = ['admin', 'superadmin', 'owner'];
-    if (!user || !allowedRoles.includes(user.user_role)) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/home';
-      return NextResponse.redirect(url);
-    }
-  }
-  if (['/hq'].some((path) => request.nextUrl.pathname.startsWith(path))) {
-    const allowedRoles = ['superadmin', 'owner'];
     if (!user || !allowedRoles.includes(user.user_role)) {
       const url = request.nextUrl.clone();
       url.pathname = '/home';

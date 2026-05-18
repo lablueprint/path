@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.89.0
       - name: Link Supabase
         run: supabase link --project-ref $SUPABASE_PROJECT_ID
       - name: Push to remote Supabase

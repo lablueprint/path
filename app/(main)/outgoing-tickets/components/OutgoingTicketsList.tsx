@@ -1,7 +1,7 @@
 'use client';
 import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
 import { useState } from 'react';
-import styles from '@/app/(main)/outgoing-tickets/components/OutgoingTicket.module.css';
+import { Table, Form } from 'react-bootstrap';
 
 type Ticket = {
   ticket_id: string;
@@ -17,42 +17,46 @@ export default function OutgoingTicketsList({
   tickets: Ticket[];
 }) {
   const [selectedStatus, setSelectedStatus] = useState<string>('All');
-  const statusOptions = ['All', 'Requested', 'Ready', 'Rejected', 'Fulfilled'];
+  const statusOptions = [
+    'All',
+    'Requested',
+    'Approved',
+    'Ready',
+    'Fulfilled',
+    'Rejected',
+  ];
   const filteredTickets =
     selectedStatus === 'All'
-      ? tickets
+      ? tickets.filter((ticket) => ticket.status !== 'draft')
       : tickets.filter(
           (ticket) => ticket.status === selectedStatus.toLowerCase(),
         );
 
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
+
   return (
-    <div>
+    <div className="content-body">
       {/* Dropdown menu with status options */}
-      <div className="d-flex justify-content-end">
-        <select
-          className={`form-select w-auto ${styles.dropdown}`}
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-        >
-          {statusOptions.map((statusOption) => (
-            <option key={statusOption} value={statusOption}>
-              {statusOption}
-            </option>
-          ))}
-        </select>
+      <div className="d-flex">
+        <div>
+          <Form.Select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            {statusOptions.map((statusOption) => (
+              <option key={statusOption} value={statusOption}>
+                {statusOption}
+              </option>
+            ))}
+          </Form.Select>
+        </div>
       </div>
 
       {filteredTickets.length > 0 ? (
-        <table
-          className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}
-        >
-          <colgroup>
-            <col className={styles.idCol} />
-            <col className={styles.storeCol} />
-            <col className={styles.statusCol} />
-            <col className={styles.dateCol} />
-          </colgroup>
-          <thead>
+        <Table borderless responsive>
+          <thead className="table-header">
             <tr>
               <th>ID</th>
               <th>STORE NAME</th>
@@ -61,7 +65,7 @@ export default function OutgoingTicketsList({
             </tr>
           </thead>
           <tbody>
-            {filteredTickets.map((ticket) => (
+            {sortedFilteredTickets.map((ticket) => (
               <OutgoingTicketCard
                 key={ticket.ticket_id}
                 ticketId={ticket.ticket_id}
@@ -71,7 +75,7 @@ export default function OutgoingTicketsList({
               />
             ))}
           </tbody>
-        </table>
+        </Table>
       ) : (
         <p>No tickets found.</p>
       )}

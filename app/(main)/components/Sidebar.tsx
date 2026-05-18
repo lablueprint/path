@@ -2,7 +2,10 @@ import Link from 'next/link';
 import styles from '@/app/(main)/components/Sidebar.module.css';
 import Image from 'next/image';
 import { createClient } from '@/app/lib/supabase/server-client';
-import SidebarNavLink from './SidebarNavLink';
+import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
+import MobileSidebar from '@/app/(main)/components/MobileSidebar';
+import imagePlaceholder from '@/public/image-placeholder.svg';
+import pathLogo from '@/public/path.png';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
@@ -32,6 +35,27 @@ export default async function Sidebar() {
 
   const sidebarGroups = [
     {
+      heading: 'General',
+      links: [
+        {
+          label: 'FAQ',
+          href: '/faq',
+          allowedRoles: [
+            'default',
+            'requestor',
+            'admin',
+            'superadmin',
+            'owner',
+          ],
+        },
+        {
+          label: 'Administration',
+          href: '/administration',
+          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
+        },
+      ],
+    },
+    {
       heading: 'Requesting',
       links: [
         {
@@ -40,7 +64,7 @@ export default async function Sidebar() {
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
         {
-          label: 'Outgoing Tickets',
+          label: 'My Tickets',
           href: '/outgoing-tickets',
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
@@ -55,77 +79,83 @@ export default async function Sidebar() {
           allowedRoles: ['admin', 'superadmin', 'owner'],
         },
         {
-          label: 'Incoming Tickets',
+          label: 'Store Tickets',
           href: '/incoming-tickets',
           allowedRoles: ['admin', 'superadmin', 'owner'],
-        },
-        {
-          label: 'Team',
-          href: '/team',
-          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
-        },
-        {
-          label: 'HQ',
-          href: '/hq',
-          allowedRoles: ['superadmin', 'owner'],
         },
       ],
     },
   ];
 
   return (
-    <aside>
-      <nav className={styles.navContainer}>
-        <Link href="/home" className={styles.pathHomeLink}>
-          <Image
-            src="/path.png"
-            alt="Path Home Logo"
-            width={160}
-            height={76}
-            className={styles.pathHomeImage}
-            priority
-          />
-        </Link>
-
-        {sidebarGroups.map((group, index) => {
-          const visibleLinks = group.links.filter((link) =>
-            link.allowedRoles.includes(role),
-          );
-
-          // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
-          if (visibleLinks.length === 0) return null;
-
-          return (
-            <div key={index}>
-              {group.heading && (
-                <h3 className={styles.groupHeading}>{group.heading}</h3>
-              )}
-              {/* Bootstrap ul classes */}
-              <ul className={`nav flex-column ${styles.linkList}`}>
-                {visibleLinks.map((link) => (
-                  <li key={link.href} className={`nav-item ${styles.linkItem}`}>
-                    <SidebarNavLink href={link.href} label={link.label} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-
-        <Link href="/profile" className={styles.profile}>
-          <div className={styles.pfpContainer}>
+    <>
+      {/* Desktop sidebar – visible on lg and up */}
+      <aside className="d-none d-lg-block">
+        <nav className={styles.navContainer}>
+          <Link href="/home" className={styles.pathHomeLink}>
             <Image
-              src={profilePhotoUrl || '/default-profile-picture.png'}
-              alt={`${displayName} profile photo`}
-              width={40}
-              height={40}
-              className={styles.pfp}
-              unoptimized
+              src={pathLogo}
+              alt="Path logo"
+              width={160}
+              height={76}
+              className={styles.pathHomeImage}
+              priority
             />
+          </Link>
+
+          <div className={styles.desktopLinks}>
+            {sidebarGroups.map((group, index) => {
+              const visibleLinks = group.links.filter((link) =>
+                link.allowedRoles.includes(role),
+              );
+
+              // PREVENTS THE HEADING FROM SHOWING IF THERE ARE NO LINKS
+              if (visibleLinks.length === 0) return null;
+
+              return (
+                <div key={index}>
+                  {group.heading && (
+                    <h3 className={styles.groupHeading}>{group.heading}</h3>
+                  )}
+                  {/* Bootstrap ul classes */}
+                  <ul className={`nav flex-column ${styles.linkList}`}>
+                    {visibleLinks.map((link) => (
+                      <li
+                        key={link.href}
+                        className={`nav-item ${styles.linkItem}`}
+                      >
+                        <SidebarNavLink href={link.href} label={link.label} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
-          <div>{displayName}</div>
-        </Link>
-      </nav>
-    </aside>
+
+          <Link href="/profile" className={styles.profile}>
+            <div className={styles.pfpContainer}>
+              <Image
+                src={profilePhotoUrl || imagePlaceholder}
+                alt={`${displayName} profile photo`}
+                width={40}
+                height={40}
+                className={styles.pfp}
+                unoptimized
+              />
+            </div>
+            <div>{displayName}</div>
+          </Link>
+        </nav>
+      </aside>
+
+      {/* Mobile sidebar – visible below lg */}
+      <MobileSidebar
+        sidebarGroups={sidebarGroups}
+        role={role}
+        displayName={displayName}
+        profilePhotoUrl={profilePhotoUrl}
+      />
+    </>
   );
 }

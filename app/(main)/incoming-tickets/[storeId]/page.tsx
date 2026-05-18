@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import IncomingTicketsList from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketsList';
 
 export default async function IncomingTicketsStorePage({
@@ -51,7 +52,7 @@ export default async function IncomingTicketsStorePage({
     .from('tickets')
     .select('*, users(*)')
     .eq('store_id', storeId)
-    .in('status', ['requested', 'ready', 'rejected', 'fulfilled']);
+    .in('status', ['requested', 'approved', 'ready', 'rejected', 'fulfilled']);
 
   if (ticketsError) {
     console.error('Error fetching tickets:', ticketsError);
@@ -69,7 +70,13 @@ export default async function IncomingTicketsStorePage({
 
   return (
     <div>
-      <h1>Incoming Tickets</h1>
+      <Breadcrumbs
+        labelMap={{
+          'incoming-tickets': 'Store Tickets',
+          [storeId]: store.name,
+        }}
+      />
+      <h1>Store Tickets</h1>
       <IncomingTicketsList tickets={tickets} />
     </div>
   );

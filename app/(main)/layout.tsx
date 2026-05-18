@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import Sidebar from '@/app/(main)/components/Sidebar';
-import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,7 +7,6 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       {/* Sidebar */}
       <Sidebar />
       <main className="main-container">
-        <Breadcrumbs />
         {/* Main page content */}
         {children}
       </main>
