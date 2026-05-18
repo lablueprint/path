@@ -12,7 +12,7 @@ export default async function OutgoingTicketDetailsPage({
     <div>
       <Breadcrumbs
         labelMap={{
-          'outgoing-tickets': 'Outgoing Tickets',
+          'outgoing-tickets': 'My Tickets',
           [`/outgoing-tickets/${ticketId}`]: ticketId,
         }}
       />

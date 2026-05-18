@@ -46,7 +46,7 @@ export default async function TeamProfilePage({
         {user.first_name} {user.last_name}
       </h1>
       {/* same styling as profile page */}
-      <div>
+      <div className="content-body">
         <div className={`form-card ${styles.card}`}>
           <div className={`form-body ${styles.cardBody}`}>
             <div className={styles.avatarCircle}>

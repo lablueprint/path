@@ -45,12 +45,11 @@ th {
   color: #4a5568;
   background-color: #e5f3ff;
   font-weight: 600;
-  font-size: 16.93px;
   line-height: 100%;
 }
 
 td {
-  padding: 22.28px 26.74px;
+  padding: 1.25rem;
   color: #718096;
   border-bottom: 0.45px solid #e5f3ff;
 }
@@ -67,10 +66,9 @@ tr {
 }
 
 Table {
-  margin-top: 26.74px;
   width: 100%;
   border-collapse: collapse;
-  border-radius: 12px;
+  border-radius: 0.5rem;
   overflow: hidden;
   text-align: left;
 }
@@ -79,7 +77,6 @@ Table {
 .table-header th {
   background-color: #e5f3ff;
   font-weight: 500;
-  padding-left: 15px;
 }
 
 .main-container {
@@ -391,11 +388,6 @@ Table {
   align-self: flex-end;
 }
 
-/* search bar layout */
-.search-filter-wrapper {
-  margin-bottom: 1rem;
-}
-
 /* clear filter button styling */
 .btn-primary.search-filter-clear {
   padding-left: 2.25rem;
@@ -418,51 +410,6 @@ Table {
 
 /* search bar layout */
 .search-filter-wrapper {
-  margin-bottom: 1rem;
-}
-
-/* clear filter button styling */
-.btn-primary.search-filter-clear {
-  padding-left: 2.25rem;
-  background: #fff url('/filter-icon.svg') no-repeat left 0.75rem center / 1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.btn-primary.search-filter-clear:hover {
-  background: #dee2e6 url('/filter-icon.svg') no-repeat left 0.75rem center /
-    1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.search-bar {
-  background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* search bar layout */
-.search-filter-wrapper {
-  margin-bottom: 0.5rem;
-}
-
-/* clear filter button styling */
-.btn-primary.search-filter-clear {
-  padding-left: 2.25rem;
-  background: #fff url('/filter-icon.svg') no-repeat left 0.75rem center / 1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.btn-primary.search-filter-clear:hover {
-  background: #dee2e6 url('/filter-icon.svg') no-repeat left 0.75rem center /
-    1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.search-bar {
-  background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
   margin-bottom: 0.5rem;
 }
 
@@ -474,19 +421,4 @@ Table {
 .button-spacing {
   display: flex;
   gap: 12px;
-}
-
-/* Outgoing, Incoming Tickets */
-.dropdown {
-  padding: 8px 36px 8px 16px;
-  width: auto;
-  border: 0.5px solid #cbd5e0;
-  border-radius: 5px;
-
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1;
-
-  color: #000000;
-  cursor: pointer;
 }
