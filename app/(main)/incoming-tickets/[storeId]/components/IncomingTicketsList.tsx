@@ -1,7 +1,7 @@
 'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
 import { useState } from 'react';
-import styles from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicket.module.css';
+import { Table, Form } from 'react-bootstrap';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -20,10 +20,10 @@ export default function IncomingTicketsList({
   const statusOptions = [
     'All',
     'Requested',
-    'Ready',
-    'Rejected',
-    'Fulfilled',
     'Approved',
+    'Ready',
+    'Fulfilled',
+    'Rejected',
   ];
 
   // Filter tickets to only show tickets with the selected status
@@ -38,34 +38,27 @@ export default function IncomingTicketsList({
   );
 
   return (
-    <div>
+    <div className="content-body">
       {/* Dropdown menu with status options */}
-      <div className="d-flex justify-content-end">
-        <select
-          className={`form-select w-auto ${styles.dropdown}`}
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-        >
-          {statusOptions.map((statusOption) => (
-            <option key={statusOption} value={statusOption}>
-              {statusOption}
-            </option>
-          ))}
-        </select>
+      <div className="d-flex">
+        <div>
+          <Form.Select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            {statusOptions.map((statusOption) => (
+              <option key={statusOption} value={statusOption}>
+                {statusOption}
+              </option>
+            ))}
+          </Form.Select>
+        </div>
       </div>
 
       {filteredTickets.length > 0 ? (
         <div>
-          <table
-            className={`table table-borderless text-center align-middle ${styles.table} ${styles.tableWrapper}`}
-          >
-            <colgroup>
-              <col className={styles.idCol} />
-              <col className={styles.requestorCol} />
-              <col className={styles.statusCol} />
-              <col className={styles.dateCol} />
-            </colgroup>
-            <thead>
+          <Table borderless responsive>
+            <thead className="table-header">
               <tr>
                 <th>ID</th>
                 <th>REQUESTOR</th>
@@ -86,7 +79,7 @@ export default function IncomingTicketsList({
                 />
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       ) : (
         <p>No tickets found.</p>

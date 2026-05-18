@@ -7,6 +7,7 @@ import ViewToggle, { ViewMode } from '@/app/(main)/components/ViewToggle';
 import Image from 'next/image';
 import styles from '@/app/(main)/components/StoresList.module.css';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
+import { Table } from 'react-bootstrap';
 
 export default function StoresList({ stores }: { stores: Store[] }) {
   const [view, setView] = useState<ViewMode>('grid');
@@ -27,8 +28,8 @@ export default function StoresList({ stores }: { stores: Store[] }) {
           ))}
         </div>
       ) : (
-        <table className={styles.table}>
-          <thead className={styles.tableHeader}>
+        <Table borderless responsive>
+          <thead className="table-header">
             <tr>
               <th>NAME</th>
               <th>ADDRESS</th>
@@ -38,24 +39,24 @@ export default function StoresList({ stores }: { stores: Store[] }) {
             {sortedStores?.map((store) => (
               <tr className={styles.tableRow} key={store.store_id}>
                 <td>
-                  <div className={styles.nameCell}>
+                  <div>
                     <Image
                       src={store.photo_url || defaultStorePhoto}
                       alt={`${store.name} photo`}
                       width={32}
                       height={32}
-                      className={styles.storePhoto}
+                      className="rounded-circle me-2"
                       unoptimized
                     />
 
-                    <span className={styles.name}>{store.name}</span>
+                    <span>{store.name}</span>
                   </div>
                 </td>
-                <td className={styles.address}>{store.street_address}</td>
+                <td>{store.street_address}</td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       )}
     </div>
   );

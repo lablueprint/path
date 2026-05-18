@@ -41,20 +41,39 @@ p {
 
 th {
   text-transform: uppercase;
+  padding: 22.28px 44.56px;
+  color: #4a5568;
+  background-color: #e5f3ff;
+  font-weight: 600;
+  line-height: 100%;
+}
+
+td {
+  padding: 1.25rem;
+  color: #718096;
+  border-bottom: 0.45px solid #e5f3ff;
+}
+
+td a,
+td Link {
+  color: #333;
+  text-decoration: none;
 }
 
 tr {
   height: 80px;
-  text-align: center;
   vertical-align: middle;
 }
 
 Table {
-  margin-top: 10px;
   width: 100%;
   border-collapse: collapse;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  text-align: left;
 }
 
+/* for tables, this ensures that it is blue*/
 .table-header th {
   background-color: #e5f3ff;
   font-weight: 500;
@@ -369,11 +388,6 @@ Table {
   align-self: flex-end;
 }
 
-/* search bar layout */
-.search-filter-wrapper {
-  margin-bottom: 1rem;
-}
-
 /* clear filter button styling */
 .btn-primary.search-filter-clear {
   padding-left: 2.25rem;
@@ -396,51 +410,6 @@ Table {
 
 /* search bar layout */
 .search-filter-wrapper {
-  margin-bottom: 1rem;
-}
-
-/* clear filter button styling */
-.btn-primary.search-filter-clear {
-  padding-left: 2.25rem;
-  background: #fff url('/filter-icon.svg') no-repeat left 0.75rem center / 1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.btn-primary.search-filter-clear:hover {
-  background: #dee2e6 url('/filter-icon.svg') no-repeat left 0.75rem center /
-    1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.search-bar {
-  background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* search bar layout */
-.search-filter-wrapper {
-  margin-bottom: 0.5rem;
-}
-
-/* clear filter button styling */
-.btn-primary.search-filter-clear {
-  padding-left: 2.25rem;
-  background: #fff url('/filter-icon.svg') no-repeat left 0.75rem center / 1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.btn-primary.search-filter-clear:hover {
-  background: #dee2e6 url('/filter-icon.svg') no-repeat left 0.75rem center /
-    1rem;
-  border-color: #dee2e6;
-  color: #000;
-}
-
-.search-bar {
-  background: #fff url('/search-icon.svg') no-repeat right 0.75rem center / 1rem;
   margin-bottom: 0.5rem;
 }
 

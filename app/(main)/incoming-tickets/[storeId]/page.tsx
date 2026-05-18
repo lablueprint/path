@@ -72,11 +72,11 @@ export default async function IncomingTicketsStorePage({
     <div>
       <Breadcrumbs
         labelMap={{
-          'incoming-tickets': 'Incoming Tickets',
+          'incoming-tickets': 'Store Tickets',
           [storeId]: store.name,
         }}
       />
-      <h1>Incoming Tickets</h1>
+      <h1>Store Tickets</h1>
       <IncomingTicketsList tickets={tickets} />
     </div>
   );

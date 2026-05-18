@@ -38,10 +38,10 @@ export default function UsersList({
           ))}
         </div>
       ) : (
-        <Table borderless>
+        <Table borderless responsive>
           <thead className="table-header">
             <tr>
-              <th>Requestor</th>
+              <th>Team Member</th>
               <th>Role</th>
               <th>Email</th>
             </tr>
@@ -56,21 +56,18 @@ export default function UsersList({
                     height={32}
                     width={32}
                     unoptimized
-                    className={styles.userPfp}
+                    className="rounded-circle me-2"
                   />
                   <Link
                     key={user.user_id}
-                    href={`/team/people/${user.user_id}`} // Where to navigate
-                    className={styles.userLink}
+                    href={`/administration/members/${user.user_id}`} // Where to navigate
                   >
                     {user.first_name + ' ' + user.last_name}
                   </Link>
                 </td>
-                <td className={styles.userRole}>{user.role}</td>
+                <td className="text-uppercase">{user.role}</td>
                 <td>
-                  <a className={styles.userEmail} href={`mailto:${user.email}`}>
-                    {user.email}
-                  </a>
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
                 </td>
               </tr>
             ))}
