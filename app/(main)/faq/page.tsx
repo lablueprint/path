@@ -78,37 +78,37 @@ export default function FaqPage() {
     <div>
       <h1>FAQ</h1>
       <div className="content-body">
-        <section>
+        <div>
           <h2>Roles &amp; Permissions</h2>
           <p className={styles.sectionDescription}>
             Roles determine what pages you can access and what actions you can
             take. Higher roles inherit all permissions from roles below them.
           </p>
+        </div>
 
-          <div className="row row-cols-1 row-cols-sm-2 g-5">
-            {roleCards.map((card) => (
-              <div key={card.title}>
-                <FaqCard {...card} />
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="row row-cols-1 row-cols-sm-2 g-5">
+          {roleCards.map((card) => (
+            <div key={card.title}>
+              <FaqCard {...card} />
+            </div>
+          ))}
+        </div>
 
-        <section>
+        <div>
           <h2>Ticket Statuses</h2>
           <p className={styles.sectionDescription}>
             Once a ticket is submitted, tickets move through the following
             statuses as store admins review and fulfill them.
           </p>
+        </div>
 
-          <div className="row row-cols-1 row-cols-sm-2 g-5">
-            {statusCards.map((card) => (
-              <div key={card.title}>
-                <FaqCard {...card} />
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="row row-cols-1 row-cols-sm-2 g-5">
+          {statusCards.map((card) => (
+            <div key={card.title}>
+              <FaqCard {...card} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

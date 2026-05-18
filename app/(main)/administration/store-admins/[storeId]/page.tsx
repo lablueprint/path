@@ -2,6 +2,8 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import AddAdminSearch from '@/app/(main)/administration/store-admins/[storeId]/components/AddAdminSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import AddAdminCard from '@/app/(main)/administration/store-admins/[storeId]/components/AddAdminCard';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
 
 export default async function StoreAdminPage({
   params,
@@ -85,42 +87,41 @@ export default async function StoreAdminPage({
             store_data?.name ?? 'Store',
         }}
       />
-      <div>
-        <h1>{store_data.name}</h1>
-        <p>{store_data.street_address}</p>
-      </div>
+      <h1>
+        <span>{store_data.name} </span>
+        <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
 
-      {/* searching store admins (AddAdminSearch) if eligible role */}
-      {canChangeAdmins && (
-        <div>
-          <h2>Add New Admins</h2>
+      <div className="content-body">
+        {/* searching store admins (AddAdminSearch) if eligible role */}
+        {canChangeAdmins && (
           <AddAdminSearch
             storeId={storeId}
             existingAdminUserIds={existingAdminUserIds ?? []}
           />
-        </div>
-      )}
+        )}
 
-      {/* viewing store admins */}
-      <div>
-        <h2>Current Admins</h2>
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
-          {admins?.length ? (
-            admins.map((admin) => {
-              const user = admin.users;
-              return (
-                <div key={admin.store_admin_id}>
-                  <AddAdminCard
-                    user={user}
-                    showRemove={canChangeAdmins}
-                    storeAdminId={admin.store_admin_id}
-                  ></AddAdminCard>
-                </div>
-              );
-            })
-          ) : (
-            <div>No admins found.</div>
-          )}
+        {/* viewing store admins */}
+        <div className="form-body">
+          <p className="form-title">Current Admins</p>
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
+            {admins?.length ? (
+              admins.map((admin) => {
+                const user = admin.users;
+                return (
+                  <div key={admin.store_admin_id}>
+                    <AddAdminCard
+                      user={user}
+                      showRemove={canChangeAdmins}
+                      storeAdminId={admin.store_admin_id}
+                    ></AddAdminCard>
+                  </div>
+                );
+              })
+            ) : (
+              <div>No admins found.</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

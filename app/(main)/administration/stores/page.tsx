@@ -3,7 +3,7 @@ import StoresList from '@/app/(main)/components/StoresList';
 import AddStoreForm from '@/app/(main)/administration/stores/components/AddStoreForm';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
-export default async function HqPage() {
+export default async function StoresPage() {
   const supabase = await createClient();
 
   const { data: storesData, error: storesErr } = await supabase
@@ -20,13 +20,17 @@ export default async function HqPage() {
     <div>
       <Breadcrumbs />
       <h1>Stores</h1>
-      <AddStoreForm />
-      <h3>Edit Stores</h3>
-      {stores.length > 0 ? (
-        <StoresList stores={stores} />
-      ) : (
-        <p>No stores found.</p>
-      )}
+      <div className="content-body">
+        <AddStoreForm />
+        <div>
+          <h2>Edit Stores</h2>
+          {stores.length > 0 ? (
+            <StoresList stores={stores} />
+          ) : (
+            <p>No stores found.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
