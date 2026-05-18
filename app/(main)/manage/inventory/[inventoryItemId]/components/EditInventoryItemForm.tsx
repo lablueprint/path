@@ -7,11 +7,10 @@ import type {
   InventoryItem,
   Subcategory,
 } from '@/app/types/inventory';
-import Image from 'next/image';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import defaultItemPhoto from '@/public/image-placeholder.svg';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
+import styles from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm.module.css';
 
 type FormValues = {
   name: string;
@@ -215,123 +214,112 @@ export default function EditInventoryItemForm({
     },
   });
 
-  const displayImage = isPendingDelete
-    ? defaultItemPhoto.src
-    : previewUrl || photoUrl || defaultItemPhoto.src;
-
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="form-card">
         <div className="card-body">
-          <div className="mb-3">
-            <Image
-              src={displayImage}
-              alt="Item photo"
-              width={64}
-              height={64}
-              className="photo"
-              unoptimized
-            />
+          <div className={styles.layout}>
+            <div className={styles.photoColumn}>
+              <PhotoUpload
+                ref={photoUploadRef}
+                onFileSelect={handleFileSelect}
+                previewUrl={previewUrl}
+                initialPhotoUrl={photoUrl}
+                isPendingDelete={isPendingDelete}
+                onRemove={handleRemovePhoto}
+              />
+            </div>
+            <div className={styles.fieldsColumn}>
+              <div>
+                <label className="form-label field-label">
+                  Inventory item name
+                </label>
+                <input
+                  type="text"
+                  {...register('name', { required: 'Item name is required.' })}
+                  className="form-control"
+                />
+                {errors.name && <p role="alert">{errors.name.message}</p>}
+              </div>
 
-            {!isPendingDelete && displayImage !== defaultItemPhoto.src && (
-              <button
-                type="button"
-                onClick={handleRemovePhoto}
-                className="btn-cancel"
-              >
-                Remove
-              </button>
-            )}
+              <div>
+                <label className="form-label field-label">Description</label>
+                <input
+                  type="text"
+                  {...register('description', {
+                    required: 'Description is required.',
+                  })}
+                  className="form-control"
+                />
+                {errors.description && (
+                  <p role="alert">{errors.description.message}</p>
+                )}
+              </div>
 
-            <br />
-            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-          </div>
+              <div>
+                <label className="form-label field-label">Category</label>
+                <select className="form-select" {...categoryField}>
+                  <option value="">None</option>
+                  {initialCategories.map((category) => (
+                    <option
+                      key={category.category_id}
+                      value={category.category_id}
+                    >
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="mb-3">
-            <label className="form-label field-label">
-              Inventory item name
-            </label>
-            <input
-              type="text"
-              {...register('name', { required: 'Item name is required.' })}
-              className="form-control"
-            />
-            {errors.name && <p role="alert">{errors.name.message}</p>}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label field-label">Description</label>
-            <input
-              type="text"
-              {...register('description', {
-                required: 'Description is required.',
-              })}
-              className="form-control"
-            />
-            {errors.description && (
-              <p role="alert">{errors.description.message}</p>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label field-label">Category</label>
-            <select className="form-select" {...categoryField}>
-              <option value="">None</option>
-              {initialCategories.map((category) => (
-                <option key={category.category_id} value={category.category_id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {!!selectedCategory && (
-            <div className="mb-3">
-              <label className="form-label field-label">Subcategory</label>
-              <select
-                className="form-select"
-                {...register('selectedSubcategory', {
-                  required: 'Subcategory is required.',
-                  onChange: () => trigger('selectedSubcategory'),
-                })}
-              >
-                <option value="">None</option>
-                {subcategories.map((subcategory) => (
-                  <option
-                    key={subcategory.subcategory_id}
-                    value={subcategory.subcategory_id}
+              {!!selectedCategory && (
+                <div>
+                  <label className="form-label field-label">Subcategory</label>
+                  <select
+                    className="form-select"
+                    {...register('selectedSubcategory', {
+                      required: 'Subcategory is required.',
+                      onChange: () => trigger('selectedSubcategory'),
+                    })}
                   >
-                    {subcategory.name}
-                  </option>
-                ))}
-              </select>
-              {errors.selectedSubcategory && (
-                <p role="alert">{errors.selectedSubcategory.message}</p>
+                    <option value="">None</option>
+                    {subcategories.map((subcategory) => (
+                      <option
+                        key={subcategory.subcategory_id}
+                        value={subcategory.subcategory_id}
+                      >
+                        {subcategory.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.selectedSubcategory && (
+                    <p role="alert">{errors.selectedSubcategory.message}</p>
+                  )}
+                </div>
+              )}
+
+              {hasDirtyTextOrImage && (
+                <div className="button-spacing">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn-submit"
+                  >
+                    {isSubmitting ? 'Saving...' : 'Save'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-cancel"
+                    onClick={handleCancel}
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                </div>
               )}
             </div>
-          )}
-
-          {hasDirtyTextOrImage && (
-            <div className="button-spacing">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-submit"
-              >
-                {isSubmitting ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                type="button"
-                className="btn-cancel"
-                onClick={handleCancel}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
+          </div>
         </div>
       </form>
     </div>
