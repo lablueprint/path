@@ -43,7 +43,7 @@ export default function OutgoingTicketsList({
       </div>
 
       {filteredTickets.length > 0 ? (
-        <Table>
+        <Table borderless responsive>
           <thead className="table-header">
             <tr>
               <th>ID</th>

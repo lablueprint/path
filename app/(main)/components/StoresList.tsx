@@ -28,7 +28,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
           ))}
         </Row>
       ) : (
-        <Table borderless>
+        <Table borderless responsive>
           <thead className="table-header">
             <tr>
               <th>NAME</th>
@@ -45,7 +45,7 @@ export default function StoresList({ stores }: { stores: Store[] }) {
                       alt={`${store.name} photo`}
                       width={32}
                       height={32}
-                      className="profilePicture"
+                      className="profile-picture"
                       unoptimized
                     />
 

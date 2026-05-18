@@ -46,7 +46,7 @@ export default function IncomingTicketsList({
 
       {filteredTickets.length > 0 ? (
         <div>
-          <Table>
+          <Table borderless responsive>
             <thead className="table-header">
               <tr>
                 <th>ID</th>

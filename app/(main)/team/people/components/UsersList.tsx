@@ -17,7 +17,7 @@ export default function UsersList({
 }) {
   return (
     <div>
-      <Table borderless>
+      <Table borderless responsive>
         <thead className="table-header">
           <tr>
             <th>Team Member</th>
@@ -35,7 +35,7 @@ export default function UsersList({
                   height={32}
                   width={32}
                   unoptimized
-                  className="profilePicture"
+                  className="profile-picture"
                 />
                 <Link
                   key={user.user_id}
@@ -45,7 +45,7 @@ export default function UsersList({
                   {user.first_name + ' ' + user.last_name}
                 </Link>
               </td>
-              <td className="userRole">{user.role}</td>
+              <td className="user-role">{user.role}</td>
               <td>
                 <a className="userEmail" href={`mailto:${user.email}`}>
                   {user.email}
