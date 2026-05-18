@@ -2,6 +2,7 @@
 
 import { deleteTicket } from '@/app/actions/ticket';
 import { usePathname, useRouter } from 'next/navigation';
+import { Button } from 'react-bootstrap';
 
 export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
   const pathname = usePathname();
@@ -20,8 +21,12 @@ export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
   }
 
   return (
-    <button type="button" onClick={handleDelete}>
+    <Button
+      variant="outline-danger"
+      className="btn-remove"
+      onClick={handleDelete}
+    >
       Delete ticket
-    </button>
+    </Button>
   );
 }
