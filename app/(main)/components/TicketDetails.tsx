@@ -176,11 +176,14 @@ export default async function TicketDetails({
                   <h2>Ticket #{userTicket.ticket_id}</h2>
                 </div>
               </Col>
-              {!outgoing ? (
-                <Col xs={12} className={styles.headerCardContact}>
+              <Col
+                xs={12}
+                className={`${styles.headerCardContact} d-flex flex-column align-items-start gap-2`}
+              >
+                {!outgoing && (
                   <Button
                     as="a"
-                    className={styles.contactButton}
+                    className={`${styles.contactButton} ${styles.headerEndAtLarge}`}
                     href={
                       requestor?.email ? `mailto:${requestor.email}` : undefined
                     }
@@ -190,31 +193,18 @@ export default async function TicketDetails({
                   >
                     Contact
                   </Button>
-                </Col>
-              ) : null}
+                )}
+                <TicketStatusDropdown
+                  ticketId={userTicket.ticket_id}
+                  currentStatus={userTicket.status as TicketStatus}
+                  statusOptions={statusOptions}
+                />
+                <div className={styles.headerEndAtLarge}>
+                  <DeleteTicketButton ticketId={userTicket.ticket_id} />
+                </div>
+              </Col>
             </Row>
           </Card>
-
-          <div>
-            <p>Status: </p>
-            <TicketStatusDropdown
-              ticketId={userTicket.ticket_id}
-              currentStatus={userTicket.status as TicketStatus}
-              statusOptions={statusOptions}
-            />
-          </div>
-          <div>
-            <p>Ticket Destination Store: </p>
-            <TicketDestStoreDropdown
-              ticketId={ticketId}
-              currentDestStore={(currentDestStore as Store) || null}
-              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
-                store,
-              }))}
-            />
-          </div>
-
-          <DeleteTicketButton ticketId={userTicket.ticket_id} />
 
           <Row className={styles.ticketContentLayout}>
             <Col xs={12} className={styles.ticketContentMain}>
@@ -246,6 +236,17 @@ export default async function TicketDetails({
                   <p>
                     <strong>Store Address:</strong> {store.street_address}
                   </p>
+                  <div className="mt-3">
+                    <TicketDestStoreDropdown
+                      ticketId={ticketId}
+                      currentDestStore={(currentDestStore as Store) || null}
+                      destStoreOptions={(destStoreOptions ?? []).map(
+                        (store) => ({
+                          store,
+                        }),
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </Col>

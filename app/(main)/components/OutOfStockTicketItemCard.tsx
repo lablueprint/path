@@ -38,8 +38,12 @@ export default function OutOfStockTicketItemCard({
       />
       {isChanged && (
         <div className={styles.actionsRow}>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button className="btn-submit py-1 px-3" onClick={handleSave}>
+            Save
+          </button>
+          <button className="btn-cancel py-1 px-3" onClick={handleCancel}>
+            Cancel
+          </button>
         </div>
       )}
     </div>

@@ -162,6 +162,9 @@
     width: auto;
     margin-top: 0;
   }
+  .headerEndAtLarge {
+    align-self: flex-end;
+  }
   .ticketContentMain {
     flex: 0 0 auto;
     width: 66.66666667%;
