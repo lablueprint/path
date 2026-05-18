@@ -2,12 +2,11 @@
 
 import { useForm } from 'react-hook-form';
 import type { Store, StoreUpdate } from '@/app/types/store';
-import Image from 'next/image';
 import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
-import defaultStorePhoto from '@/public/image-placeholder.svg';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import styles from '@/app/(main)/hq/[storeId]/components/EditStoreForm.module.css';
 
 type FormValues = {
   name: string;
@@ -130,65 +129,58 @@ export default function EditStoreForm({ store }: { store: Store }) {
     }
   };
 
-  const displayImage = isPendingDelete
-    ? defaultStorePhoto.src
-    : previewUrl || photoUrl || defaultStorePhoto.src;
-
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form-card">
       <div className="card-body">
-        <div className="mb-3">
-          <Image
-            src={displayImage}
-            alt="Store photo"
-            width={64}
-            height={64}
-            className="photo"
-            unoptimized
-          />
-
-          {!isPendingDelete && displayImage !== defaultStorePhoto.src && (
-            <button
-              type="button"
-              onClick={handleRemovePhoto}
-              className="btn-cancel"
-            >
-              Remove
-            </button>
-          )}
-
-          <br />
-          <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label field-label">Store name</label>
-          <input {...register('name')} className="form-control" />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label field-label">Store street address</label>
-          <input {...register('street_address')} className="form-control" />
-        </div>
-
-        {hasDirtyTextOrImage && (
-          <div className="button-spacing">
-            <button type="submit" disabled={isSaving} className="btn-submit">
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={onCancel}
-              disabled={isSaving}
-            >
-              Cancel
-            </button>
+        <div className={styles.layout}>
+          <div className={styles.photoColumn}>
+            <PhotoUpload
+              ref={photoUploadRef}
+              onFileSelect={handleFileSelect}
+              previewUrl={previewUrl}
+              initialPhotoUrl={photoUrl}
+              isPendingDelete={isPendingDelete}
+              onRemove={handleRemovePhoto}
+            />
           </div>
-        )}
+
+          <div className={styles.fieldsColumn}>
+            <div className="mb-3">
+              <label className="form-label field-label">Store name</label>
+              <input {...register('name')} className="form-control" />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label field-label">
+                Store street address
+              </label>
+              <input {...register('street_address')} className="form-control" />
+            </div>
+
+            {hasDirtyTextOrImage && (
+              <div className="button-spacing">
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="btn-submit"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
+
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={onCancel}
+                  disabled={isSaving}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </form>
   );

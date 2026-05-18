@@ -6,6 +6,9 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultItemPhoto from '@/public/image-placeholder.svg';
+import { Form } from 'react-bootstrap';
+import donationStyles from '@/app/(main)/components/DonationForm.module.css';
+import styles from '@/app/(main)/manage/components/AddInventoryItemForm.module.css';
 
 export type Inputs = {
   name: string;
@@ -108,75 +111,106 @@ export default function AddInventoryItemForm({
   }, [selectedCategory]);
 
   return (
-    <div>
-      <Image
-        src={previewUrl || defaultItemPhoto}
-        alt="Item photo"
-        width={64}
-        height={64}
-        style={{ objectFit: 'cover' }}
-        unoptimized
-      />
-      {selectedFile && (
-        <button type="button" onClick={handleRemovePhoto}>
-          Remove
-        </button>
-      )}
-      <br />
-      <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
-      <br />
-      <label>
-        Inventory item name
-        <input type="text" {...register('name', { required: true })} />
-      </label>
-      {errors.name?.type === 'required' && (
-        <p role="alert">Item name is required.</p>
-      )}
-      <br />
-      <label>
-        Description
-        <input type="text" {...register('description', { required: true })} />
-      </label>
-      {errors.description?.type === 'required' && (
-        <p role="alert">Description is required.</p>
-      )}
-      <br />
-      <label>
-        Category
-        <select {...register('selectedCategory', { required: true })}>
+    <div className={donationStyles.formBody}>
+      {/* Item Title */}
+      <Form.Group controlId="name">
+        <Form.Label className={donationStyles.fieldLabel}>
+          Item Title
+        </Form.Label>
+        <Form.Control
+          type="text"
+          className={styles.nameField}
+          {...register('name', { required: 'Item name is required' })}
+          isInvalid={!!errors.name}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errors.name?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
+      {/* Image */}
+      <Form.Group controlId="image">
+        <Form.Label className={donationStyles.fieldLabel}>Image</Form.Label>
+        {/* placeholder for drag and drop */}
+        <div>
+          <Image
+            src={previewUrl || defaultItemPhoto}
+            alt="Item photo"
+            width={64}
+            height={64}
+            style={{ objectFit: 'cover' }}
+            unoptimized
+          />
+          {selectedFile && (
+            <button type="button" onClick={handleRemovePhoto}>
+              Remove
+            </button>
+          )}
+          <div>
+            <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          </div>
+        </div>
+      </Form.Group>
+
+      {/* Description */}
+      <Form.Group controlId="description">
+        <Form.Label className={donationStyles.fieldLabel}>
+          Description
+        </Form.Label>
+        <Form.Control
+          as="textarea"
+          className={styles.descriptionField}
+          {...register('description', { required: 'Description is required' })}
+          isInvalid={!!errors.description}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errors.description?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
+
+      {/* Category */}
+      <Form.Group controlId="selectedCategory">
+        <Form.Label className={donationStyles.fieldLabel}>Category</Form.Label>
+        <Form.Select
+          className={styles.selectField}
+          {...register('selectedCategory', {
+            required: 'Category is required.',
+          })}
+          isInvalid={!!errors.selectedCategory}
+        >
           <option value="">None</option>
           {categories.map((item) => (
             <option key={item.category_id} value={item.category_id}>
               {item.name}
             </option>
           ))}
-        </select>
-      </label>
-      {errors.selectedCategory?.type === 'required' && (
-        <p role="alert">Category is required.</p>
-      )}
-      {selectedCategory !== '' && (
-        <>
-          <br />
-          <label>
-            Subcategory
-            <select {...register('selectedSubcategory', { required: true })}>
-              <option value="">None</option>
-              {subcategories.map((subcat) => (
-                <option
-                  key={subcat.subcategory_id}
-                  value={subcat.subcategory_id}
-                >
-                  {subcat.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          {errors.selectedSubcategory?.type === 'required' && (
-            <p role="alert">Subcategory is required.</p>
-          )}
-        </>
-      )}
+        </Form.Select>
+        <Form.Control.Feedback type="invalid">
+          {errors.selectedCategory?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
+      {/* subcategory */}
+      <Form.Group controlId="selectedSubcategory">
+        <Form.Label className={donationStyles.fieldLabel}>
+          Subcategory
+        </Form.Label>
+        <Form.Select
+          className={styles.selectField}
+          {...register('selectedSubcategory', {
+            required: 'Subcategory is required.',
+          })}
+          isInvalid={!!errors.selectedSubcategory}
+        >
+          <option value="">None</option>
+          {subcategories.map((subcat) => (
+            <option key={subcat.subcategory_id} value={subcat.subcategory_id}>
+              {subcat.name}
+            </option>
+          ))}
+        </Form.Select>
+        <Form.Control.Feedback type="invalid">
+          {errors.selectedSubcategory?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
     </div>
   );
 }

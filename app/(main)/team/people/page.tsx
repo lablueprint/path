@@ -29,6 +29,7 @@ export default async function UsersPage({
         last_name,
         full_name,
         email,
+        phone,
         profile_photo_url,
         user_roles!inner(
           roles!inner (
@@ -69,6 +70,7 @@ export default async function UsersPage({
       last_name: u.last_name,
       role: user_roles.roles.name,
       email: u.email,
+      phone: u.phone,
       profile_photo_url: u.profile_photo_url,
     };
   });

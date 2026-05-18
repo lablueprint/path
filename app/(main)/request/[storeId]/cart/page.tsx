@@ -6,6 +6,7 @@ import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 import { Store } from '@/app/types/store';
+import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
 export default async function CartPage({
   params,
@@ -70,6 +71,10 @@ export default async function CartPage({
             <h2>0 in-stock · 0 out-of-stock</h2>
           </div>
         </div>
+        <div>
+          <h2>Out-of-Stock Request</h2>
+          <AddOutOfStockToCartForm storeId={storeId} />
+        </div>
       </div>
     );
   }
@@ -115,18 +120,6 @@ export default async function CartPage({
         }}
       />
       <h1>Cart</h1>
-      {hasItems ? (
-        <div>
-          <p>Ticket Destination Store: </p>
-          <TicketDestStoreDropdown
-            ticketId={ticket.ticket_id}
-            currentDestStore={(currentDestStore as Store) || null}
-            destStoreOptions={(destStoreOptions ?? []).map((store) => ({
-              store,
-            }))}
-          />
-        </div>
-      ) : null}
       {showSuccess && (
         <div>
           <p>Ticket submitted successfully!</p>
@@ -135,7 +128,23 @@ export default async function CartPage({
       )}
       <div>
         <TicketItemsList ticketId={ticket.ticket_id} />
-        {hasItems ? <SubmitTicketButton ticketId={ticket.ticket_id} /> : null}
+        <div>
+          <h2>Out-of-Stock Request</h2>
+          <AddOutOfStockToCartForm storeId={storeId} />
+        </div>
+        {hasItems ? (
+          <div>
+            <p>Ticket Destination Store: </p>
+            <TicketDestStoreDropdown
+              ticketId={ticket.ticket_id}
+              currentDestStore={(currentDestStore as Store) || null}
+              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                store,
+              }))}
+            />
+            <SubmitTicketButton ticketId={ticket.ticket_id} />
+          </div>
+        ) : null}
       </div>
     </div>
   );

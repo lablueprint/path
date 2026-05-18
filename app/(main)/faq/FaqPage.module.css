@@ -1,0 +1,39 @@
+.content {
+  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionDescription {
+  color: #4f5d75;
+}
+
+.card {
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid #d8e1ec;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+  padding: 0.75rem;
+  border-bottom: 1px solid #d8e1ec;
+}
+
+.cardTitle {
+  margin: 0;
+  color: #000000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cardBody {
+  padding: 0.75rem;
+}
+
+.cardDescription {
+  margin: 0;
+  color: #4f5d75;
+}

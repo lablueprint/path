@@ -1,13 +1,15 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
-import Link from 'next/link';
 import styles from '@/app/(main)/request/CartPage.module.css';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
+import accordionStyles from '@/app/(main)/request/all/Accordion.module.css';
+import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
 type DraftTicket = {
   ticket_id: string;
@@ -17,13 +19,7 @@ type DraftTicket = {
   }[];
 };
 
-export default async function AllCartsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ submitted?: string; ticketId?: string }>;
-}) {
-  const { submitted, ticketId } = await searchParams;
-  const showSuccess = submitted === '1' && !!ticketId;
+export default async function AllCartsPage() {
   const supabase = await createClient();
 
   // Get the current user
@@ -38,7 +34,7 @@ export default async function AllCartsPage({
   // Fetch stores
   const { data: stores, error: storesError } = await supabase
     .from('stores')
-    .select('store_id, name')
+    .select('store_id, name, street_address')
     .order('name');
 
   if (storesError || !stores) {
@@ -69,9 +65,14 @@ export default async function AllCartsPage({
         {sortedStores.map((store) => {
           return (
             <Accordion key={store.store_id}>
-              <AccordionItem eventKey={store.store_id}>
-                <AccordionHeader>{store.name}</AccordionHeader>
-                <AccordionBody>
+              <AccordionItem
+                eventKey={store.store_id}
+                className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+              >
+                <AccordionHeader className={accordionStyles.accordionHeader}>
+                  {store.name}
+                </AccordionHeader>
+                <AccordionBody className={accordionStyles.accordionBodySpacing}>
                   <div className={styles.itemsCard}>
                     <div className={styles.itemsCardHeader}>
                       <h1>ITEMS</h1>
@@ -116,29 +117,52 @@ export default async function AllCartsPage({
 
         return (
           <Accordion key={store.store_id}>
-            <AccordionItem eventKey={store.store_id}>
-              <AccordionHeader>{store.name}</AccordionHeader>
-              <AccordionBody>
-                {showSuccess && (
-                  <div>
-                    <p>Ticket submitted successfully!</p>
-                    <Link href={`/outgoing-tickets/${ticketId}`}>
-                      Go to ticket
-                    </Link>
-                  </div>
-                )}
+            <AccordionItem
+              eventKey={store.store_id}
+              className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+            >
+              <AccordionHeader className={accordionStyles.accordionHeader}>
+                {store.name}
+              </AccordionHeader>
+              <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 {draftTicket ? (
                   <div>
                     <TicketItemsList ticketId={draftTicket.ticket_id} />
+                    <div>
+                      <h3>Out-of-Stock Request</h3>
+                      <AddOutOfStockToCartForm storeId={store.store_id} />
+                    </div>
                     {draftTicket.ticket_items[0].count > 0 ? (
-                      <SubmitTicketButton ticketId={draftTicket.ticket_id} />
+                      <div>
+                        <p>Ticket Destination Store: </p>
+                        <TicketDestStoreDropdown
+                          ticketId={draftTicket.ticket_id}
+                          currentDestStore={store.store_id}
+                          destStoreOptions={stores
+                            .filter((s) => s.store_id !== store.store_id)
+                            .map((s) => ({
+                              store: {
+                                store_id: s.store_id,
+                                name: s.name,
+                                street_address: s.street_address,
+                              },
+                            }))}
+                        />
+                        <SubmitTicketButton ticketId={draftTicket.ticket_id} />
+                      </div>
                     ) : null}
                   </div>
                 ) : (
-                  <div className={styles.itemsCard}>
-                    <div className={styles.itemsCardHeader}>
-                      <h1>ITEMS</h1>
-                      <h2>0 in-stock · 0 out-of-stock</h2>
+                  <div>
+                    <div className={styles.itemsCard}>
+                      <div className={styles.itemsCardHeader}>
+                        <h1>ITEMS</h1>
+                        <h2>0 in-stock · 0 out-of-stock</h2>
+                      </div>
+                    </div>
+                    <div>
+                      <h3>Out-of-Stock Request</h3>
+                      <AddOutOfStockToCartForm storeId={store.store_id} />
                     </div>
                   </div>
                 )}

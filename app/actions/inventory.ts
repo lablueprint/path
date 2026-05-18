@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import {
   InventoryItem,
   InventoryItemInsert,
@@ -12,7 +13,6 @@ import {
   SubcategoryUpdate,
 } from '@/app/types/inventory';
 import { createClient } from '@/app/lib/supabase/server-client';
-import { revalidatePath } from 'next/cache';
 
 export const createItem = async (data: InventoryItemInsert) => {
   const supabase = await createClient();
@@ -28,7 +28,6 @@ export const createItem = async (data: InventoryItemInsert) => {
   }
 
   revalidatePath('/manage/inventory');
-  revalidatePath('/manage/inventory/[inventoryItemId]', 'page');
 
   return { success: true, data: entry as InventoryItem };
 };
@@ -51,7 +50,6 @@ export const updateItem = async (
   }
 
   revalidatePath('/manage/inventory');
-  revalidatePath('/manage/inventory/[inventoryItemId]', 'page');
 
   return { success: true, data: entry as InventoryItem };
 };
@@ -71,7 +69,6 @@ export const deleteItem = async (inventoryItemId: string) => {
   }
 
   revalidatePath('/manage/inventory');
-  revalidatePath('/manage/inventory/[inventoryItemId]', 'page');
 
   return { success: true, data: entry as InventoryItem };
 };
@@ -88,6 +85,9 @@ export const createSubcategory = async (data: SubcategoryInsert) => {
     console.error('Error creating subcategory:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+
   return { success: true, data: entry as Subcategory };
 };
 
@@ -107,6 +107,9 @@ export const updateSubcategory = async (
     console.error('Error updating subcategory:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+
   return { success: true, data: entry as Subcategory };
 };
 
@@ -123,6 +126,9 @@ export const deleteSubcategory = async (subcategoryId: number) => {
     console.error('Error deleting subcategory:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+
   return { success: true, data: entry as Subcategory };
 };
 
@@ -138,6 +144,9 @@ export const createCategory = async (data: CategoryInsert) => {
     console.error('Error creating category:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+
   return { success: true, data: entry as Category };
 };
 
@@ -157,6 +166,9 @@ export const updateCategory = async (
     console.error('Error updating category:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+
   return { success: true, data: entry as Category };
 };
 
@@ -173,5 +185,8 @@ export const deleteCategory = async (categoryId: number) => {
     console.error('Error deleting category:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/manage/inventory');
+
   return { success: true, data: entry as Category };
 };

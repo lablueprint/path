@@ -1,4 +1,4 @@
-import styles from '@/app/(main)/home/components/ActionButton.module.css';
+import styles from '@/app/(main)/components/ActionButton.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
 

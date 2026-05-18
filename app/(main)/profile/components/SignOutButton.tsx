@@ -14,5 +14,9 @@ export default function SignOutButton() {
     router.push('/home');
   }
 
-  return <button onClick={signOut}>Sign out</button>;
+  return (
+    <button className="btn-submit" onClick={signOut}>
+      Sign out
+    </button>
+  );
 }

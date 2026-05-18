@@ -1,0 +1,48 @@
+.card {
+  border: none;
+  border-radius: 5px;
+  background: #fff;
+  margin-top: 8.25rem;
+}
+
+.cardBody {
+  padding: 40px;
+  padding-top: 6.25rem;
+  margin-top: 50px;
+}
+
+.userInfoText {
+  margin-top: 1.25rem;
+}
+
+.avatarCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -12.5rem;
+}
+
+.avatarCircle img {
+  width: 12.5rem;
+  height: 12.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarCircleEdit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -12.5rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.profileLabel {
+  font-weight: 500;
+  margin-bottom: 5px;
+}

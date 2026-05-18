@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Dropdown from '@/app/(main)/team/people/[userId]/components/Dropdown';
 import Image from 'next/image';
+import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 
 export default async function TeamProfilePage({
@@ -43,19 +44,45 @@ export default async function TeamProfilePage({
           [`/team/people/${userId}`]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
         }}
       />
+      <h1>Profile</h1>
+      {/* same styling as profile page */}
+      <div className={styles.card}>
+        <div className={`form-body ${styles.cardBody}`}>
+          <div className={styles.avatarCircle}>
+            <Image
+              src={user.profile_photo_url || imagePlaceholder}
+              alt={user.first_name + ' ' + user.last_name}
+              width={96}
+              height={96}
+              unoptimized
+            />
+          </div>
+          <h2>User Information</h2>
 
-      <Image
-        src={user.profile_photo_url || imagePlaceholder}
-        alt={user.first_name + ' ' + user.last_name}
-        height={64}
-        width={64}
-        unoptimized
-      />
-      <p>
-        Name: {user.first_name || 'FirstName'} {user.last_name || 'LastName'}
-      </p>
-      <p>Email: {user.email}</p>
-      <Dropdown userId={userId} roleId={role?.role_id} />
+          <div>
+            <div className="two-col-row">
+              <div>
+                <label className={styles.profileLabel}>First name</label>
+                <p className="form-control-plaintext">{user.first_name}</p>
+              </div>
+              <div>
+                <label className={styles.profileLabel}>Last name</label>
+                <p className="form-control-plaintext">{user.last_name}</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className={styles.profileLabel}>Email</label>
+            <p className="form-control-plaintext">{user.email}</p>
+          </div>
+
+          <div>
+            <label className={styles.profileLabel}>Role</label>
+            <Dropdown userId={userId} roleId={role?.role_id} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

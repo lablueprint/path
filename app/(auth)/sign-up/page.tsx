@@ -1,20 +1,29 @@
 'use client';
 
-import { useForm, useWatch, SubmitHandler } from 'react-hook-form';
+import { useForm, useWatch, SubmitHandler, Controller } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
+import { PatternFormat } from 'react-number-format';
+
 type Inputs = {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
   password: string;
   passwordConfirmation: string;
 };
 import pathLogo from '@/public/path.png';
+
+const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
+  (props, ref) => <Form.Control {...props} ref={ref} />,
+);
+BootstrapInput.displayName = 'BootstrapInput';
 
 export default function SignUpPage() {
   const {
@@ -40,6 +49,7 @@ export default function SignUpPage() {
         data: {
           first_name: formData.firstName,
           last_name: formData.lastName,
+          phone: formData.phone,
         },
       },
     });
@@ -117,6 +127,40 @@ export default function SignUpPage() {
               />
               <Form.Control.Feedback type="invalid">
                 {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="phone">
+              <Controller
+                name="phone"
+                control={control}
+                rules={{
+                  validate: (value) => {
+                    const digits = value?.replace(/\D/g, '');
+                    return (
+                      !digits ||
+                      digits.length === 10 ||
+                      'Phone number must be 10 digits'
+                    );
+                  },
+                }}
+                render={({ field }) => (
+                  <PatternFormat
+                    {...field}
+                    format="(###) ###-####"
+                    mask="_"
+                    placeholder="Phone Number (Optional)"
+                    allowEmptyFormatting
+                    onValueChange={(values) => {
+                      field.onChange(values.value);
+                    }}
+                    customInput={BootstrapInput}
+                    isInvalid={!!errors.phone}
+                    className="auth-field"
+                  />
+                )}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.phone?.message}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="password">

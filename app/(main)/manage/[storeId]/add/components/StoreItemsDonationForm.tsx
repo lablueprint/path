@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-
+import { Form } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -66,14 +66,30 @@ export default function StoreItemsDonationForm({
   const isInventorySelected =
     itemSettingsSelected.includes('addInventoryItems');
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
+  const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
   useEffect(() => {
     if (isGiftSelected && isInventorySelected) {
-      const itemsString = autoFillItems.map((item) => item.name).join(', ');
-      methods.setValue('items_donated', itemsString);
+      // Only run the sync logic if there are actually items to fill
+      if (autoFillItems.length > 0) {
+        const itemsString = autoFillItems.map((item) => item.name).join(', ');
+
+        methods.setValue('items_donated', itemsString, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
+      } else {
+        // If autoFillItems is empty, reset the field value silently
+        methods.setValue('items_donated', '', {
+          shouldValidate: false,
+          shouldDirty: false,
+          shouldTouch: false,
+        });
+      }
     }
   }, [isGiftSelected, isInventorySelected, autoFillItems, methods]);
   const onSubmit = async (data: CombinedFormData) => {
@@ -158,6 +174,7 @@ export default function StoreItemsDonationForm({
           items_donated: '',
           items: [],
         });
+        setSelectedItems([]);
         setAutoFillItems([]);
         methods.clearErrors();
       }
@@ -166,46 +183,52 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <div>
-          <label>
-            <input
-              value="addInventoryItems"
+    <div>
+      <h2>Add Items</h2>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <div className="checkbox-row">
+            <Form.Check
               type="checkbox"
+              id="addInventoryItems"
+              label="Inventory"
+              value="addInventoryItems"
               {...methods.register('itemSettings')}
             />
-            Add inventory items to store?
-          </label>
-          <label>
-            <input
+            <Form.Check
               type="checkbox"
+              id="giftInKind"
+              label="Gift-in-Kind Donation"
               value="giftInKind"
               {...methods.register('itemSettings')}
             />
-            Submit gift-in-kind donation?
-          </label>
-        </div>
+          </div>
 
-        {itemSettingsSelected?.includes('giftInKind') && (
-          <DonationForm
-            donorType={donorType}
-            setItemsDonated={setItemsDonated}
-            showSubmitButton={
-              !itemSettingsSelected?.includes('addInventoryItems')
-            }
-          />
-        )}
-        {itemSettingsSelected?.includes('addInventoryItems') && (
-          <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
-          // add autofillitems connection pass in prop to storeitemsform
-        )}
-        {itemSettingsSelected?.includes('addInventoryItems') && (
-          <button type="submit" className="btn-submit">
-            Submit
-          </button>
-        )}
-      </form>
-    </FormProvider>
+          {itemSettingsSelected?.includes('giftInKind') && (
+            <DonationForm
+              donorType={donorType}
+              setItemsDonated={setItemsDonated}
+              showSubmitButton={
+                !itemSettingsSelected?.includes('addInventoryItems')
+              }
+            />
+          )}
+
+          {itemSettingsSelected?.includes('addInventoryItems') && (
+            <>
+              <AddStoreItemSearch
+                setAutoFillItems={setAutoFillItems}
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems}
+              />
+              {/* add autofillitems connection pass in prop to storeitemsform */}
+              <button type="submit" className="btn-submit">
+                Submit
+              </button>
+            </>
+          )}
+        </form>
+      </FormProvider>
+    </div>
   );
 }

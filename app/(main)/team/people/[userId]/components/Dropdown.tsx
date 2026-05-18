@@ -60,6 +60,7 @@ export default function Dropdown({
     >
       <select
         name="role"
+        className="form-select w-auto"
         value={currentRoleId}
         onChange={(e) => setCurrentRoleId(Number(e.target.value))}
       >
@@ -69,7 +70,11 @@ export default function Dropdown({
           </option>
         ))}
       </select>
-      <button type="submit">Update role</button>
+      <div className="btn-row">
+        <button className="btn-submit" type="submit">
+          Save
+        </button>
+      </div>
     </form>
   );
 }
