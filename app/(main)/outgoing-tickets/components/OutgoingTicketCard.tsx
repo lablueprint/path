@@ -19,6 +19,18 @@ export default function OutgoingTicketCard({
   const pathname = usePathname();
   const router = useRouter();
 
+  /* Stuatus Class mapping for colors for different statuses */
+  const statusClassMap: Record<string, string> = {
+    requested: styles.statusRequested,
+    ready: styles.statusReady,
+    rejected: styles.statusRejected,
+    fulfilled: styles.statusFulfilled,
+    approved: styles.statusApproved,
+  };
+
+  const normalizedStatus = status.toLowerCase();
+  const statusClass = statusClassMap[normalizedStatus] ?? styles.statusDefault;
+
   return (
     <tr
       onClick={() => router.push(`${pathname}/${ticketId}`)}
@@ -27,7 +39,7 @@ export default function OutgoingTicketCard({
       <td>{ticketId}</td>
       <td>{storeName}</td>
       <td>
-        <span className={styles.statusBubble}>
+        <span className={`${styles.statusBubble} ${statusClass}`}>
           {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
         </span>
       </td>

@@ -21,6 +21,18 @@ export default function IncomingTicketCard({
   const pathname = usePathname();
   const router = useRouter();
 
+  /* Stuatus Class mapping for colors for different statuses */
+  const statusClassMap: Record<string, string> = {
+    requested: styles.statusRequested,
+    ready: styles.statusReady,
+    rejected: styles.statusRejected,
+    fulfilled: styles.statusFulfilled,
+    approved: styles.statusApproved,
+  };
+
+  const normalizedStatus = status.toLowerCase();
+  const statusClass = statusClassMap[normalizedStatus] ?? styles.statusDefault;
+
   // Display requestor's name, status, and date submitted
   return (
     <tr
@@ -33,7 +45,7 @@ export default function IncomingTicketCard({
       </td>
 
       <td>
-        <span className={styles.statusBubble}>
+        <span className={`${styles.statusBubble} ${statusClass}`}>
           {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
         </span>
       </td>
