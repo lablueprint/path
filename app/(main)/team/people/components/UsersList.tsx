@@ -45,7 +45,7 @@ export default function UsersList({
                   {user.first_name + ' ' + user.last_name}
                 </Link>
               </td>
-              <td className="user-role">{user.role}</td>
+              <td className="text-uppercase">{user.role}</td>
               <td>
                 <a className="userEmail" href={`mailto:${user.email}`}>
                   {user.email}
