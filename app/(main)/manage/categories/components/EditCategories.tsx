@@ -1,290 +1,245 @@
 'use client';
 
-import styles from './EditCategories.module.css';
 import { useState } from 'react';
-import {
-  updateCategory,
-  updateSubcategory,
-  deleteCategory,
-  deleteSubcategory,
-  createCategory,
-  createSubcategory,
-} from '@/app/actions/inventory';
+import { Button, Form } from 'react-bootstrap';
+
+import styles from './EditCategories.module.css';
 
 type Category = {
-  category_id: number;
   name: string;
-  subcategories: {
-    subcategory_id: number;
-    name: string;
-  }[];
+  subcategories: string[];
 };
 
-export default function EditCategories({
-  categories,
-}: {
-  categories: Category[];
-}) {
+const initialCategories: Category[] = [
+  {
+    name: 'Cleaning',
+    subcategories: ['Laundry', 'Surface Cleaners'],
+  },
+  {
+    name: 'Clothing',
+    subcategories: ['Menswear', 'Womenswear'],
+  },
+  {
+    name: 'Food',
+    subcategories: ['Beverages', 'Dry goods', 'Produce'],
+  },
+  {
+    name: 'Home Goods',
+    subcategories: ['Bedding', 'Kitchenware'],
+  },
+  {
+    name: 'Hygiene',
+    subcategories: [],
+  },
+];
+
+export default function EditCategories() {
   const [editing, setEditing] = useState(false);
 
-  const [showAddCategory, setShowAddCategory] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState('');
+  const [categories, setCategories] =
+    useState<Category[]>(initialCategories);
 
-  const [addingSubcategory, setAddingSubcategory] = useState<number | null>(
-    null,
-  );
-  const [newSubcategoryName, setNewSubcategoryName] = useState('');
+  const updateCategoryName = (
+    categoryIndex: number,
+    value: string
+  ) => {
+    const updated = [...categories];
 
-  const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) return;
+    updated[categoryIndex].name = value;
 
-    await createCategory({ name: newCategoryName });
-    setNewCategoryName('');
+    setCategories(updated);
   };
 
-  const handleCreateSubcategory = async (categoryId: number) => {
-    if (!newSubcategoryName.trim()) return;
+  const updateSubcategoryName = (
+    categoryIndex: number,
+    subcategoryIndex: number,
+    value: string
+  ) => {
+    const updated = [...categories];
 
-    await createSubcategory({
-      name: newSubcategoryName,
-      category_id: categoryId,
-    });
+    updated[categoryIndex].subcategories[subcategoryIndex] =
+      value;
 
-    setNewSubcategoryName('');
+    setCategories(updated);
+  };
+
+  const removeCategory = (categoryIndex: number) => {
+    setCategories(
+      categories.filter((_, i) => i !== categoryIndex)
+    );
+  };
+
+  const removeSubcategory = (
+    categoryIndex: number,
+    subcategoryIndex: number
+  ) => {
+    const updated = [...categories];
+
+    updated[categoryIndex].subcategories =
+      updated[categoryIndex].subcategories.filter(
+        (_, i) => i !== subcategoryIndex
+      );
+
+    setCategories(updated);
+  };
+
+  const addCategory = () => {
+    setCategories([
+      ...categories,
+      {
+        name: '',
+        subcategories: [],
+      },
+    ]);
+  };
+
+  const addSubcategory = (categoryIndex: number) => {
+    const updated = [...categories];
+
+    updated[categoryIndex].subcategories.push('');
+
+    setCategories(updated);
   };
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.topButtons}>
-        <button
-          className={styles.primaryButton}
-          onClick={() => setEditing(!editing)}
-        >
-          {editing ? 'Done' : 'Edit'}
-        </button>
-      </div>
+      <h1 className={styles.title}></h1>
 
-      {/* Add Category */}
       {editing && (
-        <div className={styles.addSection}>
-          <button
-            className={styles.primaryButton}
-            onClick={() => setShowAddCategory(!showAddCategory)}
-          >
-            {showAddCategory ? 'Done' : 'Add'}
-          </button>
-
-          {showAddCategory && (
-            <div className={styles.buttonGroup}>
-              <input
-                placeholder="New category name"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                className={styles.inputField}
-              />
-
-              {newCategoryName && (
-                <>
-                  <button
-                    className={styles.secondaryButton}
-                    onClick={handleCreateCategory}
-                  >
-                    Save
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setNewCategoryName('');
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-        </div>
+        <p className={styles.subtitle}>
+          Manage inventory categories and subcategories
+        </p>
       )}
 
-      <ul className={styles.categoriesContainer}>
-        {categories?.map((category) => (
-          <li
-            key={category.category_id}
+      <div className={styles.topButtons}>
+        {editing ? (
+          <Button
+            className="btn-submit"
+            onClick={() => setEditing(false)}
+          >
+            Save Changes
+          </Button>
+        ) : (
+          <Button
+            className="btn-submit"
+            onClick={() => setEditing(true)}
+          >
+            Edit
+          </Button>
+        )}
+      </div>
+
+      <div className={styles.categoriesContainer}>
+        {editing && (
+          <Button
+            className="btn-submit align-self-start"
+            onClick={addCategory}
+          >
+            Add Category
+          </Button>
+        )}
+
+        {categories.map((category, categoryIndex) => (
+          <div
+            key={categoryIndex}
             className={styles.categoryBlock}
           >
-            <div className={styles.categoryRow}>
-              {editing ? (
-                <EditableField
-                  id={category.category_id}
-                  name={category.name}
-                  type="category"
-                />
-              ) : (
-                <p className="fw-semibold mb-0">{category.name}</p>
-              )}
-
-              {/* Add Subcategory */}
-              {editing && (
-                <button
-                  className={styles.primaryButton}
-                  onClick={() =>
-                    setAddingSubcategory(
-                      addingSubcategory === category.category_id
-                        ? null
-                        : category.category_id,
-                    )
-                  }
-                >
-                  {addingSubcategory === category.category_id
-                    ? 'Done'
-                    : 'Add'}
-                </button>
-              )}
-            </div>
-
-            {editing && addingSubcategory === category.category_id && (
-              <div className={styles.addSection}>
-                <div className={styles.buttonGroup}>
-                  <input
-                    placeholder="New subcategory"
-                    value={newSubcategoryName}
-                    onChange={(e) => setNewSubcategoryName(e.target.value)}
+            {editing ? (
+              <>
+                <div className={styles.categoryRow}>
+                  <Form.Control
+                    type="text"
+                    value={category.name}
+                    onChange={(e) =>
+                      updateCategoryName(
+                        categoryIndex,
+                        e.target.value
+                      )
+                    }
                     className={styles.inputField}
                   />
 
-                  {newSubcategoryName && (
-                    <>
-                      <button
-                        className={styles.secondaryButton}
-                        onClick={() =>
-                          handleCreateSubcategory(category.category_id)
+                  <Button
+                    variant="outline-danger"
+                    className="btn-remove"
+                    onClick={() =>
+                      removeCategory(categoryIndex)
+                    }
+                  >
+                    Remove
+                  </Button>
+                </div>
+
+                <div className={styles.subcategoryList}>
+                  {category.subcategories.map(
+                    (subcategory, subcategoryIndex) => (
+                      <div
+                        key={subcategoryIndex}
+                        className={
+                          styles.subcategoryRow
                         }
                       >
-                        Save
-                      </button>
+                        <Form.Control
+                          type="text"
+                          value={subcategory}
+                          onChange={(e) =>
+                            updateSubcategoryName(
+                              categoryIndex,
+                              subcategoryIndex,
+                              e.target.value
+                            )
+                          }
+                          className={
+                            styles.inputField
+                          }
+                        />
 
-                      <button onClick={() => setNewSubcategoryName('')}>
-                        Cancel
-                      </button>
-                    </>
+                        <Button
+                          variant="outline-danger"
+                          className="btn-remove"
+                          onClick={() =>
+                            removeSubcategory(
+                              categoryIndex,
+                              subcategoryIndex
+                            )
+                          }
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    )
+                  )}
+
+                  <div className={styles.addSection}>
+                    <Button
+                      className="btn-submit"
+                      onClick={() =>
+                        addSubcategory(categoryIndex)
+                      }
+                    >
+                      Add Subcategory
+                    </Button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3>{category.name}</h3>
+
+                <div className={styles.subcategoryList}>
+                  {category.subcategories.map(
+                    (subcategory, subcategoryIndex) => (
+                      <p key={subcategoryIndex}>
+                        {subcategory}
+                      </p>
+                    )
                   )}
                 </div>
-              </div>
+              </>
             )}
-
-            <ul className={styles.subcategoryList}>
-              {category.subcategories?.map((sub) => (
-                <li
-                  key={sub.subcategory_id}
-                  className={styles.subcategoryRow}
-                >
-                  {editing ? (
-                    <EditableField
-                      id={sub.subcategory_id}
-                      name={sub.name}
-                      type="subcategory"
-                    />
-                  ) : (
-                    <p className="mb-0">{sub.name}</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </li>
+          </div>
         ))}
-      </ul>
-    </div>
-  );
-}
-
-function EditableField({
-  id,
-  name,
-  type,
-}: {
-  id: number;
-  name: string;
-  type: 'category' | 'subcategory';
-}) {
-  const [value, setValue] = useState(name);
-  const [isDirty, setIsDirty] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleSave = async () => {
-    try {
-      setLoading(true);
-
-      if (type === 'category') {
-        await updateCategory(id, { name: value });
-      } else {
-        await updateSubcategory(id, { name: value });
-      }
-
-      setIsDirty(false);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-
-      if (type === 'category') {
-        await deleteCategory(id);
-      } else {
-        await deleteSubcategory(id);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className={styles.buttonGroup}>
-      <input
-        value={value}
-        disabled={loading}
-        className={styles.inputField}
-        onChange={(e) => {
-          setValue(e.target.value);
-          setIsDirty(e.target.value !== name);
-        }}
-      />
-
-      {isDirty && (
-        <>
-          <button
-            className={styles.secondaryButton}
-            onClick={handleSave}
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : 'Save'}
-          </button>
-
-          <button
-            onClick={() => {
-              setValue(name);
-              setIsDirty(false);
-            }}
-            disabled={loading}
-          >
-            Cancel
-          </button>
-        </>
-      )}
-
-      <button
-        className={styles.removeButton}
-        onClick={handleDelete}
-        disabled={loading}
-      >
-        Remove
-      </button>
+      </div>
     </div>
   );
 }
