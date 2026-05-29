@@ -63,11 +63,11 @@ export default async function TeamProfilePage({
             <div>
               <div className="two-col-row">
                 <div>
-                  <label className={styles.profileLabel}>First name</label>
+                  <label className={styles.profileLabel}>First Name</label>
                   <p className="form-control-plaintext">{user.first_name}</p>
                 </div>
                 <div>
-                  <label className={styles.profileLabel}>Last name</label>
+                  <label className={styles.profileLabel}>Last Name</label>
                   <p className="form-control-plaintext">{user.last_name}</p>
                 </div>
               </div>
@@ -76,6 +76,11 @@ export default async function TeamProfilePage({
             <div>
               <label className={styles.profileLabel}>Email</label>
               <p className="form-control-plaintext">{user.email}</p>
+            </div>
+
+            <div>
+              <label className={styles.profileLabel}>Phone Number</label>
+              <p className="form-control-plaintext">{user.phone}</p>
             </div>
 
             <div>
