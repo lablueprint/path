@@ -14,6 +14,7 @@ type ProfileFormValues = {
   email: string;
   firstName: string;
   lastName: string;
+  phone: string;
 };
 
 export default function ProfileForm({ user }: { user: User }) {
@@ -40,6 +41,7 @@ export default function ProfileForm({ user }: { user: User }) {
       firstName: user.first_name,
       lastName: user.last_name,
       email: user.email,
+      phone: user.phone,
     },
   });
 
@@ -115,6 +117,7 @@ export default function ProfileForm({ user }: { user: User }) {
       if (data.email !== user.email) changes.email = data.email;
       if (selectedFile || isPendingDelete)
         changes.profile_photo_url = finalPhotoUrl;
+      if (data.phone != user.phone) changes.phone = data.phone;
 
       const result = await updateUser(user.user_id, changes);
 
@@ -129,6 +132,7 @@ export default function ProfileForm({ user }: { user: User }) {
           firstName: data.firstName,
           lastName: data.lastName,
           email: user.email,
+          phone: user.phone,
         });
         setIsEditing(false);
         if (data.email !== user.email) {
@@ -230,6 +234,23 @@ export default function ProfileForm({ user }: { user: User }) {
               </>
             ) : (
               <p className="form-control-plaintext">{watchedValues.email}</p>
+            )}
+          </div>
+
+          <div>
+            <label className={styles.profileLabel}>Phone Number</label>
+            {isEditing ? (
+              <>
+                <input
+                  className="form-control"
+                  {...register('phone', { required: true })}
+                />
+                {errors.phone?.type === 'required' && (
+                  <p role="alert">Phone number is required.</p>
+                )}
+              </>
+            ) : (
+              <p className="form-control-plaintext">{watchedValues.phone}</p>
             )}
           </div>
 
