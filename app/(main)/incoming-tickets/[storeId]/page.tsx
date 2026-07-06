@@ -69,7 +69,7 @@ export default async function IncomingTicketsStorePage({
     })) ?? [];
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           'incoming-tickets': 'Store Tickets',
@@ -78,6 +78,6 @@ export default async function IncomingTicketsStorePage({
       />
       <h1>Store Tickets</h1>
       <IncomingTicketsList tickets={tickets} />
-    </div>
+    </>
   );
 }

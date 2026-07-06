@@ -9,15 +9,14 @@ export default async function OutgoingTicketDetailsPage({
   const { ticketId } = await params;
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           'outgoing-tickets': 'My Tickets',
           [`/outgoing-tickets/${ticketId}`]: ticketId,
         }}
       />
-
       <TicketDetails ticketId={ticketId} outgoing={true} />
-    </div>
+    </>
   );
 }
