@@ -16,20 +16,18 @@ export default async function RequestPage() {
   const stores = storesData || [];
 
   return (
-    <div>
+    <>
       <h1>Request Inventory</h1>
-      <div className="content-body">
-        <div>
-          <Link className="btn-submit" href="/request/all">
-            All Stores
-          </Link>
-        </div>
-        {stores.length > 0 ? (
-          <StoresList stores={stores} />
-        ) : (
-          <p>No stores found.</p>
-        )}
+      <div>
+        <Link className="btn-submit" href="/request/all">
+          All Stores
+        </Link>
       </div>
-    </div>
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
+    </>
   );
 }
