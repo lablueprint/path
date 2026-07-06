@@ -76,11 +76,11 @@ export default async function UsersPage({
   });
 
   return (
-    <div>
+    <>
       <Breadcrumbs />
       <h1>Members</h1>
       <UserSearch roles={rolesData ?? []} />
       {users.length > 0 ? <UsersList users={users} /> : <p>No users found.</p>}
-    </div>
+    </>
   );
 }

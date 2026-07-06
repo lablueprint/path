@@ -151,12 +151,11 @@ export default function LightweightDonationForm({ stores, user }: Props) {
   };
 
   return (
-    <div>
-      <h1>Record Gift-in-Kind</h1>
+    <>
       <Card className="form-card">
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} className="form-body">
-            <p className="form-title">Store Information</p>
+            <h2>Store Information</h2>
             <Form.Group controlId="receiving_site">
               <Form.Label className="field-label">Receiving Site</Form.Label>
               <Form.Select {...register('receiving_site')}>
@@ -168,7 +167,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
               </Form.Select>
             </Form.Group>
 
-            <p className="form-title">Donor Information</p>
+            <h2>Donor Information</h2>
 
             <Form.Group key={resetKey}>
               <div className="radio-row">
@@ -377,7 +376,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
               </>
             )}
 
-            <p className="form-title">Donation Information</p>
+            <h2>Donation Information</h2>
 
             <Form.Group controlId="estimated_value">
               <Form.Label className="field-label">
@@ -460,6 +459,6 @@ export default function LightweightDonationForm({ stores, user }: Props) {
           </form>
         </Card.Body>
       </Card>
-    </div>
+    </>
   );
 }

@@ -80,7 +80,7 @@ export default async function StoreAdminPage({
   const existingAdminUserIds = admins?.map((admin) => admin.user_id);
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           [`/administration/store-admins/${storeId}`]:
@@ -92,38 +92,37 @@ export default async function StoreAdminPage({
         <Image src={pinIcon} height={32} alt="Pin icon" />
       </h1>
 
-      <div className="content-body">
-        {/* searching store admins (AddAdminSearch) if eligible role */}
-        {canChangeAdmins && (
+      {/* searching store admins (AddAdminSearch) if eligible role */}
+      {canChangeAdmins && (
+        <>
+          <h2>Add Admin</h2>
           <AddAdminSearch
             storeId={storeId}
             existingAdminUserIds={existingAdminUserIds ?? []}
           />
-        )}
+        </>
+      )}
 
-        {/* viewing store admins */}
-        <div className="form-body">
-          <p className="form-title">Current Admins</p>
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
-            {admins?.length ? (
-              admins.map((admin) => {
-                const user = admin.users;
-                return (
-                  <div key={admin.store_admin_id}>
-                    <AddAdminCard
-                      user={user}
-                      showRemove={canChangeAdmins}
-                      storeAdminId={admin.store_admin_id}
-                    ></AddAdminCard>
-                  </div>
-                );
-              })
-            ) : (
-              <div>No admins found.</div>
-            )}
-          </div>
-        </div>
+      {/* viewing store admins */}
+      <h2>Current Admins</h2>
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-5">
+        {admins?.length ? (
+          admins.map((admin) => {
+            const user = admin.users;
+            return (
+              <div key={admin.store_admin_id} className="col">
+                <AddAdminCard
+                  user={user}
+                  showRemove={canChangeAdmins}
+                  storeAdminId={admin.store_admin_id}
+                ></AddAdminCard>
+              </div>
+            );
+          })
+        ) : (
+          <div>No admins found.</div>
+        )}
       </div>
-    </div>
+    </>
   );
 }

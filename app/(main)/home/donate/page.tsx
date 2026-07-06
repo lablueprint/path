@@ -36,14 +36,15 @@ export default async function DonationPage() {
   if (userError) return notFound();
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           home: 'Home',
           donate: 'Donate',
         }}
       />
+      <h1>Record Gift-in-Kind</h1>
       <LightweightDonationForm stores={stores || []} user={userData} />
-    </div>
+    </>
   );
 }

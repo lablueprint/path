@@ -17,20 +17,17 @@ export default async function StoresPage() {
   const stores = storesData || [];
 
   return (
-    <div>
+    <>
       <Breadcrumbs />
       <h1>Stores</h1>
-      <div className="content-body">
-        <AddStoreForm />
-        <div>
-          <h2>Edit Stores</h2>
-          {stores.length > 0 ? (
-            <StoresList stores={stores} />
-          ) : (
-            <p>No stores found.</p>
-          )}
-        </div>
-      </div>
-    </div>
+      <h2>Add Store</h2>
+      <AddStoreForm />
+      <h2>Edit Stores</h2>
+      {stores.length > 0 ? (
+        <StoresList stores={stores} />
+      ) : (
+        <p>No stores found.</p>
+      )}
+    </>
   );
 }

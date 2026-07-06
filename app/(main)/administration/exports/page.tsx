@@ -23,37 +23,34 @@ export default async function ExportsPage() {
   );
 
   return (
-    <div>
+    <>
       <Breadcrumbs />
       <h1>Exports</h1>
-      <div className="content-body">
-        <DonationsExportForm />
-        <div>
-          <h2>Recent Gift-in-Kind Records</h2>
-          <Table borderless>
-            <thead className="table-header">
-              <tr>
-                <th>Receiver</th>
-                <th>Store</th>
-                <th>Items Donated</th>
-                <th>Date Submitted</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedDonations.map((item) => (
-                <tr key={item.donation_id}>
-                  <td>
-                    {item.receiver_first_name} {item.receiver_last_name}
-                  </td>
-                  <td>{item.store_name}</td>
-                  <td>{item.items_donated}</td>
-                  <td>{new Date(item.date_submitted).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      </div>
-    </div>
+      <h2>Export Gift-in-Kind Records</h2>
+      <DonationsExportForm />
+      <h2>Recent Gift-in-Kind Records</h2>
+      <Table borderless>
+        <thead className="table-header">
+          <tr>
+            <th>Receiver</th>
+            <th>Store</th>
+            <th>Items Donated</th>
+            <th>Date Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedDonations.map((item) => (
+            <tr key={item.donation_id}>
+              <td>
+                {item.receiver_first_name} {item.receiver_last_name}
+              </td>
+              <td>{item.store_name}</td>
+              <td>{item.items_donated}</td>
+              <td>{new Date(item.date_submitted).toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
   );
 }
