@@ -183,11 +183,11 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-    <div>
+    <>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="content-body"
+          className="gap-container"
         >
           <div className="checkbox-row">
             <Form.Check
@@ -207,17 +207,21 @@ export default function StoreItemsDonationForm({
           </div>
 
           {itemSettingsSelected?.includes('giftInKind') && (
-            <DonationForm
-              donorType={donorType}
-              setItemsDonated={setItemsDonated}
-              showSubmitButton={
-                !itemSettingsSelected?.includes('addInventoryItems')
-              }
-            />
+            <>
+              <h2>Record Gift-in-Kind</h2>
+              <DonationForm
+                donorType={donorType}
+                setItemsDonated={setItemsDonated}
+                showSubmitButton={
+                  !itemSettingsSelected?.includes('addInventoryItems')
+                }
+              />
+            </>
           )}
 
           {itemSettingsSelected?.includes('addInventoryItems') && (
             <>
+              <h2>Add Item</h2>
               <AddStoreItemSearch
                 setAutoFillItems={setAutoFillItems}
                 selectedItems={selectedItems}
@@ -233,6 +237,6 @@ export default function StoreItemsDonationForm({
           )}
         </form>
       </FormProvider>
-    </div>
+    </>
   );
 }

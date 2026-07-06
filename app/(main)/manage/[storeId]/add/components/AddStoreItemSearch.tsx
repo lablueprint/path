@@ -177,7 +177,7 @@ export default function AddStoreItemSearch({
   };
 
   return (
-    <div className="content-body">
+    <>
       <Card className="form-card">
         <Card.Body>
           <div className="form-body">
@@ -250,32 +250,30 @@ export default function AddStoreItemSearch({
           </div>
         </Card.Body>
       </Card>
-      <div className="form-body">
-        <p className="form-title">Selected Items</p>
-        {fields.length > 0 ? (
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
-            {fields.map((field, idx) => (
-              <div key={field.id}>
-                <AddItemCard
-                  index={idx}
-                  photoUrl={selectedItems[idx]?.photo_url ?? null}
-                  item={selectedItems[idx]?.name}
-                  subcategory={selectedItems[idx]?.subcategory_name}
-                  category={selectedItems[idx]?.category_name}
-                  description={selectedItems[idx]?.description}
-                  onRemove={() => handleRemove(idx)}
-                />
-                <input
-                  type="hidden"
-                  {...methods.register(`items.${idx}.inventory_item_id`)}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No items selected.</p>
-        )}
-      </div>
-    </div>
+      <h2>Selected Items</h2>
+      {fields.length > 0 ? (
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+          {fields.map((field, idx) => (
+            <div key={field.id} className="col">
+              <AddItemCard
+                index={idx}
+                photoUrl={selectedItems[idx]?.photo_url ?? null}
+                item={selectedItems[idx]?.name}
+                subcategory={selectedItems[idx]?.subcategory_name}
+                category={selectedItems[idx]?.category_name}
+                description={selectedItems[idx]?.description}
+                onRemove={() => handleRemove(idx)}
+              />
+              <input
+                type="hidden"
+                {...methods.register(`items.${idx}.inventory_item_id`)}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No items selected.</p>
+      )}
+    </>
   );
 }

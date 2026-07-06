@@ -68,7 +68,7 @@ export default async function ManageStoreItemPage({
   }
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           '/manage': 'Manage Inventory',
@@ -133,8 +133,9 @@ export default async function ManageStoreItemPage({
           </Row>
         </div>
       </Card>
-
-      <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
-    </div>
+      <div>
+        <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
+      </div>
+    </>
   );
 }

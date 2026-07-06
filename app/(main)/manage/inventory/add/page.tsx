@@ -74,7 +74,7 @@ export default function AddInventoryItemPage() {
   };
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
@@ -103,6 +103,6 @@ export default function AddInventoryItemPage() {
           </FormProvider>
         </div>
       </div>
-    </div>
+    </>
   );
 }

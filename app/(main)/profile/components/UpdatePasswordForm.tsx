@@ -57,7 +57,6 @@ export default function UpdatePasswordForm() {
     <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)} className="form-body">
-          <p className="form-title">Change Password</p>
           <div>
             <label className="field-label">New password</label>
             <input

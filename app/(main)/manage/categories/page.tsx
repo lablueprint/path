@@ -31,33 +31,31 @@ export default async function InventoryPage() {
   }
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
         }}
       />
       <h1>Categories</h1>
-      <div className="content-body">
-        {role === 'admin' && (
-          <ul>
-            {categories?.map((cat) => (
-              <li key={cat.category_id}>
-                {cat.name}
-                <ul>
-                  {cat.subcategories?.map((sub) => (
-                    <li key={sub.subcategory_id}>{sub.name}</li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        )}
+      {role === 'admin' && (
+        <ul>
+          {categories?.map((cat) => (
+            <li key={cat.category_id}>
+              {cat.name}
+              <ul>
+                {cat.subcategories?.map((sub) => (
+                  <li key={sub.subcategory_id}>{sub.name}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )}
 
-        {(role === 'superadmin' || role === 'owner') && (
-          <EditCategories categories={categories} />
-        )}
-      </div>
-    </div>
+      {(role === 'superadmin' || role === 'owner') && (
+        <EditCategories categories={categories} />
+      )}
+    </>
   );
 }

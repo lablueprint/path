@@ -94,7 +94,7 @@ export default async function InventoryPage({
     }));
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
@@ -107,7 +107,6 @@ export default async function InventoryPage({
           Add Item
         </Link>
       </div>
-      <div className="content-body">
         <ItemSearch
           categories={
             categories?.map((cat) => ({
@@ -138,9 +137,8 @@ export default async function InventoryPage({
             ))}
           </div>
         ) : (
-          <p>No items found.</p>
+          <>No items found.</>
         )}
-      </div>
-    </div>
+    </>
   );
 }

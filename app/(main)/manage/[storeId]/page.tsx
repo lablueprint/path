@@ -121,7 +121,7 @@ export default async function ManageStorePage({
   }));
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
@@ -137,41 +137,39 @@ export default async function ManageStorePage({
           Add Items
         </Link>
       </div>
-      <div className="content-body">
-        <ItemSearch
-          categories={
-            categories?.map((cat) => ({
-              id: cat.category_id,
-              name: cat.name,
-            })) || []
-          }
-          subcategories={
-            subcategories?.map((sub) => ({
-              id: sub.subcategory_id,
-              name: sub.name,
-              category_id: sub.category_id,
-            })) || []
-          }
-        />
+      <ItemSearch
+        categories={
+          categories?.map((cat) => ({
+            id: cat.category_id,
+            name: cat.name,
+          })) || []
+        }
+        subcategories={
+          subcategories?.map((sub) => ({
+            id: sub.subcategory_id,
+            name: sub.name,
+            category_id: sub.category_id,
+          })) || []
+        }
+      />
 
-        {items && items.length > 0 ? (
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
-            {items.map((item) => (
-              <div key={item.id} className="col">
-                <ItemCard
-                  id={item.id}
-                  item={item.item}
-                  photoUrl={item.photoUrl}
-                  subcategory={item.subcategory}
-                  category={item.category}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No items found.</p>
-        )}
-      </div>
-    </div>
+      {items && items.length > 0 ? (
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+          {items.map((item) => (
+            <div key={item.id} className="col">
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                photoUrl={item.photoUrl}
+                subcategory={item.subcategory}
+                category={item.category}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No items found.</p>
+      )}
+    </>
   );
 }

@@ -31,19 +31,17 @@ export default async function StoreDetailsPage({
   const store = storeData as Store;
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           [`/administration/stores/${store.store_id}`]: `${store.name}`,
         }}
       />
       <h1>{store.name}</h1>
-      <div className="content-body">
-        <EditStoreForm store={store} />
-        <div>
-          <RemoveStoreButton storeId={store.store_id} />
-        </div>
+      <EditStoreForm store={store} />
+      <div>
+        <RemoveStoreButton storeId={store.store_id} />
       </div>
-    </div>
+    </>
   );
 }

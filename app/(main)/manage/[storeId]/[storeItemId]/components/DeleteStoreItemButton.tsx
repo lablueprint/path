@@ -30,7 +30,7 @@ export default function DeleteStoreItemButton({
   }
 
   return (
-    <button type="button" onClick={handleDelete} className="btn-remove mt-3">
+    <button type="button" onClick={handleDelete} className="btn-remove">
       Remove
     </button>
   );

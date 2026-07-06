@@ -172,8 +172,6 @@ export default function ProfileForm({ user }: { user: User }) {
               />
             </div>
           )}
-          <p className="form-title">User Information</p>
-
           <div>
             <div className="two-col-row">
               <div>
