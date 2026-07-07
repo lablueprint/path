@@ -58,7 +58,7 @@ export default function UpdatePasswordForm() {
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)} className="form-body">
           <div>
-            <label className="field-label">New password</label>
+            <label className="form-label field-label">New password</label>
             <input
               className="form-control"
               type="password"
@@ -78,7 +78,7 @@ export default function UpdatePasswordForm() {
             </div>
           </div>
           <div>
-            <label className="field-label">Confirm new password</label>
+            <label className="form-label field-label">Confirm new password</label>
             <input
               className="form-control"
               type="password"

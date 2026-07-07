@@ -57,30 +57,24 @@ export default async function TeamProfilePage({
               unoptimized
             />
           </div>
-          <h2>User Information</h2>
 
-          <div>
-            <div className="two-col-row">
-              <div>
-                <label className={styles.profileLabel}>First name</label>
-                <p className="form-control-plaintext">{user.first_name}</p>
-              </div>
-              <div>
-                <label className={styles.profileLabel}>Last name</label>
-                <p className="form-control-plaintext">{user.last_name}</p>
-              </div>
+          <div className="two-col-row">
+            <div>
+              <p className={styles.textLabel}>First Name</p>
+              <p>{user.first_name}</p>
+            </div>
+            <div>
+              <p className={styles.textLabel}>Last Name</p>
+              <p>{user.last_name}</p>
             </div>
           </div>
 
           <div>
-            <label className={styles.profileLabel}>Email</label>
-            <p className="form-control-plaintext">{user.email}</p>
+            <p className={styles.textLabel}>Email</p>
+            <p>{user.email}</p>
           </div>
 
-          <div>
-            <label className={styles.profileLabel}>Role</label>
-            <Dropdown userId={userId} roleId={role?.role_id} />
-          </div>
+          <Dropdown userId={userId} roleId={role?.role_id} />
         </div>
       </div>
     </>

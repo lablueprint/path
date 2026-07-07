@@ -78,7 +78,7 @@ export default function FaqPage() {
     <>
       <h1>FAQ</h1>
       <h2>Roles &amp; Permissions</h2>
-      <p className={styles.sectionDescription}>
+      <p>
         Roles determine what pages you can access and what actions you can take.
         Higher roles inherit all permissions from roles below them.
       </p>
@@ -92,7 +92,7 @@ export default function FaqPage() {
       </div>
 
       <h2>Ticket Statuses</h2>
-      <p className={styles.sectionDescription}>
+      <p>
         Once a ticket is submitted, tickets move through the following statuses
         as store admins review and fulfill them.
       </p>

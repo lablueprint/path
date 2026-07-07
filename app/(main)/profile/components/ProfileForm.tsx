@@ -172,52 +172,52 @@ export default function ProfileForm({ user }: { user: User }) {
               />
             </div>
           )}
-          <div>
-            <div className="two-col-row">
-              <div>
-                <label className={styles.profileLabel}>First Name</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      className="form-control"
-                      {...register('firstName', { required: true })}
-                    />
-                    {errors.firstName?.type === 'required' && (
-                      <p role="alert">First name is required.</p>
-                    )}
-                  </>
-                ) : (
-                  <p className="form-control-plaintext">
-                    {watchedValues.firstName}
-                  </p>
-                )}
-              </div>
+          <div className="two-col-row">
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label form-label field-label">First Name</label>
+                  <input
+                    className="form-control"
+                    {...register('firstName', { required: true })}
+                  />
+                  {errors.firstName?.type === 'required' && (
+                    <p role="alert">First name is required.</p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>First Name</p>
+                  <p>{watchedValues.firstName}</p>
+                </>
+              )}
+            </div>
 
-              <div>
-                <label className={styles.profileLabel}>Last Name</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      className="form-control"
-                      {...register('lastName', { required: true })}
-                    />
-                    {errors.lastName?.type === 'required' && (
-                      <p role="alert">Last name is required.</p>
-                    )}
-                  </>
-                ) : (
-                  <p className="form-control-plaintext">
-                    {watchedValues.lastName}
-                  </p>
-                )}
-              </div>
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Last Name</label>
+                  <input
+                    className="form-control"
+                    {...register('lastName', { required: true })}
+                  />
+                  {errors.lastName?.type === 'required' && (
+                    <p role="alert">Last name is required.</p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Last Name</p>
+                  <p>{watchedValues.lastName}</p>
+                </>
+              )}
             </div>
           </div>
 
           <div>
-            <label className={styles.profileLabel}>Email</label>
             {isEditing ? (
               <>
+                <label className="form-label field-label">Email</label>
                 <input
                   className="form-control"
                   {...register('email', { required: true })}
@@ -227,7 +227,10 @@ export default function ProfileForm({ user }: { user: User }) {
                 )}
               </>
             ) : (
-              <p className="form-control-plaintext">{watchedValues.email}</p>
+              <>
+                <p className={styles.textLabel}>Email</p>
+                <p>{watchedValues.email}</p>
+              </>
             )}
           </div>
 

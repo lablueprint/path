@@ -26,7 +26,7 @@ export default function AddAdminCard({
         <div className={styles.imageContainer}>
           <Image
             src={profilePhoto || imagePlaceholder}
-            objectFit={'cover'}
+            className="object-fit-cover"
             alt={user.first_name + ' ' + user.last_name}
             fill
             unoptimized
