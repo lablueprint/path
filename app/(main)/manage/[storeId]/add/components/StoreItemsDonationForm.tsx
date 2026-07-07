@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -229,9 +229,9 @@ export default function StoreItemsDonationForm({
               />
               {/* add autofillitems connection pass in prop to storeitemsform */}
               <div>
-                <button type="submit" className="btn-submit">
+                <Button type="submit" className="btn-submit">
                   Submit
-                </button>
+                </Button>
               </div>
             </>
           )}

@@ -14,7 +14,7 @@ import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
-import { Form, Card } from 'react-bootstrap';
+import { Form, Card, Button } from 'react-bootstrap';
 import AddItemCard from '@/app/(main)/manage/[storeId]/add/components/AddItemCard';
 import { ListGroup } from 'react-bootstrap';
 
@@ -202,16 +202,14 @@ export default function AddStoreItemSearch({
               </div>
             </Form.Group>
             {inventoryType == 'existing' && (
-              <div>
-                <div className="search-filter-wrapper">
-                  <Form.Control
-                    type="text"
-                    placeholder="Search store items..."
-                    className="search-bar"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
+              <div className="search-filter-wrapper">
+                <Form.Control
+                  type="text"
+                  placeholder="Search store items..."
+                  className="search-bar"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
                 {results.length > 0 && (
                   <ListGroup>
                     {results?.map((item) => (
@@ -235,7 +233,7 @@ export default function AddStoreItemSearch({
                   onFileChange={setSelectedFile}
                 />
                 <div>
-                  <button
+                  <Button
                     type="button"
                     onClick={createItemMethods.handleSubmit(
                       handleCreateAndSelect,
@@ -243,7 +241,7 @@ export default function AddStoreItemSearch({
                     className="btn-submit"
                   >
                     Create Item
-                  </button>
+                  </Button>
                 </div>
               </FormProvider>
             )}

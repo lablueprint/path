@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 type TicketStatus =
   | 'draft'
@@ -43,7 +43,7 @@ export default function TicketStatusDropdown({
   };
 
   return (
-    <div>
+    <div className="form-body">
       <Form.Select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
@@ -57,21 +57,13 @@ export default function TicketStatusDropdown({
       </Form.Select>
 
       {selectedStatus !== originalStatus && (
-        <div className="d-flex flex-wrap gap-2 mt-2">
-          <button
-            type="button"
-            className="btn-submit py-1 px-3"
-            onClick={handleSave}
-          >
+        <div className="button-spacing">
+          <Button type="button" className="btn-submit" onClick={handleSave}>
             Save
-          </button>
-          <button
-            type="button"
-            className="btn-cancel py-1 px-3"
-            onClick={handleCancel}
-          >
+          </Button>
+          <Button type="button" className="btn-cancel" onClick={handleCancel}>
             Cancel
-          </button>
+          </Button>
           {error && <div className="w-100">{error}</div>}
         </div>
       )}

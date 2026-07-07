@@ -7,6 +7,7 @@ import AddInventoryItemForm, {
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { Button } from 'react-bootstrap';
 
 const supabase = createClient();
 
@@ -95,9 +96,9 @@ export default function AddInventoryItemPage() {
                 onFileChange={setSelectedFile}
               />
               <div>
-                <button className="btn-submit" type="submit">
+                <Button className="btn-submit" type="submit">
                   Submit
-                </button>
+                </Button>
               </div>
             </form>
           </FormProvider>

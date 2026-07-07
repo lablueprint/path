@@ -50,10 +50,10 @@ export default async function ManagePage() {
     <>
       <h1>Manage Inventory</h1>
       <span className="link-btn-row">
-        <Link className="btn-submit" href="/manage/inventory">
+        <Link className="link-btn" href="/manage/inventory">
           Inventory Library
         </Link>
-        <Link className="btn-submit" href="/manage/categories">
+        <Link className="link-btn" href="/manage/categories">
           Item Categories
         </Link>
       </span>

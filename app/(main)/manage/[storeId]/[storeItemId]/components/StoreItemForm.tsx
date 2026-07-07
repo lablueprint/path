@@ -68,7 +68,6 @@ export default function StoreItemForm({
         <Form.Control
           className={styles.quantityInput}
           type="number"
-          min={0}
           step={1}
           placeholder=""
           disabled={isSubmitting}
@@ -98,13 +97,13 @@ export default function StoreItemForm({
       </Form.Group>
 
       {isDirty && (
-        <div>
-          <Button type="submit" disabled={isSubmitting}>
+        <div className="btn-row">
+          <Button type="submit" className="btn-submit" disabled={isSubmitting}>
             {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
           <Button
             type="button"
-            variant="secondary"
+            className="btn-cancel"
             disabled={isSubmitting}
             onClick={() => reset()}
           >

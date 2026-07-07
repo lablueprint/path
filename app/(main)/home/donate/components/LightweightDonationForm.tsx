@@ -4,7 +4,7 @@ import { forwardRef, useState } from 'react';
 import { DonationInsert } from '@/app/types/donation';
 import { useForm, useWatch, Controller } from 'react-hook-form';
 import { PatternFormat, NumericFormat } from 'react-number-format';
-import { Form, Card, Alert } from 'react-bootstrap';
+import { Form, Card, Alert, Button } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
 import styles from '@/app/(main)/components/DonationForm.module.css';
@@ -169,34 +169,35 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
             <h2>Donor Information</h2>
 
-            <Form.Group key={resetKey}>
+            <Form.Group>
               <div className="radio-row">
                 <Form.Check
                   type="radio"
                   label="Individual"
                   value="individual"
                   id="donor-individual"
+                  isInvalid={!!errors.donor_type}
                   {...register('donor_type', {
-                    required: 'Please select a donor type',
+                    required: 'Please select a donor type.',
                   })}
                 />
-
                 <Form.Check
                   type="radio"
                   label="Business"
                   value="business"
                   id="donor-business"
+                  isInvalid={!!errors.donor_type}
                   {...register('donor_type', {
-                    required: 'Please select a donor type',
+                    required: 'Please select a donor type.',
                   })}
                 />
               </div>
-
-              {errors.donor_type && (
-                <Form.Control.Feedback type="invalid">
-                  {errors.donor_type.message}
-                </Form.Control.Feedback>
-              )}
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: !!errors.donor_type ? 'block' : 'none' }}
+              >
+                {errors.donor_type?.message}
+              </Form.Control.Feedback>
             </Form.Group>
 
             {donorType && (
@@ -211,7 +212,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
                         <Form.Control
                           {...register('individual_name', {
-                            required: 'Individual name is required',
+                            required: 'Individual name is required.',
                           })}
                           isInvalid={!!errors.individual_name}
                         />
@@ -231,7 +232,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
                           <Form.Control
                             {...register('business_name', {
-                              required: 'Business name is required',
+                              required: 'Business name is required.',
                             })}
                             isInvalid={!!errors.business_name}
                           />
@@ -248,7 +249,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
                           <Form.Control
                             {...register('business_contact_name', {
-                              required: 'Business contact name is required',
+                              required: 'Business contact name is required.',
                             })}
                             isInvalid={!!errors.business_contact_name}
                           />
@@ -269,7 +270,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
                       <Form.Control
                         {...register('address', {
-                          required: 'Street address is required',
+                          required: 'Street address is required.',
                         })}
                         isInvalid={!!errors.address}
                       />
@@ -291,10 +292,10 @@ export default function LightweightDonationForm({ stores, user }: Props) {
                       <Form.Control
                         type="email"
                         {...register('email', {
-                          required: 'Email is required',
+                          required: 'Email is required.',
                           pattern: {
                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: 'Please enter a valid email address',
+                            message: 'Please enter a valid email address.',
                           },
                         })}
                         isInvalid={!!errors.email}
@@ -322,7 +323,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
                             return (
                               !digits ||
                               digits.length === 10 ||
-                              'Phone number must be 10 digits'
+                              'Phone number must be 10 digits.'
                             );
                           },
                         }}
@@ -388,7 +389,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
                 name="estimated_value"
                 control={control}
                 rules={{
-                  required: 'Estimated donation value is required',
+                  required: 'Estimated donation value is required.',
 
                   validate: (value) => {
                     if (!value) return true;
@@ -397,7 +398,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
                     const num = parseFloat(cleanValue);
 
-                    return num > 0 || 'Please enter a valid donation amount';
+                    return num > 0 || 'Please enter a valid donation amount.';
                   },
                 }}
                 render={({ field }) => (
@@ -427,14 +428,13 @@ export default function LightweightDonationForm({ stores, user }: Props) {
             <Form.Group controlId="items_donated">
               <Form.Label className="field-label">Items Donated</Form.Label>
               <Form.Control
-                type="text"
-                placeholder="Describe the items you are donating"
+                as="textarea"
                 {...register('items_donated', {
-                  required: 'Please enter the items you are donating',
+                  required: 'Please enter the items you are donating.',
 
                   maxLength: {
                     value: 500,
-                    message: 'Items description cannot exceed 500 characters',
+                    message: 'Items description cannot exceed 500 characters.',
                   },
                 })}
                 isInvalid={!!errors.items_donated}
@@ -446,9 +446,9 @@ export default function LightweightDonationForm({ stores, user }: Props) {
             </Form.Group>
 
             <div>
-              <button type="submit" className="btn-submit">
+              <Button type="submit" className="btn-submit">
                 Submit
-              </button>
+              </Button>
             </div>
 
             {showSuccess && (

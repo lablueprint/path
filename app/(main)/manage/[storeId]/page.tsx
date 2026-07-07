@@ -133,7 +133,7 @@ export default async function ManageStorePage({
           <span>Managing </span>
           {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
         </h1>
-        <Link className="btn-submit" href={`/manage/${storeId}/add`}>
+        <Link className="link-btn" href={`/manage/${storeId}/add`}>
           Add Items
         </Link>
       </div>

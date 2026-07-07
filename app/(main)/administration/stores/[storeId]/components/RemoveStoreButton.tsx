@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { deleteStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { Button } from 'react-bootstrap';
 
 type RemoveStoreButtonProp = {
   storeId: string;
@@ -27,8 +28,8 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   };
 
   return (
-    <button type="button" onClick={handleDeletion} className="btn-remove">
+    <Button type="button" variant="outline-danger" onClick={handleDeletion} className="btn-remove">
       Remove
-    </button>
+    </Button>
   );
 }

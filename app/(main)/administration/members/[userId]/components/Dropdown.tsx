@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/user';
 import profileFormStyles from '@/app/(main)/profile/components/ProfileForm.module.css';
+import { Button } from 'react-bootstrap';
 
 export default function Dropdown({
   userId,
@@ -76,9 +77,9 @@ export default function Dropdown({
           </select>
         </div>
         <div className="btn-row">
-          <button className="btn-submit" type="submit">
+          <Button className="btn-submit" type="submit">
             Save
-          </button>
+          </Button>
         </div>
       </div>
     </form>

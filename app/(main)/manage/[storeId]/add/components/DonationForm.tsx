@@ -3,7 +3,7 @@
 import { forwardRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { PatternFormat, NumericFormat } from 'react-number-format';
-import { Form, Card } from 'react-bootstrap';
+import { Form, Card, Button } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { CombinedFormData } from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 import styles from '@/app/(main)/components/DonationForm.module.css';
@@ -41,8 +41,9 @@ export default function DonationForm({
                 label="Individual"
                 value="individual"
                 id="donor-individual"
+                isInvalid={!!errors.donor_type}
                 {...register('donor_type', {
-                  required: 'Please select a donor type',
+                  required: 'Please select a donor type.',
                 })}
               />
               <Form.Check
@@ -50,16 +51,18 @@ export default function DonationForm({
                 label="Business"
                 value="business"
                 id="donor-business"
+                isInvalid={!!errors.donor_type}
                 {...register('donor_type', {
-                  required: 'Please select a donor type',
+                  required: 'Please select a donor type.',
                 })}
               />
             </div>
-            {errors.donor_type && (
-              <Form.Control.Feedback type="invalid">
-                {errors.donor_type.message}
-              </Form.Control.Feedback>
-            )}
+            <Form.Control.Feedback
+              type="invalid"
+              style={{ display: !!errors.donor_type ? 'block' : 'none' }}
+            >
+              {errors.donor_type?.message}
+            </Form.Control.Feedback>
           </Form.Group>
 
           {donorType && (
@@ -75,7 +78,7 @@ export default function DonationForm({
                       </Form.Label>
                       <Form.Control
                         {...register('individual_name', {
-                          required: 'Individual name is required',
+                          required: 'Individual name is required.',
                         })}
                         isInvalid={!!errors.individual_name}
                       />
@@ -94,7 +97,7 @@ export default function DonationForm({
                         </Form.Label>
                         <Form.Control
                           {...register('business_name', {
-                            required: 'Business name is required',
+                            required: 'Business name is required.',
                           })}
                           isInvalid={!!errors.business_name}
                         />
@@ -109,7 +112,7 @@ export default function DonationForm({
                         </Form.Label>
                         <Form.Control
                           {...register('business_contact_name', {
-                            required: 'Business contact name is required',
+                            required: 'Business contact name is required.',
                           })}
                           isInvalid={!!errors.business_contact_name}
                         />
@@ -129,7 +132,7 @@ export default function DonationForm({
                     </Form.Label>
                     <Form.Control
                       {...register('address', {
-                        required: 'Street address is required',
+                        required: 'Street address is required.',
                       })}
                       isInvalid={!!errors.address}
                     />
@@ -149,7 +152,7 @@ export default function DonationForm({
                     <Form.Control
                       type="email"
                       {...register('email', {
-                        required: 'Email is required',
+                        required: 'Email is required.',
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                           message: 'Please enter a valid email address',
@@ -178,7 +181,7 @@ export default function DonationForm({
                           return (
                             !digits ||
                             digits.length === 10 ||
-                            'Phone number must be 10 digits'
+                            'Phone number must be 10 digits.'
                           );
                         },
                       }}
@@ -235,13 +238,13 @@ export default function DonationForm({
           {/* Estimated Value */}
           <Form.Group controlId="estimated_value">
             <Form.Label className="field-label">
-              Estimated value (USD)
+              Estimated Value (USD)
             </Form.Label>
             <Controller
               name="estimated_value"
               control={control}
               rules={{
-                required: 'Estimated donation value is required',
+                required: 'Estimated donation value is required.',
                 validate: (value) => {
                   if (!value) return true;
 
@@ -279,12 +282,11 @@ export default function DonationForm({
 
           {/* Items Donated */}
           <Form.Group controlId="items_donated">
-            <Form.Label className="field-label">Items donated</Form.Label>
+            <Form.Label className="field-label">Items Donated</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Describe the items you are donating"
+              as="textarea"
               {...register('items_donated', {
-                required: 'Please enter the items you are donating',
+                required: 'Please enter the items you are donating.',
                 maxLength: {
                   value: 500,
                   message: 'Items description cannot exceed 500 characters',
@@ -300,9 +302,9 @@ export default function DonationForm({
 
           {showSubmitButton && (
             <div>
-              <button type="submit" className="btn-submit">
+              <Button type="submit" className="btn-submit">
                 Submit
-              </button>
+              </Button>
             </div>
           )}
         </div>

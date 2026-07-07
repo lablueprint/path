@@ -103,7 +103,7 @@ export default async function InventoryPage({
       />
       <div className="page-header">
         <h1 className="mb-0">Inventory Library</h1>
-        <Link className="btn-submit" href="/manage/inventory/add">
+        <Link className="link-btn" href="/manage/inventory/add">
           Add Item
         </Link>
       </div>

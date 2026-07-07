@@ -6,6 +6,7 @@ import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import { Form, Button } from 'react-bootstrap';
 
 type FormValues = {
   name: string;
@@ -32,7 +33,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
   const {
     register,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, errors },
     reset,
   } = useForm<FormValues>({
     defaultValues: {
@@ -148,34 +149,52 @@ export default function EditStoreForm({ store }: { store: Store }) {
           <div className="fields-col">
             <div>
               <label className="form-label field-label">Store Name</label>
-              <input {...register('name')} className="form-control" />
+              <Form.Control
+                {...register('name', {
+                  required: 'Store name is required.',
+                })}
+                className="form-control"
+                isInvalid={!!errors.name}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.name?.message}
+              </Form.Control.Feedback>
             </div>
 
             <div>
               <label className="form-label field-label">
                 Store Street Address
               </label>
-              <input {...register('street_address')} className="form-control" />
+              <Form.Control
+                {...register('street_address', {
+                  required: 'Store street address is required.',
+                })}
+                className="form-control"
+                isInvalid={!!errors.street_address}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.street_address?.message}
+              </Form.Control.Feedback>
             </div>
 
             {hasDirtyTextOrImage && (
               <div className="button-spacing">
-                <button
+                <Button
                   type="submit"
                   disabled={isSaving}
                   className="btn-submit"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
-                </button>
+                </Button>
 
-                <button
+                <Button
                   type="button"
                   className="btn-cancel"
                   onClick={onCancel}
                   disabled={isSaving}
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             )}
           </div>

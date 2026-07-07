@@ -113,7 +113,7 @@ export default function AddInventoryItemForm({
         <Form.Label className="field-label">Item Title</Form.Label>
         <Form.Control
           type="text"
-          {...register('name', { required: 'Item name is required' })}
+          {...register('name', { required: 'Item name is required.' })}
           isInvalid={!!errors.name}
         />
         <Form.Control.Feedback type="invalid">
@@ -139,7 +139,7 @@ export default function AddInventoryItemForm({
         <Form.Label className="field-label">Description</Form.Label>
         <Form.Control
           as="textarea"
-          {...register('description', { required: 'Description is required' })}
+          {...register('description', { required: 'Description is required.' })}
           isInvalid={!!errors.description}
         />
         <Form.Control.Feedback type="invalid">

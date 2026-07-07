@@ -1,6 +1,7 @@
 'use client';
 import { useState, useTransition } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
+import { Button } from 'react-bootstrap';
 
 export default function SubmitTicketButton({ ticketId }: { ticketId: string }) {
   const [isPending, startTransition] = useTransition();
@@ -15,9 +16,9 @@ export default function SubmitTicketButton({ ticketId }: { ticketId: string }) {
 
   return (
     <div>
-      <button type="button" onClick={handleSubmit} disabled={isPending}>
-        {isPending ? 'Submitting...' : 'Submit ticket'}
-      </button>
+      <Button type="button" className="btn-submit" onClick={handleSubmit} disabled={isPending}>
+        {isPending ? 'Submitting...' : 'Submit Ticket'}
+      </Button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );

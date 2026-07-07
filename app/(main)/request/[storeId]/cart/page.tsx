@@ -130,14 +130,16 @@ export default async function CartPage({
       {hasItems ? (
         <>
           <h2>Ticket Destination Store</h2>
-          <div className="d-flex">
-            <TicketDestStoreDropdown
-              ticketId={ticket.ticket_id}
-              currentDestStore={(currentDestStore as Store) || null}
-              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
-                store,
-              }))}
-            />
+          <div className="form-card">
+            <div className="card-body">
+              <TicketDestStoreDropdown
+                ticketId={ticket.ticket_id}
+                currentDestStore={(currentDestStore as Store) || null}
+                destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                  store,
+                }))}
+              />
+            </div>
           </div>
           <SubmitTicketButton ticketId={ticket.ticket_id} />
         </>

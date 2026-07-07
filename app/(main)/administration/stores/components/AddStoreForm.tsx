@@ -1,11 +1,12 @@
 'use client';
 
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useState, useRef } from 'react';
 import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
+import { Form, Button } from 'react-bootstrap';
 
 type FormValues = {
   storeName: string;
@@ -20,20 +21,17 @@ export default function AddStoreForm() {
   const supabase = createClient();
   const photoUploadRef = useRef<{ resetFile: () => void }>(null);
 
-  const { register, handleSubmit, control, reset } = useForm<FormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>({
     defaultValues: {
       storeName: '',
       storeStreetAddress: '',
     },
   });
-
-  const storeName = useWatch({ control, name: 'storeName' });
-  const storeStreetAddress = useWatch({ control, name: 'storeStreetAddress' });
-
-  const bothFilled =
-    storeName.trim().length > 0 && storeStreetAddress.trim().length > 0;
-  const eitherFilled =
-    storeName.trim().length > 0 || storeStreetAddress.trim().length > 0;
 
   const handleFileSelect = (file: File) => {
     const maxSize = 200 * 1024;
@@ -108,27 +106,42 @@ export default function AddStoreForm() {
 
             <div className="fields-col">
               <div>
-                <label className="form-label field-label">Store name</label>
-                <input {...register('storeName')} className="form-control" />
+                <label className="form-label field-label">Store Name</label>
+                <Form.Control
+                  {...register('storeName', {
+                    required: 'Store name is required.',
+                  })}
+                  className="form-control"
+                  isInvalid={!!errors.storeName}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.storeName?.message}
+                </Form.Control.Feedback>
               </div>
 
               <div>
                 <label className="form-label field-label">
-                  Store street address
+                  Store Street Address
                 </label>
-                <input
-                  {...register('storeStreetAddress')}
+                <Form.Control
+                  {...register('storeStreetAddress', {
+                    required: 'Store street address is required.',
+                  })}
                   className="form-control"
+                  isInvalid={!!errors.storeStreetAddress}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {errors.storeStreetAddress?.message}
+                </Form.Control.Feedback>
               </div>
               <div>
-                <button
+                <Button
                   type="submit"
                   disabled={isSaving}
                   className="btn-submit"
                 >
                   {isSaving ? 'Saving...' : 'Save'}
-                </button>
+                </Button>
               </div>
             </div>
           </div>

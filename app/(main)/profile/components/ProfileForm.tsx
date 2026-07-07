@@ -9,6 +9,7 @@ import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
+import { Button, Form } from 'react-bootstrap';
 
 type ProfileFormValues = {
   email: string;
@@ -176,14 +177,19 @@ export default function ProfileForm({ user }: { user: User }) {
             <div>
               {isEditing ? (
                 <>
-                  <label className="form-label form-label field-label">First Name</label>
-                  <input
+                  <label className="form-label form-label field-label">
+                    First Name
+                  </label>
+                  <Form.Control
                     className="form-control"
-                    {...register('firstName', { required: true })}
+                    {...register('firstName', {
+                      required: 'First name is required.',
+                    })}
+                    isInvalid={!!errors.firstName}
                   />
-                  {errors.firstName?.type === 'required' && (
-                    <p role="alert">First name is required.</p>
-                  )}
+                  <Form.Control.Feedback type="invalid">
+                    {errors.firstName?.message}
+                  </Form.Control.Feedback>
                 </>
               ) : (
                 <>
@@ -197,13 +203,16 @@ export default function ProfileForm({ user }: { user: User }) {
               {isEditing ? (
                 <>
                   <label className="form-label field-label">Last Name</label>
-                  <input
+                  <Form.Control
                     className="form-control"
-                    {...register('lastName', { required: true })}
+                    {...register('lastName', {
+                      required: 'Last name is required.',
+                    })}
+                    isInvalid={!!errors.lastName}
                   />
-                  {errors.lastName?.type === 'required' && (
-                    <p role="alert">Last name is required.</p>
-                  )}
+                  <Form.Control.Feedback type="invalid">
+                    {errors.lastName?.message}
+                  </Form.Control.Feedback>
                 </>
               ) : (
                 <>
@@ -218,13 +227,16 @@ export default function ProfileForm({ user }: { user: User }) {
             {isEditing ? (
               <>
                 <label className="form-label field-label">Email</label>
-                <input
+                <Form.Control
                   className="form-control"
-                  {...register('email', { required: true })}
+                  {...register('email', {
+                    required: 'Email is required.',
+                  })}
+                  isInvalid={!!errors.email}
                 />
-                {errors.email?.type === 'required' && (
-                  <p role="alert">Email is required.</p>
-                )}
+                <Form.Control.Feedback type="invalid">
+                  {errors.email?.message}
+                </Form.Control.Feedback>
               </>
             ) : (
               <>
@@ -236,29 +248,29 @@ export default function ProfileForm({ user }: { user: User }) {
 
           {isEditing && (
             <div className="btn-row">
-              <button
+              <Button className="btn-submit" type="submit" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save'}
+              </Button>
+              <Button
                 className="btn-cancel"
                 type="button"
                 onClick={onCancel}
                 disabled={isSaving}
               >
                 Cancel
-              </button>
-              <button className="btn-submit" type="submit" disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
+              </Button>
             </div>
           )}
 
           {!isEditing && (
             <div className="btn-row">
-              <button
+              <Button
                 type="button"
                 className="btn-cancel"
                 onClick={() => setIsEditing(true)}
               >
                 Edit
-              </button>
+              </Button>
             </div>
           )}
         </form>
