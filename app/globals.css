@@ -232,6 +232,12 @@ Table {
   flex-wrap: wrap;
 }
 
+.auth-btn-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
 /* ── form formatting ── */
 .form-body {
   display: flex;
@@ -260,12 +266,6 @@ Table {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
-}
-
-.submit-button-row {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
 }
 
 /* ── two-column forms with photo uploads ── */
@@ -366,10 +366,6 @@ Table {
   color: #718096;
   font-family: Montserrat;
   font-weight: 500;
-}
-
-.btn-submit.auth {
-  background: var(--Button-color, #3182ce);
 }
 
 .auth-link {

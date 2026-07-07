@@ -63,15 +63,18 @@ export default function UpdatePasswordForm() {
             <Form.Control
               type="password"
               {...register('newPassword', {
-                minLength: 8,
-                pattern:
-                  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                required: 'Password is required.',
+                pattern: {
+                  value:
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                  message:
+                    'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
+                },
               })}
               isInvalid={!!errors.newPassword}
             />
             <Form.Control.Feedback type="invalid">
-              Password must be at least 8 characters and include an uppercase
-              letter, a lowercase letter, a number, and a symbol.
+              {errors.newPassword?.message}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group>
