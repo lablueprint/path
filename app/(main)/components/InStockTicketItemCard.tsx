@@ -94,7 +94,7 @@ export default function InStockTicketItemCard({
         </div>
         {errorMessage && <p role="alert">{errorMessage}</p>}
         {hasChanged && (
-          <div className="button-spacing">
+          <div className="btn-row">
             <Button className="btn-submit" size="sm" onClick={handleSave}>
               Save
             </Button>

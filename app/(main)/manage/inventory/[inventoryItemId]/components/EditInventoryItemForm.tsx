@@ -297,7 +297,7 @@ export default function EditInventoryItemForm({
             )}
 
             {hasDirtyTextOrImage && (
-              <div className="button-spacing">
+              <div className="btn-row">
                 <Button
                   type="submit"
                   disabled={isSubmitting}

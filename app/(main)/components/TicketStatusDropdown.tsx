@@ -57,7 +57,7 @@ export default function TicketStatusDropdown({
       </Form.Select>
 
       {selectedStatus !== originalStatus && (
-        <div className="button-spacing">
+        <div className="btn-row">
           <Button type="button" className="btn-submit" onClick={handleSave}>
             Save
           </Button>

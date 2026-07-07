@@ -413,13 +413,3 @@ Table {
   gap: 0.5rem;
   z-index: 10;
 }
-
-.photo {
-  object-fit: cover;
-  margin-bottom: 10px;
-}
-
-.button-spacing {
-  display: flex;
-  gap: 0.5rem;
-}

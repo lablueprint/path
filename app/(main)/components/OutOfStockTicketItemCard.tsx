@@ -38,7 +38,7 @@ export default function OutOfStockTicketItemCard({
         rows={4}
       />
       {isChanged && (
-        <div className="button-spacing">
+        <div className="btn-row">
           <Button className="btn-submit" size="sm" onClick={handleSave}>
             Save
           </Button>

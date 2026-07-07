@@ -178,7 +178,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
             </div>
 
             {hasDirtyTextOrImage && (
-              <div className="button-spacing">
+              <div className="btn-row">
                 <Button
                   type="submit"
                   disabled={isSaving}

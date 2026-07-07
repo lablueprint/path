@@ -69,7 +69,7 @@ export default function TicketDestStoreDropdown({
           ))}
       </Form.Select>
       {selectedDestStore != originalDestStore && (
-        <div className="button-spacing">
+        <div className="btn-row">
           <Button type="button" className="btn-submit" onClick={handleSave}>
             Save
           </Button>
