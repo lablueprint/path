@@ -114,7 +114,7 @@ export default async function AllCartsPage() {
                     ) : null}
                   </div>
                 ) : (
-                  <>
+                  <div className="gap-container">
                     <div className={styles.itemsCard}>
                       <div className={styles.itemsCardHeader}>
                         <h1>ITEMS</h1>
@@ -123,7 +123,7 @@ export default async function AllCartsPage() {
                     </div>
                     <h2>Out-of-Stock Request</h2>
                     <AddOutOfStockToCartForm storeId={store.store_id} />
-                  </>
+                  </div>
                 )}
               </AccordionBody>
             </AccordionItem>

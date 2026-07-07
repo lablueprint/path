@@ -22,7 +22,7 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
       alert('Failed to remove store.');
       console.error(error);
     } else {
-      router.push('/hq');
+      router.push('/administration/stores');
     }
   };
 

@@ -282,6 +282,39 @@ Table {
   justify-content: flex-end;
 }
 
+/* ── two-column forms with photo uploads ── */
+
+.two-col-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.photo-col {
+  width: 16rem;
+  height: 16rem;
+  flex-shrink: 0;
+}
+
+.fields-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .fields-col {
+    flex: 1;
+    width: auto;
+  }
+
+  .two-col-layout {
+    gap: 3rem;
+  }
+}
+
 /* auth pages */
 .auth-form-wrap {
   display: flex;

@@ -10,7 +10,6 @@ import type {
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
-import styles from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm.module.css';
 
 type FormValues = {
   name: string;
@@ -217,11 +216,10 @@ export default function EditInventoryItemForm({
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <div>
       <form onSubmit={handleSubmit(onSubmit)} className="form-card">
         <div className="card-body">
-          <div className={styles.layout}>
-            <div className={styles.photoColumn}>
+          <div className="two-col-layout">
+            <div className="photo-col">
               <PhotoUpload
                 ref={photoUploadRef}
                 onFileSelect={handleFileSelect}
@@ -231,7 +229,7 @@ export default function EditInventoryItemForm({
                 onRemove={handleRemovePhoto}
               />
             </div>
-            <div className={styles.fieldsColumn}>
+            <div className="fields-col">
               <div>
                 <label className="form-label field-label">
                   Inventory item name
@@ -322,6 +320,5 @@ export default function EditInventoryItemForm({
           </div>
         </div>
       </form>
-    </div>
   );
 }

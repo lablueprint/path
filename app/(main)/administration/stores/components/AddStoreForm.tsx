@@ -96,8 +96,8 @@ export default function AddStoreForm() {
     <div className="form-card">
       <div className="card-body">
         <form onSubmit={handleSubmit(onSubmit)} className="form-body">
-          <div className="row g-5 align-items-start">
-            <div className="col-auto" style={{ width: '16rem' }}>
+          <div className="two-col-layout">
+            <div className="photo-col">
               <PhotoUpload
                 ref={photoUploadRef}
                 onFileSelect={handleFileSelect}
@@ -106,13 +106,13 @@ export default function AddStoreForm() {
               />
             </div>
 
-            <div className="col">
-              <div className="mb-3">
+            <div className="fields-col">
+              <div>
                 <label className="form-label field-label">Store name</label>
                 <input {...register('storeName')} className="form-control" />
               </div>
 
-              <div className="mb-3">
+              <div>
                 <label className="form-label field-label">
                   Store street address
                 </label>
@@ -121,32 +121,14 @@ export default function AddStoreForm() {
                   className="form-control"
                 />
               </div>
-
-              <div className="button-spacing">
-                {eitherFilled && (
-                  <button
-                    type="button"
-                    className="btn-cancel"
-                    disabled={isSaving}
-                    onClick={() => {
-                      reset({ storeName: '', storeStreetAddress: '' });
-                      setSelectedFile(null);
-                      setPreviewUrl(null);
-                      photoUploadRef.current?.resetFile();
-                    }}
-                  >
-                    Cancel
-                  </button>
-                )}
-                {bothFilled && (
-                  <button
-                    type="submit"
-                    disabled={isSaving}
-                    className="btn-submit"
-                  >
-                    {isSaving ? 'Saving...' : 'Save'}
-                  </button>
-                )}
+              <div>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="btn-submit"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
               </div>
             </div>
           </div>

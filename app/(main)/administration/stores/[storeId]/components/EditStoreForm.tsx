@@ -6,7 +6,6 @@ import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import styles from '@/app/(main)/administration/stores/[storeId]/components/EditStoreForm.module.css';
 
 type FormValues = {
   name: string;
@@ -134,8 +133,8 @@ export default function EditStoreForm({ store }: { store: Store }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form-card">
       <div className="card-body">
-        <div className={styles.layout}>
-          <div className={styles.photoColumn}>
+        <div className="two-col-layout">
+          <div className="photo-col">
             <PhotoUpload
               ref={photoUploadRef}
               onFileSelect={handleFileSelect}
@@ -146,15 +145,15 @@ export default function EditStoreForm({ store }: { store: Store }) {
             />
           </div>
 
-          <div className={styles.fieldsColumn}>
-            <div className="mb-3">
-              <label className="form-label field-label">Store name</label>
+          <div className="fields-col">
+            <div>
+              <label className="form-label field-label">Store Name</label>
               <input {...register('name')} className="form-control" />
             </div>
 
-            <div className="mb-3">
+            <div>
               <label className="form-label field-label">
-                Store street address
+                Store Street Address
               </label>
               <input {...register('street_address')} className="form-control" />
             </div>
