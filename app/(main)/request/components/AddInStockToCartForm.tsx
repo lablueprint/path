@@ -1,8 +1,9 @@
 'use client';
 
-import Form from 'react-bootstrap/Form';
+import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
 import styles from '@/app/(main)/request/[storeId]/[storeItemId]/RequestStoreItemPage.module.css';
+import { Form, Button } from 'react-bootstrap';
 
 interface AddInStockToCartFormProps {
   storeId: string;
@@ -13,8 +14,17 @@ export default function AddInStockToCartForm({
   storeId,
   storeItemId,
 }: AddInStockToCartFormProps) {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleSubmit = async (formData: FormData) => {
+    setErrorMessage(null);
+
     const actualQuantity = Number(formData.get('quantity'));
+
+    if (!actualQuantity || actualQuantity < 1) {
+      setErrorMessage('Please enter a valid quantity of 1 or more.');
+      return;
+    }
     const { error: err } = await addToCart(
       storeId,
       storeItemId,
@@ -22,6 +32,12 @@ export default function AddInStockToCartForm({
     );
     if (err) {
       console.error('Error fetching ticket:', err);
+    }
+  };
+
+  const handleInputChange = () => {
+    if (errorMessage) {
+      setErrorMessage(null);
     }
   };
 
@@ -34,15 +50,17 @@ export default function AddInStockToCartForm({
           className={styles.quantityInput}
           name="quantity"
           type="number"
-          min={1}
           step={1}
-          required
+          isInvalid={!!errorMessage}
+          onChange={handleInputChange}
         />
+        <Form.Control.Feedback type="invalid">
+          {errorMessage}
+        </Form.Control.Feedback>
       </Form.Group>
-
-      <button type="submit" className="align-self-start btn-submit">
+      <Button type="submit" className="align-self-start btn-submit">
         Add to Cart
-      </button>
+      </Button>
     </Form>
   );
 }

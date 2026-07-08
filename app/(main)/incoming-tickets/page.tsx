@@ -44,13 +44,13 @@ export default async function IncomingTicketsPage() {
     stores = (data ?? []).map((row) => row.stores as Store);
   }
   return (
-    <div>
+    <>
       <h1>Store Tickets</h1>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (
         <p>No stores found.</p>
       )}
-    </div>
+    </>
   );
 }

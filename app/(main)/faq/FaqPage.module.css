@@ -1,14 +1,3 @@
-.content {
-  gap: 2rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.sectionDescription {
-  color: #4f5d75;
-  margin-bottom: 0;
-}
-
 .card {
   height: 100%;
   overflow: hidden;
@@ -25,7 +14,6 @@
 
 .cardTitle {
   margin: 0;
-  color: #000000;
   font-size: 1rem;
   font-weight: 600;
 }
@@ -36,5 +24,4 @@
 
 .cardDescription {
   margin: 0;
-  color: #4f5d75;
 }

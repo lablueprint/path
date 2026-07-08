@@ -10,7 +10,7 @@ import type {
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
-import styles from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm.module.css';
+import { Form, Button } from 'react-bootstrap';
 
 type FormValues = {
   name: string;
@@ -72,8 +72,6 @@ export default function EditInventoryItemForm({
     handleSubmit,
     control,
     reset,
-    setValue,
-    trigger,
     formState: { errors, isDirty, isSubmitting },
   } = useForm<FormValues>({
     defaultValues: getDefaultValues(item),
@@ -205,123 +203,121 @@ export default function EditInventoryItemForm({
     reset(initialValues, { keepErrors: false });
   };
 
-  const categoryField = register('selectedCategory', {
-    onChange: () => {
-      setValue('selectedSubcategory', '', {
-        shouldDirty: true,
-        shouldValidate: false,
-      });
-    },
-  });
-
   const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className="form-card">
-        <div className="card-body">
-          <div className={styles.layout}>
-            <div className={styles.photoColumn}>
-              <PhotoUpload
-                ref={photoUploadRef}
-                onFileSelect={handleFileSelect}
-                previewUrl={previewUrl}
-                initialPhotoUrl={photoUrl}
-                isPendingDelete={isPendingDelete}
-                onRemove={handleRemovePhoto}
+    <form onSubmit={handleSubmit(onSubmit)} className="form-card">
+      <div className="card-body">
+        <div className="two-col-layout">
+          <div className="photo-col">
+            <PhotoUpload
+              ref={photoUploadRef}
+              onFileSelect={handleFileSelect}
+              previewUrl={previewUrl}
+              initialPhotoUrl={photoUrl}
+              isPendingDelete={isPendingDelete}
+              onRemove={handleRemovePhoto}
+            />
+          </div>
+          <div className="fields-col">
+            <div>
+              <label className="form-label field-label">Item Title</label>
+              <Form.Control
+                type="text"
+                {...register('name', { required: 'Item name is required.' })}
+                className="form-control"
+                isInvalid={!!errors.name}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.name?.message}
+              </Form.Control.Feedback>
             </div>
-            <div className={styles.fieldsColumn}>
-              <div>
-                <label className="form-label field-label">
-                  Inventory item name
-                </label>
-                <input
-                  type="text"
-                  {...register('name', { required: 'Item name is required.' })}
-                  className="form-control"
-                />
-                {errors.name && <p role="alert">{errors.name.message}</p>}
-              </div>
 
+            <div>
+              <label className="form-label field-label">Description</label>
+              <Form.Control
+                as="textarea"
+                {...register('description', {
+                  required: 'Description is required.',
+                })}
+                className="form-control"
+                isInvalid={!!errors.description}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.description?.message}
+              </Form.Control.Feedback>
+            </div>
+
+            <div>
+              <label className="form-label field-label">Category</label>
+              <Form.Select
+                {...register('selectedCategory', {
+                  required: 'Category is required.',
+                })}
+                isInvalid={!!errors.selectedCategory}
+              >
+                <option value="">None</option>
+                {initialCategories.map((category) => (
+                  <option
+                    key={category.category_id}
+                    value={category.category_id}
+                  >
+                    {category.name}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.selectedCategory?.message}
+              </Form.Control.Feedback>
+            </div>
+
+            {!!selectedCategory && (
               <div>
-                <label className="form-label field-label">Description</label>
-                <input
-                  type="text"
-                  {...register('description', {
-                    required: 'Description is required.',
+                <label className="form-label field-label">Subcategory</label>
+                <Form.Select
+                  {...register('selectedSubcategory', {
+                    required: 'Subcategory is required.',
                   })}
-                  className="form-control"
-                />
-                {errors.description && (
-                  <p role="alert">{errors.description.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="form-label field-label">Category</label>
-                <select className="form-select" {...categoryField}>
+                  isInvalid={!!errors.selectedSubcategory}
+                >
                   <option value="">None</option>
-                  {initialCategories.map((category) => (
+                  {subcategories.map((subcategory) => (
                     <option
-                      key={category.category_id}
-                      value={category.category_id}
+                      key={subcategory.subcategory_id}
+                      value={subcategory.subcategory_id}
                     >
-                      {category.name}
+                      {subcategory.name}
                     </option>
                   ))}
-                </select>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {errors.selectedSubcategory?.message}
+                </Form.Control.Feedback>
               </div>
+            )}
 
-              {!!selectedCategory && (
-                <div>
-                  <label className="form-label field-label">Subcategory</label>
-                  <select
-                    className="form-select"
-                    {...register('selectedSubcategory', {
-                      required: 'Subcategory is required.',
-                      onChange: () => trigger('selectedSubcategory'),
-                    })}
-                  >
-                    <option value="">None</option>
-                    {subcategories.map((subcategory) => (
-                      <option
-                        key={subcategory.subcategory_id}
-                        value={subcategory.subcategory_id}
-                      >
-                        {subcategory.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.selectedSubcategory && (
-                    <p role="alert">{errors.selectedSubcategory.message}</p>
-                  )}
-                </div>
-              )}
-
-              {hasDirtyTextOrImage && (
-                <div className="button-spacing">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-submit"
-                  >
-                    {isSubmitting ? 'Saving...' : 'Save'}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-cancel"
-                    onClick={handleCancel}
-                    disabled={isSubmitting}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </div>
+            {hasDirtyTextOrImage && (
+              <div className="btn-row">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-submit"
+                >
+                  {isSubmitting ? 'Saving...' : 'Save'}
+                </Button>
+                <Button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={handleCancel}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 }

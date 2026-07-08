@@ -65,7 +65,7 @@ export default async function RequestStoreItemPage({
   const storeName = storeId == 'all' ? 'All Stores' : itemData.stores.name;
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           request: 'Request Inventory',
@@ -139,6 +139,6 @@ export default async function RequestStoreItemPage({
       <Link href={`/request/${storeId}/cart`} className={cartStyles.cartButton}>
         <Image src={cartIcon} height={32} alt="Cart icon" />
       </Link>
-    </div>
+    </>
   );
 }

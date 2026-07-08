@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
+import { Button } from 'react-bootstrap';
 
 export default function SignOutButton() {
   const router = useRouter();
@@ -15,8 +16,8 @@ export default function SignOutButton() {
   }
 
   return (
-    <button className="btn-submit" onClick={signOut}>
-      Sign out
-    </button>
+    <Button className="btn-submit" onClick={signOut}>
+      Sign Out
+    </Button>
   );
 }

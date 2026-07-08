@@ -14,7 +14,7 @@ import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
-import { Form, Card } from 'react-bootstrap';
+import { Form, Card, Button } from 'react-bootstrap';
 import AddItemCard from '@/app/(main)/manage/[storeId]/add/components/AddItemCard';
 import { ListGroup } from 'react-bootstrap';
 
@@ -177,7 +177,7 @@ export default function AddStoreItemSearch({
   };
 
   return (
-    <div className="content-body">
+    <>
       <Card className="form-card">
         <Card.Body>
           <div className="form-body">
@@ -202,16 +202,14 @@ export default function AddStoreItemSearch({
               </div>
             </Form.Group>
             {inventoryType == 'existing' && (
-              <div>
-                <div className="search-filter-wrapper">
-                  <Form.Control
-                    type="text"
-                    placeholder="Search store items..."
-                    className="search-bar"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
+              <div className="search-filter-wrapper">
+                <Form.Control
+                  type="text"
+                  placeholder="Search store items..."
+                  className="search-bar"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
                 {results.length > 0 && (
                   <ListGroup>
                     {results?.map((item) => (
@@ -235,7 +233,7 @@ export default function AddStoreItemSearch({
                   onFileChange={setSelectedFile}
                 />
                 <div>
-                  <button
+                  <Button
                     type="button"
                     onClick={createItemMethods.handleSubmit(
                       handleCreateAndSelect,
@@ -243,39 +241,37 @@ export default function AddStoreItemSearch({
                     className="btn-submit"
                   >
                     Create Item
-                  </button>
+                  </Button>
                 </div>
               </FormProvider>
             )}
           </div>
         </Card.Body>
       </Card>
-      <div className="form-body">
-        <p className="form-title">Selected Items</p>
-        {fields.length > 0 ? (
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
-            {fields.map((field, idx) => (
-              <div key={field.id}>
-                <AddItemCard
-                  index={idx}
-                  photoUrl={selectedItems[idx]?.photo_url ?? null}
-                  item={selectedItems[idx]?.name}
-                  subcategory={selectedItems[idx]?.subcategory_name}
-                  category={selectedItems[idx]?.category_name}
-                  description={selectedItems[idx]?.description}
-                  onRemove={() => handleRemove(idx)}
-                />
-                <input
-                  type="hidden"
-                  {...methods.register(`items.${idx}.inventory_item_id`)}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No items selected.</p>
-        )}
-      </div>
-    </div>
+      <h2>Selected Items</h2>
+      {fields.length > 0 ? (
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+          {fields.map((field, idx) => (
+            <div key={field.id} className="col">
+              <AddItemCard
+                index={idx}
+                photoUrl={selectedItems[idx]?.photo_url ?? null}
+                item={selectedItems[idx]?.name}
+                subcategory={selectedItems[idx]?.subcategory_name}
+                category={selectedItems[idx]?.category_name}
+                description={selectedItems[idx]?.description}
+                onRemove={() => handleRemove(idx)}
+              />
+              <input
+                type="hidden"
+                {...methods.register(`items.${idx}.inventory_item_id`)}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No items selected.</p>
+      )}
+    </>
   );
 }

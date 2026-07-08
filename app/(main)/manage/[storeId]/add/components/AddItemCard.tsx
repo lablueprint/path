@@ -37,7 +37,7 @@ export default function AddItemCard({
         <div className={styles.imageContainer}>
           <Image
             src={photoUrl || defaultItemPhoto}
-            objectFit={'cover'}
+            className="object-fit-cover"
             alt="Item photo"
             fill
             unoptimized

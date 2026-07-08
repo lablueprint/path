@@ -26,9 +26,9 @@ export default async function OutgoingTicketsPage() {
   if (error) return <div>Failed to load data: {error.message}</div>;
 
   return (
-    <div>
+    <>
       <h1>My Tickets</h1>
       <OutgoingTicketsList tickets={userTickets}></OutgoingTicketsList>
-    </div>
+    </>
   );
 }

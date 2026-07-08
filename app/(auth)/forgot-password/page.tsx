@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 import Link from 'next/link';
 
@@ -71,14 +71,14 @@ export default function ForgotPasswordPage() {
                 {errors.email?.message}
               </Form.Control.Feedback>
             </Form.Group>
-            <div className={'submit-button-row'}>
-              <button
+            <div className={'auth-btn-row'}>
+              <Button
                 type="submit"
-                className={'btn-submit auth'}
+                className={'btn-submit'}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Sending' : 'Reset'}
-              </button>
+                {isSubmitting ? 'Sending...' : 'Reset'}
+              </Button>
             </div>
           </div>
         </form>

@@ -38,7 +38,7 @@ export default function IncomingTicketsList({
   );
 
   return (
-    <div className="content-body">
+    <>
       {/* Dropdown menu with status options */}
       <div className="d-flex">
         <div>
@@ -56,34 +56,32 @@ export default function IncomingTicketsList({
       </div>
 
       {filteredTickets.length > 0 ? (
-        <div>
-          <Table borderless responsive>
-            <thead className="table-header">
-              <tr>
-                <th>ID</th>
-                <th>REQUESTOR</th>
-                <th>STATUS</th>
-                <th>DATE SUBMITTED</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Map the list of tickets to IncomingTicketCard components */}
-              {sortedFilteredTickets.map((ticket) => (
-                <IncomingTicketCard
-                  key={ticket.id}
-                  ticketId={ticket.id}
-                  requestorFirstName={ticket.requestorFirstName}
-                  requestorLastName={ticket.requestorLastName}
-                  status={ticket.status}
-                  date={ticket.date}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </div>
+        <Table borderless responsive>
+          <thead className="table-header">
+            <tr>
+              <th>ID</th>
+              <th>REQUESTOR</th>
+              <th>STATUS</th>
+              <th>DATE SUBMITTED</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Map the list of tickets to IncomingTicketCard components */}
+            {sortedFilteredTickets.map((ticket) => (
+              <IncomingTicketCard
+                key={ticket.id}
+                ticketId={ticket.id}
+                requestorFirstName={ticket.requestorFirstName}
+                requestorLastName={ticket.requestorLastName}
+                status={ticket.status}
+                date={ticket.date}
+              />
+            ))}
+          </tbody>
+        </Table>
       ) : (
         <p>No tickets found.</p>
       )}
-    </div>
+    </>
   );
 }

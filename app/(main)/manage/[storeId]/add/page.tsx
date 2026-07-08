@@ -31,7 +31,7 @@ export default async function AddStoreItemsPage({
   if (userError || storeError) return notFound();
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
@@ -41,6 +41,6 @@ export default async function AddStoreItemsPage({
       />
       <h1>Add Store Items</h1>
       <StoreItemsDonationForm store={storeData} user={userData} />
-    </div>
+    </>
   );
 }

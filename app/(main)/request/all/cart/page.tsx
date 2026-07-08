@@ -28,7 +28,7 @@ export default async function AllCartsPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return <div>User not found</div>;
+    return <>User not found.</>;
   }
 
   // Fetch stores
@@ -39,7 +39,7 @@ export default async function AllCartsPage() {
 
   if (storesError || !stores) {
     console.error('Error fetching stores:', storesError);
-    return <div>Failed to load stores.</div>;
+    return <>Failed to load stores.</>;
   }
 
   const sortedStores = stores.sort((a, b) => a.name.localeCompare(b.name));
@@ -52,46 +52,7 @@ export default async function AllCartsPage() {
     .eq('status', 'draft');
 
   if (ticketError || !draftTickets) {
-    return (
-      <div>
-        <Breadcrumbs
-          labelMap={{
-            request: 'Request Inventory',
-            all: 'All Stores',
-            cart: 'All Carts',
-          }}
-        />
-        <h1>All Carts</h1>
-        {sortedStores.map((store) => {
-          return (
-            <Accordion key={store.store_id}>
-              <AccordionItem
-                eventKey={store.store_id}
-                className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
-              >
-                <AccordionHeader className={accordionStyles.accordionHeader}>
-                  {store.name}
-                </AccordionHeader>
-                <AccordionBody className={accordionStyles.accordionBodySpacing}>
-                  <div className={styles.itemsCard}>
-                    <div className={styles.itemsCardHeader}>
-                      <h1>ITEMS</h1>
-                      <h2>0 in-stock · 0 out-of-stock</h2>
-                    </div>
-                  </div>
-                </AccordionBody>
-              </AccordionItem>
-            </Accordion>
-          );
-        })}
-        <div className={styles.itemsCard}>
-          <div className={styles.itemsCardHeader}>
-            <h1>ITEMS</h1>
-            <h2>0 in-stock · 0 out-of-stock</h2>
-          </div>
-        </div>
-      </div>
-    );
+    return <>Failed to load carts.</>;
   }
 
   const draftTicketByStore = draftTickets.reduce<Record<string, DraftTicket>>(
@@ -103,7 +64,7 @@ export default async function AllCartsPage() {
   );
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           request: 'Request Inventory',
@@ -126,44 +87,42 @@ export default async function AllCartsPage() {
               </AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 {draftTicket ? (
-                  <div>
+                  <div className="gap-container">
                     <TicketItemsList ticketId={draftTicket.ticket_id} />
-                    <div>
-                      <h3>Out-of-Stock Request</h3>
-                      <AddOutOfStockToCartForm storeId={store.store_id} />
-                    </div>
+                    <h2>Out-of-Stock Request</h2>
+                    <AddOutOfStockToCartForm storeId={store.store_id} />
                     {draftTicket.ticket_items[0].count > 0 ? (
-                      <div>
-                        <p>Ticket Destination Store: </p>
-                        <TicketDestStoreDropdown
-                          ticketId={draftTicket.ticket_id}
-                          currentDestStore={store.store_id}
-                          destStoreOptions={stores
-                            .filter((s) => s.store_id !== store.store_id)
-                            .map((s) => ({
-                              store: {
-                                store_id: s.store_id,
-                                name: s.name,
-                                street_address: s.street_address,
-                              },
-                            }))}
-                        />
+                      <>
+                        <h2>Ticket Destination Store</h2>
+                        <div className="d-flex">
+                          <TicketDestStoreDropdown
+                            ticketId={draftTicket.ticket_id}
+                            currentDestStore={store.store_id}
+                            destStoreOptions={stores
+                              .filter((s) => s.store_id !== store.store_id)
+                              .map((s) => ({
+                                store: {
+                                  store_id: s.store_id,
+                                  name: s.name,
+                                  street_address: s.street_address,
+                                },
+                              }))}
+                          />
+                        </div>
                         <SubmitTicketButton ticketId={draftTicket.ticket_id} />
-                      </div>
+                      </>
                     ) : null}
                   </div>
                 ) : (
-                  <div>
+                  <div className="gap-container">
                     <div className={styles.itemsCard}>
                       <div className={styles.itemsCardHeader}>
                         <h1>ITEMS</h1>
                         <h2>0 in-stock · 0 out-of-stock</h2>
                       </div>
                     </div>
-                    <div>
-                      <h3>Out-of-Stock Request</h3>
-                      <AddOutOfStockToCartForm storeId={store.store_id} />
-                    </div>
+                    <h2>Out-of-Stock Request</h2>
+                    <AddOutOfStockToCartForm storeId={store.store_id} />
                   </div>
                 )}
               </AccordionBody>
@@ -171,6 +130,6 @@ export default async function AllCartsPage() {
           </Accordion>
         );
       })}
-    </div>
+    </>
   );
 }

@@ -6,7 +6,7 @@ import { forwardRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { PatternFormat } from 'react-number-format';
 
@@ -200,14 +200,14 @@ export default function SignUpPage() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <div className={'submit-button-row'}>
-              <button
-                className={'btn-submit auth'}
+            <div className={'auth-btn-row'}>
+              <Button
+                className={'btn-submit'}
                 type="submit"
                 disabled={isLoading}
               >
                 {isLoading ? 'Creating account...' : 'Sign Up'}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -183,11 +183,11 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-    <div>
+    <>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="content-body"
+          className="gap-container"
         >
           <div className="checkbox-row">
             <Form.Check
@@ -207,17 +207,21 @@ export default function StoreItemsDonationForm({
           </div>
 
           {itemSettingsSelected?.includes('giftInKind') && (
-            <DonationForm
-              donorType={donorType}
-              setItemsDonated={setItemsDonated}
-              showSubmitButton={
-                !itemSettingsSelected?.includes('addInventoryItems')
-              }
-            />
+            <>
+              <h2>Record Gift-in-Kind</h2>
+              <DonationForm
+                donorType={donorType}
+                setItemsDonated={setItemsDonated}
+                showSubmitButton={
+                  !itemSettingsSelected?.includes('addInventoryItems')
+                }
+              />
+            </>
           )}
 
           {itemSettingsSelected?.includes('addInventoryItems') && (
             <>
+              <h2>Add Item</h2>
               <AddStoreItemSearch
                 setAutoFillItems={setAutoFillItems}
                 selectedItems={selectedItems}
@@ -225,14 +229,14 @@ export default function StoreItemsDonationForm({
               />
               {/* add autofillitems connection pass in prop to storeitemsform */}
               <div>
-                <button type="submit" className="btn-submit">
+                <Button type="submit" className="btn-submit">
                   Submit
-                </button>
+                </Button>
               </div>
             </>
           )}
         </form>
       </FormProvider>
-    </div>
+    </>
   );
 }

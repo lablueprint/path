@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from '@/app/(main)/components/Breadcrumbs.module.css';
 
 type BreadcrumbsProps = {
   labelMap?: Record<string, string>;
@@ -63,9 +62,5 @@ export default function Breadcrumbs({ labelMap = {} }: BreadcrumbsProps) {
     );
   });
 
-  return (
-    <nav className={styles.breadcrumbs} aria-label="Breadcrumbs">
-      {crumbs}
-    </nav>
-  );
+  return <nav aria-label="Breadcrumbs">{crumbs}</nav>;
 }

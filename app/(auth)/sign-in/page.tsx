@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 
 type Inputs = {
@@ -35,10 +35,10 @@ export default function SignInPage() {
   };
 
   return (
-    <div className={'auth-form-wrap'}>
-      <div className={'auth-left'}></div>
-      <div className={'auth-right'}>
-        <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
+    <div className="auth-form-wrap">
+      <div className="auth-left"></div>
+      <div className="auth-right">
+        <form className="form-card auth" onSubmit={handleSubmit(onSubmit)}>
           <Link href="/home">
             <Image
               width={96}
@@ -48,11 +48,11 @@ export default function SignInPage() {
               priority
             />
           </Link>
-          <p className={'auth-title'}>Sign In</p>
-          <div className={'form-body'}>
-            <p className={'auth-prompt'}>
+          <p className="auth-title">Sign In</p>
+          <div className="form-body">
+            <p className="auth-prompt">
               Not a member?{' '}
-              <Link className={'auth-link'} href="/sign-up">
+              <Link className="auth-link" href="/sign-up">
                 Sign up
               </Link>
             </p>
@@ -89,13 +89,13 @@ export default function SignInPage() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Link className={'forgot-password'} href="/forgot-password">
+            <Link className="forgot-password" href="/forgot-password">
               Forgot password?
             </Link>
-            <div className={'submit-button-row'}>
-              <button type="submit" className={'btn-submit auth'}>
+            <div className="auth-btn-row">
+              <Button type="submit" className="btn-submit">
                 Sign In
-              </button>
+              </Button>
             </div>
           </div>
         </form>

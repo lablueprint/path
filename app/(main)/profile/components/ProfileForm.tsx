@@ -9,6 +9,7 @@ import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
+import { Button, Form } from 'react-bootstrap';
 
 type ProfileFormValues = {
   email: string;
@@ -176,64 +177,76 @@ export default function ProfileForm({ user }: { user: User }) {
               />
             </div>
           )}
-          <p className="form-title">User Information</p>
+          <div className="two-col-row">
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label form-label field-label">
+                    First Name
+                  </label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('firstName', {
+                      required: 'First name is required.',
+                    })}
+                    isInvalid={!!errors.firstName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.firstName?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>First Name</p>
+                  <p>{watchedValues.firstName}</p>
+                </>
+              )}
+            </div>
 
-          <div>
-            <div className="two-col-row">
-              <div>
-                <label className={styles.profileLabel}>First Name</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      className="form-control"
-                      {...register('firstName', { required: true })}
-                    />
-                    {errors.firstName?.type === 'required' && (
-                      <p role="alert">First name is required.</p>
-                    )}
-                  </>
-                ) : (
-                  <p className="form-control-plaintext">
-                    {watchedValues.firstName}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className={styles.profileLabel}>Last Name</label>
-                {isEditing ? (
-                  <>
-                    <input
-                      className="form-control"
-                      {...register('lastName', { required: true })}
-                    />
-                    {errors.lastName?.type === 'required' && (
-                      <p role="alert">Last name is required.</p>
-                    )}
-                  </>
-                ) : (
-                  <p className="form-control-plaintext">
-                    {watchedValues.lastName}
-                  </p>
-                )}
-              </div>
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Last Name</label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('lastName', {
+                      required: 'Last name is required.',
+                    })}
+                    isInvalid={!!errors.lastName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.lastName?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Last Name</p>
+                  <p>{watchedValues.lastName}</p>
+                </>
+              )}
             </div>
           </div>
 
           <div>
-            <label className={styles.profileLabel}>Email</label>
             {isEditing ? (
               <>
-                <input
+                <label className="form-label field-label">Email</label>
+                <Form.Control
                   className="form-control"
-                  {...register('email', { required: true })}
+                  {...register('email', {
+                    required: 'Email is required.',
+                  })}
+                  isInvalid={!!errors.email}
                 />
-                {errors.email?.type === 'required' && (
-                  <p role="alert">Email is required.</p>
-                )}
+                <Form.Control.Feedback type="invalid">
+                  {errors.email?.message}
+                </Form.Control.Feedback>
               </>
             ) : (
-              <p className="form-control-plaintext">{watchedValues.email}</p>
+              <>
+                <p className={styles.textLabel}>Email</p>
+                <p>{watchedValues.email}</p>
+              </>
             )}
           </div>
 
@@ -256,29 +269,29 @@ export default function ProfileForm({ user }: { user: User }) {
 
           {isEditing && (
             <div className="btn-row">
-              <button
+              <Button className="btn-submit" type="submit" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save'}
+              </Button>
+              <Button
                 className="btn-cancel"
                 type="button"
                 onClick={onCancel}
                 disabled={isSaving}
               >
                 Cancel
-              </button>
-              <button className="btn-submit" type="submit" disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
+              </Button>
             </div>
           )}
 
           {!isEditing && (
             <div className="btn-row">
-              <button
+              <Button
                 type="button"
                 className="btn-cancel"
                 onClick={() => setIsEditing(true)}
               >
                 Edit
-              </button>
+              </Button>
             </div>
           )}
         </form>

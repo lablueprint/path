@@ -2,7 +2,7 @@
 import { updateTicketDestStore } from '@/app/actions/ticket';
 import { Store } from '@/app/types/store';
 import { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 export default function TicketDestStoreDropdown({
   ticketId,
@@ -41,7 +41,7 @@ export default function TicketDestStoreDropdown({
   };
 
   return (
-    <div>
+    <div className="form-body">
       <Form.Select
         value={selectedDestStore?.store_id || ''}
         onChange={(e) => {
@@ -69,21 +69,13 @@ export default function TicketDestStoreDropdown({
           ))}
       </Form.Select>
       {selectedDestStore != originalDestStore && (
-        <div className="d-flex flex-wrap gap-2 mt-2">
-          <button
-            type="button"
-            className="btn-submit py-1 px-3"
-            onClick={handleSave}
-          >
+        <div className="btn-row">
+          <Button type="button" className="btn-submit" onClick={handleSave}>
             Save
-          </button>
-          <button
-            type="button"
-            className="btn-cancel py-1 px-3"
-            onClick={handleCancel}
-          >
+          </Button>
+          <Button type="button" className="btn-cancel" onClick={handleCancel}>
             Cancel
-          </button>
+          </Button>
           {error && <div className="w-100">{error}</div>}
         </div>
       )}

@@ -51,7 +51,7 @@ export default async function CartPage({
 
   if (ticketError || !ticket) {
     return (
-      <div>
+      <>
         <Breadcrumbs
           labelMap={{
             request: 'Request Inventory',
@@ -60,10 +60,10 @@ export default async function CartPage({
         />
         <h1>Cart</h1>
         {showSuccess && (
-          <div>
+          <>
             <p>Ticket submitted successfully!</p>
             <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
-          </div>
+          </>
         )}
         <div className={styles.itemsCard}>
           <div className={styles.itemsCardHeader}>
@@ -71,11 +71,9 @@ export default async function CartPage({
             <h2>0 in-stock · 0 out-of-stock</h2>
           </div>
         </div>
-        <div>
-          <h2>Out-of-Stock Request</h2>
-          <AddOutOfStockToCartForm storeId={storeId} />
-        </div>
-      </div>
+        <h2>Out-of-Stock Request</h2>
+        <AddOutOfStockToCartForm storeId={storeId} />
+      </>
     );
   }
 
@@ -112,7 +110,7 @@ export default async function CartPage({
     .single();
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           request: 'Request Inventory',
@@ -121,31 +119,31 @@ export default async function CartPage({
       />
       <h1>Cart</h1>
       {showSuccess && (
-        <div>
+        <>
           <p>Ticket submitted successfully!</p>
           <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
-        </div>
+        </>
       )}
-      <div>
-        <TicketItemsList ticketId={ticket.ticket_id} />
-        <div>
-          <h2>Out-of-Stock Request</h2>
-          <AddOutOfStockToCartForm storeId={storeId} />
-        </div>
-        {hasItems ? (
-          <div>
-            <p>Ticket Destination Store: </p>
-            <TicketDestStoreDropdown
-              ticketId={ticket.ticket_id}
-              currentDestStore={(currentDestStore as Store) || null}
-              destStoreOptions={(destStoreOptions ?? []).map((store) => ({
-                store,
-              }))}
-            />
-            <SubmitTicketButton ticketId={ticket.ticket_id} />
+      <TicketItemsList ticketId={ticket.ticket_id} />
+      <h2>Out-of-Stock Request</h2>
+      <AddOutOfStockToCartForm storeId={storeId} />
+      {hasItems ? (
+        <>
+          <h2>Ticket Destination Store</h2>
+          <div className="form-card">
+            <div className="card-body">
+              <TicketDestStoreDropdown
+                ticketId={ticket.ticket_id}
+                currentDestStore={(currentDestStore as Store) || null}
+                destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                  store,
+                }))}
+              />
+            </div>
           </div>
-        ) : null}
-      </div>
-    </div>
+          <SubmitTicketButton ticketId={ticket.ticket_id} />
+        </>
+      ) : null}
+    </>
   );
 }
