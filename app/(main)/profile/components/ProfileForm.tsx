@@ -227,44 +227,52 @@ export default function ProfileForm({ user }: { user: User }) {
             </div>
           </div>
 
-          <div>
-            {isEditing ? (
-              <>
-                <label className="form-label field-label">Email</label>
-                <Form.Control
-                  className="form-control"
-                  {...register('email', {
-                    required: 'Email is required.',
-                  })}
-                  isInvalid={!!errors.email}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email?.message}
-                </Form.Control.Feedback>
-              </>
-            ) : (
-              <>
-                <p className={styles.textLabel}>Email</p>
-                <p>{watchedValues.email}</p>
-              </>
-            )}
-          </div>
+          <div className="two-col-row">
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Email</label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('email', {
+                      required: 'Email is required.',
+                    })}
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Email</p>
+                  <p>{watchedValues.email}</p>
+                </>
+              )}
+            </div>
 
-          <div>
-            <label className={styles.profileLabel}>Phone Number</label>
-            {isEditing ? (
-              <>
-                <input
-                  className="form-control"
-                  {...register('phone', { required: true })}
-                />
-                {errors.phone?.type === 'required' && (
-                  <p role="alert">Phone number is required.</p>
-                )}
-              </>
-            ) : (
-              <p className="form-control-plaintext">{watchedValues.phone}</p>
-            )}
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Phone Number</label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('phone', {
+                      required: 'Phone number is required.',
+                    })}
+                    isInvalid={!!errors.phone}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.phone?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Phone Number</p>
+                  <p>{watchedValues.phone}</p>
+                </>
+              )}
+            </div>
           </div>
 
           {isEditing && (
