@@ -18,7 +18,7 @@
 
 .fieldLabel {
   margin-bottom: 0.25rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .fieldValue {
@@ -30,5 +30,5 @@
 }
 
 .isHiddenCheckbox {
-  font-weight: 700;
+  font-weight: 600;
 }

@@ -93,7 +93,7 @@ export default async function InventoryItemPage({
   }
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
@@ -102,16 +102,14 @@ export default async function InventoryItemPage({
         }}
       />
       <h1>{item.name}</h1>
-      <div className="content-body">
-        <EditInventoryItemForm
-          item={item}
-          initialCategories={categoriesRes.data || []}
-          initialSubcategories={subcategoriesRes.data || []}
-        />
-        <div>
-          <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
-        </div>
+      <EditInventoryItemForm
+        item={item}
+        initialCategories={categoriesRes.data || []}
+        initialSubcategories={subcategoriesRes.data || []}
+      />
+      <div>
+        <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
       </div>
-    </div>
+    </>
   );
 }

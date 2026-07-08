@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/user';
+import profileFormStyles from '@/app/(main)/profile/components/ProfileForm.module.css';
+import { Button } from 'react-bootstrap';
 
 export default function Dropdown({
   userId,
@@ -58,22 +60,27 @@ export default function Dropdown({
         }
       }}
     >
-      <select
-        name="role"
-        className="form-select w-auto"
-        value={currentRoleId}
-        onChange={(e) => setCurrentRoleId(Number(e.target.value))}
-      >
-        {sortedRoles.map((r) => (
-          <option key={r.id} value={r.id}>
-            {formatRole(r.roleName)}
-          </option>
-        ))}
-      </select>
-      <div className="btn-row">
-        <button className="btn-submit" type="submit">
-          Save
-        </button>
+      <div className="gap-container">
+        <div>
+          <p className={profileFormStyles.textLabel}>Role</p>
+          <select
+            name="role"
+            className="form-select w-auto"
+            value={currentRoleId}
+            onChange={(e) => setCurrentRoleId(Number(e.target.value))}
+          >
+            {sortedRoles.map((r) => (
+              <option key={r.id} value={r.id}>
+                {formatRole(r.roleName)}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="btn-row">
+          <Button className="btn-submit" type="submit">
+            Save
+          </Button>
+        </div>
       </div>
     </form>
   );

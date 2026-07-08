@@ -18,7 +18,7 @@
 
 .fieldLabel {
   margin-bottom: 0.25rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .fieldValue {
@@ -27,13 +27,13 @@
 
 .inStock {
   margin: 0;
-  font-weight: 700;
+  font-weight: 600;
   color: #24704a;
 }
 
 .outOfStock {
   margin: 0;
-  font-weight: 700;
+  font-weight: 600;
   color: #c53030;
 }
 

@@ -15,7 +15,7 @@ export default async function StoreAdminsPage() {
   const stores = storesData || [];
 
   return (
-    <div>
+    <>
       <Breadcrumbs />
       <h1>Store Admins</h1>
       {stores.length > 0 ? (
@@ -23,6 +23,6 @@ export default async function StoreAdminsPage() {
       ) : (
         <p>No stores found.</p>
       )}
-    </div>
+    </>
   );
 }

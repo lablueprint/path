@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
@@ -16,6 +17,30 @@ export default async function ManageStoreItemPage({
   const { storeId, storeItemId } = await params;
 
   const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return notFound();
+  }
+
+  // Check if user can manage the store
+  const { data: canManage, error: canManageError } = await supabase.rpc(
+    'can_manage_store',
+    { store_to_manage_id: storeId },
+  );
+
+  if (canManageError) {
+    console.error('Error checking store access:', canManageError);
+    return notFound();
+  }
+
+  if (!canManage) {
+    return notFound();
+  }
+
   const [{ data: store }, { data: itemData, error: itemError }] =
     await Promise.all([
       supabase.from('stores').select('name').eq('store_id', storeId).single(),
@@ -68,7 +93,7 @@ export default async function ManageStoreItemPage({
   }
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           '/manage': 'Manage Inventory',
@@ -133,8 +158,9 @@ export default async function ManageStoreItemPage({
           </Row>
         </div>
       </Card>
-
-      <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
-    </div>
+      <div>
+        <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
+      </div>
+    </>
   );
 }

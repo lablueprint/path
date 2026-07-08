@@ -17,7 +17,7 @@ export default function StoreCard({ store }: { store: Store }) {
         <div className={styles.imageContainer}>
           <Image
             src={displayImage || defaultStorePhoto}
-            objectFit={'cover'}
+            className="object-fit-cover"
             alt="Store photo"
             fill
             unoptimized

@@ -4,7 +4,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 import Link from 'next/link';
 
@@ -66,14 +66,13 @@ export default function ResetPasswordPage() {
             <Form.Group controlId="password">
               <Form.Control
                 type="password"
-                placeholder="New password"
+                placeholder="New Password"
                 className="auth-field first"
                 {...register('password', {
-                  required: 'New password is required.',
-                  minLength: 8,
+                  required: 'Password is required.',
                   pattern: {
                     value:
-                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};'\\:"\|<>\?,\./`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]\{\};'\\:"\|<>\?,\./`~]{8,}$/,
                     message:
                       'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
                   },
@@ -87,7 +86,7 @@ export default function ResetPasswordPage() {
             <Form.Group controlId="passwordConfirmation">
               <Form.Control
                 type="password"
-                placeholder="Confirm new password"
+                placeholder="Confirm New Password"
                 className="auth-field"
                 {...register('passwordConfirmation', {
                   required: 'Please confirm your new password.',
@@ -101,14 +100,14 @@ export default function ResetPasswordPage() {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <div className={'submit-button-row'}>
-              <button
+            <div className={'auth-btn-row'}>
+              <Button
                 className={'btn-submit auth'}
                 type="submit"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Saving...' : 'Save'}
-              </button>
+              </Button>
             </div>
           </div>
         </form>

@@ -37,7 +37,7 @@ export default function OutgoingTicketsList({
   );
 
   return (
-    <div className="content-body">
+    <>
       {/* Dropdown menu with status options */}
       <div className="d-flex">
         <div>
@@ -79,6 +79,6 @@ export default function OutgoingTicketsList({
       ) : (
         <p>No tickets found.</p>
       )}
-    </div>
+    </>
   );
 }

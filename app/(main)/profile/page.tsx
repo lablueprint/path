@@ -26,18 +26,14 @@ export default async function PersonalProfilePage() {
   }
 
   return (
-    <div>
+    <>
       <h1>Profile</h1>
-      <div className="content-body">
-        <div>
-          <ProfileForm user={profile as User} />
-        </div>
-        <UpdatePasswordForm />
-
-        <div>
-          <SignOutButton />
-        </div>
+      <ProfileForm user={profile as User} />
+      <h2>Change Password</h2>
+      <UpdatePasswordForm />
+      <div>
+        <SignOutButton />
       </div>
-    </div>
+    </>
   );
 }

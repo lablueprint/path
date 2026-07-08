@@ -53,19 +53,15 @@ export default function AddAdminSearch({
     <Card className="form-card">
       <Card.Body>
         <div className="form-body">
-          <p className="form-title">Add New Admins</p>
           {/* searching */}
-          <div>
-            <div className="search-filter-wrapper">
-              <Form.Control
-                type="text"
-                placeholder="Search users..."
-                className="search-bar"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-
+          <div className="search-filter-wrapper">
+            <Form.Control
+              type="text"
+              placeholder="Search users..."
+              className="search-bar"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
             {/* search results */}
             {searchData.length > 0 && (
               <ListGroup>
@@ -80,7 +76,7 @@ export default function AddAdminSearch({
                       })
                     }
                   >
-                    {u.first_name}
+                    {u.first_name} {u.last_name}
                   </ListGroup.Item>
                 ))}
               </ListGroup>

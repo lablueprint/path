@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { deleteStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { Button } from 'react-bootstrap';
 
 type RemoveStoreButtonProp = {
   storeId: string;
@@ -22,13 +23,18 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
       alert('Failed to remove store.');
       console.error(error);
     } else {
-      router.push('/hq');
+      router.push('/administration/stores');
     }
   };
 
   return (
-    <button type="button" onClick={handleDeletion} className="btn-remove">
+    <Button
+      type="button"
+      variant="outline-danger"
+      onClick={handleDeletion}
+      className="btn-remove"
+    >
       Remove
-    </button>
+    </Button>
   );
 }

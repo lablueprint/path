@@ -16,7 +16,7 @@ export default function TeamUserCard({ user }: { user: User }) {
         <div className={styles.imageContainer}>
           <Image
             src={displayImage || imagePlaceholder}
-            objectFit={'cover'}
+            className="object-fit-cover"
             alt={user.first_name + ' ' + user.last_name}
             fill
             unoptimized

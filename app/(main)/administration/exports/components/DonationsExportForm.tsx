@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm, useWatch } from 'react-hook-form';
-import { Form, Card } from 'react-bootstrap';
+import { Form, Card, Button } from 'react-bootstrap';
 import {
   exportDonations,
   exportDonationsInRange,
@@ -67,21 +67,20 @@ export default function Donations() {
     <Card className="form-card">
       <Card.Body>
         <div className="form-body">
-          <h2 className="form-title">Export Gift-in-Kind Records</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-body">
               <Form.Group>
                 <div className="radio-row">
                   <Form.Check
                     type="radio"
-                    label="All time"
+                    label="All Time"
                     value="all"
                     id="date-mode-all"
                     {...register('dateMode')}
                   />
                   <Form.Check
                     type="radio"
-                    label="Date range"
+                    label="Date Range"
                     value="range"
                     id="date-mode-range"
                     {...register('dateMode')}
@@ -92,7 +91,7 @@ export default function Donations() {
               {dateMode === 'range' && (
                 <div className="two-col-row">
                   <Form.Group controlId="startDate">
-                    <Form.Label className="field-label">Start date</Form.Label>
+                    <Form.Label className="field-label">Start Date</Form.Label>
                     <Form.Control
                       type="date"
                       {...register('startDate', {
@@ -106,7 +105,7 @@ export default function Donations() {
                   </Form.Group>
 
                   <Form.Group controlId="endDate">
-                    <Form.Label className="field-label">End date</Form.Label>
+                    <Form.Label className="field-label">End Date</Form.Label>
                     <Form.Control
                       type="date"
                       {...register('endDate', {
@@ -122,9 +121,9 @@ export default function Donations() {
               )}
 
               <div>
-                <button type="submit" className="btn-submit">
+                <Button type="submit" className="btn-submit">
                   Export
-                </button>
+                </Button>
               </div>
             </div>
           </form>

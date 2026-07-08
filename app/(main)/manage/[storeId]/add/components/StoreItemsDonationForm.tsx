@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -54,7 +54,7 @@ export default function StoreItemsDonationForm({
     defaultValues: {
       itemSettings: [],
       donor_type: undefined,
-      phone: '',
+      phone: undefined,
       estimated_value: '',
       items: [],
     },
@@ -68,6 +68,10 @@ export default function StoreItemsDonationForm({
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
+  const [rawPhone, setRawPhone] = useState('');
+  const handleRawPhone = (value: string) => {
+    setRawPhone(value);
+  };
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
@@ -128,7 +132,7 @@ export default function StoreItemsDonationForm({
               : null,
 
           donor_email: data.email ?? null,
-          donor_phone: data.phone ?? null,
+          donor_phone: rawPhone || null,
           donor_street_address: data.address ?? null,
 
           donor_receive_emails: data.receive_emails,
@@ -164,7 +168,7 @@ export default function StoreItemsDonationForm({
           business_name: '',
           business_contact_name: '',
           email: '',
-          phone: '',
+          phone: undefined,
           address: '',
           receiving_site: '',
           receive_emails: false,
@@ -183,11 +187,11 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-    <div>
+    <>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="content-body"
+          className="gap-container"
         >
           <div className="checkbox-row">
             <Form.Check
@@ -207,17 +211,22 @@ export default function StoreItemsDonationForm({
           </div>
 
           {itemSettingsSelected?.includes('giftInKind') && (
-            <DonationForm
-              donorType={donorType}
-              setItemsDonated={setItemsDonated}
-              showSubmitButton={
-                !itemSettingsSelected?.includes('addInventoryItems')
-              }
-            />
+            <>
+              <h2>Record Gift-in-Kind</h2>
+              <DonationForm
+                setRawPhone={handleRawPhone}
+                donorType={donorType}
+                setItemsDonated={setItemsDonated}
+                showSubmitButton={
+                  !itemSettingsSelected?.includes('addInventoryItems')
+                }
+              />
+            </>
           )}
 
           {itemSettingsSelected?.includes('addInventoryItems') && (
             <>
+              <h2>Add Item</h2>
               <AddStoreItemSearch
                 setAutoFillItems={setAutoFillItems}
                 selectedItems={selectedItems}
@@ -225,14 +234,14 @@ export default function StoreItemsDonationForm({
               />
               {/* add autofillitems connection pass in prop to storeitemsform */}
               <div>
-                <button type="submit" className="btn-submit">
+                <Button type="submit" className="btn-submit">
                   Submit
-                </button>
+                </Button>
               </div>
             </>
           )}
         </form>
       </FormProvider>
-    </div>
+    </>
   );
 }

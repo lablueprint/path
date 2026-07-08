@@ -141,7 +141,7 @@ export default async function RequestAllStoresPage({
   const sortedStores = stores.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           request: 'Request Inventory',
@@ -178,20 +178,23 @@ export default async function RequestAllStoresPage({
               </AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 {storeItems.length > 0 ? (
-                  <div>
-                    <h3>In-Stock Items</h3>
+                  <div className="gap-container">
+                    <h2>In-Stock Items</h2>
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
                       {storeItems.map((item) => (
-                        <ItemCard
-                          key={item.store_item_id}
-                          id={item.store_item_id}
-                          item={item.inventory_items.name}
-                          subcategory={item.inventory_items.subcategories.name}
-                          category={
-                            item.inventory_items.subcategories.categories.name
-                          }
-                          photoUrl={item.inventory_items.photo_url}
-                        />
+                        <div key={item.store_item_id} className="col">
+                          <ItemCard
+                            id={item.store_item_id}
+                            item={item.inventory_items.name}
+                            subcategory={
+                              item.inventory_items.subcategories.name
+                            }
+                            category={
+                              item.inventory_items.subcategories.categories.name
+                            }
+                            photoUrl={item.inventory_items.photo_url}
+                          />
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -206,6 +209,6 @@ export default async function RequestAllStoresPage({
       <Link href={`/request/all/cart`} className={styles.cartButton}>
         <Image src={cartIcon} height={32} alt="Cart icon" />
       </Link>
-    </div>
+    </>
   );
 }

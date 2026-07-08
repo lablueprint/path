@@ -36,7 +36,7 @@ export default async function TeamProfilePage({
   }
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           [`/administration/members/${userId}`]: `${user.first_name || 'FirstName'} ${user.last_name || 'LastName'}`,
@@ -46,45 +46,42 @@ export default async function TeamProfilePage({
         {user.first_name} {user.last_name}
       </h1>
       {/* same styling as profile page */}
-      <div className="content-body">
-        <div className={`form-card ${styles.card}`}>
-          <div className={`form-body ${styles.cardBody}`}>
-            <div className={styles.avatarCircle}>
-              <Image
-                src={user.profile_photo_url || imagePlaceholder}
-                alt={user.first_name + ' ' + user.last_name}
-                width={96}
-                height={96}
-                unoptimized
-              />
-            </div>
-            <p className="form-title">User Information</p>
+      <div className={`form-card ${styles.card}`}>
+        <div className={`form-body ${styles.cardBody}`}>
+          <div className={styles.avatarCircle}>
+            <Image
+              src={user.profile_photo_url || imagePlaceholder}
+              alt={user.first_name + ' ' + user.last_name}
+              width={96}
+              height={96}
+              unoptimized
+            />
+          </div>
 
+          <div className="two-col-row">
             <div>
-              <div className="two-col-row">
-                <div>
-                  <label className={styles.profileLabel}>First name</label>
-                  <p className="form-control-plaintext">{user.first_name}</p>
-                </div>
-                <div>
-                  <label className={styles.profileLabel}>Last name</label>
-                  <p className="form-control-plaintext">{user.last_name}</p>
-                </div>
-              </div>
+              <p className={styles.textLabel}>First Name</p>
+              <p>{user.first_name}</p>
             </div>
-
             <div>
-              <label className={styles.profileLabel}>Email</label>
-              <p className="form-control-plaintext">{user.email}</p>
-            </div>
-
-            <div>
-              <label className={styles.profileLabel}>Role</label>
-              <Dropdown userId={userId} roleId={role?.role_id} />
+              <p className={styles.textLabel}>Last Name</p>
+              <p>{user.last_name}</p>
             </div>
           </div>
+
+          <div className="two-col-row">
+            <div>
+              <p className={styles.textLabel}>Email</p>
+              <p>{user.email}</p>
+            </div>
+            <div>
+              <p className={styles.textLabel}>Phone</p>
+              <p>{user.phone}</p>
+            </div>
+          </div>
+          <Dropdown userId={userId} roleId={role?.role_id} />
         </div>
       </div>
-    </div>
+    </>
   );
 }
