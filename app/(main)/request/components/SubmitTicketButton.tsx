@@ -16,7 +16,12 @@ export default function SubmitTicketButton({ ticketId }: { ticketId: string }) {
 
   return (
     <div>
-      <Button type="button" className="btn-submit" onClick={handleSubmit} disabled={isPending}>
+      <Button
+        type="button"
+        className="btn-submit"
+        onClick={handleSubmit}
+        disabled={isPending}
+      >
         {isPending ? 'Submitting...' : 'Submit Ticket'}
       </Button>
       {error && <p style={{ color: 'red' }}>{error}</p>}

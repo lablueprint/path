@@ -62,9 +62,5 @@ export default function Breadcrumbs({ labelMap = {} }: BreadcrumbsProps) {
     );
   });
 
-  return (
-    <nav aria-label="Breadcrumbs">
-      {crumbs}
-    </nav>
-  );
+  return <nav aria-label="Breadcrumbs">{crumbs}</nav>;
 }

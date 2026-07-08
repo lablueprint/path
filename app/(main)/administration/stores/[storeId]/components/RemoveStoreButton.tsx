@@ -28,7 +28,12 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
   };
 
   return (
-    <Button type="button" variant="outline-danger" onClick={handleDeletion} className="btn-remove">
+    <Button
+      type="button"
+      variant="outline-danger"
+      onClick={handleDeletion}
+      className="btn-remove"
+    >
       Remove
     </Button>
   );

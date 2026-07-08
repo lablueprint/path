@@ -24,7 +24,12 @@ export default function DeleteInventoryItemButton({
   }
 
   return (
-    <Button variant="outline-danger" className="btn-remove" type="button" onClick={handleDelete}>
+    <Button
+      variant="outline-danger"
+      className="btn-remove"
+      type="button"
+      onClick={handleDelete}
+    >
       Remove
     </Button>
   );
