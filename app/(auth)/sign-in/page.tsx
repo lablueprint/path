@@ -81,12 +81,6 @@ export default function SignInPage() {
                 className="auth-field"
                 {...register('password', {
                   required: 'Password is required.',
-                  pattern: {
-                    value:
-                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                    message:
-                      'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
-                  },
                 })}
                 isInvalid={!!errors.password}
               />
