@@ -19,6 +19,26 @@ export default async function AddStoreItemsPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    return notFound();
+  }
+
+  // Check if user can manage the store
+  const { data: canManage, error: canManageError } = await supabase.rpc(
+    'can_manage_store',
+    { store_to_manage_id: storeId },
+  );
+
+  if (canManageError) {
+    console.error('Error checking store access:', canManageError);
+    return notFound();
+  }
+
+  if (!canManage) {
+    return notFound();
+  }
+
   // extract user id
   const userId = user?.id;
   // fetch user's entry from users table
