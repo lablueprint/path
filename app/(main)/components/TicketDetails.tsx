@@ -194,11 +194,13 @@ export default async function TicketDetails({
                     Contact
                   </Button>
                 )}
-                <TicketStatusDropdown
-                  ticketId={userTicket.ticket_id}
-                  currentStatus={userTicket.status as TicketStatus}
-                  statusOptions={statusOptions}
-                />
+                <div className="align-self-stretch">
+                  <TicketStatusDropdown
+                    ticketId={userTicket.ticket_id}
+                    currentStatus={userTicket.status as TicketStatus}
+                    statusOptions={statusOptions}
+                  />
+                </div>
                 <div className={styles.headerEndAtLarge}>
                   <DeleteTicketButton ticketId={userTicket.ticket_id} />
                 </div>
