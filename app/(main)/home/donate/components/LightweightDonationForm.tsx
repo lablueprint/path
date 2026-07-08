@@ -22,7 +22,7 @@ type Props = {
 };
 
 type FormData = {
-  donor_type?: 'individual' | 'business';
+  donor_type?: 'individual' | 'business' | null;
 
   individual_name?: string;
   business_name?: string;
@@ -44,6 +44,7 @@ type FormData = {
 export default function LightweightDonationForm({ stores, user }: Props) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [resetKey, setResetKey] = useState(0);
+  const [rawPhone, setRawPhone] = useState('');
 
   const {
     register,
@@ -55,7 +56,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
-      phone: '',
+      phone: undefined,
       estimated_value: '',
       receiving_site: 'None',
 
@@ -103,7 +104,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
           : null,
 
       donor_email: data.email ?? null,
-      donor_phone: data.phone ?? null,
+      donor_phone: rawPhone || null,
       donor_street_address: data.address ?? null,
 
       donor_receive_emails: data.receive_emails,
@@ -129,12 +130,12 @@ export default function LightweightDonationForm({ stores, user }: Props) {
       setResetKey((k) => k + 1);
 
       reset({
-        donor_type: undefined,
+        donor_type: null,
         individual_name: '',
         business_name: '',
         business_contact_name: '',
         email: '',
-        phone: '',
+        phone: undefined,
         address: '',
         receiving_site: 'None',
         receive_emails: false,
@@ -332,10 +333,9 @@ export default function LightweightDonationForm({ stores, user }: Props) {
                             {...field}
                             format="(###) ###-####"
                             mask="_"
-                            placeholder="(415) 555-1234"
                             allowEmptyFormatting
                             onValueChange={(values) => {
-                              field.onChange(values.value);
+                              setRawPhone(values.value);
                             }}
                             customInput={BootstrapInput}
                             isInvalid={!!errors.phone}
