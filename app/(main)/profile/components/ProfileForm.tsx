@@ -1,15 +1,17 @@
 'use client';
 
 import type { User, UserUpdate } from '@/app/types/user';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import { PatternFormat } from 'react-number-format';
 import { updateUser } from '@/app/actions/user';
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
 import { Button, Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
 
 type ProfileFormValues = {
   email: string;
@@ -17,6 +19,12 @@ type ProfileFormValues = {
   lastName: string;
   phone: string;
 };
+
+const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
+  (props, ref) => <Form.Control {...props} ref={ref} />,
+);
+
+BootstrapInput.displayName = 'BootstrapInput';
 
 export default function ProfileForm({ user }: { user: User }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +43,7 @@ export default function ProfileForm({ user }: { user: User }) {
     register,
     handleSubmit,
     reset,
+    control,
     watch,
     formState: { errors },
   } = useForm<ProfileFormValues>({
@@ -255,16 +264,38 @@ export default function ProfileForm({ user }: { user: User }) {
               {isEditing ? (
                 <>
                   <label className="form-label field-label">Phone Number</label>
-                  <Form.Control
-                    className="form-control"
-                    {...register('phone', {
-                      required: 'Phone number is required.',
-                    })}
-                    isInvalid={!!errors.phone}
+                  <Controller
+                    name="phone"
+                    control={control}
+                    rules={{
+                      validate: (value) => {
+                        const digits = value?.replace(/\D/g, '');
+
+                        return (
+                          digits.length === 10 ||
+                          'Phone number must be 10 digits.'
+                        );
+                      },
+                    }}
+                    render={({ field }) => (
+                      <PatternFormat
+                        {...field}
+                        format="(###) ###-####"
+                        mask="_"
+                        allowEmptyFormatting
+                        onValueChange={(values) => {
+                          field.onChange(values.value);
+                        }}
+                        customInput={BootstrapInput}
+                        isInvalid={!!errors.phone}
+                      />
+                    )}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.phone?.message}
-                  </Form.Control.Feedback>
+                  {errors.phone && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone.message}
+                    </Form.Control.Feedback>
+                  )}
                 </>
               ) : (
                 <>

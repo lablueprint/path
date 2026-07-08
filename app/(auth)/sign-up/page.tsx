@@ -137,9 +137,7 @@ export default function SignUpPage() {
                   validate: (value) => {
                     const digits = value?.replace(/\D/g, '');
                     return (
-                      !digits ||
-                      digits.length === 10 ||
-                      'Phone number must be 10 digits'
+                      digits.length === 10 || 'Phone number must be 10 digits.'
                     );
                   },
                 }}
