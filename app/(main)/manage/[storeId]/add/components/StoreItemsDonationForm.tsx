@@ -54,7 +54,7 @@ export default function StoreItemsDonationForm({
     defaultValues: {
       itemSettings: [],
       donor_type: undefined,
-      phone: '',
+      phone: undefined,
       estimated_value: '',
       items: [],
     },
@@ -68,6 +68,10 @@ export default function StoreItemsDonationForm({
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
+  const [rawPhone, setRawPhone] = useState('');
+  const handleRawPhone = (value: string) => {
+    setRawPhone(value);
+  };
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
@@ -128,7 +132,7 @@ export default function StoreItemsDonationForm({
               : null,
 
           donor_email: data.email ?? null,
-          donor_phone: data.phone ?? null,
+          donor_phone: rawPhone || null,
           donor_street_address: data.address ?? null,
 
           donor_receive_emails: data.receive_emails,
@@ -164,7 +168,7 @@ export default function StoreItemsDonationForm({
           business_name: '',
           business_contact_name: '',
           email: '',
-          phone: '',
+          phone: undefined,
           address: '',
           receiving_site: '',
           receive_emails: false,
@@ -210,6 +214,7 @@ export default function StoreItemsDonationForm({
             <>
               <h2>Record Gift-in-Kind</h2>
               <DonationForm
+                setRawPhone={handleRawPhone}
                 donorType={donorType}
                 setItemsDonated={setItemsDonated}
                 showSubmitButton={

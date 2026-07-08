@@ -1,21 +1,30 @@
 'use client';
 
 import type { User, UserUpdate } from '@/app/types/user';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import { PatternFormat } from 'react-number-format';
 import { updateUser } from '@/app/actions/user';
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
 import { Button, Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
 
 type ProfileFormValues = {
   email: string;
   firstName: string;
   lastName: string;
+  phone: string;
 };
+
+const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
+  (props, ref) => <Form.Control {...props} ref={ref} />,
+);
+
+BootstrapInput.displayName = 'BootstrapInput';
 
 export default function ProfileForm({ user }: { user: User }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -34,6 +43,7 @@ export default function ProfileForm({ user }: { user: User }) {
     register,
     handleSubmit,
     reset,
+    control,
     watch,
     formState: { errors },
   } = useForm<ProfileFormValues>({
@@ -41,6 +51,7 @@ export default function ProfileForm({ user }: { user: User }) {
       firstName: user.first_name,
       lastName: user.last_name,
       email: user.email,
+      phone: user.phone,
     },
   });
 
@@ -116,6 +127,7 @@ export default function ProfileForm({ user }: { user: User }) {
       if (data.email !== user.email) changes.email = data.email;
       if (selectedFile || isPendingDelete)
         changes.profile_photo_url = finalPhotoUrl;
+      if (data.phone !== user.phone) changes.phone = data.phone;
 
       const result = await updateUser(user.user_id, changes);
 
@@ -130,6 +142,7 @@ export default function ProfileForm({ user }: { user: User }) {
           firstName: data.firstName,
           lastName: data.lastName,
           email: user.email,
+          phone: data.phone,
         });
         setIsEditing(false);
         if (data.email !== user.email) {
@@ -223,27 +236,74 @@ export default function ProfileForm({ user }: { user: User }) {
             </div>
           </div>
 
-          <div>
-            {isEditing ? (
-              <>
-                <label className="form-label field-label">Email</label>
-                <Form.Control
-                  className="form-control"
-                  {...register('email', {
-                    required: 'Email is required.',
-                  })}
-                  isInvalid={!!errors.email}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email?.message}
-                </Form.Control.Feedback>
-              </>
-            ) : (
-              <>
-                <p className={styles.textLabel}>Email</p>
-                <p>{watchedValues.email}</p>
-              </>
-            )}
+          <div className="two-col-row">
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Email</label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('email', {
+                      required: 'Email is required.',
+                    })}
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Email</p>
+                  <p>{watchedValues.email}</p>
+                </>
+              )}
+            </div>
+
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Phone Number</label>
+                  <Controller
+                    name="phone"
+                    control={control}
+                    rules={{
+                      validate: (value) => {
+                        const digits = value?.replace(/\D/g, '');
+
+                        return (
+                          digits.length === 10 ||
+                          'Phone number must be 10 digits.'
+                        );
+                      },
+                    }}
+                    render={({ field }) => (
+                      <PatternFormat
+                        {...field}
+                        format="(###) ###-####"
+                        mask="_"
+                        allowEmptyFormatting
+                        onValueChange={(values) => {
+                          field.onChange(values.value);
+                        }}
+                        customInput={BootstrapInput}
+                        isInvalid={!!errors.phone}
+                      />
+                    )}
+                  />
+                  {errors.phone && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone.message}
+                    </Form.Control.Feedback>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Phone Number</p>
+                  <p>{watchedValues.phone}</p>
+                </>
+              )}
+            </div>
           </div>
 
           {isEditing && (

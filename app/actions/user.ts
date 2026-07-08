@@ -28,16 +28,18 @@ export const updateUser = async (userId: string, data: UserUpdate) => {
   const updateData: UserUpdate = {};
   if (data.first_name !== undefined) updateData.first_name = data.first_name;
   if (data.last_name !== undefined) updateData.last_name = data.last_name;
+  if (data.phone !== undefined) updateData.phone = data.phone;
   if (data.profile_photo_url !== undefined) {
     updateData.profile_photo_url = data.profile_photo_url;
   }
 
-  if (data.email || data.first_name || data.last_name) {
+  if (data.email || data.first_name || data.last_name || data.phone) {
     const { error: authError } = await supabase.auth.updateUser({
       ...(data.email && { email: data.email }),
       data: {
         ...(data.first_name && { first_name: data.first_name }),
         ...(data.last_name && { last_name: data.last_name }),
+        ...(data.phone && { phone: data.phone }),
       },
     });
 

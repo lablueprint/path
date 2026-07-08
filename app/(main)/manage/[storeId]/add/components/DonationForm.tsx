@@ -15,10 +15,12 @@ BootstrapInput.displayName = 'BootstrapInput';
 
 export default function DonationForm({
   setItemsDonated,
+  setRawPhone,
   donorType,
   showSubmitButton,
 }: {
   setItemsDonated: (value: string) => void;
+  setRawPhone: (value: string) => void;
   donorType: 'individual' | 'business' | undefined;
   showSubmitButton: boolean;
 }) {
@@ -190,10 +192,9 @@ export default function DonationForm({
                           {...field}
                           format="(###) ###-####"
                           mask="_"
-                          placeholder="(415) 555-1234"
                           allowEmptyFormatting
                           onValueChange={(values) => {
-                            field.onChange(values.value);
+                            setRawPhone(values.value);
                           }}
                           customInput={BootstrapInput}
                           isInvalid={!!errors.phone}
