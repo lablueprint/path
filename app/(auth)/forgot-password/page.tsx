@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
                 {...register('email', {
                   required: 'Email is required.',
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message: 'Please enter a valid email address.',
                   },
                 })}

@@ -119,7 +119,7 @@ export default function SignUpPage() {
                 {...register('email', {
                   required: 'Email is required.',
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message: 'Enter a valid email.',
                   },
                 })}
@@ -170,7 +170,7 @@ export default function SignUpPage() {
                   required: 'Password is required.',
                   pattern: {
                     value:
-                      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};'\\:"\|<>\?,\./`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]\{\};'\\:"\|<>\?,\./`~]{8,}$/,
                     message:
                       'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
                   },
