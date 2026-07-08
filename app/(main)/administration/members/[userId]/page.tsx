@@ -69,11 +69,16 @@ export default async function TeamProfilePage({
             </div>
           </div>
 
-          <div>
-            <p className={styles.textLabel}>Email</p>
-            <p>{user.email}</p>
+          <div className="two-col-row">
+            <div>
+              <p className={styles.textLabel}>Email</p>
+              <p>{user.email}</p>
+            </div>
+            <div>
+              <p className={styles.textLabel}>Phone</p>
+              <p>{user.phone}</p>
+            </div>
           </div>
-
           <Dropdown userId={userId} roleId={role?.role_id} />
         </div>
       </div>

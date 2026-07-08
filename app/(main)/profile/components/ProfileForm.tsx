@@ -118,7 +118,7 @@ export default function ProfileForm({ user }: { user: User }) {
       if (data.email !== user.email) changes.email = data.email;
       if (selectedFile || isPendingDelete)
         changes.profile_photo_url = finalPhotoUrl;
-      if (data.phone != user.phone) changes.phone = data.phone;
+      if (data.phone !== user.phone) changes.phone = data.phone;
 
       const result = await updateUser(user.user_id, changes);
 
@@ -133,7 +133,7 @@ export default function ProfileForm({ user }: { user: User }) {
           firstName: data.firstName,
           lastName: data.lastName,
           email: user.email,
-          phone: user.phone,
+          phone: data.phone,
         });
         setIsEditing(false);
         if (data.email !== user.email) {
