@@ -71,7 +71,7 @@ export default function StoreItemsDonationForm({
   const [rawPhone, setRawPhone] = useState('');
   const handleRawPhone = (value: string) => {
     setRawPhone(value);
-  }
+  };
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
