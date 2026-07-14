@@ -13,17 +13,29 @@ export default function ViewCategories({
   categories: Category[];
 }) {
   return (
-    <ul>
-      {categories?.map((cat) => (
-        <li key={cat.category_id}>
-          {cat.name}
-          <ul>
-            {cat.subcategories?.map((sub) => (
-              <li key={sub.subcategory_id}>{sub.name}</li>
-            ))}
-          </ul>
-        </li>
-      ))}
-    </ul>
+    <>
+      {categories.length > 0 ? (
+        <ul className="gap-container mb-0">
+          {categories.map((cat) => (
+            <li key={cat.category_id}>
+              <div className="gap-container">
+                {cat.name}
+                {cat.subcategories.length > 0 ? (
+                  <ul className="gap-container">
+                    {cat.subcategories.map((sub) => (
+                      <li key={sub.subcategory_id}>{sub.name}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div>No subcategories found.</div>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div>No categories found.</div>
+      )}
+    </>
   );
 }
