@@ -39,9 +39,7 @@ export default async function InventoryPage() {
         }}
       />
       <h1>Categories</h1>
-      {role === 'admin' && (
-        <ViewCategories categories={categories} />
-      )}
+      {role === 'admin' && <ViewCategories categories={categories} />}
 
       {(role === 'superadmin' || role === 'owner') && (
         <EditCategories categories={categories} />
