@@ -242,11 +242,11 @@ export async function addToCart(
       return { success: false, data: null, error: itemError.message };
     }
 
-    return { success: true, data: ticketItem };
-  }
+    revalidatePath(`/request/${storeId}/cart`);
+    revalidatePath(`/request/all/cart`);
 
-  // If description is provided
-  if (description) {
+    return { success: true, data: ticketItem };
+  } else if (description) {
     // Create a ticket item in ticket_items
     const { data: ticketItem, error: itemError } = await supabase
       .from('ticket_items')
@@ -262,8 +262,42 @@ export async function addToCart(
       return { success: false, data: null, error: itemError.message };
     }
 
+    revalidatePath(`/request/${storeId}/cart`);
+    revalidatePath(`/request/all/cart`);
+
     return { success: true, data: ticketItem };
   }
 
-  return { success: true, data: ticket };
+  return { success: true, data: null };
+}
+
+export async function updateTicketDestStore(
+  newDestStoreId: string | null,
+  ticketId: string,
+) {
+  const supabase = await createClient();
+  const { data: entry, error: err } = await supabase
+    .from('tickets')
+    .update({ dest_store_id: newDestStoreId })
+    .eq('ticket_id', ticketId)
+    .select()
+    .single();
+
+  if (err) {
+    console.error('Error changing ticket destination store:', err);
+    return { success: false, data: null, error: err.message };
+  }
+
+  // fetch the ticket storeId for revalidating paths after updating the dest store
+  const { data: ticket } = await supabase
+    .from('tickets')
+    .select('store_id')
+    .eq('ticket_id', ticketId)
+    .single();
+
+  revalidatePath(`/request/${ticket?.store_id}/cart`);
+  revalidatePath(`incoming-tickets.${ticket?.store_id}`);
+  revalidatePath(`/incoming-tickets/${ticket?.store_id}/${ticketId}`);
+
+  return { success: true, data: entry as Ticket };
 }

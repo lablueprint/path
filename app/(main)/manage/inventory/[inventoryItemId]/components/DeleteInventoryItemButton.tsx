@@ -2,6 +2,7 @@
 
 import { deleteItem } from '@/app/actions/inventory';
 import { useRouter } from 'next/navigation';
+import { Button } from 'react-bootstrap';
 
 export default function DeleteInventoryItemButton({
   inventoryItemId,
@@ -23,8 +24,13 @@ export default function DeleteInventoryItemButton({
   }
 
   return (
-    <button type="button" onClick={handleDelete}>
-      Remove item
-    </button>
+    <Button
+      variant="outline-danger"
+      className="btn-remove"
+      type="button"
+      onClick={handleDelete}
+    >
+      Remove
+    </Button>
   );
 }

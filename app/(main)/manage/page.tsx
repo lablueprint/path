@@ -47,16 +47,21 @@ export default async function ManagePage() {
     stores = (data ?? []).map((row) => row.stores as Store);
   }
   return (
-    <div>
+    <>
       <h1>Manage Inventory</h1>
-      <Link href="/manage/inventory">
-        <p>Inventory Library</p>
-      </Link>
+      <span className="link-btn-row">
+        <Link className="link-btn" href="/manage/inventory">
+          Inventory Library
+        </Link>
+        <Link className="link-btn" href="/manage/categories">
+          Item Categories
+        </Link>
+      </span>
       {stores.length > 0 ? (
         <StoresList stores={stores} />
       ) : (
         <p>No stores found.</p>
       )}
-    </div>
+    </>
   );
 }

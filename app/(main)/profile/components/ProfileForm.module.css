@@ -1,0 +1,39 @@
+.card {
+  margin-top: 6.25rem;
+}
+
+.cardBody {
+  padding: 6.25rem 1.5rem 1.5rem 1.5rem;
+}
+
+@media (min-width: 576px) {
+  .cardBody {
+    padding: 6.25rem 3rem 3rem 3rem;
+  }
+}
+
+.avatarCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -12.5rem;
+}
+
+.avatarCircle img {
+  width: 12.5rem;
+  height: 12.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarCircleEdit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -12.5rem;
+}
+
+.textLabel {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}

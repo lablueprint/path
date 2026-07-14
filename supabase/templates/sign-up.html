@@ -1,8 +1,51 @@
-<h2>Confirm sign-up</h2>
-
-<p>Follow this link to confirm your sign-up:</p>
-<p>
-  <a href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=email"
-    >Confirm sign-up</a
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    style="
+      margin: 0;
+      background: #f5f7fa;
+      color: #000000;
+      font-family: Montserrat, sans-serif;
+    "
   >
-</p>
+    <div style="padding: 3rem; background: #f5f7fa">
+      <div
+        style="
+          max-width: 32rem;
+          margin: 0 auto;
+          padding: 3rem;
+          border-radius: 0.5rem;
+          background: #ffffff;
+        "
+      >
+        <img
+          src="{{ .SiteURL }}/path.png"
+          alt="PATH logo"
+          style="display: block; width: 6rem; height: auto; margin-bottom: 3rem"
+        />
+        <h2 style="font-weight: 600; font-size: 1.5rem; margin: 1rem 0">
+          Confirm Sign-Up
+        </h2>
+
+        <p style="font-weight: 400; font-size: 1rem">
+          Follow this link to confirm your sign-up:
+        </p>
+        <a
+          style="
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none;
+            color: #2c5282;
+          "
+          href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=email"
+          >Confirm sign-up</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

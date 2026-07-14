@@ -7,6 +7,7 @@ export type InventoryItem = {
 };
 
 export type InventoryItemInsert = Omit<InventoryItem, 'inventory_item_id'>;
+
 export type InventoryItemUpdate = Partial<InventoryItemInsert>;
 
 export type Category = {
@@ -15,6 +16,7 @@ export type Category = {
 };
 
 export type CategoryInsert = Omit<Category, 'category_id'>;
+
 export type CategoryUpdate = Partial<CategoryInsert>;
 
 export type Subcategory = {
@@ -24,4 +26,5 @@ export type Subcategory = {
 };
 
 export type SubcategoryInsert = Omit<Subcategory, 'subcategory_id'>;
+
 export type SubcategoryUpdate = Partial<SubcategoryInsert>;

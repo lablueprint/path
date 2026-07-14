@@ -69,13 +69,19 @@ select
     ) ->> 'user_role' in ('admin', 'superadmin', 'owner')
   );
 
-create policy "auth can insert donations if >= admin" on public.donations for insert to authenticated
+create policy "auth can insert donations if >= default" on public.donations for insert to authenticated
 with
   check (
     (
       select
         auth.jwt ()
-    ) ->> 'user_role' in ('admin', 'superadmin', 'owner')
+    ) ->> 'user_role' in (
+      'default',
+      'requestor',
+      'admin',
+      'superadmin',
+      'owner'
+    )
   );
 
 create policy "auth can update donations if >= superadmin" on public.donations

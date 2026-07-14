@@ -2,6 +2,7 @@
 import { updateTicketItemDescription } from '@/app/actions/ticket';
 import { useState } from 'react';
 import styles from '@/app/(main)/components/OutOfStockTicketItemCard.module.css';
+import { Button } from 'react-bootstrap';
 
 interface OutOfStockTicketItemCardProps {
   ticketItemId: string;
@@ -37,9 +38,13 @@ export default function OutOfStockTicketItemCard({
         rows={4}
       />
       {isChanged && (
-        <div className={styles.actionsRow}>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
+        <div className="btn-row">
+          <Button className="btn-submit" size="sm" onClick={handleSave}>
+            Save
+          </Button>
+          <Button className="btn-cancel" size="sm" onClick={handleCancel}>
+            Cancel
+          </Button>
         </div>
       )}
     </div>

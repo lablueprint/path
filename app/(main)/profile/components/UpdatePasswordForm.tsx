@@ -2,6 +2,7 @@
 
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { Button, Form } from 'react-bootstrap';
 
 type FormValues = {
   newPassword: string;
@@ -16,6 +17,7 @@ export default function UpdatePasswordForm() {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
+    mode: 'onChange',
     defaultValues: {
       newPassword: '',
       newPasswordConfirmation: '',
@@ -53,44 +55,64 @@ export default function UpdatePasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label>New password</label>
-      <input
-        type="password"
-        {...register('newPassword', {
-          minLength: 8,
-          pattern:
-            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        })}
-      />
-      {errors.newPassword && (
-        <p role="alert">
-          Password must be at least 8 characters and include an uppercase
-          letter, a lowercase letter, a number, and a symbol.
-        </p>
-      )}
-      <br />
-      <label>Confirm new password</label>
-      <input type="password" {...register('newPasswordConfirmation')} />
-
-      {newPasswordConfirmation.length > 0 && !passwordsMatch && (
-        <p role="alert">Passwords do not match.</p>
-      )}
-      <br />
-      {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
-        <button
-          type="button"
-          onClick={() =>
-            reset({
-              newPassword: '',
-              newPasswordConfirmation: '',
-            })
-          }
-        >
-          Cancel
-        </button>
-      )}
-      {passwordsMatch && <button type="submit">Save</button>}
-    </form>
+    <div className="form-card">
+      <div className="card-body">
+        <Form onSubmit={handleSubmit(onSubmit)} className="form-body">
+          <Form.Group>
+            <label className="form-label field-label">New Password</label>
+            <Form.Control
+              type="password"
+              {...register('newPassword', {
+                required: 'Password is required.',
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+\-=\[\]\{\};'\\:"\|<>\?,\./`~])[A-Za-z\d!@#\$%\^&\*\(\)_\+\-=\[\]\{\};'\\:"\|<>\?,\./`~]{8,}$/,
+                  message:
+                    'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol.',
+                },
+              })}
+              isInvalid={!!errors.newPassword}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.newPassword?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <label className="form-label field-label">
+              Confirm New Password
+            </label>
+            <Form.Control
+              type="password"
+              {...register('newPasswordConfirmation')}
+              isInvalid={newPasswordConfirmation.length > 0 && !passwordsMatch}
+            />
+            <Form.Control.Feedback type="invalid">
+              Passwords do not match.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <div className="btn-row">
+            {passwordsMatch && (
+              <Button className="btn-submit" type="submit">
+                Save
+              </Button>
+            )}
+            {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+              <Button
+                type="button"
+                className="btn-cancel"
+                onClick={() =>
+                  reset({
+                    newPassword: '',
+                    newPasswordConfirmation: '',
+                  })
+                }
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
+        </Form>
+      </div>
+    </div>
   );
 }

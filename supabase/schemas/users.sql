@@ -9,18 +9,25 @@ create table users (
   ) stored,
   email text,
   profile_photo_url text,
+  phone text,
   constraint fk_auth_users foreign key (user_id) references auth.users (id) on delete cascade
 );
 
 alter table "users" enable row level security;
 
-create policy "auth can read users if >= requestor" on public.users for
+create policy "auth can read users if >= default" on public.users for
 select
   to authenticated using (
     (
       select
         auth.jwt ()
-    ) ->> 'user_role' in ('requestor', 'admin', 'superadmin', 'owner')
+    ) ->> 'user_role' in (
+      'default',
+      'requestor',
+      'admin',
+      'superadmin',
+      'owner'
+    )
   );
 
 create policy "no user can insert users" on public.users for insert

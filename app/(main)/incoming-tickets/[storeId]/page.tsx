@@ -52,7 +52,7 @@ export default async function IncomingTicketsStorePage({
     .from('tickets')
     .select('*, users(*)')
     .eq('store_id', storeId)
-    .in('status', ['requested', 'ready', 'rejected', 'fulfilled']);
+    .in('status', ['requested', 'approved', 'ready', 'rejected', 'fulfilled']);
 
   if (ticketsError) {
     console.error('Error fetching tickets:', ticketsError);
@@ -69,15 +69,15 @@ export default async function IncomingTicketsStorePage({
     })) ?? [];
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
-          'incoming-tickets': 'Incoming Tickets',
+          'incoming-tickets': 'Store Tickets',
           [storeId]: store.name,
         }}
       />
-      <h1>Incoming Tickets</h1>
+      <h1>Store Tickets</h1>
       <IncomingTicketsList tickets={tickets} />
-    </div>
+    </>
   );
 }
