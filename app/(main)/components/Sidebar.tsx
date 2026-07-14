@@ -5,6 +5,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import SidebarNavLink from '@/app/(main)/components/SidebarNavLink';
 import MobileSidebar from '@/app/(main)/components/MobileSidebar';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import pathLogo from '@/public/path.png';
 
 type Role = 'default' | 'requestor' | 'admin' | 'superadmin' | 'owner';
 
@@ -34,6 +35,27 @@ export default async function Sidebar() {
 
   const sidebarGroups = [
     {
+      heading: 'General',
+      links: [
+        {
+          label: 'FAQ',
+          href: '/faq',
+          allowedRoles: [
+            'default',
+            'requestor',
+            'admin',
+            'superadmin',
+            'owner',
+          ],
+        },
+        {
+          label: 'Administration',
+          href: '/administration',
+          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
+        },
+      ],
+    },
+    {
       heading: 'Requesting',
       links: [
         {
@@ -42,7 +64,7 @@ export default async function Sidebar() {
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
         {
-          label: 'Outgoing Tickets',
+          label: 'My Tickets',
           href: '/outgoing-tickets',
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
@@ -57,19 +79,9 @@ export default async function Sidebar() {
           allowedRoles: ['admin', 'superadmin', 'owner'],
         },
         {
-          label: 'Incoming Tickets',
+          label: 'Store Tickets',
           href: '/incoming-tickets',
           allowedRoles: ['admin', 'superadmin', 'owner'],
-        },
-        {
-          label: 'Team',
-          href: '/team',
-          allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
-        },
-        {
-          label: 'HQ',
-          href: '/hq',
-          allowedRoles: ['superadmin', 'owner'],
         },
       ],
     },
@@ -82,8 +94,8 @@ export default async function Sidebar() {
         <nav className={styles.navContainer}>
           <Link href="/home" className={styles.pathHomeLink}>
             <Image
-              src="/path.png"
-              alt="Path Home Logo"
+              src={pathLogo}
+              alt="Path logo"
               width={160}
               height={76}
               className={styles.pathHomeImage}

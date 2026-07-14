@@ -14,8 +14,9 @@ import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
-import ItemCard from '@/app/(main)/components/ItemCard';
-import { Form } from 'react-bootstrap';
+import { Form, Card, Button } from 'react-bootstrap';
+import AddItemCard from '@/app/(main)/manage/[storeId]/add/components/AddItemCard';
+import { ListGroup } from 'react-bootstrap';
 
 type ItemWithNames = InventoryItem & {
   category_name: string;
@@ -26,8 +27,12 @@ const supabase = createClient();
 
 export default function AddStoreItemSearch({
   setAutoFillItems,
+  selectedItems,
+  setSelectedItems,
 }: {
   setAutoFillItems: (items: ItemWithNames[]) => void;
+  selectedItems: ItemWithNames[];
+  setSelectedItems: React.Dispatch<React.SetStateAction<ItemWithNames[]>>;
 }) {
   const methods = useFormContext<CombinedFormData>();
   const { fields, append, remove } = useFieldArray({
@@ -36,10 +41,12 @@ export default function AddStoreItemSearch({
   });
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
-  const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const createItemMethods = useForm<Inputs>();
+
+  const [inventoryType, setInventoryType] = useState<'existing' | 'new' | null>(
+    null,
+  );
 
   function useTime() {
     const [time, setTime] = useState(() => Date.now());
@@ -161,7 +168,6 @@ export default function AddStoreItemSearch({
         }
 
         createItemMethods.reset({}, { keepValues: false });
-        setShowCreateForm(false);
       } else {
         console.error('Failed to create item:', result.error);
       }
@@ -171,104 +177,101 @@ export default function AddStoreItemSearch({
   };
 
   return (
-    <div>
-      <h2>Add Store Items</h2>
-      <div className="search-filter-wrapper">
-        <Form.Control
-          type="text"
-          placeholder="Search store items..."
-          className="search-bar"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-      <button
-        type="button"
-        onClick={() => {
-          setShowCreateForm((prev) => {
-            if (prev) setSelectedFile(null);
-            return !prev;
-          });
-        }}
-      >
-        {showCreateForm ? 'Cancel' : 'Create new item'}
-      </button>
-      <ul>
-        {results?.map((item) => (
-          <div key={item.inventory_item_id}>
-            <li>{item.name}</li>
-            <button type="button" onClick={() => handleSelect(item)}>
-              Select
-            </button>
-          </div>
-        ))}
-      </ul>
-
-      {showCreateForm && (
-        <FormProvider {...createItemMethods}>
-          <AddInventoryItemForm
-            selectedFile={selectedFile}
-            onFileChange={setSelectedFile}
-          />
-          <button
-            type="button"
-            onClick={createItemMethods.handleSubmit(handleCreateAndSelect)}
-          >
-            Create and select
-          </button>
-        </FormProvider>
-      )}
-
-      <h3>Selected Items</h3>
-      {fields.length > 0 ? (
-        fields.map((field, idx) => (
-          <div key={field.id}>
-            <ItemCard
-              id={selectedItems[idx]?.inventory_item_id}
-              photoUrl={selectedItems[idx]?.photo_url ?? null}
-              item={selectedItems[idx]?.name}
-              subcategory={selectedItems[idx]?.subcategory_name}
-              category={selectedItems[idx]?.category_name}
-            />
-            <p>Description: {selectedItems[idx]?.description}</p>
-            <p>
-              Quantity:{' '}
-              <input
-                type="number"
-                min="1"
-                placeholder="Quantity to add"
-                defaultValue={1}
-                {...methods.register(`items.${idx}.quantity`, {
-                  required: 'Quantity is required.',
-                  valueAsNumber: true,
-                  min: {
-                    value: 1,
-                    message: 'Quantity must be at least 1.',
-                  },
-                })}
-              />
-            </p>
-            {methods.formState.errors.items?.[idx]?.quantity && (
-              <p style={{ color: 'red' }}>
-                {' '}
-                {
-                  methods.formState.errors.items?.[idx]?.quantity
-                    ?.message as string
-                }
-              </p>
+    <>
+      <Card className="form-card">
+        <Card.Body>
+          <div className="form-body">
+            <Form.Group>
+              <div className="radio-row">
+                <Form.Check
+                  type="radio"
+                  label="Search for Existing Item"
+                  value="existing"
+                  id="inventory-existing"
+                  name="inventoryType"
+                  onChange={() => setInventoryType('existing')}
+                />
+                <Form.Check
+                  type="radio"
+                  label="Create New Item"
+                  value="new"
+                  id="inventory-new"
+                  name="inventoryType"
+                  onChange={() => setInventoryType('new')}
+                />
+              </div>
+            </Form.Group>
+            {inventoryType == 'existing' && (
+              <div className="search-filter-wrapper">
+                <Form.Control
+                  type="text"
+                  placeholder="Search store items..."
+                  className="search-bar"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {results.length > 0 && (
+                  <ListGroup>
+                    {results?.map((item) => (
+                      <ListGroup.Item
+                        key={item.inventory_item_id}
+                        action
+                        type="button"
+                        onClick={() => handleSelect(item)}
+                      >
+                        {item.name}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                )}
+              </div>
             )}
-            <input
-              type="hidden"
-              {...methods.register(`items.${idx}.inventory_item_id`)}
-            />
-            <button type="button" onClick={() => handleRemove(idx)}>
-              Remove
-            </button>
+            {inventoryType == 'new' && (
+              <FormProvider {...createItemMethods}>
+                <AddInventoryItemForm
+                  selectedFile={selectedFile}
+                  onFileChange={setSelectedFile}
+                />
+                <div>
+                  <Button
+                    type="button"
+                    onClick={createItemMethods.handleSubmit(
+                      handleCreateAndSelect,
+                    )}
+                    className="btn-submit"
+                  >
+                    Create Item
+                  </Button>
+                </div>
+              </FormProvider>
+            )}
           </div>
-        ))
+        </Card.Body>
+      </Card>
+      <h2>Selected Items</h2>
+      {fields.length > 0 ? (
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+          {fields.map((field, idx) => (
+            <div key={field.id} className="col">
+              <AddItemCard
+                index={idx}
+                photoUrl={selectedItems[idx]?.photo_url ?? null}
+                item={selectedItems[idx]?.name}
+                subcategory={selectedItems[idx]?.subcategory_name}
+                category={selectedItems[idx]?.category_name}
+                description={selectedItems[idx]?.description}
+                onRemove={() => handleRemove(idx)}
+              />
+              <input
+                type="hidden"
+                {...methods.register(`items.${idx}.inventory_item_id`)}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
         <p>No items selected.</p>
       )}
-    </div>
+    </>
   );
 }

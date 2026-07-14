@@ -1,30 +1,39 @@
 'use client';
 
 import type { User, UserUpdate } from '@/app/types/user';
-import Image from 'next/image';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import { PatternFormat } from 'react-number-format';
 import { updateUser } from '@/app/actions/user';
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
+import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
+import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
+import { Button, Form } from 'react-bootstrap';
+import type { FormControlProps } from 'react-bootstrap';
 
 type ProfileFormValues = {
   email: string;
   firstName: string;
   lastName: string;
+  phone: string;
 };
 
+const BootstrapInput = forwardRef<HTMLInputElement, FormControlProps>(
+  (props, ref) => <Form.Control {...props} ref={ref} />,
+);
+
+BootstrapInput.displayName = 'BootstrapInput';
+
 export default function ProfileForm({ user }: { user: User }) {
+  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string | null>(
     user.profile_photo_url,
   );
-  // previewUrl represents the locally selected file for the UI
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // Track if the user has explicitly clicked "Remove" but hasn't saved yet
   const [isPendingDelete, setIsPendingDelete] = useState(false);
 
   const supabase = createClient();
@@ -34,24 +43,27 @@ export default function ProfileForm({ user }: { user: User }) {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    control,
+    watch,
+    formState: { errors },
   } = useForm<ProfileFormValues>({
     defaultValues: {
       firstName: user.first_name,
       lastName: user.last_name,
       email: user.email,
+      phone: user.phone,
     },
   });
 
+  const watchedValues = watch();
+
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024; // 200 KB in bytes
+    const maxSize = 200 * 1024;
     if (file.size > maxSize) {
       alert('File is too large. Please select an image under 200 KB.');
       return;
     }
-    // Create a temporary local blob URL for immediate UI feedback
-    const preview = URL.createObjectURL(file);
-    setPreviewUrl(preview);
+    setPreviewUrl(URL.createObjectURL(file));
     setSelectedFile(file);
     setIsPendingDelete(false);
   };
@@ -71,6 +83,7 @@ export default function ProfileForm({ user }: { user: User }) {
     setPhotoUrl(user.profile_photo_url);
     photoUploadRef.current?.resetFile();
     reset();
+    setIsEditing(false);
   };
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -82,7 +95,6 @@ export default function ProfileForm({ user }: { user: User }) {
       } = await supabase.auth.getUser();
 
       if (authUser) {
-        // Handle deletion if flagged
         if (isPendingDelete) {
           await supabase.storage
             .from('profile_photos')
@@ -90,7 +102,6 @@ export default function ProfileForm({ user }: { user: User }) {
           finalPhotoUrl = null;
         }
 
-        // Handle upload if a new file is selected
         if (selectedFile) {
           const { error: uploadError } = await supabase.storage
             .from('profile_photos')
@@ -104,21 +115,19 @@ export default function ProfileForm({ user }: { user: User }) {
             const { data: publicData } = supabase.storage
               .from('profile_photos')
               .getPublicUrl(`${authUser.id}/profile.jpg`);
-
             finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
           }
         }
       }
 
-      // Create a partial update object
       const changes: UserUpdate = {};
       if (data.firstName !== user.first_name)
         changes.first_name = data.firstName;
       if (data.lastName !== user.last_name) changes.last_name = data.lastName;
       if (data.email !== user.email) changes.email = data.email;
-      if (selectedFile || isPendingDelete) {
+      if (selectedFile || isPendingDelete)
         changes.profile_photo_url = finalPhotoUrl;
-      }
+      if (data.phone !== user.phone) changes.phone = data.phone;
 
       const result = await updateUser(user.user_id, changes);
 
@@ -133,7 +142,9 @@ export default function ProfileForm({ user }: { user: User }) {
           firstName: data.firstName,
           lastName: data.lastName,
           email: user.email,
+          phone: data.phone,
         });
+        setIsEditing(false);
         if (data.email !== user.email) {
           alert('Please check your new email address to verify the change.');
         }
@@ -147,65 +158,183 @@ export default function ProfileForm({ user }: { user: User }) {
     }
   };
 
-  // Determine image to show the user
-  const displayImage = isPendingDelete
-    ? defaultProfilePhoto.src
-    : previewUrl || photoUrl || defaultProfilePhoto.src;
-
-  const hasDirtyTextOrImage = isDirty || !!selectedFile || isPendingDelete;
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <Image
-          src={displayImage}
-          alt="Profile photo"
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
+    <div className={`form-card ${styles.card}`}>
+      <div className={styles.cardBody}>
+        <form onSubmit={handleSubmit(onSubmit)} className="form-body">
+          {isEditing ? (
+            <div className={styles.avatarCircleEdit}>
+              <PhotoUpload
+                variant="circle"
+                ref={photoUploadRef}
+                id="photo-upload-input"
+                initialPhotoUrl={photoUrl}
+                previewUrl={previewUrl}
+                isPendingDelete={isPendingDelete}
+                onFileSelect={handleFileSelect}
+                onRemove={handleRemovePhoto}
+              />
+            </div>
+          ) : (
+            <div className={styles.avatarCircle}>
+              <Image
+                src={photoUrl || defaultProfilePhoto.src}
+                alt="Profile photo"
+                width={96}
+                height={96}
+                unoptimized
+              />
+            </div>
+          )}
+          <div className="two-col-row">
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label form-label field-label">
+                    First Name
+                  </label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('firstName', {
+                      required: 'First name is required.',
+                    })}
+                    isInvalid={!!errors.firstName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.firstName?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>First Name</p>
+                  <p>{watchedValues.firstName}</p>
+                </>
+              )}
+            </div>
 
-        {/* Only show Remove if there is currently a photo and we aren't already deleting it */}
-        {!isPendingDelete && displayImage !== defaultProfilePhoto.src && (
-          <button type="button" onClick={handleRemovePhoto}>
-            Remove
-          </button>
-        )}
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Last Name</label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('lastName', {
+                      required: 'Last name is required.',
+                    })}
+                    isInvalid={!!errors.lastName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.lastName?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Last Name</p>
+                  <p>{watchedValues.lastName}</p>
+                </>
+              )}
+            </div>
+          </div>
 
-        <br />
-        <PhotoUpload ref={photoUploadRef} onFileSelect={handleFileSelect} />
+          <div className="two-col-row">
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Email</label>
+                  <Form.Control
+                    className="form-control"
+                    {...register('email', {
+                      required: 'Email is required.',
+                    })}
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email?.message}
+                  </Form.Control.Feedback>
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Email</p>
+                  <p>{watchedValues.email}</p>
+                </>
+              )}
+            </div>
+
+            <div>
+              {isEditing ? (
+                <>
+                  <label className="form-label field-label">Phone Number</label>
+                  <Controller
+                    name="phone"
+                    control={control}
+                    rules={{
+                      validate: (value) => {
+                        const digits = value?.replace(/\D/g, '');
+
+                        return (
+                          digits.length === 10 ||
+                          'Phone number must be 10 digits.'
+                        );
+                      },
+                    }}
+                    render={({ field }) => (
+                      <PatternFormat
+                        {...field}
+                        format="(###) ###-####"
+                        mask="_"
+                        allowEmptyFormatting
+                        onValueChange={(values) => {
+                          field.onChange(values.value);
+                        }}
+                        customInput={BootstrapInput}
+                        isInvalid={!!errors.phone}
+                      />
+                    )}
+                  />
+                  {errors.phone && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.phone.message}
+                    </Form.Control.Feedback>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className={styles.textLabel}>Phone Number</p>
+                  <p>{watchedValues.phone}</p>
+                </>
+              )}
+            </div>
+          </div>
+
+          {isEditing && (
+            <div className="btn-row">
+              <Button className="btn-submit" type="submit" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save'}
+              </Button>
+              <Button
+                className="btn-cancel"
+                type="button"
+                onClick={onCancel}
+                disabled={isSaving}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
+
+          {!isEditing && (
+            <div className="btn-row">
+              <Button
+                type="button"
+                className="btn-submit"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit
+              </Button>
+            </div>
+          )}
+        </form>
       </div>
-
-      <label>First name</label>
-      <input {...register('firstName', { required: true })} />
-      {errors.firstName?.type === 'required' && (
-        <p role="alert">First name is required.</p>
-      )}
-      <br />
-      <label>Last name</label>
-      <input {...register('lastName', { required: true })} />
-      {errors.lastName?.type === 'required' && (
-        <p role="alert">Last name is required.</p>
-      )}
-      <br />
-      <label>Email</label>
-      <input {...register('email', { required: true })} />
-      {errors.email?.type === 'required' && (
-        <p role="alert">Email is required.</p>
-      )}
-      <br />
-
-      {hasDirtyTextOrImage && (
-        <>
-          <button type="submit" disabled={isSaving}>
-            {isSaving ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" onClick={onCancel} disabled={isSaving}>
-            Cancel
-          </button>
-        </>
-      )}
-    </form>
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import { updateTicketItemQuantity } from '@/app/actions/ticket';
 import styles from '@/app/(main)/components/InStockTicketItemCard.module.css';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import { Button } from 'react-bootstrap';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -93,10 +94,14 @@ export default function InStockTicketItemCard({
         </div>
         {errorMessage && <p role="alert">{errorMessage}</p>}
         {hasChanged && (
-          <>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </>
+          <div className="btn-row">
+            <Button className="btn-submit" size="sm" onClick={handleSave}>
+              Save
+            </Button>
+            <Button className="btn-cancel" size="sm" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
         )}
       </div>
     </div>

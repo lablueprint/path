@@ -1,6 +1,7 @@
 'use client';
 
 import { deleteTicketItem } from '@/app/actions/ticket';
+import { Button } from 'react-bootstrap';
 
 type RemoveTicketItemButtonProps = {
   ticketItemId: string;
@@ -18,8 +19,13 @@ export default function RemoveTicketItemButton({
   };
 
   return (
-    <button type="button" onClick={handleDelete}>
+    <Button
+      variant="outline-danger"
+      size="sm"
+      className="btn-remove"
+      onClick={handleDelete}
+    >
       Remove
-    </button>
+    </Button>
   );
 }

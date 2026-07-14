@@ -36,6 +36,11 @@ export default async function TicketItemsList({
     .eq('ticket_id', ticketId)
     .eq('is_in_stock_request', true);
   InStockTicketItems = inStockItemsData || [];
+  const sortedInStockTicketItems = [...InStockTicketItems].sort((a, b) =>
+    (a.store_items?.inventory_items?.name).localeCompare(
+      b.store_items?.inventory_items?.name,
+    ),
+  );
 
   const { data: outOfStockItemsData } = await supabase
     .from('ticket_items')
@@ -48,6 +53,7 @@ export default async function TicketItemsList({
     .eq('ticket_id', ticketId)
     .eq('is_in_stock_request', false);
   OutOfStockTicketItems = outOfStockItemsData || [];
+
   const totalTicketItems =
     InStockTicketItems.length + OutOfStockTicketItems.length;
 
@@ -66,7 +72,7 @@ export default async function TicketItemsList({
             <div>
               <h2 className={styles.instockHead}>In-Stock Requests</h2>
               <div className={styles.ticketsDisplay}>
-                {InStockTicketItems.map((item) => (
+                {sortedInStockTicketItems.map((item) => (
                   <div key={item.ticket_item_id} className={styles.itemRow}>
                     <InStockTicketItemCard
                       key={item.ticket_item_id}

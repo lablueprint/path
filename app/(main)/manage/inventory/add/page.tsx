@@ -7,6 +7,7 @@ import AddInventoryItemForm, {
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
 import { createClient } from '@/app/lib/supabase/browser-client';
+import { Button } from 'react-bootstrap';
 
 const supabase = createClient();
 
@@ -74,7 +75,7 @@ export default function AddInventoryItemPage() {
   };
 
   return (
-    <div>
+    <>
       <Breadcrumbs
         labelMap={{
           manage: 'Manage Inventory',
@@ -82,17 +83,27 @@ export default function AddInventoryItemPage() {
           add: 'Add Inventory Item',
         }}
       />
-
       <h1>Add Inventory Item</h1>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <AddInventoryItemForm
-            selectedFile={selectedFile}
-            onFileChange={setSelectedFile}
-          />
-          <button type="submit">Submit</button>
-        </form>
-      </FormProvider>
-    </div>
+      <div className="form-card">
+        <div className="card-body">
+          <FormProvider {...methods}>
+            <form
+              onSubmit={methods.handleSubmit(onSubmit)}
+              className="form-body"
+            >
+              <AddInventoryItemForm
+                selectedFile={selectedFile}
+                onFileChange={setSelectedFile}
+              />
+              <div>
+                <Button className="btn-submit" type="submit">
+                  Submit
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
+        </div>
+      </div>
+    </>
   );
 }

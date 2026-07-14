@@ -1,8 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
+import { Form, Button } from 'react-bootstrap';
 
-type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
+type TicketStatus =
+  | 'draft'
+  | 'requested'
+  | 'ready'
+  | 'rejected'
+  | 'fulfilled'
+  | 'approved';
 
 export default function TicketStatusDropdown({
   ticketId,
@@ -36,27 +43,28 @@ export default function TicketStatusDropdown({
   };
 
   return (
-    <div>
-      <select
+    <div className="form-body">
+      <Form.Select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
+        style={{ textTransform: 'capitalize' }}
       >
         {statusOptions.map((status) => (
           <option key={status} value={status}>
             {status}
           </option>
         ))}
-      </select>
+      </Form.Select>
 
       {selectedStatus !== originalStatus && (
-        <div>
-          <button type="button" onClick={handleSave}>
+        <div className="btn-row">
+          <Button type="button" className="btn-submit" onClick={handleSave}>
             Save
-          </button>
-          <button type="button" onClick={handleCancel}>
+          </Button>
+          <Button type="button" className="btn-cancel" onClick={handleCancel}>
             Cancel
-          </button>
-          {error && <div>{error}</div>}
+          </Button>
+          {error && <div className="w-100">{error}</div>}
         </div>
       )}
     </div>

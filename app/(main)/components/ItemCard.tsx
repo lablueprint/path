@@ -29,16 +29,18 @@ export default function ItemCard({
         <div className={styles.imageContainer}>
           <Image
             src={photoUrl || defaultItemPhoto}
-            objectFit={'cover'}
+            className="object-fit-cover"
             alt="Item photo"
             fill
             unoptimized
           />
         </div>
         <div className={styles.cardBody}>
-          <p className={styles.name}>{item}</p>
-          <p className={styles.cardText}>{category}</p>
-          <p className={styles.cardText}>↳ {subcategory}</p>
+          <div className={styles.cardTextGroup}>
+            <p className={styles.name}>{item}</p>
+            <p className={styles.cardText}>{category}</p>
+            <p className={styles.cardText}>↳ {subcategory}</p>
+          </div>
         </div>
       </div>
     </Link>

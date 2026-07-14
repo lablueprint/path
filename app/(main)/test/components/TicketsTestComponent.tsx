@@ -53,7 +53,7 @@ export default function TicketsTestComponent() {
     <div>
       <h2>Ticket Testing</h2>
       <a href={url + 'outgoing-tickets'}>
-        <button>View Outgoing Tickets</button>
+        <button>View My Tickets</button>
       </a>
       <ul>
         <li>Tickets you can read will appear here.</li>

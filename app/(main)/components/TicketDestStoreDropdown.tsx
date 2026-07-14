@@ -2,6 +2,7 @@
 import { updateTicketDestStore } from '@/app/actions/ticket';
 import { Store } from '@/app/types/store';
 import { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
 
 export default function TicketDestStoreDropdown({
   ticketId,
@@ -40,8 +41,8 @@ export default function TicketDestStoreDropdown({
   };
 
   return (
-    <div>
-      <select
+    <div className="form-body">
+      <Form.Select
         value={selectedDestStore?.store_id || ''}
         onChange={(e) => {
           const selectedStoreId = e.target.value;
@@ -59,21 +60,23 @@ export default function TicketDestStoreDropdown({
         }}
       >
         <option value="">No Destination Store</option>
-        {destStoreOptions.map(({ store }) => (
-          <option key={store.store_id} value={store.store_id}>
-            {store.name}
-          </option>
-        ))}
-      </select>
+        {[...destStoreOptions]
+          .sort((a, b) => a.store.name.localeCompare(b.store.name))
+          .map(({ store }) => (
+            <option key={store.store_id} value={store.store_id}>
+              {store.name}
+            </option>
+          ))}
+      </Form.Select>
       {selectedDestStore != originalDestStore && (
-        <div>
-          <button type="button" onClick={handleSave}>
+        <div className="btn-row">
+          <Button type="button" className="btn-submit" onClick={handleSave}>
             Save
-          </button>
-          <button type="button" onClick={handleCancel}>
+          </Button>
+          <Button type="button" className="btn-cancel" onClick={handleCancel}>
             Cancel
-          </button>
-          {error && <div>{error}</div>}
+          </Button>
+          {error && <div className="w-100">{error}</div>}
         </div>
       )}
     </div>

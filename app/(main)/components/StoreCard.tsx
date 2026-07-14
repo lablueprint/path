@@ -17,15 +17,17 @@ export default function StoreCard({ store }: { store: Store }) {
         <div className={styles.imageContainer}>
           <Image
             src={displayImage || defaultStorePhoto}
-            objectFit={'cover'}
+            className="object-fit-cover"
             alt="Store photo"
             fill
             unoptimized
           />
         </div>
         <div className={styles.cardBody}>
-          <p className={styles.name}>{store.name}</p>
-          <p className={styles.cardText}>{store.street_address}</p>
+          <div className={styles.cardTextGroup}>
+            <p className={styles.name}>{store.name}</p>
+            <p className={styles.cardText}>{store.street_address}</p>
+          </div>
         </div>
       </div>
     </Link>
