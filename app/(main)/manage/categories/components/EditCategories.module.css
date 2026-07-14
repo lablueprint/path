@@ -1,70 +1,21 @@
-.pageContainer {
-  padding: 0;
-}
-
-.title {
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #718096;
-
-  margin-bottom: 40px;
-}
-
-.topButtons {
-  display: flex;
-  justify-content: flex-end;
-
-  margin-bottom: 40px;
-}
-
-.categoriesContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-
-  width: 100%;
-  max-width: 640px;
-}
-
-.categoryBlock {
-  display: flex;
-  flex-direction: column;
-
-  gap: 16px;
-}
-
 .categoryRow {
   display: flex;
-  align-items: center;
-
-  gap: 16px;
+  gap: 0.5rem;
 }
 
 .subcategoryList {
   display: flex;
   flex-direction: column;
-
-  gap: 12px;
-
-  margin-left: 20px;
+  gap: 1rem;
+  margin-left: 2rem;
 }
 
 .subcategoryRow {
   display: flex;
-  align-items: center;
-
-  gap: 16px;
+  gap: 0.5rem;
 }
 
 .inputField {
   width: 100%;
-  max-width: 320px;
-}
-
-.addSection {
-  margin-top: 8px;
+  max-width: 16rem;
 }

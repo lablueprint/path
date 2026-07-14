@@ -326,7 +326,7 @@ export default function ProfileForm({ user }: { user: User }) {
             <div className="btn-row">
               <Button
                 type="button"
-                className="btn-cancel"
+                className="btn-submit"
                 onClick={() => setIsEditing(true)}
               >
                 Edit

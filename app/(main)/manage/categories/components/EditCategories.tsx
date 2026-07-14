@@ -2,158 +2,108 @@
 
 import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-
-import styles from './EditCategories.module.css';
+import styles from '@/app/(main)/manage/categories/components/EditCategories.module.css';
+import ViewCategories from '@/app/(main)/manage/categories/components/ViewCategories';
 
 type Category = {
+  category_id: number;
   name: string;
-  subcategories: string[];
+  subcategories: {
+    name: string;
+    subcategory_id: number;
+  }[];
 };
 
-const initialCategories: Category[] = [
-  {
-    name: 'Cleaning',
-    subcategories: ['Laundry', 'Surface Cleaners'],
-  },
-  {
-    name: 'Clothing',
-    subcategories: ['Menswear', 'Womenswear'],
-  },
-  {
-    name: 'Food',
-    subcategories: ['Beverages', 'Dry goods', 'Produce'],
-  },
-  {
-    name: 'Home Goods',
-    subcategories: ['Bedding', 'Kitchenware'],
-  },
-  {
-    name: 'Hygiene',
-    subcategories: [],
-  },
-];
-
-export default function EditCategories() {
+export default function EditCategories({
+  categories,
+}: {
+  categories: Category[];
+}) {
   const [editing, setEditing] = useState(false);
 
-  const [categories, setCategories] =
-    useState<Category[]>(initialCategories);
+  const updateCategoryName = (categoryId: number, value: string) => {};
 
-  const updateCategoryName = (
-    categoryIndex: number,
-    value: string
-  ) => {
-    const updated = [...categories];
+  const updateSubcategoryName = (subdategoryId: number, value: string) => {};
 
-    updated[categoryIndex].name = value;
+  const removeCategory = (categoryId: number) => {};
 
-    setCategories(updated);
-  };
+  const removeSubcategory = (subcategoryId: number) => {};
 
-  const updateSubcategoryName = (
-    categoryIndex: number,
-    subcategoryIndex: number,
-    value: string
-  ) => {
-    const updated = [...categories];
+  const addCategory = () => {};
 
-    updated[categoryIndex].subcategories[subcategoryIndex] =
-      value;
-
-    setCategories(updated);
-  };
-
-  const removeCategory = (categoryIndex: number) => {
-    setCategories(
-      categories.filter((_, i) => i !== categoryIndex)
-    );
-  };
-
-  const removeSubcategory = (
-    categoryIndex: number,
-    subcategoryIndex: number
-  ) => {
-    const updated = [...categories];
-
-    updated[categoryIndex].subcategories =
-      updated[categoryIndex].subcategories.filter(
-        (_, i) => i !== subcategoryIndex
-      );
-
-    setCategories(updated);
-  };
-
-  const addCategory = () => {
-    setCategories([
-      ...categories,
-      {
-        name: '',
-        subcategories: [],
-      },
-    ]);
-  };
-
-  const addSubcategory = (categoryIndex: number) => {
-    const updated = [...categories];
-
-    updated[categoryIndex].subcategories.push('');
-
-    setCategories(updated);
-  };
+  const addSubcategory = (categoryId: number) => {};
 
   return (
-    <div className={styles.pageContainer}>
-      <h1 className={styles.title}></h1>
-
+    <>
       {editing && (
-        <p className={styles.subtitle}>
-          Manage inventory categories and subcategories
-        </p>
-      )}
-
-      <div className={styles.topButtons}>
-        {editing ? (
-          <Button
-            className="btn-submit"
-            onClick={() => setEditing(false)}
-          >
-            Save Changes
+        <div className="btn-row">
+          <Button className="btn-submit" onClick={() => setEditing(false)}>
+            Save
           </Button>
-        ) : (
+          <Button className="btn-cancel" type="button">
+            Cancel
+          </Button>
+        </div>
+      )}
+      {!editing && (
+        <div className="btn-row">
           <Button
+            type="button"
             className="btn-submit"
             onClick={() => setEditing(true)}
           >
             Edit
           </Button>
-        )}
-      </div>
+        </div>
+      )}
+      {editing && (
+        <Button className="btn-submit align-self-start" onClick={addCategory}>
+          Add Category
+        </Button>
+      )}
+      {editing ? (
+        categories.map((category) => (
+          <div key={category.category_id} className="gap-container">
+            <div className={styles.categoryRow}>
+              <Form.Control
+                type="text"
+                value={category.name}
+                onChange={(e) =>
+                  updateCategoryName(category.category_id, e.target.value)
+                }
+                className={styles.inputField}
+              />
 
-      <div className={styles.categoriesContainer}>
-        {editing && (
-          <Button
-            className="btn-submit align-self-start"
-            onClick={addCategory}
-          >
-            Add Category
-          </Button>
-        )}
+              <Button
+                variant="outline-danger"
+                className="btn-remove"
+                onClick={() => removeCategory(category.category_id)}
+              >
+                Remove
+              </Button>
+            </div>
 
-        {categories.map((category, categoryIndex) => (
-          <div
-            key={categoryIndex}
-            className={styles.categoryBlock}
-          >
-            {editing ? (
-              <>
-                <div className={styles.categoryRow}>
+            <div className={styles.subcategoryList}>
+              <div>
+                <Button
+                  className="btn-submit"
+                  onClick={() => addSubcategory(category.category_id)}
+                >
+                  Add Subcategory
+                </Button>
+              </div>
+              {category.subcategories.map((subcategory) => (
+                <div
+                  key={subcategory.subcategory_id}
+                  className={styles.subcategoryRow}
+                >
                   <Form.Control
                     type="text"
-                    value={category.name}
+                    value={subcategory.name}
                     onChange={(e) =>
-                      updateCategoryName(
-                        categoryIndex,
-                        e.target.value
+                      updateSubcategoryName(
+                        subcategory.subcategory_id,
+                        e.target.value,
                       )
                     }
                     className={styles.inputField}
@@ -163,83 +113,19 @@ export default function EditCategories() {
                     variant="outline-danger"
                     className="btn-remove"
                     onClick={() =>
-                      removeCategory(categoryIndex)
+                      removeSubcategory(subcategory.subcategory_id)
                     }
                   >
                     Remove
                   </Button>
                 </div>
-
-                <div className={styles.subcategoryList}>
-                  {category.subcategories.map(
-                    (subcategory, subcategoryIndex) => (
-                      <div
-                        key={subcategoryIndex}
-                        className={
-                          styles.subcategoryRow
-                        }
-                      >
-                        <Form.Control
-                          type="text"
-                          value={subcategory}
-                          onChange={(e) =>
-                            updateSubcategoryName(
-                              categoryIndex,
-                              subcategoryIndex,
-                              e.target.value
-                            )
-                          }
-                          className={
-                            styles.inputField
-                          }
-                        />
-
-                        <Button
-                          variant="outline-danger"
-                          className="btn-remove"
-                          onClick={() =>
-                            removeSubcategory(
-                              categoryIndex,
-                              subcategoryIndex
-                            )
-                          }
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    )
-                  )}
-
-                  <div className={styles.addSection}>
-                    <Button
-                      className="btn-submit"
-                      onClick={() =>
-                        addSubcategory(categoryIndex)
-                      }
-                    >
-                      Add Subcategory
-                    </Button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <h3>{category.name}</h3>
-
-                <div className={styles.subcategoryList}>
-                  {category.subcategories.map(
-                    (subcategory, subcategoryIndex) => (
-                      <p key={subcategoryIndex}>
-                        {subcategory}
-                      </p>
-                    )
-                  )}
-                </div>
-              </>
-            )}
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
+        ))
+      ) : (
+        <ViewCategories categories={categories} />
+      )}
+    </>
   );
 }
