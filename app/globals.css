@@ -355,10 +355,9 @@ Table {
 .auth-title {
   margin-top: 3rem;
   margin-bottom: 0;
-  color: #2d3748;
   font-family: Montserrat;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .auth-prompt {
