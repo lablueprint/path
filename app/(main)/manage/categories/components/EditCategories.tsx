@@ -9,6 +9,8 @@ import {
   createCategory,
   createSubcategory,
 } from '@/app/actions/inventory';
+import { Button, Form } from 'react-bootstrap';
+import styles from '@/app/(main)/manage/categories/components/EditCategories.module.css';
 
 type Category = {
   category_id: number;
@@ -39,6 +41,7 @@ export default function EditCategories({
 
     await createCategory({ name: newCategoryName });
     setNewCategoryName('');
+    setShowAddCategory(false);
   };
 
   const handleCreateSubcategory = async (categoryId: number) => {
@@ -50,120 +53,151 @@ export default function EditCategories({
     });
 
     setNewSubcategoryName('');
+    setAddingSubcategory(null);
   };
 
   return (
-    <div>
-      <button onClick={() => setEditing(!editing)}>
+    <>
+      <Button
+        className="btn-submit align-self-start"
+        onClick={() => setEditing(!editing)}
+      >
         {editing ? 'Done' : 'Edit'}
-      </button>
+      </Button>
 
       {/* Add Category */}
-      {editing && (
-        <div style={{ marginTop: '1rem' }}>
-          <button onClick={() => setShowAddCategory(!showAddCategory)}>
-            {showAddCategory ? 'Done' : 'Add'}
-          </button>
+      {editing && !showAddCategory && (
+        <Button
+          className="btn-submit align-self-start"
+          onClick={() => setShowAddCategory(true)}
+        >
+          Add Category
+        </Button>
+      )}
 
-          {showAddCategory && (
-            <div>
-              <input
-                placeholder="New category name"
+      {editing && showAddCategory && (
+        <ul className="mb-0">
+          <li>
+            <div className="btn-row">
+              <Form.Control
+                type="text"
+                placeholder="New Category Name"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
+                className={styles.inputField}
               />
 
               {newCategoryName && (
-                <>
-                  <button onClick={handleCreateCategory}>Save</button>
-
-                  <button
-                    onClick={() => {
-                      setNewCategoryName('');
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </>
+                <Button className="btn-submit" onClick={handleCreateCategory}>
+                  Save
+                </Button>
               )}
+              <Button
+                className="btn-cancel"
+                onClick={() => {
+                  setNewCategoryName('');
+                  setShowAddCategory(false);
+                }}
+              >
+                Cancel
+              </Button>
             </div>
-          )}
-        </div>
+          </li>
+        </ul>
       )}
 
-      <ul>
-        {categories?.map((category) => (
-          <li key={category.category_id}>
-            {editing ? (
-              <EditableField
-                id={category.category_id}
-                name={category.name}
-                type="category"
-              />
-            ) : (
-              category.name
-            )}
+      {categories.length > 0 ? (
+        <ul className="mb-0 gap-container">
+          {categories.map((category) => (
+            <li key={category.category_id}>
+              <div className="gap-container">
+                {editing ? (
+                  <EditableField
+                    id={category.category_id}
+                    name={category.name}
+                    type="category"
+                  />
+                ) : (
+                  category.name
+                )}
 
-            {/* Add Subcategory */}
-            {editing && (
-              <button
-                onClick={() =>
-                  setAddingSubcategory(
-                    addingSubcategory === category.category_id
-                      ? null
-                      : category.category_id,
-                  )
-                }
-              >
-                {addingSubcategory === category.category_id ? 'Done' : 'Add'}
-              </button>
-            )}
+                {/* Add Subcategory */}
+                {editing && addingSubcategory != category.category_id && (
+                  <Button
+                    className="btn-submit align-self-start"
+                    onClick={() => {
+                      setAddingSubcategory(category.category_id);
+                      setNewSubcategoryName('');
+                    }}
+                  >
+                    Add Subcategory
+                  </Button>
+                )}
 
-            {editing && addingSubcategory === category.category_id && (
-              <div>
-                <input
-                  placeholder="New subcategory"
-                  value={newSubcategoryName}
-                  onChange={(e) => setNewSubcategoryName(e.target.value)}
-                />
+                {editing && addingSubcategory === category.category_id && (
+                  <ul className="mb-0">
+                    <li>
+                      <div className="btn-row">
+                        <Form.Control
+                          type="text"
+                          placeholder="New Subcategory Name"
+                          value={newSubcategoryName}
+                          onChange={(e) =>
+                            setNewSubcategoryName(e.target.value)
+                          }
+                          className={styles.inputField}
+                        />
+                        {newSubcategoryName && (
+                          <Button
+                            className="btn-submit"
+                            onClick={() =>
+                              handleCreateSubcategory(category.category_id)
+                            }
+                          >
+                            Save
+                          </Button>
+                        )}
+                        <Button
+                          className="btn-cancel"
+                          onClick={() => {
+                            setNewSubcategoryName('');
+                            setAddingSubcategory(null);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </li>
+                  </ul>
+                )}
 
-                {newSubcategoryName && (
-                  <>
-                    <button
-                      onClick={() =>
-                        handleCreateSubcategory(category.category_id)
-                      }
-                    >
-                      Save
-                    </button>
-
-                    <button onClick={() => setNewSubcategoryName('')}>
-                      Cancel
-                    </button>
-                  </>
+                {category.subcategories.length > 0 ? (
+                  <ul className="mb-0 gap-container">
+                    {category.subcategories.map((sub) => (
+                      <li key={sub.subcategory_id}>
+                        {editing ? (
+                          <EditableField
+                            id={sub.subcategory_id}
+                            name={sub.name}
+                            type="subcategory"
+                          />
+                        ) : (
+                          sub.name
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div>No subcategories found.</div>
                 )}
               </div>
-            )}
-
-            <ul>
-              {category.subcategories?.map((sub) => (
-                <li key={sub.subcategory_id}>
-                  {editing ? (
-                    <EditableField
-                      id={sub.subcategory_id}
-                      name={sub.name}
-                      type="subcategory"
-                    />
-                  ) : (
-                    sub.name
-                  )}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div>No categories found.</div>
+      )}
+    </>
   );
 }
 
@@ -215,37 +249,49 @@ function EditableField({
   };
 
   return (
-    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-      <input
+    <div className="btn-row">
+      <Form.Control
+        type="text"
         value={value}
         disabled={loading}
         onChange={(e) => {
           setValue(e.target.value);
           setIsDirty(e.target.value !== name);
         }}
+        className={styles.inputField}
       />
 
       {isDirty && (
         <>
-          <button onClick={handleSave} disabled={loading}>
+          <Button
+            onClick={handleSave}
+            disabled={loading}
+            className="btn-submit"
+          >
             {loading ? 'Saving...' : 'Save'}
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={() => {
               setValue(name);
               setIsDirty(false);
             }}
             disabled={loading}
+            className="btn-cancel"
           >
             Cancel
-          </button>
+          </Button>
         </>
       )}
 
-      <button onClick={handleDelete} disabled={loading}>
+      <Button
+        variant="outline-danger"
+        onClick={handleDelete}
+        disabled={loading}
+        className="btn-remove"
+      >
         Remove
-      </button>
+      </Button>
     </div>
   );
 }

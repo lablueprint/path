@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import EditCategories from '@/app/(main)/manage/categories/components/EditCategories';
+import ViewCategories from '@/app/(main)/manage/categories/components/ViewCategories';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function InventoryPage() {
@@ -38,20 +39,7 @@ export default async function InventoryPage() {
         }}
       />
       <h1>Categories</h1>
-      {role === 'admin' && (
-        <ul>
-          {categories?.map((cat) => (
-            <li key={cat.category_id}>
-              {cat.name}
-              <ul>
-                {cat.subcategories?.map((sub) => (
-                  <li key={sub.subcategory_id}>{sub.name}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      )}
+      {role === 'admin' && <ViewCategories categories={categories} />}
 
       {(role === 'superadmin' || role === 'owner') && (
         <EditCategories categories={categories} />
