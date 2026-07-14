@@ -69,6 +69,22 @@ create trigger protect_store_items_trigger before
 update on store_items for each row
 execute function private.protect_store_items_cols ();
 
+-- store_admins
+create or replace function private.protect_store_admins_cols () returns trigger language plpgsql security definer
+set
+  search_path = '' as $$
+begin
+    new.store_admin_id := old.store_admin_id;
+    return new;
+end;
+$$;
+
+drop trigger if exists protect_store_admins_trigger on store_admins;
+
+create trigger protect_store_admins_trigger before
+update on store_admins for each row
+execute function private.protect_store_admins_cols ();
+
 -- inventory_items
 create or replace function private.protect_inventory_items_cols () returns trigger language plpgsql security definer
 set
@@ -129,11 +145,14 @@ begin
     -- old.status is "fulfilled"
     if old.status = 'fulfilled' then
         new.status := old.status;
-    -- can_manage_store returns false and old.status is "requested"
-    elsif not private.can_manage_store(old.store_id) and old.status = 'requested' then
+    -- can_manage_store returns false
+    elsif not private.can_manage_store(old.store_id) and not (old.status = 'ready' and new.status = 'fulfilled') then
         new.status := old.status;
-    -- can_manage_store returns true, old.status is "requested", and new.status is "fulfilled"
-    elsif private.can_manage_store(old.store_id) and old.status = 'requested' and new.status = 'fulfilled' then
+    -- can_manage_store returns true, old.status is "requested" or "rejected", and new.status is "ready" or "fulfilled"
+    elsif private.can_manage_store(old.store_id) and (old.status = 'requested' or old.status = 'rejected') and (new.status = 'ready' or new.status = 'fulfilled') then
+        new.status := old.status;
+    -- can_manage_store returns true, old.status is "approved", and new.status is "fulfilled"
+    elsif private.can_manage_store(old.store_id) and old.status = 'approved' and new.status = 'fulfilled' then
         new.status := old.status;
     end if;
 

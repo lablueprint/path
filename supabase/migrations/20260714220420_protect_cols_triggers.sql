@@ -40,6 +40,19 @@ end;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION private.protect_store_admins_cols()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+begin
+    new.store_admin_id := old.store_admin_id;
+    return new;
+end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION private.protect_store_items_cols()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -109,11 +122,14 @@ begin
     -- old.status is "fulfilled"
     if old.status = 'fulfilled' then
         new.status := old.status;
-    -- can_manage_store returns false and old.status is "requested"
-    elsif not private.can_manage_store(old.store_id) and old.status = 'requested' then
+    -- can_manage_store returns false
+    elsif not private.can_manage_store(old.store_id) and not (old.status = 'ready' and new.status = 'fulfilled') then
         new.status := old.status;
-    -- can_manage_store returns true, old.status is "requested", and new.status is "fulfilled"
-    elsif private.can_manage_store(old.store_id) and old.status = 'requested' and new.status = 'fulfilled' then
+    -- can_manage_store returns true, old.status is "requested" or "rejected", and new.status is "ready" or "fulfilled"
+    elsif private.can_manage_store(old.store_id) and (old.status = 'requested' or old.status = 'rejected') and (new.status = 'ready' or new.status = 'fulfilled') then
+        new.status := old.status;
+    -- can_manage_store returns true, old.status is "approved", and new.status is "fulfilled"
+    elsif private.can_manage_store(old.store_id) and old.status = 'approved' and new.status = 'fulfilled' then
         new.status := old.status;
     end if;
 
@@ -157,6 +173,8 @@ CREATE TRIGGER protect_categories_trigger BEFORE UPDATE ON public.categories FOR
 CREATE TRIGGER protect_donations_trigger BEFORE UPDATE ON public.donations FOR EACH ROW EXECUTE FUNCTION private.protect_donations_cols();
 
 CREATE TRIGGER protect_inventory_items_trigger BEFORE UPDATE ON public.inventory_items FOR EACH ROW EXECUTE FUNCTION private.protect_inventory_items_cols();
+
+CREATE TRIGGER protect_store_admins_trigger BEFORE UPDATE ON public.store_admins FOR EACH ROW EXECUTE FUNCTION private.protect_store_admins_cols();
 
 CREATE TRIGGER protect_store_items_trigger BEFORE UPDATE ON public.store_items FOR EACH ROW EXECUTE FUNCTION private.protect_store_items_cols();
 
