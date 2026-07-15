@@ -80,11 +80,9 @@ export default async function AllCartsPage() {
           <Accordion key={store.store_id}>
             <AccordionItem
               eventKey={store.store_id}
-              className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+              className={accordionStyles.accordionBody}
             >
-              <AccordionHeader className={accordionStyles.accordionHeader}>
-                {store.name}
-              </AccordionHeader>
+              <AccordionHeader>{store.name}</AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 {draftTicket ? (
                   <div className="gap-container">

@@ -148,9 +148,7 @@ export default async function RequestAllStoresPage({
           all: 'All Stores',
         }}
       />
-      <div>
-        <h1>Requesting from All Stores</h1>
-      </div>
+      <h1>Requesting from All Stores</h1>
       <ItemSearch
         categories={
           categories?.map((cat) => ({ id: cat.category_id, name: cat.name })) ||
@@ -168,18 +166,18 @@ export default async function RequestAllStoresPage({
       {sortedStores.map((store) => {
         const storeItems = itemsByStore.get(store.store_id) || [];
         return (
-          <Accordion key={store.store_id}>
+          <Accordion
+            key={store.store_id}
+            className={accordionStyles.accordionBody}
+          >
             <AccordionItem
               eventKey={store.store_id}
-              className={`${accordionStyles.accordionSpacing} ${accordionStyles.accordionBody}`}
+              className={accordionStyles.accordionBody}
             >
-              <AccordionHeader className={accordionStyles.accordionHeader}>
-                {store.name}
-              </AccordionHeader>
+              <AccordionHeader>{store.name}</AccordionHeader>
               <AccordionBody className={accordionStyles.accordionBodySpacing}>
                 {storeItems.length > 0 ? (
                   <div className="gap-container">
-                    <h2>In-Stock Items</h2>
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
                       {storeItems.map((item) => (
                         <div key={item.store_item_id} className="col">
