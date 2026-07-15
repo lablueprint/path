@@ -60,12 +60,12 @@ export default function IncomingTicketsList({
           <thead className="table-header">
             <tr>
               <th>ID</th>
-              <th>REQUESTOR</th>
-              <th>STATUS</th>
-              <th>DATE SUBMITTED</th>
+              <th>Requestor</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="table-body">
             {/* Map the list of tickets to IncomingTicketCard components */}
             {sortedFilteredTickets.map((ticket) => (
               <IncomingTicketCard

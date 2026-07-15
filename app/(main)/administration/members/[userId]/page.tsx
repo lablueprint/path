@@ -55,6 +55,7 @@ export default async function TeamProfilePage({
               width={96}
               height={96}
               unoptimized
+              className="object-fit-cover"
             />
           </div>
 

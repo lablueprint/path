@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import styles from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard.module.css';
+import styles from '@/app/(main)/components/TicketCard.module.css';
 
 type OutgoingTicketCardProps = {
   ticketId: string;
@@ -39,9 +39,9 @@ export default function OutgoingTicketCard({
       <td>{ticketId}</td>
       <td>{storeName}</td>
       <td>
-        <span className={`${styles.statusBubble} ${statusClass}`}>
+        <div className={`${styles.statusBubble} ${statusClass}`}>
           {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
-        </span>
+        </div>
       </td>
       <td>{new Date(date).toLocaleString()}</td>
     </tr>

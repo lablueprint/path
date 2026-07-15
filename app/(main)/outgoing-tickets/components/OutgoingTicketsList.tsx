@@ -59,12 +59,12 @@ export default function OutgoingTicketsList({
           <thead className="table-header">
             <tr>
               <th>ID</th>
-              <th>STORE NAME</th>
-              <th>STATUS</th>
-              <th>DATE SUBMITTED</th>
+              <th>Store Name</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="table-body">
             {sortedFilteredTickets.map((ticket) => (
               <OutgoingTicketCard
                 key={ticket.ticket_id}

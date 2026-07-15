@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import StoreCard from '@/app/(main)/components/StoreCard';
 import { Store } from '@/app/types/store';
@@ -10,12 +11,14 @@ import defaultStorePhoto from '@/public/image-placeholder.svg';
 import { Table } from 'react-bootstrap';
 
 export default function StoresList({ stores }: { stores: Store[] }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [view, setView] = useState<ViewMode>('grid');
 
   const sortedStores = [...stores].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div>
+    <>
       <div className={styles.header}>
         <ViewToggle defaultView="grid" onChange={setView} />
       </div>
@@ -31,26 +34,27 @@ export default function StoresList({ stores }: { stores: Store[] }) {
         <Table borderless responsive>
           <thead className="table-header">
             <tr>
-              <th>NAME</th>
-              <th>ADDRESS</th>
+              <th>Name</th>
+              <th>Address</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="table-body">
             {sortedStores?.map((store) => (
-              <tr className={styles.tableRow} key={store.store_id}>
-                <td>
-                  <div>
-                    <Image
-                      src={store.photo_url || defaultStorePhoto}
-                      alt={`${store.name} photo`}
-                      width={32}
-                      height={32}
-                      className="rounded-circle me-2"
-                      unoptimized
-                    />
-
-                    <span>{store.name}</span>
-                  </div>
+              <tr
+                key={store.store_id}
+                onClick={() => router.push(`${pathname}/${store.store_id}`)}
+                className={styles.cursor}
+              >
+                <td className={styles.pfpRow}>
+                  <Image
+                    src={store.photo_url || defaultStorePhoto}
+                    alt={`${store.name} photo`}
+                    width={40}
+                    height={40}
+                    className="rounded-circle object-fit-cover"
+                    unoptimized
+                  />
+                  {store.name}
                 </td>
                 <td>{store.street_address}</td>
               </tr>
@@ -58,6 +62,6 @@ export default function StoresList({ stores }: { stores: Store[] }) {
           </tbody>
         </Table>
       )}
-    </div>
+    </>
   );
 }

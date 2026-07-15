@@ -1,9 +1,8 @@
 .statusBubble {
   font-weight: 600;
-  font-size: 16.93px;
-  line-height: 100%;
-  padding: 8.91px 22.28px;
-  border-radius: 4.46px;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  display: inline-block;
 }
 
 .statusRequested {

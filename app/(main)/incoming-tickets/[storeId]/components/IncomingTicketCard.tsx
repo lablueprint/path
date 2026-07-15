@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import styles from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard.module.css';
+import styles from '@/app/(main)/components/TicketCard.module.css';
 
 type IncomingTicketCardProps = {
   ticketId: string;
@@ -43,13 +43,11 @@ export default function IncomingTicketCard({
       <td>
         {requestorFirstName} {requestorLastName}
       </td>
-
       <td>
-        <span className={`${styles.statusBubble} ${statusClass}`}>
+        <div className={`${styles.statusBubble} ${statusClass}`}>
           {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
-        </span>
+        </div>
       </td>
-
       <td>{new Date(date).toLocaleString()}</td>
     </tr>
   );

@@ -183,6 +183,7 @@ export default function ProfileForm({ user }: { user: User }) {
                 width={96}
                 height={96}
                 unoptimized
+                className="object-fit-cover"
               />
             </div>
           )}

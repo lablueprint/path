@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from '@/app/(main)/administration/members/components/UsersList.module.css';
 import { Table } from 'react-bootstrap';
@@ -22,10 +22,11 @@ export default function UsersList({
     profile_photo_url: string | null;
   }[];
 }) {
+  const router = useRouter();
   const [view, setView] = useState<ViewMode>('grid');
 
   return (
-    <div>
+    <>
       <div className={styles.header}>
         <ViewToggle defaultView="grid" onChange={setView} />
       </div>
@@ -46,34 +47,33 @@ export default function UsersList({
               <th>Email</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="table-body">
             {users.map((user) => (
-              <tr key={user.user_id}>
-                <td>
+              <tr
+                key={user.user_id}
+                onClick={() =>
+                  router.push(`/administration/members/${user.user_id}`)
+                }
+                className={styles.cursor}
+              >
+                <td className={styles.pfpRow}>
                   <Image
                     src={user.profile_photo_url || imagePlaceholder}
                     alt={user.first_name + ' ' + user.last_name}
-                    height={32}
-                    width={32}
+                    height={40}
+                    width={40}
                     unoptimized
-                    className="rounded-circle me-2"
+                    className="rounded-circle object-fit-cover"
                   />
-                  <Link
-                    key={user.user_id}
-                    href={`/administration/members/${user.user_id}`} // Where to navigate
-                  >
-                    {user.first_name + ' ' + user.last_name}
-                  </Link>
+                  {user.first_name + ' ' + user.last_name}
                 </td>
-                <td className="text-uppercase">{user.role}</td>
-                <td>
-                  <a href={`mailto:${user.email}`}>{user.email}</a>
-                </td>
+                <td className="text-capitalize">{user.role}</td>
+                <td>{user.email}</td>
               </tr>
             ))}
           </tbody>
         </Table>
       )}
-    </div>
+    </>
   );
 }

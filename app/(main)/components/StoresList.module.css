@@ -1,5 +1,15 @@
 .header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 1rem;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.pfpRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
 }

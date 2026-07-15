@@ -39,29 +39,28 @@ p {
   margin-bottom: 0;
 }
 
-th {
+/* ── tables ── */
+.table-header th {
   text-transform: uppercase;
-  padding: 22.28px 44.56px;
-  color: #4a5568;
   background-color: #e5f3ff;
+  color: black;
   font-weight: 600;
-  line-height: 100%;
+  padding: 0.75rem;
+  line-height: 1.5rem;
 }
 
-td {
-  padding: 1.25rem;
-  color: #718096;
-  border-bottom: 0.45px solid #e5f3ff;
+.table-body td {
+  padding: 0.75rem;
+  color: black;
+  border-bottom: 1px solid #dee2e6;
+  line-height: 1.5rem;
 }
 
-td a,
-td Link {
-  color: #333;
-  text-decoration: none;
+.table-body tr:last-child td {
+  border-bottom: 0;
 }
 
 tr {
-  height: 80px;
   vertical-align: middle;
 }
 
@@ -73,12 +72,7 @@ Table {
   text-align: left;
 }
 
-/* for tables, this ensures that it is blue*/
-.table-header th {
-  background-color: #e5f3ff;
-  font-weight: 500;
-}
-
+/* ── containers ── */
 .main-container {
   padding: 3rem;
   width: 100%;
@@ -123,6 +117,7 @@ Table {
   margin-bottom: 1rem;
 }
 
+/* ── accordions ── */
 .accordion .accordion-item .accordion-header .accordion-button,
 .accordion .accordion-item .accordion-header .accordion-button.collapsed {
   box-shadow: none;
@@ -130,6 +125,8 @@ Table {
   border-radius: 0.5rem;
   border: none;
   line-height: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .accordion .accordion-item .accordion-header .accordion-button {

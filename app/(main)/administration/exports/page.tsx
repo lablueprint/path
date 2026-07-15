@@ -29,7 +29,7 @@ export default async function ExportsPage() {
       <h2>Export Gift-in-Kind Records</h2>
       <DonationsExportForm />
       <h2>Recent Gift-in-Kind Records</h2>
-      <Table borderless>
+      <Table borderless responsive>
         <thead className="table-header">
           <tr>
             <th>Receiver</th>
@@ -38,7 +38,7 @@ export default async function ExportsPage() {
             <th>Date Submitted</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="table-body">
           {sortedDonations.map((item) => (
             <tr key={item.donation_id}>
               <td>
