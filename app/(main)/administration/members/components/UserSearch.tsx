@@ -68,7 +68,7 @@ export default function UserSearch({ roles }: Props) {
   function formatRole(role: string) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
   }
-  const roleOrder = ['Owner', 'Superadmin', 'Admin', 'Requestor', 'Default'];
+  const roleOrder = ['Default', 'Requestor', 'Admin', 'Superadmin', 'Owner'];
   const sortedRoles = [...roles].sort((a, b) => {
     const aIndex = roleOrder.indexOf(formatRole(a.name));
     const bIndex = roleOrder.indexOf(formatRole(b.name));
@@ -97,7 +97,7 @@ export default function UserSearch({ roles }: Props) {
             <option value="">All Roles</option>
             {sortedRoles.map((role) => (
               <option key={role.role_id} value={String(role.role_id)}>
-                {role.name}
+                {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
               </option>
             ))}
           </Form.Select>

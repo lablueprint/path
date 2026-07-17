@@ -40,7 +40,7 @@ export default function Dropdown({
   function formatRole(role: string) {
     return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
   }
-  const roleOrder = ['Owner', 'Superadmin', 'Admin', 'Requestor', 'Default'];
+  const roleOrder = ['Default', 'Requestor', 'Admin', 'Superadmin', 'Owner'];
   const sortedRoles = [...allRoles].sort((a, b) => {
     const aIndex = roleOrder.indexOf(formatRole(a.roleName));
     const bIndex = roleOrder.indexOf(formatRole(b.roleName));
@@ -49,6 +49,10 @@ export default function Dropdown({
       (bIndex === -1 ? roleOrder.length : bIndex)
     );
   });
+
+  const handleCancel = () => {
+    setCurrentRoleId(roleId);
+  };
 
   return (
     <form
@@ -76,11 +80,16 @@ export default function Dropdown({
             ))}
           </select>
         </div>
-        <div className="btn-row">
-          <Button className="btn-submit" type="submit">
-            Save
-          </Button>
-        </div>
+        {currentRoleId !== roleId && (
+          <div className="btn-row">
+            <Button className="btn-submit" type="submit">
+              Save
+            </Button>
+            <Button type="button" className="btn-cancel" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
+        )}
       </div>
     </form>
   );

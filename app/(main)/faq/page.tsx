@@ -77,7 +77,7 @@ export default function FaqPage() {
   return (
     <>
       <h1>FAQ</h1>
-      <h2>Roles &amp; Permissions</h2>
+      <h2>Roles and Permissions</h2>
       <p>
         Roles determine what pages you can access and what actions you can take.
         Higher roles inherit all permissions from roles below them.
