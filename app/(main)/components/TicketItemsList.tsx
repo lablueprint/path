@@ -8,7 +8,7 @@ import ticketStyles from '@/app/(main)/components/TicketDetails.module.css';
 export default async function TicketItemsList({
   ticketId,
 }: {
-  ticketId: string;
+  ticketId: string | null;
 }) {
   const supabase = await createClient();
 
@@ -61,10 +61,10 @@ export default async function TicketItemsList({
   return (
     <div className={ticketStyles.card}>
       <div className={styles.itemsCardHeader}>
-        <h2 className={ticketStyles.cardTitle}>Items</h2>
+        <h2 className={ticketStyles.cardTitle}>Requested Items</h2>
         <h2 className={styles.countText}>
-          {InStockTicketItems.length} in-stock · {OutOfStockTicketItems.length}{' '}
-          out-of-stock
+          {InStockTicketItems.length} In-Stock · {OutOfStockTicketItems.length}{' '}
+          Out-of-Stock
         </h2>
       </div>
       {totalTicketItems > 0 ? (
@@ -118,7 +118,9 @@ export default async function TicketItemsList({
             </div>
           ) : null}
         </>
-      ) : null}
+      ) : (
+        <div className={ticketStyles.rowWrapper}>No items found.</div>
+      )}
     </div>
   );
 }

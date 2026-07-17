@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
+import TicketLogistics from '@/app/(main)/components/TicketLogistics';
 import DeleteTicketButton from '@/app/(main)/components/DeleteTicketButton';
 import TicketUserCard from '@/app/(main)/components/TicketUserCard';
 import { User } from '@/app/types/user';
@@ -10,7 +11,6 @@ import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 import { Store } from '@/app/types/store';
-import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 
 type TicketStatus =
   | 'draft'
@@ -35,6 +35,7 @@ export default async function TicketDetails({
       `
         store_id, ticket_id, requestor_user_id, status, date_submitted, dest_store_id,
         stores!fk_stores (
+          store_id,
           name,
           street_address
         )
@@ -49,6 +50,7 @@ export default async function TicketDetails({
   }
 
   const store = userTicket.stores as unknown as {
+    store_id: string;
     name: string;
     street_address: string;
   };
@@ -217,47 +219,28 @@ export default async function TicketDetails({
                   <div className={styles.cardHeader}>
                     <h2 className={styles.cardTitle}>Contact Store Admins</h2>
                   </div>
-                  {sortedStoreAdminsList.map((storeAdmin) => (
-                    <div key={storeAdmin.user_id} className={styles.rowWrapper}>
-                      <TicketUserCard user={storeAdmin}></TicketUserCard>
-                    </div>
-                  ))}
+                  {sortedStoreAdminsList.length > 0 ? (
+                    sortedStoreAdminsList.map((storeAdmin) => (
+                      <div
+                        key={storeAdmin.user_id}
+                        className={styles.rowWrapper}
+                      >
+                        <TicketUserCard user={storeAdmin} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className={styles.rowWrapper}>No admins found.</div>
+                  )}
                 </div>
               )}
-
-              <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h2 className={styles.cardTitle}>Logistics</h2>
-                </div>
-                <div className={styles.cardBody}>
-                  <div className={styles.cardTextGroup}>
-                    <p className={styles.cardTextHeading}>
-                      Source Store (Requesting From)
-                    </p>
-                    <p>{store.name}</p>
-                  </div>
-                  <div className={styles.cardTextGroup}>
-                    <p className={styles.cardTextHeading}>
-                      Source Store Street Address
-                    </p>
-                    <p>{store.street_address}</p>
-                  </div>
-                  <div className={styles.cardTextGroup}>
-                    <p className={styles.cardTextHeading}>
-                      Destination Store (Transferring To)
-                    </p>
-                    <TicketDestStoreDropdown
-                      ticketId={ticketId}
-                      currentDestStore={(currentDestStore as Store) || null}
-                      destStoreOptions={(destStoreOptions ?? []).map(
-                        (store) => ({
-                          store,
-                        }),
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
+              <TicketLogistics
+                ticketId={ticketId}
+                sourceStore={store}
+                currentDestStore={(currentDestStore as Store) || null}
+                destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+                  store,
+                }))}
+              />
             </Col>
           </Row>
         </>

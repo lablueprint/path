@@ -21,7 +21,7 @@ export default function IncomingTicketCard({
   const pathname = usePathname();
   const router = useRouter();
 
-  /* Stuatus Class mapping for colors for different statuses */
+  /* Status class mapping for colors for different statuses */
   const statusClassMap: Record<string, string> = {
     requested: styles.statusRequested,
     ready: styles.statusReady,

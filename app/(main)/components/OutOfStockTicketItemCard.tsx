@@ -34,6 +34,7 @@ export default function OutOfStockTicketItemCard({
         as="textarea"
         value={description}
         onChange={handleChange}
+        placeholder="Description of item..."
         rows={4}
       />
       {isChanged && (

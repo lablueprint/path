@@ -59,7 +59,7 @@ export default function IncomingTicketsList({
         <Table borderless responsive>
           <thead className="table-header">
             <tr>
-              <th>ID</th>
+              <th>Ticket #</th>
               <th>Requestor</th>
               <th>Status</th>
               <th>Date Submitted</th>

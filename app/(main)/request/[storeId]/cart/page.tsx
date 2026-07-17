@@ -1,10 +1,11 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
-import styles from '@/app/(main)/request/CartPage.module.css';
+import TicketLogistics from '@/app/(main)/components/TicketLogistics';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
-import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 import { Store } from '@/app/types/store';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
@@ -58,20 +59,17 @@ export default async function CartPage({
             [`/request/${storeId}`]: store.name,
           }}
         />
-        <h1>Cart</h1>
+        <h1>
+          <span>Cart for </span>
+          {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+        </h1>
         {showSuccess && (
           <>
             <p>Ticket submitted successfully!</p>
-            <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
+            <Link href={`/outgoing-tickets/${ticketId}`}>Go to Ticket</Link>
           </>
         )}
-        <div className={styles.itemsCard}>
-          <div className={styles.itemsCardHeader}>
-            <h1>ITEMS</h1>
-            <h2>0 in-stock · 0 out-of-stock</h2>
-          </div>
-        </div>
-        <h2>Out-of-Stock Request</h2>
+        <TicketItemsList ticketId={null} />
         <AddOutOfStockToCartForm storeId={storeId} />
       </>
     );
@@ -117,30 +115,28 @@ export default async function CartPage({
           [`/request/${storeId}`]: store.name,
         }}
       />
-      <h1>Cart</h1>
+      <h1>
+        <span>Cart for </span>
+        {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       {showSuccess && (
         <>
           <p>Ticket submitted successfully!</p>
-          <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
+          <Link href={`/outgoing-tickets/${ticketId}`}>Go to Ticket</Link>
         </>
       )}
       <TicketItemsList ticketId={ticket.ticket_id} />
-      <h2>Out-of-Stock Request</h2>
       <AddOutOfStockToCartForm storeId={storeId} />
       {hasItems ? (
         <>
-          <h2>Ticket Destination Store</h2>
-          <div className="form-card">
-            <div className="card-body">
-              <TicketDestStoreDropdown
-                ticketId={ticket.ticket_id}
-                currentDestStore={(currentDestStore as Store) || null}
-                destStoreOptions={(destStoreOptions ?? []).map((store) => ({
-                  store,
-                }))}
-              />
-            </div>
-          </div>
+          <TicketLogistics
+            ticketId={ticket.ticket_id}
+            sourceStore={store}
+            currentDestStore={(currentDestStore as Store) || null}
+            destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+              store,
+            }))}
+          />
           <SubmitTicketButton ticketId={ticket.ticket_id} />
         </>
       ) : null}

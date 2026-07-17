@@ -1,13 +1,12 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
 import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
-import styles from '@/app/(main)/request/CartPage.module.css';
+import TicketLogistics from '@/app/(main)/components/TicketLogistics';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import TicketDestStoreDropdown from '@/app/(main)/components/TicketDestStoreDropdown';
 import accordionStyles from '@/app/(main)/request/all/Accordion.module.css';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
@@ -17,6 +16,11 @@ type DraftTicket = {
   ticket_items: {
     count: number;
   }[];
+  stores: {
+    store_id: string;
+    name: string;
+    street_address: string;
+  };
 };
 
 export default async function AllCartsPage() {
@@ -47,11 +51,15 @@ export default async function AllCartsPage() {
   // Query all draft tickets for the current user, then index them by store.
   const { data: draftTickets, error: ticketError } = await supabase
     .from('tickets')
-    .select('ticket_id, store_id, ticket_items(count)')
+    .select(
+      'ticket_id, store_id, ticket_items(count), stores!fk_dest_stores(*)',
+    )
     .eq('requestor_user_id', user.id)
-    .eq('status', 'draft');
+    .eq('status', 'draft')
+    .overrideTypes<DraftTicket[], { merge: false }>();
 
   if (ticketError || !draftTickets) {
+    console.log(ticketError);
     return <>Failed to load carts.</>;
   }
 
@@ -87,39 +95,30 @@ export default async function AllCartsPage() {
                 {draftTicket ? (
                   <div className="gap-container">
                     <TicketItemsList ticketId={draftTicket.ticket_id} />
-                    <h2>Out-of-Stock Request</h2>
                     <AddOutOfStockToCartForm storeId={store.store_id} />
                     {draftTicket.ticket_items[0].count > 0 ? (
                       <>
-                        <h2>Ticket Destination Store</h2>
-                        <div className="d-flex">
-                          <TicketDestStoreDropdown
-                            ticketId={draftTicket.ticket_id}
-                            currentDestStore={store.store_id}
-                            destStoreOptions={stores
-                              .filter((s) => s.store_id !== store.store_id)
-                              .map((s) => ({
-                                store: {
-                                  store_id: s.store_id,
-                                  name: s.name,
-                                  street_address: s.street_address,
-                                },
-                              }))}
-                          />
-                        </div>
+                        <TicketLogistics
+                          ticketId={draftTicket.ticket_id}
+                          sourceStore={store}
+                          currentDestStore={draftTicket.stores}
+                          destStoreOptions={stores
+                            .filter((s) => s.store_id !== store.store_id)
+                            .map((s) => ({
+                              store: {
+                                store_id: s.store_id,
+                                name: s.name,
+                                street_address: s.street_address,
+                              },
+                            }))}
+                        />
                         <SubmitTicketButton ticketId={draftTicket.ticket_id} />
                       </>
                     ) : null}
                   </div>
                 ) : (
                   <div className="gap-container">
-                    <div className={styles.itemsCard}>
-                      <div className={styles.itemsCardHeader}>
-                        <h1>ITEMS</h1>
-                        <h2>0 in-stock · 0 out-of-stock</h2>
-                      </div>
-                    </div>
-                    <h2>Out-of-Stock Request</h2>
+                    <TicketItemsList ticketId={null} />
                     <AddOutOfStockToCartForm storeId={store.store_id} />
                   </div>
                 )}

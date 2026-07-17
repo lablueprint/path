@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
-import { Form, Card, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
+import styles from '@/app/(main)/components/TicketDetails.module.css';
 
 interface AddOutOfStockToCartFormProps {
   storeId: string;
@@ -40,8 +41,11 @@ export default function AddOutOfStockToCartForm({
   };
 
   return (
-    <Card className="form-card">
-      <Card.Body>
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <h2 className={styles.cardTitle}>New Out-of-Stock Request</h2>
+      </div>
+      <div className={styles.cardBody}>
         <Form action={handleSubmit} className="form-body">
           <Form.Group>
             <Form.Control
@@ -50,6 +54,7 @@ export default function AddOutOfStockToCartForm({
               placeholder="Description of item..."
               isInvalid={!!errorMessage}
               onChange={handleInputChange}
+              rows={4}
             />
             <Form.Control.Feedback type="invalid">
               {errorMessage}
@@ -59,7 +64,7 @@ export default function AddOutOfStockToCartForm({
             Add to Cart
           </Button>
         </Form>
-      </Card.Body>
-    </Card>
+      </div>
+    </div>
   );
 }
