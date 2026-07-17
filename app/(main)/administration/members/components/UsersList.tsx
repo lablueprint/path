@@ -56,16 +56,18 @@ export default function UsersList({
                 }
                 className={styles.cursor}
               >
-                <td className={styles.pfpRow}>
-                  <Image
-                    src={user.profile_photo_url || imagePlaceholder}
-                    alt={user.first_name + ' ' + user.last_name}
-                    height={40}
-                    width={40}
-                    unoptimized
-                    className="rounded-circle object-fit-cover"
-                  />
-                  {user.first_name + ' ' + user.last_name}
+                <td>
+                  <div className={styles.pfpRow}>
+                    <Image
+                      src={user.profile_photo_url || imagePlaceholder}
+                      alt={user.first_name + ' ' + user.last_name}
+                      height={40}
+                      width={40}
+                      unoptimized
+                      className="rounded-circle object-fit-cover"
+                    />
+                    {user.first_name + ' ' + user.last_name}
+                  </div>
                 </td>
                 <td className="text-capitalize">{user.role}</td>
                 <td>{user.email}</td>

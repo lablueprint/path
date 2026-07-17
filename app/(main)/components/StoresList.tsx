@@ -34,8 +34,8 @@ export default function StoresList({ stores }: { stores: Store[] }) {
         <Table borderless responsive>
           <thead className="table-header">
             <tr>
-              <th>Name</th>
-              <th>Address</th>
+              <th>Store</th>
+              <th>Street Address</th>
             </tr>
           </thead>
           <tbody className="table-body">
@@ -45,16 +45,18 @@ export default function StoresList({ stores }: { stores: Store[] }) {
                 onClick={() => router.push(`${pathname}/${store.store_id}`)}
                 className={styles.cursor}
               >
-                <td className={styles.pfpRow}>
-                  <Image
-                    src={store.photo_url || defaultStorePhoto}
-                    alt={`${store.name} photo`}
-                    width={40}
-                    height={40}
-                    className="rounded-circle object-fit-cover"
-                    unoptimized
-                  />
-                  {store.name}
+                <td>
+                  <div className={styles.pfpRow}>
+                    <Image
+                      src={store.photo_url || defaultStorePhoto}
+                      alt={`${store.name} photo`}
+                      width={40}
+                      height={40}
+                      className="rounded-circle object-fit-cover"
+                      unoptimized
+                    />
+                    {store.name}
+                  </div>
                 </td>
                 <td>{store.street_address}</td>
               </tr>

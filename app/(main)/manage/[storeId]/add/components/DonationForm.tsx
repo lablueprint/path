@@ -157,7 +157,7 @@ export default function DonationForm({
                         required: 'Email is required.',
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: 'Please enter a valid email address',
+                          message: 'Please enter a valid email address.',
                         },
                       })}
                       isInvalid={!!errors.email}
@@ -290,7 +290,7 @@ export default function DonationForm({
                 required: 'Please enter the items you are donating.',
                 maxLength: {
                   value: 500,
-                  message: 'Items description cannot exceed 500 characters',
+                  message: 'Items description cannot exceed 500 characters.',
                 },
                 onChange: (e) => setItemsDonated(e.target.value),
               })}

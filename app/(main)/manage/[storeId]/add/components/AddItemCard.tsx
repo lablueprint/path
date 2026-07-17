@@ -62,7 +62,7 @@ export default function AddItemCard({
               type="number"
               placeholder="Quantity to add"
               {...register(`items.${index}.quantity`, {
-                required: 'Quantity is required',
+                required: 'Quantity is required.',
                 valueAsNumber: true,
                 min: {
                   value: 1,

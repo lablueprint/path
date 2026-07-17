@@ -59,7 +59,7 @@ export default function OutgoingTicketsList({
           <thead className="table-header">
             <tr>
               <th>Ticket #</th>
-              <th>Store Name</th>
+              <th>Store</th>
               <th>Status</th>
               <th>Date Submitted</th>
             </tr>
