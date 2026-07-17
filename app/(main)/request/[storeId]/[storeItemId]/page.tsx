@@ -122,10 +122,10 @@ export default async function RequestStoreItemPage({
               <div className={styles.fieldGroup}>
                 {itemData.quantity_available > 0 ? (
                   <p className={styles.inStock}>
-                    {itemData.quantity_available} in Stock
+                    {itemData.quantity_available} Available
                   </p>
                 ) : (
-                  <p className={styles.outOfStock}>Out of Stock</p>
+                  <p className={styles.outOfStock}>0 Available</p>
                 )}
               </div>
               <AddInStockToCartForm

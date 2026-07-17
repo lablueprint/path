@@ -154,7 +154,7 @@ export default async function RequestStorePage({
         }
       />
       {items && items.length > 0 ? (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {items.map((item) => (
             <div key={item.id} className="col">
               <ItemCard

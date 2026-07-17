@@ -23,10 +23,10 @@ export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
   return (
     <Button
       variant="outline-danger"
-      className="btn-remove"
+      className="btn-remove btn-sm"
       onClick={handleDelete}
     >
-      Delete ticket
+      Delete Ticket
     </Button>
   );
 }

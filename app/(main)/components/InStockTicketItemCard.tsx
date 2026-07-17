@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import { updateTicketItemQuantity } from '@/app/actions/ticket';
 import styles from '@/app/(main)/components/InStockTicketItemCard.module.css';
+import ticketStyles from '@/app/(main)/components/TicketDetails.module.css';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
-import { Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 interface InStockTicketItemCardProps {
   ticketItemId: string;
@@ -55,54 +56,68 @@ export default function InStockTicketItemCard({
 
   return (
     <div className={styles.itemCard}>
-      <Image
-        className={styles.itemImage}
-        src={photoUrl || imagePlaceholder}
-        alt={`Picture of ${itemName}`}
-        width={77}
-        height={77}
-        unoptimized
-      ></Image>
-      <div className={styles.textDescriptors}>
-        <h3>{itemName}</h3>
-        <div className={styles.metaRow}>
-          <p>
-            Category:{' '}
-            <span className={styles.descriptorValue}>{categoryName}</span>
-          </p>
-          <p>
-            Subcategory:{' '}
-            <span className={styles.descriptorValue}>{subcategoryName}</span>
-          </p>
-        </div>
+      <div>
+        <Image
+          className={styles.itemImage}
+          src={photoUrl || imagePlaceholder}
+          alt={`Picture of ${itemName}`}
+          width={80}
+          height={80}
+          unoptimized
+        />
       </div>
-      <div className={styles.numericalDescriptors}>
-        <div className={styles.quantityCard}>Qty: {quantityAvailable}</div>
-        <div className={styles.availabilityCard}>
-          <label>
-            Quantity requested:{' '}
-            <input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => {
-                setQuantity(Number(e.target.value));
-                setErrorMessage('');
-              }}
-            />
-          </label>
-        </div>
-        {errorMessage && <p role="alert">{errorMessage}</p>}
-        {hasChanged && (
-          <div className="btn-row">
-            <Button className="btn-submit" size="sm" onClick={handleSave}>
-              Save
-            </Button>
-            <Button className="btn-cancel" size="sm" onClick={handleCancel}>
-              Cancel
-            </Button>
+      <div className="container p-0 m-0">
+        <div className="row row-cols-1 row-cols-sm-3 g-3">
+          <div className={`col ${ticketStyles.cardTextGroup}`}>
+            <p className={ticketStyles.cardTextHeading}>{itemName}</p>
+            <p>{categoryName}</p>
+            <p>↳ {subcategoryName}</p>
           </div>
-        )}
+          <div className="col">
+            {quantityAvailable > 0 ? (
+              <p className={styles.inStock}>{quantityAvailable} Available</p>
+            ) : (
+              <p className={styles.outOfStock}>0 Available</p>
+            )}
+          </div>
+          <div className={`col ${ticketStyles.cardTextGroup}`}>
+            <div className={ticketStyles.cardTextHeading}>Quantity</div>
+            <div className={styles.btnContainer}>
+              <Form.Group>
+                <Form.Control
+                  id="quantity"
+                  name="quantity"
+                  type="number"
+                  min={1}
+                  isInvalid={!!errorMessage}
+                  value={quantity}
+                  onChange={(e) => {
+                    setQuantity(Number(e.target.value));
+                    setErrorMessage('');
+                  }}
+                  className={`form-control-sm ${styles.quantityInput}`}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errorMessage}
+                </Form.Control.Feedback>
+              </Form.Group>
+              {hasChanged && (
+                <div className={styles.btnContainer}>
+                  <Button className="btn-submit" size="sm" onClick={handleSave}>
+                    Save
+                  </Button>
+                  <Button
+                    className="btn-cancel"
+                    size="sm"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -83,7 +83,7 @@ export default function FaqPage() {
         Higher roles inherit all permissions from roles below them.
       </p>
 
-      <div className="row row-cols-1 row-cols-sm-2 g-5">
+      <div className="row row-cols-1 row-cols-sm-2 g-3">
         {roleCards.map((card) => (
           <div key={card.title}>
             <FaqCard {...card} />
@@ -97,7 +97,7 @@ export default function FaqPage() {
         as store admins review and fulfill them.
       </p>
 
-      <div className="row row-cols-1 row-cols-sm-2 g-5">
+      <div className="row row-cols-1 row-cols-sm-2 g-3">
         {statusCards.map((card) => (
           <div key={card.title}>
             <FaqCard {...card} />

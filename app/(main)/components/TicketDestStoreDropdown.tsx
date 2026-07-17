@@ -41,7 +41,7 @@ export default function TicketDestStoreDropdown({
   };
 
   return (
-    <div className="form-body">
+    <div className="form-body align-self-start">
       <Form.Select
         value={selectedDestStore?.store_id || ''}
         onChange={(e) => {
@@ -50,7 +50,6 @@ export default function TicketDestStoreDropdown({
             setSelectedDestStore(null);
             return;
           }
-
           const selectedStore =
             destStoreOptions.find(
               ({ store }) => store.store_id === selectedStoreId,

@@ -1,85 +1,35 @@
-.itemsCard {
-  width: 100%;
-  min-width: 36.0625rem;
-  height: auto;
-  background: #fff;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.05));
-  border-radius: 0.9375rem;
-  margin-bottom: 1rem;
-}
-
 .itemsCardHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.94rem;
+  padding: 0.75rem;
+  gap: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  text-transform: uppercase;
 }
 
-.itemsCardHeader h1 {
-  color: #1a202c;
-  font-family: Montserrat;
-  font-size: 1.1875rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-  margin: 0;
-}
-
-.itemsCardHeader h2 {
-  color: #718096;
-  font-family: Montserrat;
+.countText {
   font-size: 1rem;
   font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+  font-weight: 500;
+  line-height: 1.5rem;
+  color: #718096;
   margin: 0;
+  text-transform: none;
 }
 
-.itemsCardBody {
-  margin-top: 0;
-  border-top: 2px solid #e2e8f0;
-}
-
-.instockHead {
-  background: #f0fff4;
-  color: #2f855a;
-  font-family: Montserrat;
-  font-size: 1.1875rem;
-  font-style: normal;
+.inStockHeader {
+  background: #e7ffee;
+  color: #24704a;
   font-weight: 600;
-  line-height: normal;
-  padding-left: 0.94rem;
-  padding-right: 0.94rem;
-  padding-top: 0.44rem;
-  padding-bottom: 0.69rem;
-  margin-bottom: 0;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
 }
 
-.outofstockHead {
-  background: #fff5f5;
+.outOfStockHeader {
+  background: #ffefef;
   color: #c53030;
-  font-family: Montserrat;
-  font-size: 1.1875rem;
-  font-style: normal;
   font-weight: 600;
-  line-height: normal;
-  padding-left: 0.94rem;
-  padding-right: 0.94rem;
-  padding-top: 0.44rem;
-  padding-bottom: 0.69rem;
-  margin-bottom: 0;
-}
-
-.ticketsDisplay {
-  padding: 0.94rem;
-  padding-top: 0rem;
-  padding-bottom: 1.31rem;
-}
-
-.itemRow {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
 }

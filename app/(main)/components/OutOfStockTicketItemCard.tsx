@@ -2,7 +2,7 @@
 import { updateTicketItemDescription } from '@/app/actions/ticket';
 import { useState } from 'react';
 import styles from '@/app/(main)/components/OutOfStockTicketItemCard.module.css';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 interface OutOfStockTicketItemCardProps {
   ticketItemId: string;
@@ -30,8 +30,9 @@ export default function OutOfStockTicketItemCard({
     setIsChanged(false);
   };
   return (
-    <div className={styles.cardContainer}>
-      <textarea
+    <>
+      <Form.Control
+        as="textarea"
         className={styles.descriptionInput}
         value={description}
         onChange={handleChange}
@@ -39,14 +40,14 @@ export default function OutOfStockTicketItemCard({
       />
       {isChanged && (
         <div className="btn-row">
-          <Button className="btn-submit" size="sm" onClick={handleSave}>
+          <Button className="btn-submit" onClick={handleSave}>
             Save
           </Button>
-          <Button className="btn-cancel" size="sm" onClick={handleCancel}>
+          <Button className="btn-cancel" onClick={handleCancel}>
             Cancel
           </Button>
         </div>
       )}
-    </div>
+    </>
   );
 }

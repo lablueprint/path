@@ -43,11 +43,11 @@ export default function TicketStatusDropdown({
   };
 
   return (
-    <div className="form-body">
+    <div className="btn-row">
       <Form.Select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
-        style={{ textTransform: 'capitalize' }}
+        className="text-capitalize form-select-sm"
       >
         {statusOptions.map((status) => (
           <option key={status} value={status}>
@@ -57,15 +57,23 @@ export default function TicketStatusDropdown({
       </Form.Select>
 
       {selectedStatus !== originalStatus && (
-        <div className="btn-row">
-          <Button type="button" className="btn-submit" onClick={handleSave}>
+        <>
+          <Button
+            type="button"
+            className="btn-submit btn-sm"
+            onClick={handleSave}
+          >
             Save
           </Button>
-          <Button type="button" className="btn-cancel" onClick={handleCancel}>
+          <Button
+            type="button"
+            className="btn-cancel btn-sm"
+            onClick={handleCancel}
+          >
             Cancel
           </Button>
           {error && <div className="w-100">{error}</div>}
-        </div>
+        </>
       )}
     </div>
   );

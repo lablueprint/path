@@ -125,15 +125,6 @@ export default async function TicketDetails({
     ? getOutgoingStatusOptions(userTicket.status as TicketStatus)
     : getIncomingStatusOptions(userTicket.status as TicketStatus);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${month}-${day}-${year}`;
-  };
-
   // If ticket exists, query for dest store options
   const { data: destStoreOptions, error: destStoreOptionsError } =
     await supabase
@@ -155,9 +146,9 @@ export default async function TicketDetails({
     .single();
 
   return (
-    <div>
+    <>
       {userTicket ? (
-        <div>
+        <>
           {/*Header Card*/}
           <Card className={styles.headerCard}>
             <Row className={styles.headerCardRow}>
@@ -166,79 +157,95 @@ export default async function TicketDetails({
                   src={requestor?.profile_photo_url || imagePlaceholder}
                   alt={requestor?.first_name + ' ' + requestor?.last_name}
                   className={styles.profilePicture}
-                  width={95}
-                  height={95}
+                  width={96}
+                  height={96}
                   unoptimized
                 ></Image>
-                <div className={styles.headerCardText}>
+                <div>
                   <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
-                  <h2>Submitted {formatDate(userTicket.date_submitted)}</h2>
-                  <h2>Ticket #{userTicket.ticket_id}</h2>
+                  <p>
+                    Submitted{' '}
+                    {new Date(userTicket.date_submitted).toLocaleString()}
+                  </p>
+                  <p>Ticket #{userTicket.ticket_id}</p>
                 </div>
               </Col>
               <Col
                 xs={12}
-                className={`${styles.headerCardContact} d-flex flex-column align-items-start gap-2`}
+                className={`${styles.headerCardContact} d-flex flex-column gap-2`}
               >
                 {!outgoing && (
-                  <Button
-                    as="a"
-                    className={`${styles.contactButton} ${styles.headerEndAtLarge}`}
-                    href={
-                      requestor?.email ? `mailto:${requestor.email}` : undefined
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    disabled={!requestor?.email}
-                  >
-                    Contact
-                  </Button>
+                  <div className="align-self-start align-self-md-end">
+                    <Button
+                      as="a"
+                      className="btn-submit btn-sm"
+                      href={
+                        requestor?.email
+                          ? `mailto:${requestor.email}`
+                          : undefined
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      disabled={!requestor?.email}
+                    >
+                      Contact Requestor
+                    </Button>
+                  </div>
                 )}
-                <div className="align-self-stretch">
+                <div className="align-self-start align-self-md-end">
                   <TicketStatusDropdown
                     ticketId={userTicket.ticket_id}
                     currentStatus={userTicket.status as TicketStatus}
                     statusOptions={statusOptions}
                   />
                 </div>
-                <div className={styles.headerEndAtLarge}>
+                <div className="align-self-start align-self-md-end">
                   <DeleteTicketButton ticketId={userTicket.ticket_id} />
                 </div>
               </Col>
             </Row>
           </Card>
 
-          <Row className={styles.ticketContentLayout}>
-            <Col xs={12} className={styles.ticketContentMain}>
+          <Row>
+            <Col xs={12} xl={8} className="pe-xl-2 mb-3 mb-xl-0">
               <TicketItemsList ticketId={userTicket.ticket_id} />
             </Col>
 
-            <Col
-              xs={12}
-              className={`${styles.ticketContentSide} ${styles.ticketContentRight}`}
-            >
+            <Col xs={12} xl={4} className="ps-xl-2 gap-container">
               {outgoing && (
-                <div className={styles.adminCard}>
-                  <h2>CONTACT STORE ADMINS</h2>
+                <div className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h2 className={styles.cardTitle}>Contact Store Admins</h2>
+                  </div>
                   {sortedStoreAdminsList.map((storeAdmin) => (
-                    <TicketUserCard
-                      user={storeAdmin}
-                      key={storeAdmin.user_id}
-                    ></TicketUserCard>
+                    <div key={storeAdmin.user_id} className={styles.rowWrapper}>
+                      <TicketUserCard user={storeAdmin}></TicketUserCard>
+                    </div>
                   ))}
                 </div>
               )}
 
-              <div className={styles.adminCard}>
-                <h2>TICKET LOCATION</h2>
-                <div className={styles.locationCardContent}>
-                  <p>
-                    <strong>Store:</strong> {store.name}
-                  </p>
-                  <p>
-                    <strong>Store Address:</strong> {store.street_address}
-                  </p>
-                  <div className="mt-3">
+              <div className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <h2 className={styles.cardTitle}>Logistics</h2>
+                </div>
+                <div className={styles.cardBody}>
+                  <div className={styles.cardTextGroup}>
+                    <p className={styles.cardTextHeading}>
+                      Source Store (Requesting From)
+                    </p>
+                    <p>{store.name}</p>
+                  </div>
+                  <div className={styles.cardTextGroup}>
+                    <p className={styles.cardTextHeading}>
+                      Source Store Street Address
+                    </p>
+                    <p>{store.street_address}</p>
+                  </div>
+                  <div className={styles.cardTextGroup}>
+                    <p className={styles.cardTextHeading}>
+                      Destination Store (Transferring To)
+                    </p>
                     <TicketDestStoreDropdown
                       ticketId={ticketId}
                       currentDestStore={(currentDestStore as Store) || null}
@@ -253,10 +260,10 @@ export default async function TicketDetails({
               </div>
             </Col>
           </Row>
-        </div>
+        </>
       ) : (
-        <p>No ticket found.</p>
+        <>No ticket found.</>
       )}
-    </div>
+    </>
   );
 }
