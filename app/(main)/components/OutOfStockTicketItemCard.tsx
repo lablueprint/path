@@ -1,7 +1,6 @@
 'use client';
 import { updateTicketItemDescription } from '@/app/actions/ticket';
 import { useState } from 'react';
-import styles from '@/app/(main)/components/OutOfStockTicketItemCard.module.css';
 import { Button, Form } from 'react-bootstrap';
 
 interface OutOfStockTicketItemCardProps {
@@ -33,7 +32,6 @@ export default function OutOfStockTicketItemCard({
     <>
       <Form.Control
         as="textarea"
-        className={styles.descriptionInput}
         value={description}
         onChange={handleChange}
         rows={4}
