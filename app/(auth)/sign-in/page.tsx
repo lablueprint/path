@@ -3,7 +3,6 @@
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Form } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
@@ -19,7 +18,6 @@ export default function SignInPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const router = useRouter();
   const supabase = createClient();
 
   const onSubmit = async (formData: Inputs) => {
@@ -31,12 +29,12 @@ export default function SignInPage() {
       alert(error.message);
       return;
     }
-    router.push('/home');
+    window.location.assign('/home');
   };
 
   return (
     <div className="auth-form-wrap">
-      <div className="auth-left"></div>
+      <div className="auth-left" />
       <div className="auth-right">
         <form className="form-card auth" onSubmit={handleSubmit(onSubmit)}>
           <Link href="/home">

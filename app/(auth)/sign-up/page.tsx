@@ -4,7 +4,6 @@ import { useForm, useWatch, SubmitHandler, Controller } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { forwardRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Form } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
@@ -34,7 +33,6 @@ export default function SignUpPage() {
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
-  const router = useRouter();
   const passwordValue = useWatch({
     control,
     name: 'password',
@@ -57,12 +55,12 @@ export default function SignUpPage() {
     if (error) {
       console.error('Sign-up error:', error);
     }
-    router.push('/home');
+    window.location.assign('/home');
   };
 
   return (
     <div className={'auth-form-wrap'}>
-      <div className={'auth-left'}></div>
+      <div className={'auth-left'} />
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
           <Link href="/home">

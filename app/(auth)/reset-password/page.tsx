@@ -2,7 +2,6 @@
 
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button, Form } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
@@ -15,7 +14,6 @@ type ResetPasswordFormValues = {
 
 export default function ResetPasswordPage() {
   const supabase = createClient();
-  const router = useRouter();
 
   const {
     register,
@@ -43,12 +41,12 @@ export default function ResetPasswordPage() {
     }
 
     alert('Your password has been updated.');
-    router.push('/home');
+    window.location.assign('/home');
   };
 
   return (
     <div className={'auth-form-wrap'}>
-      <div className={'auth-left'}></div>
+      <div className={'auth-left'} />
       <div className={'auth-right'}>
         <form className={'form-card auth'} onSubmit={handleSubmit(onSubmit)}>
           <Link href="/home">
@@ -62,7 +60,7 @@ export default function ResetPasswordPage() {
           </Link>
           <p className={'auth-title'}>Reset Password</p>
           <div className={'form-body'}>
-            <p className={'auth-prompt'}></p>
+            <div className={'auth-prompt'} />
             <Form.Group controlId="password">
               <Form.Control
                 type="password"
