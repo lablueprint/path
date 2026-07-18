@@ -42,7 +42,14 @@ export default function AddStoreItemSearch({
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const createItemMethods = useForm<Inputs>();
+  const createItemMethods = useForm<Inputs>({
+    defaultValues: {
+      name: '',
+      description: '',
+      selectedCategory: '',
+      selectedSubcategory: '',
+    },
+  });
 
   const [inventoryType, setInventoryType] = useState<'existing' | 'new' | null>(
     null,
@@ -166,6 +173,13 @@ export default function AddStoreItemSearch({
           };
           handleSelect(newItem);
         }
+
+        createItemMethods.reset({
+          name: '',
+          description: '',
+          selectedCategory: '',
+          selectedSubcategory: '',
+        });
 
         createItemMethods.reset({}, { keepValues: false });
       } else {

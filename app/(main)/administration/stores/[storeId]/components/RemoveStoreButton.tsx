@@ -5,11 +5,11 @@ import { deleteStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { Button } from 'react-bootstrap';
 
-type RemoveStoreButtonProp = {
+type RemoveStoreButtonProps = {
   storeId: string;
 };
 
-export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProp) {
+export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProps) {
   const router = useRouter();
   const supabase = createClient();
 
