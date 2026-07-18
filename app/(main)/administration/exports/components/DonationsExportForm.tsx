@@ -6,6 +6,14 @@ import {
   exportDonations,
   exportDonationsInRange,
 } from '@/app/actions/donation';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const TARGET_TZ = 'America/Los_Angeles';
 
 type FormValues = {
   dateMode: 'all' | 'range';
@@ -17,37 +25,45 @@ export default function Donations() {
   const {
     register,
     control,
-    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       dateMode: 'all',
+      startDate: '',
+      endDate: '',
     },
   });
 
-  const dateMode = useWatch({
-    control,
-    name: 'dateMode',
-  });
+  const dateMode = useWatch({ control, name: 'dateMode' });
+  const watchedStartDate = useWatch({ control, name: 'startDate' });
 
-  const onSubmit = () => {
-    handleExport();
-  };
+  const handleExport = async (values: FormValues) => {
+    if (values.dateMode === 'range' && values.startDate && values.endDate) {
+      const isoStart = dayjs
+        .tz(values.startDate, TARGET_TZ)
+        .startOf('day')
+        .toISOString();
+      const isoEnd = dayjs
+        .tz(values.endDate, TARGET_TZ)
+        .endOf('day')
+        .toISOString();
 
-  const handleExport = async () => {
-    if (dateMode === 'range') {
-      const { startDate, endDate } = getValues();
       const result = await exportDonationsInRange({
-        startDate: startDate || '',
-        endDate: endDate || '',
+        startDate: isoStart,
+        endDate: isoEnd,
       });
+
       const csvString = result?.data;
       const blob = new Blob([csvString || ''], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.setAttribute('href', url);
-      a.setAttribute('download', `donations_${startDate}_to_${endDate}.csv`);
+
+      a.setAttribute(
+        'download',
+        `donations_${values.startDate}_to_${values.endDate}.csv`,
+      );
       a.click();
       window.URL.revokeObjectURL(url);
     } else {
@@ -66,68 +82,77 @@ export default function Donations() {
   return (
     <Card className="form-card">
       <Card.Body>
-        <div className="form-body">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-body">
-              <Form.Group>
-                <div className="radio-row">
-                  <Form.Check
-                    type="radio"
-                    label="All Time"
-                    value="all"
-                    id="date-mode-all"
-                    {...register('dateMode')}
-                  />
-                  <Form.Check
-                    type="radio"
-                    label="Date Range"
-                    value="range"
-                    id="date-mode-range"
-                    {...register('dateMode')}
-                  />
-                </div>
-              </Form.Group>
-
-              {dateMode === 'range' && (
-                <div className="two-col-row">
-                  <Form.Group controlId="startDate">
-                    <Form.Label className="field-label">Start Date</Form.Label>
-                    <Form.Control
-                      type="date"
-                      {...register('startDate', {
-                        required: 'Start date is required.',
-                      })}
-                      isInvalid={!!errors.startDate}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.startDate?.message}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-
-                  <Form.Group controlId="endDate">
-                    <Form.Label className="field-label">End Date</Form.Label>
-                    <Form.Control
-                      type="date"
-                      {...register('endDate', {
-                        required: 'End date is required.',
-                      })}
-                      isInvalid={!!errors.endDate}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.endDate?.message}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </div>
-              )}
-
-              <div>
-                <Button type="submit" className="btn-submit">
-                  Export
-                </Button>
+        <Form onSubmit={handleSubmit(handleExport)}>
+          <div className="form-body">
+            <Form.Group>
+              <div className="radio-row">
+                <Form.Check
+                  type="radio"
+                  label="All Time"
+                  value="all"
+                  id="date-mode-all"
+                  {...register('dateMode')}
+                />
+                <Form.Check
+                  type="radio"
+                  label="Date Range"
+                  value="range"
+                  id="date-mode-range"
+                  {...register('dateMode')}
+                />
               </div>
+            </Form.Group>
+
+            {dateMode === 'range' && (
+              <div className="two-col-row">
+                <Form.Group controlId="startDate">
+                  <Form.Label className="field-label">Start Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    {...register('startDate', {
+                      required: 'Start date is required.',
+                    })}
+                    isInvalid={!!errors.startDate}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.startDate?.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="endDate">
+                  <Form.Label className="field-label">End Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    {...register('endDate', {
+                      required: 'End date is required.',
+                      validate: (value) => {
+                        if (watchedStartDate && value) {
+                          const start = dayjs.tz(watchedStartDate, TARGET_TZ);
+                          const end = dayjs.tz(value, TARGET_TZ);
+
+                          if (end.isBefore(start)) {
+                            return 'End date cannot come before start date.';
+                          }
+                        }
+                        return true;
+                      },
+                    })}
+                    isInvalid={!!errors.endDate}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.endDate?.message}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+            )}
+
+            <div>
+              <Button type="submit" className="btn-submit">
+                Export
+              </Button>
             </div>
-          </form>
-        </div>
+          </div>
+        </Form>
       </Card.Body>
     </Card>
   );

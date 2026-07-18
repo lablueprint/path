@@ -167,7 +167,12 @@ export default async function TicketDetails({
                   <h1>{`${requestor?.first_name + ' ' + requestor?.last_name}'s Ticket`}</h1>
                   <p>
                     Submitted{' '}
-                    {new Date(userTicket.date_submitted).toLocaleString()}
+                    {new Date(userTicket.date_submitted).toLocaleString(
+                      'en-US',
+                      {
+                        timeZone: 'America/Los_Angeles',
+                      },
+                    )}
                   </p>
                   <p>Ticket #{userTicket.ticket_id}</p>
                 </div>

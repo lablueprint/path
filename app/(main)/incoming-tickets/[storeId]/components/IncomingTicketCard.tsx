@@ -48,7 +48,11 @@ export default function IncomingTicketCard({
           {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
         </div>
       </td>
-      <td>{new Date(date).toLocaleString()}</td>
+      <td>
+        {new Date(date).toLocaleString('en-US', {
+          timeZone: 'America/Los_Angeles',
+        })}
+      </td>
     </tr>
   );
 }

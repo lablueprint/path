@@ -46,7 +46,11 @@ export default async function ExportsPage() {
               </td>
               <td>{item.store_name}</td>
               <td>{item.items_donated}</td>
-              <td>{new Date(item.date_submitted).toLocaleString()}</td>
+              <td>
+                {new Date(item.date_submitted).toLocaleString('en-US', {
+                  timeZone: 'America/Los_Angeles',
+                })}
+              </td>
             </tr>
           ))}
         </tbody>
