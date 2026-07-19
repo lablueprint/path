@@ -2,6 +2,7 @@
 
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import Image from 'next/image';
+import imageCompression from 'browser-image-compression';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
 import uploadPhotoIcon from '@/public/image-upload.svg';
 import styles from '@/app/(main)/components/PhotoUpload.module.css';
@@ -31,6 +32,7 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [isCompressing, setIsCompressing] = useState(false);
 
     useImperativeHandle(ref, () => ({
       resetFile: () => {
@@ -38,9 +40,47 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
       },
     }));
 
+    // Handle compression
+    const processAndCompressFile = async (file: File) => {
+      if (!file.type.startsWith('image/')) return;
+
+      // If the file is already under 200 KB, skip compression
+      if (file.size / 1024 < 200) {
+        onFileSelect?.(file);
+        return;
+      }
+
+      const options = {
+        maxSizeMB: 0.195, // Target just under 200 KB (0.2 MB)
+        maxWidthOrHeight: 1024, // Restrict dimensions to avoid massive memory usage
+        useWebWorker: true, // Speed up processing on a separate UI thread
+      };
+
+      try {
+        setIsCompressing(true);
+        const compressedBlob = await imageCompression(file, options);
+
+        // Re-package the blob back into a standard File object
+        const compressedFile = new File([compressedBlob], file.name, {
+          type: file.type,
+          lastModified: Date.now(),
+        });
+
+        onFileSelect?.(compressedFile);
+      } catch (error) {
+        console.error(
+          'Image compression failed, using original file instead:',
+          error,
+        );
+        onFileSelect?.(file); // Fallback to original file if compression errors out
+      } finally {
+        setIsCompressing(false);
+      }
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (file) onFileSelect?.(file);
+      if (file) processAndCompressFile(file);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -54,7 +94,7 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
       e.preventDefault();
       setIsDragging(false);
       const file = e.dataTransfer.files?.[0];
-      if (file?.type.startsWith('image/')) onFileSelect?.(file);
+      if (file) processAndCompressFile(file);
     };
 
     const displayImage = isPendingDelete
@@ -97,7 +137,13 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
                 unoptimized
               />
               <span className={styles.photoPlaceholderText}>
-                Drag and drop file here or <u>browse</u>
+                {isCompressing ? (
+                  <>Compressing image...</>
+                ) : (
+                  <>
+                    Drag and drop file here or <u>browse</u>
+                  </>
+                )}
               </span>
             </div>
           )}
@@ -123,6 +169,7 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
           accept="image/*"
           onChange={handleFileChange}
           style={{ display: 'none' }}
+          disabled={isCompressing}
         />
       </div>
     );
