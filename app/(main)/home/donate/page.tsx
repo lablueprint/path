@@ -40,7 +40,7 @@ export default async function DonationPage() {
       <Breadcrumbs
         labelMap={{
           home: 'Home',
-          donate: 'Donate',
+          donate: 'Record Gift-in-Kind',
         }}
       />
       <h1>Record Gift-in-Kind</h1>

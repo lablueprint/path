@@ -2,6 +2,8 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemsDonationForm from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
 
 export default async function AddStoreItemsPage({
   params,
@@ -59,7 +61,10 @@ export default async function AddStoreItemsPage({
           add: 'Add Store Items',
         }}
       />
-      <h1>Add Store Items</h1>
+      <h1>
+        <span>Add Store Items to {storeData.name} </span>
+        <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       <StoreItemsDonationForm store={storeData} user={userData} />
     </>
   );

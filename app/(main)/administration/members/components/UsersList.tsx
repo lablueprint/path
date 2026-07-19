@@ -42,7 +42,7 @@ export default function UsersList({
         <Table borderless responsive>
           <thead className="table-header">
             <tr>
-              <th>Team Member</th>
+              <th>Member</th>
               <th>Role</th>
               <th>Email</th>
             </tr>

@@ -110,7 +110,7 @@ export default function AddInventoryItemForm({
     <div className="form-body">
       {/* Item Title */}
       <Form.Group controlId="name">
-        <Form.Label className="field-label">Item Title</Form.Label>
+        <Form.Label className="field-label">Item Name</Form.Label>
         <Form.Control
           type="text"
           {...register('name', { required: 'Item name is required.' })}

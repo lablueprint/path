@@ -4,6 +4,8 @@ import EditStoreForm from '@/app/(main)/administration/stores/[storeId]/componen
 import RemoveStoreButton from '@/app/(main)/administration/stores/[storeId]/components/RemoveStoreButton';
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
 
 export default async function StoreDetailsPage({
   params,
@@ -37,7 +39,10 @@ export default async function StoreDetailsPage({
           [`/administration/stores/${store.store_id}`]: `${store.name}`,
         }}
       />
-      <h1>{store.name}</h1>
+      <h1>
+        <span>{store.name} </span>
+        <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       <EditStoreForm store={store} />
       <div>
         <RemoveStoreButton storeId={store.store_id} />

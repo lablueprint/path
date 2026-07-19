@@ -221,7 +221,7 @@ export default function EditInventoryItemForm({
           </div>
           <div className="fields-col">
             <div>
-              <label className="form-label field-label">Item Title</label>
+              <label className="form-label field-label">Item Name</label>
               <Form.Control
                 type="text"
                 {...register('name', { required: 'Item name is required.' })}

@@ -88,7 +88,7 @@ export default async function StoreAdminPage({
         }}
       />
       <h1>
-        <span>{store_data.name} </span>
+        <span>Admins for {store_data.name} </span>
         <Image src={pinIcon} height={32} alt="Pin icon" />
       </h1>
 

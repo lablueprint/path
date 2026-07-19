@@ -95,7 +95,7 @@ export default async function RequestStoreItemPage({
 
             <Col md className="form-body mt-3 mt-md-0">
               <div className={styles.fieldGroup}>
-                <p className={styles.fieldLabel}>Name</p>
+                <p className={styles.fieldLabel}>Item Name</p>
                 <p className={styles.fieldValue}>
                   {itemData.inventory_items.name}
                 </p>
