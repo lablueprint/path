@@ -34,9 +34,7 @@ export default function AddInventoryItemPage() {
       const result = await createItem({
         name: formData.name,
         description: formData.description,
-        subcategory_id: formData.selectedSubcategory
-          ? Number(formData.selectedSubcategory)
-          : null,
+        subcategory_id: Number(formData.selectedSubcategory),
       });
 
       if (!result.success) {
