@@ -1,15 +1,15 @@
 create table users (
   user_id uuid default uuid_generate_v4 () primary key,
-  first_name text,
-  last_name text,
+  first_name text not null,
+  last_name text not null,
   full_name text generated always as (
     btrim(
       coalesce(first_name, '') || ' ' || coalesce(last_name, '')
     )
   ) stored,
-  email text,
+  email text not null,
   profile_photo_url text,
-  phone text,
+  phone text not null,
   constraint fk_auth_users foreign key (user_id) references auth.users (id) on delete cascade
 );
 

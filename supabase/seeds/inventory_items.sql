@@ -10,7 +10,7 @@ values
   -- Produce
   (
     '00000000-0000-0000-0000-000000000001',
-    1,
+    2,
     'Bananas',
     'Fresh bunch of bananas.',
     'http://127.0.0.1:54321/storage/v1/object/public/inventory_item_photos/00000000-0000-0000-0000-000000000001/item.jpg'
@@ -18,7 +18,7 @@ values
   -- Dry goods
   (
     '00000000-0000-0000-0000-000000000002',
-    2,
+    3,
     'Granola bars',
     'Box of granola bars.',
     'http://127.0.0.1:54321/storage/v1/object/public/inventory_item_photos/00000000-0000-0000-0000-000000000002/item.jpg'

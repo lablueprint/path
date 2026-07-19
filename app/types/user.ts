@@ -10,7 +10,7 @@ export type User = {
   last_name: string;
   email: string;
   phone: string;
-  profile_photo_url: string | null;
+  profile_photo_url?: string | null;
 };
 
 export type UserUpdate = Partial<Omit<User, 'user_id'>>;

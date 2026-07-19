@@ -1,6 +1,6 @@
 export type InventoryItem = {
   inventory_item_id: string; // UUID
-  subcategory_id?: number | null;
+  subcategory_id: number;
   name: string;
   description: string;
   photo_url?: string | null;
