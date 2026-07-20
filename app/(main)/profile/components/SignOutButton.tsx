@@ -1,11 +1,10 @@
 'use client';
 
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { useRouter } from 'next/navigation';
+import { Button } from 'react-bootstrap';
 import { useState } from 'react';
 
 export default function SignOutButton() {
-  const router = useRouter();
   const supabase = createClient();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -20,7 +19,7 @@ export default function SignOutButton() {
         setErrorMessage(error.message ?? 'Failed to sign out.');
         return;
       }
-      router.push('/home');
+      window.location.assign('/home');
     } catch (error) {
       console.error('Sign-out error:', error);
       setErrorMessage('Failed to sign out. Please try again.');
@@ -31,9 +30,9 @@ export default function SignOutButton() {
 
   return (
     <>
-      <button onClick={signOut} disabled={isSigningOut}>
-        {isSigningOut ? 'Signing out...' : 'Sign Out'}
-      </button>
+      <Button className="btn-submit" onClick={signOut} disabled={isSigningOut}>
+        {isSigningOut ? 'Signing Out...' : 'Sign Out'}
+      </Button>
       {errorMessage && <p role="alert">{errorMessage}</p>}
     </>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import styles from '@/app/(main)/components/TicketCard.module.css';
 
 type OutgoingTicketCardProps = {
   ticketId: string;
@@ -18,32 +19,34 @@ export default function OutgoingTicketCard({
   const pathname = usePathname();
   const router = useRouter();
 
+  /* Status class mapping for colors for different statuses */
+  const statusClassMap: Record<string, string> = {
+    requested: styles.statusRequested,
+    ready: styles.statusReady,
+    rejected: styles.statusRejected,
+    fulfilled: styles.statusFulfilled,
+    approved: styles.statusApproved,
+  };
+
+  const normalizedStatus = status.toLowerCase();
+  const statusClass = statusClassMap[normalizedStatus] ?? styles.statusDefault;
+
   return (
     <tr
       onClick={() => router.push(`${pathname}/${ticketId}`)}
-      style={{ cursor: 'pointer' }}
+      className={styles.cursor}
     >
-      <td
-        style={{
-          width: '30%',
-          border: '1px solid #c5c5c5',
-          wordBreak: 'break-word',
-        }}
-      >
-        {ticketId}
+      <td>{ticketId}</td>
+      <td>{storeName}</td>
+      <td>
+        <div className={`${styles.statusBubble} ${statusClass}`}>
+          {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
+        </div>
       </td>
-      <td
-        style={{
-          width: '20%',
-          border: '1px solid #c5c5c5',
-          wordBreak: 'break-word',
-        }}
-      >
-        {storeName}
-      </td>
-      <td style={{ width: '30%', border: '1px solid #c5c5c5' }}>{status}</td>
-      <td style={{ width: '20%', border: '1px solid #c5c5c5' }}>
-        {new Date(date).toLocaleString()}
+      <td>
+        {new Date(date).toLocaleString('en-US', {
+          timeZone: 'America/Los_Angeles',
+        })}
       </td>
     </tr>
   );

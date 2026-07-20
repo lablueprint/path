@@ -1,26 +1,33 @@
 create table users (
   user_id uuid default uuid_generate_v4 () primary key,
-  first_name text,
-  last_name text,
+  first_name text not null,
+  last_name text not null,
   full_name text generated always as (
     btrim(
       coalesce(first_name, '') || ' ' || coalesce(last_name, '')
     )
   ) stored,
-  email text,
+  email text not null,
   profile_photo_url text,
+  phone text not null,
   constraint fk_auth_users foreign key (user_id) references auth.users (id) on delete cascade
 );
 
 alter table "users" enable row level security;
 
-create policy "auth can read users if >= requestor" on public.users for
+create policy "auth can read users if >= default" on public.users for
 select
   to authenticated using (
     (
       select
         auth.jwt ()
-    ) ->> 'user_role' in ('requestor', 'admin', 'superadmin', 'owner')
+    ) ->> 'user_role' in (
+      'default',
+      'requestor',
+      'admin',
+      'superadmin',
+      'owner'
+    )
   );
 
 create policy "no user can insert users" on public.users for insert

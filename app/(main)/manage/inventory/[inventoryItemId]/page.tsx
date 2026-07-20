@@ -1,6 +1,7 @@
 import DeleteInventoryItemButton from '@/app/(main)/manage/inventory/[inventoryItemId]/components/DeleteInventoryItemButton';
 import EditInventoryItemForm from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm';
 import { createClient } from '@/app/lib/supabase/server-client';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 export default async function InventoryItemPage({
   params,
@@ -42,8 +43,8 @@ export default async function InventoryItemPage({
         description: string;
         photo_url: string | null;
         subcategories: {
+          category_id: number;
           name: string;
-          category_id: string;
           categories: {
             name: string;
           };
@@ -71,7 +72,10 @@ export default async function InventoryItemPage({
     name: data.name,
     description: data.description,
     photo_url: data.photo_url,
-    category_id: data.subcategories?.category_id,
+    category_id:
+      data.subcategories?.category_id != null
+        ? String(data.subcategories.category_id)
+        : undefined,
   };
 
   const categoryName = data.subcategories?.categories?.name ?? 'None';
@@ -89,14 +93,23 @@ export default async function InventoryItemPage({
   }
 
   return (
-    <div>
+    <>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+          [inventoryItemId]: item.name ?? 'Item',
+        }}
+      />
       <h1>{item.name}</h1>
       <EditInventoryItemForm
         item={item}
         initialCategories={categoriesRes.data || []}
         initialSubcategories={subcategoriesRes.data || []}
       />
-      <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
-    </div>
+      <div>
+        <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
+      </div>
+    </>
   );
 }

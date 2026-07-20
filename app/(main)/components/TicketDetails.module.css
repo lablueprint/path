@@ -1,0 +1,105 @@
+.card {
+  height: auto;
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
+
+.cardHeader {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  text-transform: uppercase;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cardBody {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rowWrapper {
+  border-bottom: 1px solid #dee2e6;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: start;
+}
+
+.rowWrapper:last-of-type {
+  border-bottom: none;
+}
+
+.cardTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardTextHeading {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.profilePicture {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.headerCard {
+  position: relative;
+  width: 100%;
+  border-radius: 0.5rem;
+  background: #fff;
+  padding: 0.75rem;
+  border: 0;
+}
+
+.headerCardRow {
+  align-items: center;
+}
+
+.headerCardMain {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerCardContact {
+  margin-top: 1rem;
+  width: auto;
+}
+
+.headerCard h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.headerCard p {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5rem;
+  color: #718096;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .headerCardMain {
+    flex: 1 0 0%;
+  }
+  .headerCardContact {
+    flex: 0 0 auto;
+    margin-top: 0;
+  }
+}

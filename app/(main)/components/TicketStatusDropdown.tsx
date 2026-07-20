@@ -1,8 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { updateTicketStatus } from '@/app/actions/ticket';
+import { Form, Button } from 'react-bootstrap';
 
-type TicketStatus = 'draft' | 'requested' | 'ready' | 'rejected' | 'fulfilled';
+type TicketStatus =
+  | 'draft'
+  | 'requested'
+  | 'ready'
+  | 'rejected'
+  | 'fulfilled'
+  | 'approved';
 
 export default function TicketStatusDropdown({
   ticketId,
@@ -43,10 +50,11 @@ export default function TicketStatusDropdown({
   };
 
   return (
-    <div>
-      <select
+    <div className="btn-row">
+      <Form.Select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
+        className="text-capitalize form-select-sm"
         disabled={isSaving}
       >
         {statusOptions.map((status) => (
@@ -54,18 +62,28 @@ export default function TicketStatusDropdown({
             {status}
           </option>
         ))}
-      </select>
+      </Form.Select>
 
       {selectedStatus !== originalStatus && (
-        <div>
-          <button type="button" onClick={handleSave} disabled={isSaving}>
+        <>
+          <Button
+            type="button"
+            className="btn-submit btn-sm"
+            onClick={handleSave}
+            disabled={isSaving}
+          >
             {isSaving ? 'Saving...' : 'Save'}
-          </button>
-          <button type="button" onClick={handleCancel} disabled={isSaving}>
+          </Button>
+          <Button
+            type="button"
+            className="btn-cancel btn-sm"
+            onClick={handleCancel}
+            disabled={isSaving}
+          >
             Cancel
-          </button>
-          {error && <div>{error}</div>}
-        </div>
+          </Button>
+          {error && <div className="w-100">{error}</div>}
+        </>
       )}
     </div>
   );

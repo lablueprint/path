@@ -4,7 +4,9 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { Button, Form } from 'react-bootstrap';
+import pathLogo from '@/public/path.png';
 
 type Inputs = {
   email: string;
@@ -19,7 +21,6 @@ export default function SignInPage() {
   } = useForm<Inputs>();
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const router = useRouter();
   const supabase = createClient();
 
   const onSubmit = async (formData: Inputs) => {
@@ -34,43 +35,79 @@ export default function SignInPage() {
       return;
     }
     setSuccessMessage('Signed in successfully! Redirecting...');
-    router.push('/home');
+    window.location.assign('/home');
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        {...register('email', {
-          pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-          required: true,
-        })}
-        placeholder="Email"
-      />
-      {errors.email?.type === 'required' && (
-        <p role="alert">Email is required.</p>
-      )}
-      {errors.email?.type === 'pattern' && (
-        <p role="alert">Please enter a valid email.</p>
-      )}
-      <br />
-      <input
-        {...register('password', { required: true })}
-        placeholder="Password"
-        type="password"
-      />
-      {errors.password?.type === 'required' && (
-        <p role="alert">Password is required.</p>
-      )}
-      <br />
-      <button type="submit">
-        {isSubmitting ? 'Signing in...' : 'Sign In'}
-      </button>
-      <br />
-      <Link href="/forgot-password">Forgot password?</Link>
-      <br />
-      <Link href="/sign-up">Sign up</Link>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-    </form>
+    <div className="auth-form-wrap">
+      <div className="auth-left" />
+      <div className="auth-right">
+        <form className="form-card auth" onSubmit={handleSubmit(onSubmit)}>
+          <Link href="/home">
+            <Image
+              width={96}
+              height={46}
+              src={pathLogo}
+              alt="PATH logo"
+              priority
+            />
+          </Link>
+          <p className="auth-title">Sign In</p>
+          <div className="form-body">
+            <p className="auth-prompt">
+              Not a member?{' '}
+              <Link className="auth-link" href="/sign-up">
+                Sign up
+              </Link>
+            </p>
+            <Form.Group controlId="email">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                className="auth-field first"
+                {...register('email', {
+                  required: 'Email is required.',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: 'Please enter a valid email.',
+                  },
+                })}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid" className="auth-error">
+                {errors.email?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="password">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                className="auth-field"
+                {...register('password', {
+                  required: 'Password is required.',
+                })}
+                isInvalid={!!errors.password}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password?.message}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Link className="forgot-password" href="/forgot-password">
+              Forgot password?
+            </Link>
+            <div className="auth-btn-row">
+              <Button type="submit" className="btn-submit">
+                {isSubmitting ? 'Signing in...' : 'Sign In'}
+              </Button>
+            </div>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            {successMessage && (
+              <p style={{ color: 'green' }}>{successMessage}</p>
+            )}
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

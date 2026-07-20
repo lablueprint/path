@@ -2,11 +2,13 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import OutOfStockTicketItemCard from '@/app/(main)/components/OutOfStockTicketItemCard';
 import InStockTicketItemCard from '@/app/(main)/components/InStockTicketItemCard';
 import RemoveTicketItemButton from '@/app/(main)/components/RemoveTicketItemButton';
+import styles from '@/app/(main)/components/TicketItemsList.module.css';
+import ticketStyles from '@/app/(main)/components/TicketDetails.module.css';
 
 export default async function TicketItemsList({
   ticketId,
 }: {
-  ticketId: string;
+  ticketId: string | null;
 }) {
   const supabase = await createClient();
 
@@ -35,6 +37,11 @@ export default async function TicketItemsList({
     .eq('ticket_id', ticketId)
     .eq('is_in_stock_request', true);
   InStockTicketItems = inStockItemsData || [];
+  const sortedInStockTicketItems = [...InStockTicketItems].sort((a, b) =>
+    (a.store_items?.inventory_items?.name).localeCompare(
+      b.store_items?.inventory_items?.name,
+    ),
+  );
 
   const { data: outOfStockItemsData } = await supabase
     .from('ticket_items')
@@ -48,58 +55,72 @@ export default async function TicketItemsList({
     .eq('is_in_stock_request', false);
   OutOfStockTicketItems = outOfStockItemsData || [];
 
+  const totalTicketItems =
+    InStockTicketItems.length + OutOfStockTicketItems.length;
+
   return (
-    <>
-      {InStockTicketItems.length > 0 ? (
-        <div>
-          <h2>In-Stock Requests</h2>
-          <div>
-            {InStockTicketItems.map((item) => (
-              <div
-                key={item.ticket_item_id}
-                style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-              >
-                <InStockTicketItemCard
+    <div className={ticketStyles.card}>
+      <div className={styles.itemsCardHeader}>
+        <h2 className={ticketStyles.cardTitle}>Requested Items</h2>
+        <h2 className={styles.countText}>
+          {InStockTicketItems.length} In-Stock · {OutOfStockTicketItems.length}{' '}
+          Out-of-Stock
+        </h2>
+      </div>
+      {totalTicketItems > 0 ? (
+        <>
+          {InStockTicketItems.length > 0 ? (
+            <div>
+              <h2 className={styles.inStockHeader}>In-Stock Requests</h2>
+              {sortedInStockTicketItems.map((item) => (
+                <div
                   key={item.ticket_item_id}
-                  ticketItemId={item.ticket_item_id}
-                  quantityRequested={item.quantity_requested}
-                  quantityAvailable={item.store_items.quantity_available}
-                  itemName={item.store_items.inventory_items.name}
-                  photoUrl={item.store_items.inventory_items.photo_url || null}
-                  subcategoryName={
-                    item.store_items.inventory_items.subcategories.name
-                  }
-                  categoryName={
-                    item.store_items.inventory_items.subcategories.categories
-                      .name
-                  }
-                />
-                <RemoveTicketItemButton ticketItemId={item.ticket_item_id} />
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
-      {OutOfStockTicketItems.length > 0 ? (
-        <div>
-          <h2>Out-of-Stock Requests</h2>
-          <div>
-            {OutOfStockTicketItems.map((item) => (
-              <div
-                key={item.ticket_item_id}
-                style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-              >
-                <OutOfStockTicketItemCard
+                  className={ticketStyles.rowWrapper}
+                >
+                  <InStockTicketItemCard
+                    key={item.ticket_item_id}
+                    ticketItemId={item.ticket_item_id}
+                    quantityRequested={item.quantity_requested}
+                    quantityAvailable={item.store_items.quantity_available}
+                    itemName={item.store_items.inventory_items.name}
+                    photoUrl={
+                      item.store_items.inventory_items.photo_url || null
+                    }
+                    subcategoryName={
+                      item.store_items.inventory_items.subcategories.name
+                    }
+                    categoryName={
+                      item.store_items.inventory_items.subcategories.categories
+                        .name
+                    }
+                  />
+                  <RemoveTicketItemButton ticketItemId={item.ticket_item_id} />
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {OutOfStockTicketItems.length > 0 ? (
+            <div>
+              <h2 className={styles.outOfStockHeader}>Out-of-Stock Requests</h2>
+              {OutOfStockTicketItems.map((item) => (
+                <div
                   key={item.ticket_item_id}
-                  ticketItemId={item.ticket_item_id}
-                  freeTextDescription={item.free_text_description || ''}
-                />
-                <RemoveTicketItemButton ticketItemId={item.ticket_item_id} />
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : null}
-    </>
+                  className={ticketStyles.rowWrapper}
+                >
+                  <OutOfStockTicketItemCard
+                    key={item.ticket_item_id}
+                    ticketItemId={item.ticket_item_id}
+                    freeTextDescription={item.free_text_description || ''}
+                  />
+                  <RemoveTicketItemButton ticketItemId={item.ticket_item_id} />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <div className={ticketStyles.rowWrapper}>No items found.</div>
+      )}
+    </div>
   );
 }

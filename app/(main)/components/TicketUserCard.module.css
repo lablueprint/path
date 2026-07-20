@@ -1,0 +1,10 @@
+.admin {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+}
+
+.profilePicture {
+  border-radius: 50%;
+  object-fit: cover;
+}

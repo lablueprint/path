@@ -1,0 +1,29 @@
+/* ── container reset (donation-specific) ── */
+.formContainer:global(.container) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  --bs-gutter-x: 0;
+  padding-block: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* ── donation-specific field groups ── */
+.businessFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* ── error & submit row ── */
+.errorText {
+  color: red;
+  margin-top: 5px;
+  display: block;
+}

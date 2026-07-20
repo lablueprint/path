@@ -1,7 +1,13 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import TicketItemsList from '@/app/(main)/components/TicketItemsList';
-import SubmitTicketButton from '@/app/(main)/request/[storeId]/cart/components/SubmitTicketButton';
+import SubmitTicketButton from '@/app/(main)/request/components/SubmitTicketButton';
+import TicketLogistics from '@/app/(main)/components/TicketLogistics';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
+import { Store } from '@/app/types/store';
+import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
 
 export default async function CartPage({
   params,
@@ -24,6 +30,17 @@ export default async function CartPage({
     return <div>User not found</div>;
   }
 
+  const { data: store, error: storeError } = await supabase
+    .from('stores')
+    .select('*')
+    .eq('store_id', storeId)
+    .single();
+
+  if (storeError || !store) {
+    console.error('Error fetching store:', storeError);
+    return <div>Failed to load store.</div>;
+  }
+
   // Query for draft ticket
   const { data: ticket, error: ticketError } = await supabase
     .from('tickets')
@@ -35,16 +52,26 @@ export default async function CartPage({
 
   if (ticketError || !ticket) {
     return (
-      <div>
-        <h1>Cart</h1>
+      <>
+        <Breadcrumbs
+          labelMap={{
+            request: 'Request Inventory',
+            [`/request/${storeId}`]: store.name,
+          }}
+        />
+        <h1>
+          <span>Cart for </span>
+          {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+        </h1>
         {showSuccess && (
-          <div>
+          <>
             <p>Ticket submitted successfully!</p>
-            <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
-          </div>
+            <Link href={`/outgoing-tickets/${ticketId}`}>Go to Ticket</Link>
+          </>
         )}
-        <div>No items found in cart.</div>
-      </div>
+        <TicketItemsList ticketId={null} />
+        <AddOutOfStockToCartForm storeId={storeId} />
+      </>
     );
   }
 
@@ -60,23 +87,59 @@ export default async function CartPage({
 
   const hasItems = ticketItems && ticketItems.length > 0;
 
+  // If ticket exists, query for dest store options
+  const { data: destStoreOptions, error: destStoreOptionsError } =
+    await supabase
+      .from('stores')
+      .select('store_id, name, street_address')
+      .neq('store_id', storeId);
+  if (destStoreOptionsError) {
+    console.error(
+      'Error fetching destination store options:',
+      destStoreOptionsError,
+    );
+  }
+
+  // If ticket exists, query for current dest store
+  const { data: currentDestStore } = await supabase
+    .from('stores')
+    .select('store_id, name, street_address')
+    .eq('store_id', ticket.dest_store_id)
+    .single();
+
   return (
-    <div>
-      <h1>Cart</h1>
+    <>
+      <Breadcrumbs
+        labelMap={{
+          request: 'Request Inventory',
+          [`/request/${storeId}`]: store.name,
+        }}
+      />
+      <h1>
+        <span>Cart for </span>
+        {store.name} <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       {showSuccess && (
-        <div>
+        <>
           <p>Ticket submitted successfully!</p>
-          <Link href={`/outgoing-tickets/${ticketId}`}>Go to ticket</Link>
-        </div>
+          <Link href={`/outgoing-tickets/${ticketId}`}>Go to Ticket</Link>
+        </>
       )}
+      <TicketItemsList ticketId={ticket.ticket_id} />
+      <AddOutOfStockToCartForm storeId={storeId} />
       {hasItems ? (
         <>
-          <TicketItemsList ticketId={ticket.ticket_id} />
+          <TicketLogistics
+            ticketId={ticket.ticket_id}
+            sourceStore={store}
+            currentDestStore={(currentDestStore as Store) || null}
+            destStoreOptions={(destStoreOptions ?? []).map((store) => ({
+              store,
+            }))}
+          />
           <SubmitTicketButton ticketId={ticket.ticket_id} />
         </>
-      ) : (
-        <div>No items found in cart.</div>
-      )}
-    </div>
+      ) : null}
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { deleteTicket } from '@/app/actions/ticket';
 import { usePathname, useRouter } from 'next/navigation';
+import { Button } from 'react-bootstrap';
 import { useState, useTransition } from 'react';
 
 export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
@@ -32,9 +33,14 @@ export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
     <>
       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
-      <button type="button" onClick={handleDelete} disabled={isPending}>
+      <Button
+        variant="outline-danger"
+        className="btn-remove btn-sm"
+        onClick={handleDelete}
+        disabled={isPending}
+      >
         {isPending ? 'Removing...' : 'Remove'}
-      </button>
+      </Button>
     </>
   );
 }

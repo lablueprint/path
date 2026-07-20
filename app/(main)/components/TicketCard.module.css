@@ -1,0 +1,31 @@
+.statusBubble {
+  font-weight: 600;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  display: inline-block;
+}
+
+.statusRequested {
+  background-color: #eeedff;
+  color: #6921c0;
+}
+.statusReady {
+  background-color: #e7ffee;
+  color: #24704a;
+}
+.statusRejected {
+  background-color: #ffefef;
+  color: #c53030;
+}
+.statusApproved {
+  background-color: #ffebf6;
+  color: #822c65;
+}
+.statusFulfilled {
+  background-color: #ebf8ff;
+  color: #2c5282;
+}
+
+.cursor {
+  cursor: pointer;
+}

@@ -1,0 +1,26 @@
+.card {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: #ffffff;
+}
+
+.cardHeader {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  text-transform: uppercase;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cardBody {
+  padding: 0.75rem;
+}
+
+.cardDescription {
+  margin: 0;
+}

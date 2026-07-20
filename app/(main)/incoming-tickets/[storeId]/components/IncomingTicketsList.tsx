@@ -1,4 +1,7 @@
+'use client';
 import IncomingTicketCard from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketCard';
+import { useState } from 'react';
+import { Table, Form } from 'react-bootstrap';
 
 type IncomingTicketsListProps = {
   tickets: {
@@ -8,56 +11,77 @@ type IncomingTicketsListProps = {
     status: string;
     date: string;
   }[];
-  status: string;
 };
 
 export default function IncomingTicketsList({
   tickets,
-  status,
 }: IncomingTicketsListProps) {
-  // Filter tickets to only show tickets with the given status
-  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
+  const [selectedStatus, setSelectedStatus] = useState<string>('All');
+  const statusOptions = [
+    'All',
+    'Requested',
+    'Approved',
+    'Ready',
+    'Fulfilled',
+    'Rejected',
+  ];
+
+  // Filter tickets to only show tickets with the selected status
+  const filteredTickets =
+    selectedStatus === 'All'
+      ? tickets.filter((ticket) => ticket.status !== 'draft')
+      : tickets.filter(
+          (ticket) => ticket.status === selectedStatus.toLowerCase(),
+        );
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
 
   return (
-    <div>
-      {/* Display heading that indicates the status */}
-      <h2>{status.toUpperCase()} TICKETS</h2>
+    <>
+      {/* Dropdown menu with status options */}
+      <div className="d-flex">
+        <div>
+          <Form.Select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            {statusOptions.map((statusOption) => (
+              <option key={statusOption} value={statusOption}>
+                {statusOption}
+              </option>
+            ))}
+          </Form.Select>
+        </div>
+      </div>
 
       {filteredTickets.length > 0 ? (
-        <div>
-          <table
-            style={{
-              width: '100%',
-              tableLayout: 'fixed',
-              borderCollapse: 'collapse',
-            }}
-          >
-            <thead>
-              <tr>
-                <th style={{ width: '30%' }}>Ticket ID</th>
-                <th style={{ width: '20%' }}>Status</th>
-                <th style={{ width: '30%' }}>Requestor</th>
-                <th style={{ width: '20%' }}>Date Submitted</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Map the list of tickets to IncomingTicketCard components */}
-              {filteredTickets.map((ticket) => (
-                <IncomingTicketCard
-                  key={ticket.id}
-                  ticketId={ticket.id}
-                  requestorFirstName={ticket.requestorFirstName}
-                  requestorLastName={ticket.requestorLastName}
-                  status={ticket.status}
-                  date={ticket.date}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table borderless responsive>
+          <thead className="table-header">
+            <tr>
+              <th>Ticket #</th>
+              <th>Requestor</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody className="table-body">
+            {/* Map the list of tickets to IncomingTicketCard components */}
+            {sortedFilteredTickets.map((ticket) => (
+              <IncomingTicketCard
+                key={ticket.id}
+                ticketId={ticket.id}
+                requestorFirstName={ticket.requestorFirstName}
+                requestorLastName={ticket.requestorLastName}
+                status={ticket.status}
+                date={ticket.date}
+              />
+            ))}
+          </tbody>
+        </Table>
       ) : (
         <p>No tickets found.</p>
       )}
-    </div>
+    </>
   );
 }

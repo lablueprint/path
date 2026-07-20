@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-
+import { Form, Button } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -54,7 +54,7 @@ export default function StoreItemsDonationForm({
     defaultValues: {
       itemSettings: [],
       donor_type: undefined,
-      phone: '',
+      phone: undefined,
       estimated_value: '',
       items: [],
     },
@@ -66,17 +66,37 @@ export default function StoreItemsDonationForm({
   const isInventorySelected =
     itemSettingsSelected.includes('addInventoryItems');
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
+  const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [rawPhone, setRawPhone] = useState('');
+  const handleRawPhone = (value: string) => {
+    setRawPhone(value);
+  };
   const setItemsDonated = (value: string) => {
     methods.setValue('items_donated', value, { shouldValidate: true });
   };
   useEffect(() => {
     if (isGiftSelected && isInventorySelected) {
-      const itemsString = autoFillItems.map((item) => item.name).join(', ');
-      methods.setValue('items_donated', itemsString);
+      // Only run the sync logic if there are actually items to fill
+      if (autoFillItems.length > 0) {
+        const itemsString = autoFillItems.map((item) => item.name).join(', ');
+
+        methods.setValue('items_donated', itemsString, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true,
+        });
+      } else {
+        // If autoFillItems is empty, reset the field value silently
+        methods.setValue('items_donated', '', {
+          shouldValidate: false,
+          shouldDirty: false,
+          shouldTouch: false,
+        });
+      }
     }
   }, [isGiftSelected, isInventorySelected, autoFillItems, methods]);
   const onSubmit = async (data: CombinedFormData) => {
@@ -118,14 +138,16 @@ export default function StoreItemsDonationForm({
               : null,
 
           donor_email: data.email ?? null,
-          donor_phone: data.phone ?? null,
+          donor_phone: rawPhone || null,
           donor_street_address: data.address ?? null,
 
           donor_receive_emails: data.receive_emails,
           donor_receive_mailings: data.receive_mailings,
           donor_remain_anonymous: data.remain_anonymous,
 
-          estimated_value: parseFloat(data.estimated_value),
+          estimated_value:
+            parseFloat(String(data.estimated_value).replace(/[^0-9.]/g, '')) ||
+            0,
           items_donated: data.items_donated,
 
           receiver_first_name: user?.first_name,
@@ -148,6 +170,7 @@ export default function StoreItemsDonationForm({
       } else if (donationError) {
         setErrorMessage(donationError);
       } else {
+        alert('Success!');
         // Reset all fields to empty/default values
         methods.reset({
           itemSettings: [],
@@ -156,7 +179,7 @@ export default function StoreItemsDonationForm({
           business_name: '',
           business_contact_name: '',
           email: '',
-          phone: '',
+          phone: undefined,
           address: '',
           receiving_site: '',
           receive_emails: false,
@@ -166,6 +189,7 @@ export default function StoreItemsDonationForm({
           items_donated: '',
           items: [],
         });
+        setSelectedItems([]);
         setAutoFillItems([]);
         methods.clearErrors();
         setSuccessMessage('Submission saved.');
@@ -177,48 +201,67 @@ export default function StoreItemsDonationForm({
     }
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <div>
-          <label>
-            <input
-              value="addInventoryItems"
+    <>
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="gap-container"
+        >
+          <div className="checkbox-row">
+            <Form.Check
               type="checkbox"
+              id="addInventoryItems"
+              label="Inventory"
+              value="addInventoryItems"
               {...methods.register('itemSettings')}
             />
-            Add inventory items to store?
-          </label>
-          <label>
-            <input
+            <Form.Check
               type="checkbox"
+              id="giftInKind"
+              label="Gift-in-Kind Donation"
               value="giftInKind"
               {...methods.register('itemSettings')}
             />
-            Submit gift-in-kind donation?
-          </label>
-        </div>
+          </div>
 
-        {itemSettingsSelected?.includes('giftInKind') && (
-          <DonationForm
-            donorType={donorType}
-            setItemsDonated={setItemsDonated}
-          />
-        )}
-        {itemSettingsSelected?.includes('addInventoryItems') && (
-          <AddStoreItemSearch setAutoFillItems={setAutoFillItems} />
-          // add autofillitems connection pass in prop to storeitemsform
-        )}
-        {(itemSettingsSelected?.includes('giftInKind') ||
-          itemSettingsSelected?.includes('addInventoryItems')) && (
-          <>
-            {errorMessage && <p role="alert">{errorMessage}</p>}
-            {successMessage && <p role="status">{successMessage}</p>}
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </button>
-          </>
-        )}
-      </form>
-    </FormProvider>
+          {itemSettingsSelected?.includes('giftInKind') && (
+            <>
+              <h2>Record Gift-in-Kind</h2>
+              <DonationForm
+                setRawPhone={handleRawPhone}
+                donorType={donorType}
+                setItemsDonated={setItemsDonated}
+                showSubmitButton={
+                  !itemSettingsSelected?.includes('addInventoryItems')
+                }
+              />
+            </>
+          )}
+
+          {itemSettingsSelected?.includes('addInventoryItems') && (
+            <>
+              <h2>Add Item</h2>
+              <AddStoreItemSearch
+                setAutoFillItems={setAutoFillItems}
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems}
+              />
+              {/* add autofillitems connection pass in prop to storeitemsform */}
+              {errorMessage && <p role="alert">{errorMessage}</p>}
+              {successMessage && <p role="status">{successMessage}</p>}
+              <div>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-submit"
+                >
+                  Submit
+                </Button>
+              </div>
+            </>
+          )}
+        </form>
+      </FormProvider>
+    </>
   );
 }

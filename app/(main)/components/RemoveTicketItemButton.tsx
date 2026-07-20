@@ -2,6 +2,7 @@
 
 import { deleteTicketItem } from '@/app/actions/ticket';
 import { useState, useTransition } from 'react';
+import { Button } from 'react-bootstrap';
 
 type RemoveTicketItemButtonProps = {
   ticketItemId: string;
@@ -26,9 +27,15 @@ export default function RemoveTicketItemButton({
 
   return (
     <>
-      <button type="button" onClick={handleDelete} disabled={isPending}>
+      <Button
+        variant="outline-danger"
+        size="sm"
+        className="btn-remove"
+        onClick={handleDelete}
+        disabled={isPending}
+      >
         {isPending ? 'Removing...' : 'Remove'}
-      </button>
+      </Button>
       {errorMessage && (
         <p role="alert" style={{ color: 'red' }}>
           {errorMessage}

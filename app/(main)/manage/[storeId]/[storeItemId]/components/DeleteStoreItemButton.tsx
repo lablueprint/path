@@ -3,6 +3,7 @@
 import { deleteStoreItem } from '@/app/actions/store';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { Button } from 'react-bootstrap';
 
 export default function DeleteStoreItemButton({
   storeItemId,
@@ -42,9 +43,15 @@ export default function DeleteStoreItemButton({
     <>
       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
-      <button type="button" onClick={handleDelete} disabled={isPending}>
+      <Button
+        type="button"
+        variant="outline-danger"
+        className="btn-remove"
+        onClick={handleDelete}
+        disabled={isPending}
+      >
         {isPending ? 'Removing...' : 'Remove'}
-      </button>
+      </Button>
     </>
   );
 }

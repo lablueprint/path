@@ -2,6 +2,7 @@ import ItemCard from '@/app/(main)/components/ItemCard';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
 type SearchParams = {
   query?: string;
@@ -16,14 +17,13 @@ export default async function InventoryPage({
 }) {
   const supabase = await createClient();
 
-  // Don't need to fetch categories as it is done later
-  // Fetch subcategories
   const { data: subcategories } = await supabase
     .from('subcategories')
     .select('subcategory_id, name, category_id')
     .order('name');
 
   const { query, category, subcategory } = await searchParams;
+
   let filteredItems = supabase
     .from('inventory_items')
     .select(
@@ -55,6 +55,7 @@ export default async function InventoryPage({
       }[],
       { merge: false }
     >();
+
   if (itemError) {
     console.error(itemError);
     return <div>Failed to load inventory items.</div>;
@@ -67,84 +68,77 @@ export default async function InventoryPage({
     .order('name', { referencedTable: 'subcategories', ascending: true })
     .overrideTypes<
       {
-        category_id: string;
+        category_id: number;
         name: string;
         subcategories: {
           name: string;
-          subcategory_id: string;
+          subcategory_id: number;
         }[];
       }[],
       { merge: false }
     >();
+
   if (error) {
     console.error(error);
     return <div>Failed to load categories.</div>;
   }
 
-  const items = itemsData?.map((item) => ({
-    id: item.inventory_item_id,
-    item: item.name,
-    photoUrl: item.photo_url,
-    subcategory: item.subcategories.name,
-    category: item.subcategories.categories.name,
-  }));
+  const items = itemsData
+    ?.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    .map((item) => ({
+      id: item.inventory_item_id,
+      item: item.name,
+      photoUrl: item.photo_url,
+      subcategory: item.subcategories.name,
+      category: item.subcategories.categories.name,
+    }));
 
   return (
-    <div>
-      <h1>Inventory Library</h1>
-      <Link href="/manage/inventory/add">
-        <p>Add inventory item</p>
-      </Link>
-      <div>
-        <ItemSearch
-          categories={
-            categories?.map((cat) => ({
-              id: cat.category_id,
-              name: cat.name,
-            })) || []
-          }
-          subcategories={
-            subcategories?.map((sub) => ({
-              id: sub.subcategory_id,
-              name: sub.name,
-              category_id: sub.category_id,
-            })) || []
-          }
-        />
+    <>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          inventory: 'Inventory Library',
+        }}
+      />
+      <div className="page-header">
+        <h1 className="mb-0">Inventory Library</h1>
+        <Link className="link-btn" href="/manage/inventory/add">
+          Add Item
+        </Link>
       </div>
-      <h2>Items</h2>
+      <ItemSearch
+        categories={
+          categories?.map((cat) => ({
+            id: cat.category_id,
+            name: cat.name,
+          })) || []
+        }
+        subcategories={
+          subcategories?.map((sub) => ({
+            id: sub.subcategory_id,
+            name: sub.name,
+            category_id: sub.category_id,
+          })) || []
+        }
+      />
       {items && items.length > 0 ? (
-        items.map((item) => (
-          <div key={item.id}>
-            <ItemCard
-              id={item.id}
-              item={item.item}
-              photoUrl={item.photoUrl}
-              subcategory={item.subcategory}
-              category={item.category}
-            />
-          </div>
-        ))
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {items.map((item) => (
+            <div key={item.id} className="col">
+              <ItemCard
+                id={item.id}
+                item={item.item}
+                photoUrl={item.photoUrl}
+                subcategory={item.subcategory}
+                category={item.category}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
-        <p>No items found.</p>
+        <>No items found.</>
       )}
-      <h2>Categories</h2>
-      <ul>
-        {categories && categories.length > 0 ? (
-          categories.map((cat) => (
-            <li key={cat.category_id}>
-              {cat.name}
-              <ul>
-                {cat.subcategories?.map((sub) => (
-                  <li key={sub.subcategory_id}>{sub.name}</li>
-                ))}
-              </ul>
-            </li>
-          ))
-        ) : (
-          <p>No categories found.</p>
-        )}
-      </ul>
-    </div>
+    </>
   );
 }

@@ -1,22 +1,23 @@
 insert into
   subcategories (subcategory_id, category_id, name)
 values
+  -- Miscellaneous
+  (1, 1, 'Miscellaneous'),
   -- Food
-  (1, 1, 'Produce'),
-  (2, 1, 'Dry goods'),
-  (3, 1, 'Beverages'),
+  (2, 2, 'Produce'),
+  (3, 2, 'Dry goods'),
   -- Hygiene
-  (4, 2, 'Oral care'),
-  (5, 2, 'Body wash and soap'),
+  (4, 3, 'Oral care'),
+  (5, 3, 'Body wash and soap'),
   -- Cleaning
-  (6, 3, 'Laundry'),
-  (7, 3, 'Surface cleaners'),
+  (6, 4, 'Laundry'),
+  (7, 4, 'Surface cleaners'),
   -- Clothing
-  (8, 4, 'Menswear'),
-  (9, 4, 'Womenswear'),
+  (8, 5, 'Menswear'),
+  (9, 5, 'Womenswear'),
   -- Home goods
-  (10, 5, 'Kitchenware'),
-  (11, 5, 'Bedding');
+  (10, 6, 'Kitchenware'),
+  (11, 6, 'Bedding');
 
 select
   setval(

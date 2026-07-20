@@ -1,6 +1,7 @@
+'use client';
 import OutgoingTicketCard from '@/app/(main)/outgoing-tickets/components/OutgoingTicketCard';
-
-type Status = 'requested' | 'ready' | 'rejected' | 'fulfilled';
+import { useState } from 'react';
+import { Table, Form } from 'react-bootstrap';
 
 type Ticket = {
   ticket_id: string;
@@ -10,36 +11,61 @@ type Ticket = {
   stores: { name: string }[] | null;
 };
 
-export default async function OutgoingTicketsList({
+export default function OutgoingTicketsList({
   tickets,
-  status,
 }: {
   tickets: Ticket[];
-  status: Status;
 }) {
-  const filteredTickets = tickets.filter((ticket) => ticket.status === status);
+  const [selectedStatus, setSelectedStatus] = useState<string>('All');
+  const statusOptions = [
+    'All',
+    'Requested',
+    'Approved',
+    'Ready',
+    'Fulfilled',
+    'Rejected',
+  ];
+  const filteredTickets =
+    selectedStatus === 'All'
+      ? tickets.filter((ticket) => ticket.status !== 'draft')
+      : tickets.filter(
+          (ticket) => ticket.status === selectedStatus.toLowerCase(),
+        );
+
+  const sortedFilteredTickets = [...filteredTickets].sort((a, b) =>
+    b.date_submitted.localeCompare(a.date_submitted),
+  );
 
   return (
-    <div>
-      <h2>{status.toUpperCase()} TICKETS</h2>
+    <>
+      {/* Dropdown menu with status options */}
+      <div className="d-flex">
+        <div>
+          <Form.Select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            {statusOptions.map((statusOption) => (
+              <option key={statusOption} value={statusOption}>
+                {statusOption}
+              </option>
+            ))}
+          </Form.Select>
+        </div>
+      </div>
+
       {filteredTickets.length > 0 ? (
-        <table
-          style={{
-            width: '100%',
-            tableLayout: 'fixed',
-            borderCollapse: 'collapse',
-          }}
-        >
-          <thead>
+        <Table borderless responsive>
+          <thead className="table-header">
             <tr>
-              <th style={{ width: '30%' }}>Ticket ID</th>
-              <th style={{ width: '20%' }}>Store Name</th>
-              <th style={{ width: '30%' }}>Status</th>
-              <th style={{ width: '20%' }}>Date Submitted</th>
+              <th>Ticket #</th>
+              <th>Store</th>
+              <th>Status</th>
+              <th>Date Submitted</th>
             </tr>
           </thead>
-          <tbody>
-            {filteredTickets.map((ticket) => (
+          <tbody className="table-body">
+            {sortedFilteredTickets.map((ticket) => (
               <OutgoingTicketCard
                 key={ticket.ticket_id}
                 ticketId={ticket.ticket_id}
@@ -49,10 +75,10 @@ export default async function OutgoingTicketsList({
               />
             ))}
           </tbody>
-        </table>
+        </Table>
       ) : (
         <p>No tickets found.</p>
       )}
-    </div>
+    </>
   );
 }

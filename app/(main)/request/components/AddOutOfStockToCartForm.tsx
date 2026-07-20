@@ -1,9 +1,9 @@
 'use client';
 
-import Form from 'next/form';
 import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
-import SubmitButton from '@/app/(main)/request/components/SubmitButton';
+import { Form, Button } from 'react-bootstrap';
+import styles from '@/app/(main)/components/TicketDetails.module.css';
 
 interface AddOutOfStockToCartFormProps {
   storeId: string;
@@ -14,10 +14,19 @@ export default function AddOutOfStockToCartForm({
 }: AddOutOfStockToCartFormProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
+
   const handleSubmit = async (formData: FormData) => {
     setErrorMessage('');
     setSuccessMessage('');
+    setFormErrorMessage(null);
+
     const description = formData.get('description') as string;
+
+    if (!description) {
+      setFormErrorMessage('Please enter a description.');
+      return;
+    }
     const { error: err } = await addToCart(
       storeId,
       undefined,
@@ -32,18 +41,39 @@ export default function AddOutOfStockToCartForm({
     }
   };
 
+  const handleInputChange = () => {
+    if (formErrorMessage) {
+      setFormErrorMessage(null);
+    }
+  };
+
   return (
-    <div>
-      {errorMessage && <p>{errorMessage}</p>}
-      {successMessage && <p>{successMessage}</p>}
-      <Form action={handleSubmit}>
-        <input
-          name="description"
-          type="text"
-          placeholder="Description of item..."
-        />
-        <SubmitButton />
-      </Form>
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <h2 className={styles.cardTitle}>New Out-of-Stock Request</h2>
+      </div>
+      <div className={styles.cardBody}>
+        <Form action={handleSubmit} className="form-body">
+          <Form.Group>
+            <Form.Control
+              name="description"
+              as="textarea"
+              placeholder="Description of item..."
+              isInvalid={!!formErrorMessage}
+              onChange={handleInputChange}
+              rows={4}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formErrorMessage}
+            </Form.Control.Feedback>
+          </Form.Group>
+          {errorMessage && <p>{errorMessage}</p>}
+          {successMessage && <p>{successMessage}</p>}
+          <Button type="submit" className="align-self-start btn-submit">
+            Add to Cart
+          </Button>
+        </Form>
+      </div>
     </div>
   );
 }

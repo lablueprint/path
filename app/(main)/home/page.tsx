@@ -1,5 +1,9 @@
-import ActionButton from '@/app/(main)/home/components/ActionButton';
+import ActionButton from '@/app/(main)/components/ActionButton';
 import { createClient } from '@/app/lib/supabase/server-client';
+import recordGiftInKindIcon from '@/public/action-buttons/record-gift-in-kind.svg';
+import requestInventoryIcon from '@/public/action-buttons/request-inventory.svg';
+import manageInventoryIcon from '@/public/action-buttons/manage-inventory.svg';
+import administrationIcon from '@/public/action-buttons/administration.svg';
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -16,19 +20,44 @@ export default async function HomePage() {
   return (
     <>
       <h1>Home</h1>
-      <ActionButton text="Donate" url="/home/donate" />
-
-      {['requestor', 'admin', 'superadmin', 'owner'].includes(
-        userRole ?? '',
-      ) && <ActionButton text="Request Inventory" url="/request" />}
-
-      {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
-        <ActionButton text="Manage Inventory" url="/manage" />
-      )}
-
-      {['superadmin', 'owner'].includes(userRole ?? '') && (
-        <ActionButton text="HQ" url="/hq" />
-      )}
+      <div className="row row-cols-1 row-cols-sm-2 g-5">
+        <div className="col">
+          <ActionButton
+            text="Record Gift-in-Kind"
+            url="/home/donate"
+            icon={recordGiftInKindIcon}
+          />
+        </div>
+        <div className="col">
+          {['requestor', 'admin', 'superadmin', 'owner'].includes(
+            userRole ?? '',
+          ) && (
+            <ActionButton
+              text="Request Inventory"
+              url="/request"
+              icon={requestInventoryIcon}
+            />
+          )}
+        </div>
+        <div className="col">
+          {['admin', 'superadmin', 'owner'].includes(userRole ?? '') && (
+            <ActionButton
+              text="Manage Inventory"
+              url="/manage"
+              icon={manageInventoryIcon}
+            />
+          )}
+        </div>
+        <div className="col">
+          {['superadmin', 'owner'].includes(userRole ?? '') && (
+            <ActionButton
+              text="Administration"
+              url="/administration"
+              icon={administrationIcon}
+            />
+          )}
+        </div>
+      </div>
     </>
   );
 }

@@ -3,6 +3,7 @@
 import { deleteItem } from '@/app/actions/inventory';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { Button } from 'react-bootstrap';
 
 export default function DeleteInventoryItemButton({
   inventoryItemId,
@@ -34,9 +35,15 @@ export default function DeleteInventoryItemButton({
     <>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      <button type="button" onClick={handleDelete} disabled={isPending}>
+      <Button
+        type="button"
+        variant="outline-danger"
+        className="btn-remove"
+        onClick={handleDelete}
+        disabled={isPending}
+      >
         {isPending ? 'Removing...' : 'Remove'}
-      </button>
+      </Button>
     </>
   );
 }

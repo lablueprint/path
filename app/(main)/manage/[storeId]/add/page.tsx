@@ -1,6 +1,9 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemsDonationForm from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
 import { notFound } from 'next/navigation';
+import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import Image from 'next/image';
+import pinIcon from '@/public/pin-icon.svg';
 
 export default async function AddStoreItemsPage({
   params,
@@ -18,6 +21,26 @@ export default async function AddStoreItemsPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    return notFound();
+  }
+
+  // Check if user can manage the store
+  const { data: canManage, error: canManageError } = await supabase.rpc(
+    'can_manage_store',
+    { store_to_manage_id: storeId },
+  );
+
+  if (canManageError) {
+    console.error('Error checking store access:', canManageError);
+    return notFound();
+  }
+
+  if (!canManage) {
+    return notFound();
+  }
+
   // extract user id
   const userId = user?.id;
   // fetch user's entry from users table
@@ -30,8 +53,19 @@ export default async function AddStoreItemsPage({
   if (userError || storeError) return notFound();
 
   return (
-    <div>
+    <>
+      <Breadcrumbs
+        labelMap={{
+          manage: 'Manage Inventory',
+          [storeId]: storeData.name,
+          add: 'Add Store Items',
+        }}
+      />
+      <h1>
+        <span>Add Store Items to {storeData.name} </span>
+        <Image src={pinIcon} height={32} alt="Pin icon" />
+      </h1>
       <StoreItemsDonationForm store={storeData} user={userData} />
-    </div>
+    </>
   );
 }
