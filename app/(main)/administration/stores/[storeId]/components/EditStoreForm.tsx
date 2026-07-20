@@ -15,6 +15,8 @@ type FormValues = {
 
 export default function EditStoreForm({ store }: { store: Store }) {
   const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string | null>(
@@ -63,6 +65,8 @@ export default function EditStoreForm({ store }: { store: Store }) {
 
   const onCancel = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setErrorMessage('');
+    setSuccessMessage('');
     setPreviewUrl(null);
     setSelectedFile(null);
     setIsPendingDelete(false);
@@ -73,6 +77,8 @@ export default function EditStoreForm({ store }: { store: Store }) {
 
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
       let finalPhotoUrl = photoUrl;
 
@@ -93,6 +99,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
           });
 
         if (uploadError) {
+          setErrorMessage('Failed to update store: ' + uploadError.message);
           console.error('Upload error:', uploadError.message);
         } else {
           const { data: publicData } = supabase.storage
@@ -120,9 +127,12 @@ export default function EditStoreForm({ store }: { store: Store }) {
         photoUploadRef.current?.resetFile();
         reset({ name: data.name, street_address: data.street_address });
       } else {
+        setErrorMessage('Failed to update store: ' + result.error);
         console.error('Error updating store:', result.error);
       }
+      setSuccessMessage('Store updated.');
     } catch (error) {
+      setErrorMessage('Error saving store: ' + error);
       console.error('Error saving store:', error);
     } finally {
       setIsSaving(false);
@@ -176,7 +186,8 @@ export default function EditStoreForm({ store }: { store: Store }) {
                 {errors.street_address?.message}
               </Form.Control.Feedback>
             </div>
-
+            {errorMessage && <p role="alert">{errorMessage}</p>}
+            {successMessage && <p role="status">{successMessage}</p>}
             {hasDirtyTextOrImage && (
               <div className="btn-row">
                 <Button

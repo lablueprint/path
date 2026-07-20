@@ -88,10 +88,10 @@ export default function ForgotPasswordPage() {
               </Button>
             </div>
           </div>
-  
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-      </form>
+
+          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        </form>
       </div>
     </div>
   );

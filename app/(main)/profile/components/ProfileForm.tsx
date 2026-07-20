@@ -332,7 +332,7 @@ export default function ProfileForm({ user }: { user: User }) {
               )}
             </div>
           </div>
-          
+
           {errorMessage && <p role="alert">{errorMessage}</p>}
           {successMessage && <p role="status">{successMessage}</p>}
 

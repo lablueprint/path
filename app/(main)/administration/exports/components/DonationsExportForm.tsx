@@ -9,6 +9,7 @@ import {
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import { useState } from 'react';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -35,47 +36,70 @@ export default function Donations() {
     },
   });
 
+  const [isExporting, setIsExporting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   const dateMode = useWatch({ control, name: 'dateMode' });
   const watchedStartDate = useWatch({ control, name: 'startDate' });
 
   const handleExport = async (values: FormValues) => {
-    if (values.dateMode === 'range' && values.startDate && values.endDate) {
-      const isoStart = dayjs
-        .tz(values.startDate, TARGET_TZ)
-        .startOf('day')
-        .toISOString();
-      const isoEnd = dayjs
-        .tz(values.endDate, TARGET_TZ)
-        .endOf('day')
-        .toISOString();
+    setIsExporting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      if (values.dateMode === 'range' && values.startDate && values.endDate) {
+        const isoStart = dayjs
+          .tz(values.startDate, TARGET_TZ)
+          .startOf('day')
+          .toISOString();
+        const isoEnd = dayjs
+          .tz(values.endDate, TARGET_TZ)
+          .endOf('day')
+          .toISOString();
 
-      const result = await exportDonationsInRange({
-        startDate: isoStart,
-        endDate: isoEnd,
-      });
+        const result = await exportDonationsInRange({
+          startDate: isoStart,
+          endDate: isoEnd,
+        });
+        if (!result?.success || !result.data) {
+          setErrorMessage('Failed to export donations.');
+          return;
+        }
 
-      const csvString = result?.data;
-      const blob = new Blob([csvString || ''], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
+        const csvString = result?.data;
+        const blob = new Blob([csvString || ''], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
 
-      a.setAttribute(
-        'download',
-        `donations_${values.startDate}_to_${values.endDate}.csv`,
-      );
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } else {
-      const result = await exportDonations();
-      const csvString = result?.data;
-      const blob = new Blob([csvString || ''], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
-      a.setAttribute('download', `donations.csv`);
-      a.click();
-      window.URL.revokeObjectURL(url);
+        a.setAttribute(
+          'download',
+          `donations_${values.startDate}_to_${values.endDate}.csv`,
+        );
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        const result = await exportDonations();
+        if (!result?.success || !result.data) {
+          setErrorMessage('Failed to export donations.');
+          return;
+        }
+
+        const csvString = result?.data;
+        const blob = new Blob([csvString || ''], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `donations.csv`);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+      setSuccessMessage('Donations exported and downloaded.');
+    } catch (error) {
+      setErrorMessage('Donations export error: ' + error);
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -145,10 +169,15 @@ export default function Donations() {
                 </Form.Group>
               </div>
             )}
-
+            {errorMessage && <p role="alert">{errorMessage}</p>}
+            {successMessage && <p role="status">{successMessage}</p>}
             <div>
-              <Button type="submit" className="btn-submit">
-                Export
+              <Button
+                type="submit"
+                className="btn-submit"
+                disabled={isExporting}
+              >
+                {isExporting ? 'Exporting...' : 'Export'}
               </Button>
             </div>
           </div>

@@ -7,7 +7,6 @@ import { PatternFormat, NumericFormat } from 'react-number-format';
 import { Form, Card, Alert, Button } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { createDonation } from '@/app/actions/donation';
-import { useState } from 'react';
 import styles from '@/app/(main)/components/DonationForm.module.css';
 import type { User } from '@/app/types/user';
 

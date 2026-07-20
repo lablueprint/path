@@ -41,9 +41,7 @@ export default function AddStoreItemSearch({
   });
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [errorMessage, setErrorMessage] = useState('');
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const createItemMethods = useForm<Inputs>({
     defaultValues: {

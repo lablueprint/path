@@ -13,6 +13,39 @@ export default function Dropdown({
   roleId: number;
 }) {
   const [currentRoleId, setCurrentRoleId] = useState(roleId);
+  const [originalRoleId, setOriginalRoleId] = useState(roleId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const hasChanged = currentRoleId !== originalRoleId;
+
+  const handleSave = async () => {
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const res = await updateUserRole(userId, currentRoleId);
+      if (!res.success) {
+        setErrorMessage('Insufficient privileges to update role.');
+        return;
+      }
+      setOriginalRoleId(currentRoleId);
+      setSuccessMessage('Role updated.');
+    } catch (error) {
+      console.error('Role update error:', error);
+      setErrorMessage('Failed to update role.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setCurrentRoleId(originalRoleId);
+    setErrorMessage('');
+    setSuccessMessage('');
+  };
+
   const allRoles = [
     {
       id: 1,
@@ -50,47 +83,45 @@ export default function Dropdown({
     );
   });
 
-  const handleCancel = () => {
-    setCurrentRoleId(roleId);
-  };
-
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        const res = await updateUserRole(userId, currentRoleId);
-        if (!res.success) {
-          alert('Insufficient privileges to update role');
-        }
-      }}
-    >
-      <div className="gap-container">
-        <div>
-          <p className={profileFormStyles.textLabel}>Role</p>
-          <select
-            name="role"
-            className="form-select w-auto"
-            value={currentRoleId}
-            onChange={(e) => setCurrentRoleId(Number(e.target.value))}
-          >
-            {sortedRoles.map((r) => (
-              <option key={r.id} value={r.id}>
-                {formatRole(r.roleName)}
-              </option>
-            ))}
-          </select>
-        </div>
-        {currentRoleId !== roleId && (
-          <div className="btn-row">
-            <Button className="btn-submit" type="submit">
-              Save
-            </Button>
-            <Button type="button" className="btn-cancel" onClick={handleCancel}>
-              Cancel
-            </Button>
-          </div>
-        )}
+    <div className="gap-container">
+      <div>
+        <p className={profileFormStyles.textLabel}>Role</p>
+        <select
+          className="form-select w-auto"
+          value={currentRoleId}
+          onChange={(e) => setCurrentRoleId(Number(e.target.value))}
+          disabled={isSubmitting}
+        >
+          {sortedRoles.map((r) => (
+            <option key={r.id} value={r.id}>
+              {formatRole(r.roleName)}
+            </option>
+          ))}
+        </select>
       </div>
-    </form>
+      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
+      {hasChanged && (
+        <div className="btn-row">
+          <Button
+            type="button"
+            className="btn-submit"
+            onClick={handleSave}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+          <Button
+            type="button"
+            className="btn-cancel"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
