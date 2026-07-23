@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import { createStoreAdmin } from '@/app/actions/store';
 import { User } from '@/app/types/user';
-import { Form, ListGroup, Card } from 'react-bootstrap';
+import { Form, ListGroup, Card, Alert } from 'react-bootstrap';
 
 const supabase = createClient();
 
@@ -19,7 +19,6 @@ export default function AddAdminSearch({
   const [searchData, setSearchData] = useState<User[]>([]);
   const [isAddingUserId, setIsAddingUserId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   // search filtering
   useEffect(() => {
@@ -28,7 +27,6 @@ export default function AddAdminSearch({
       if (!d) {
         setSearchData([]);
         setErrorMessage('');
-        setSuccessMessage('');
         return;
       }
 
@@ -59,7 +57,6 @@ export default function AddAdminSearch({
   const handleAddAdmin = async (userId: string) => {
     setIsAddingUserId(userId);
     setErrorMessage('');
-    setSuccessMessage('');
     try {
       const result = await createStoreAdmin({
         user_id: userId,
@@ -69,7 +66,6 @@ export default function AddAdminSearch({
         setErrorMessage(result.error ?? 'Failed to add admin.');
         return;
       }
-      setSuccessMessage('Admin added.');
     } catch (error) {
       console.error('Store admin creation error:', error);
       setErrorMessage('Failed to add admin.');
@@ -91,8 +87,6 @@ export default function AddAdminSearch({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            {errorMessage && <p role="alert">{errorMessage}</p>}
-            {successMessage && <p role="status">{successMessage}</p>}
             {/* search results */}
             {searchData.length > 0 && (
               <ListGroup>
@@ -109,6 +103,7 @@ export default function AddAdminSearch({
               </ListGroup>
             )}
           </div>
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </div>
       </Card.Body>
     </Card>

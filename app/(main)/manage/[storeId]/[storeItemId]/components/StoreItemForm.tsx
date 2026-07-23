@@ -1,8 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { Button, Form, Alert } from 'react-bootstrap';
 import {
   updateStoreItemQuantity,
   updateStoreItemIsHidden,
@@ -65,9 +64,13 @@ export default function StoreItemForm({
     reset(values);
   };
 
+  const handleCancel = () => {
+    reset();
+    setErrorMessage('');
+  };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="form-body">
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       <Form.Group>
         <Form.Label className={styles.fieldLabel}>Quantity</Form.Label>
         <Form.Control
@@ -110,12 +113,13 @@ export default function StoreItemForm({
             type="button"
             className="btn-cancel"
             disabled={isSubmitting}
-            onClick={() => reset()}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
         </div>
       )}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </Form>
   );
 }

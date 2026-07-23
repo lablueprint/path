@@ -54,7 +54,6 @@ export default async function InventoryItemPage({
     >();
 
   if (error || !data) {
-    console.error('Error fetching inventory item:', error);
     return <div>Failed to load inventory item.</div>;
   }
 
@@ -107,9 +106,7 @@ export default async function InventoryItemPage({
         initialCategories={categoriesRes.data || []}
         initialSubcategories={subcategoriesRes.data || []}
       />
-      <div>
-        <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
-      </div>
+      <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
     </>
   );
 }

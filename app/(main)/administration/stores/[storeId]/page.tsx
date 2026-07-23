@@ -44,9 +44,7 @@ export default async function StoreDetailsPage({
         <Image src={pinIcon} height={32} alt="Pin icon" />
       </h1>
       <EditStoreForm store={store} />
-      <div>
-        <RemoveStoreButton storeId={store.store_id} />
-      </div>
+      <RemoveStoreButton storeId={store.store_id} />
     </>
   );
 }

@@ -6,7 +6,7 @@ import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 type FormValues = {
   storeName: string;
@@ -149,8 +149,6 @@ export default function AddStoreForm() {
                   {errors.storeStreetAddress?.message}
                 </Form.Control.Feedback>
               </div>
-              {errorMessage && <p role="alert">{errorMessage}</p>}
-              {successMessage && <p role="status">{successMessage}</p>}
               <div>
                 <Button
                   type="submit"
@@ -160,6 +158,10 @@ export default function AddStoreForm() {
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
               </div>
+              {successMessage && (
+                <Alert variant="success">{successMessage}</Alert>
+              )}
+              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
             </div>
           </div>
         </form>

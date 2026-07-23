@@ -120,7 +120,7 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
           {hasPhoto ? (
             <Image
               src={displayImage}
-              alt="Profile photo"
+              alt="Photo"
               width={variant === 'circle' ? 200 : 256}
               height={variant === 'circle' ? 200 : 256}
               className="object-fit-cover"

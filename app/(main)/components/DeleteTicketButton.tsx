@@ -2,28 +2,25 @@
 
 import { deleteTicket } from '@/app/actions/ticket';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import { useState, useTransition } from 'react';
 
 export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [isPending, startTransition] = useTransition();
 
   async function handleDelete() {
     setErrorMessage('');
-    setSuccessMessage('');
     startTransition(async () => {
       const result = await deleteTicket(ticketId);
 
       if (!result.success) {
-        setErrorMessage('Failed to delete ticket.' + result.error);
+        setErrorMessage('Failed to remove ticket.');
         return;
       }
 
-      setSuccessMessage('Ticket deleted successfully!');
       const parentPath = pathname.split('/').slice(0, -1).join('/') || '/';
       router.push(parentPath);
     });
@@ -31,16 +28,22 @@ export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
 
   return (
     <>
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
       <Button
         variant="outline-danger"
-        className="btn-remove btn-sm"
+        className="btn-remove btn-sm align-self-start align-self-md-end"
         onClick={handleDelete}
         disabled={isPending}
       >
         {isPending ? 'Removing...' : 'Remove'}
       </Button>
+      {errorMessage && (
+        <Alert
+          variant="danger"
+          className="align-self-start align-self-md-end w-100"
+        >
+          {errorMessage}
+        </Alert>
+      )}
     </>
   );
 }

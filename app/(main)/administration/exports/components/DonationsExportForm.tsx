@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm, useWatch } from 'react-hook-form';
-import { Form, Card, Button } from 'react-bootstrap';
+import { Form, Card, Button, Alert } from 'react-bootstrap';
 import {
   exportDonations,
   exportDonationsInRange,
@@ -95,9 +95,9 @@ export default function Donations() {
         a.click();
         window.URL.revokeObjectURL(url);
       }
-      setSuccessMessage('Donations exported and downloaded.');
+      setSuccessMessage('Exported and downloaded donations.');
     } catch (error) {
-      setErrorMessage('Donations export error: ' + error);
+      setErrorMessage('Failed to export donations: ' + error);
     } finally {
       setIsExporting(false);
     }
@@ -169,8 +169,6 @@ export default function Donations() {
                 </Form.Group>
               </div>
             )}
-            {errorMessage && <p role="alert">{errorMessage}</p>}
-            {successMessage && <p role="status">{successMessage}</p>}
             <div>
               <Button
                 type="submit"
@@ -180,6 +178,10 @@ export default function Donations() {
                 {isExporting ? 'Exporting...' : 'Export'}
               </Button>
             </div>
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
+            )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </Form>
       </Card.Body>

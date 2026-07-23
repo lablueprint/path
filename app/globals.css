@@ -187,6 +187,26 @@ Table {
   margin-bottom: 0.25rem;
 }
 
+/* —— alerts –– */
+.alert {
+  margin-bottom: 0;
+  padding: 0.75rem;
+  line-height: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.alert-success {
+  background-color: #e7ffee;
+  border: none;
+  color: #24704a;
+}
+
+.alert-danger {
+  background-color: #ffefef;
+  border: none;
+  color: #c53030;
+}
+
 /* ── buttons ── */
 .btn-outline-danger.btn-remove {
   background-color: #ffefef;

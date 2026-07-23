@@ -14,7 +14,7 @@ import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
-import { Form, Card, Button } from 'react-bootstrap';
+import { Form, Card, Button, Alert } from 'react-bootstrap';
 import AddItemCard from '@/app/(main)/manage/[storeId]/add/components/AddItemCard';
 import { ListGroup } from 'react-bootstrap';
 
@@ -227,7 +227,6 @@ export default function AddStoreItemSearch({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                {errorMessage && <p role="alert">{errorMessage}</p>}
                 {results.length > 0 && (
                   <ListGroup>
                     {results?.map((item) => (
@@ -243,6 +242,9 @@ export default function AddStoreItemSearch({
                   </ListGroup>
                 )}
               </div>
+            )}
+            {inventoryType == 'existing' && errorMessage && (
+              <Alert variant="danger">{errorMessage}</Alert>
             )}
             {inventoryType == 'new' && (
               <FormProvider {...createItemMethods}>
@@ -288,7 +290,7 @@ export default function AddStoreItemSearch({
           ))}
         </div>
       ) : (
-        <p>No items selected.</p>
+        <>No items selected.</>
       )}
     </>
   );

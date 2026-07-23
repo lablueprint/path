@@ -42,9 +42,10 @@ type FormData = {
 };
 
 export default function LightweightDonationForm({ stores, user }: Props) {
-  const [showSuccess, setShowSuccess] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [rawPhone, setRawPhone] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const {
     register,
@@ -65,8 +66,6 @@ export default function LightweightDonationForm({ stores, user }: Props) {
       remain_anonymous: false,
     },
   });
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   const donorType = useWatch({
     control,
@@ -79,7 +78,6 @@ export default function LightweightDonationForm({ stores, user }: Props) {
   const onSubmit = async (data: FormData) => {
     setErrorMessage('');
     setSuccessMessage('');
-    setShowSuccess(false);
 
     const finalReceivingSite =
       data.receiving_site === 'None' || !data.receiving_site
@@ -130,8 +128,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
     const result = await createDonation(donation);
 
     if (result.success) {
-      setSuccessMessage('Donation submitted successfully!');
-      setShowSuccess(true);
+      setSuccessMessage('Donation submitted successfully.');
       setResetKey((k) => k + 1);
 
       reset({
@@ -162,8 +159,6 @@ export default function LightweightDonationForm({ stores, user }: Props) {
     <>
       <Card className="form-card">
         <Card.Body>
-          {errorMessage && <p>{errorMessage}</p>}
-          {successMessage && <div>{successMessage}</div>}
           <form onSubmit={handleSubmit(onSubmit)} className="form-body">
             <h2>Store Information</h2>
             <Form.Group controlId="receiving_site">
@@ -464,11 +459,10 @@ export default function LightweightDonationForm({ stores, user }: Props) {
               </Button>
             </div>
 
-            {showSuccess && (
-              <Alert variant="success" className="mb-0">
-                Form submitted successfully!
-              </Alert>
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </form>
         </Card.Body>
       </Card>

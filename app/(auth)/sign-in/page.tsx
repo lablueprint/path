@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 
 type Inputs = {
@@ -20,21 +20,18 @@ export default function SignInPage() {
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const supabase = createClient();
 
   const onSubmit = async (formData: Inputs) => {
     setErrorMessage('');
-    setSuccessMessage('');
     const { error } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     });
     if (error) {
-      setErrorMessage('Failed to sign in: ' + error.message);
+      setErrorMessage(error.message ?? 'Failed to sign in.');
       return;
     }
-    setSuccessMessage('Signed in successfully! Redirecting...');
     window.location.assign('/home');
   };
 
@@ -97,14 +94,15 @@ export default function SignInPage() {
               Forgot password?
             </Link>
             <div className="auth-btn-row">
-              <Button type="submit" className="btn-submit">
-                {isSubmitting ? 'Signing in...' : 'Sign In'}
+              <Button
+                type="submit"
+                className="btn-submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Signing In...' : 'Sign In'}
               </Button>
             </div>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            {successMessage && (
-              <p style={{ color: 'green' }}>{successMessage}</p>
-            )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </form>
       </div>

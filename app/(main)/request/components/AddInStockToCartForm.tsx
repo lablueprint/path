@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { addToCart } from '@/app/actions/ticket';
 import styles from '@/app/(main)/request/[storeId]/[storeItemId]/RequestStoreItemPage.module.css';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 interface AddInStockToCartFormProps {
   storeId: string;
@@ -37,9 +37,9 @@ export default function AddInStockToCartForm({
         actualQuantity,
       );
       if (err) {
-        setErrorMessage('Failed to add in-stock item to cart: ' + err);
+        setErrorMessage('Failed to add to cart: ' + err);
       } else {
-        setSuccessMessage('Item added to cart.');
+        setSuccessMessage('Added to cart.');
       }
     });
   };
@@ -67,8 +67,6 @@ export default function AddInStockToCartForm({
           {formErrorMessage}
         </Form.Control.Feedback>
       </Form.Group>
-      {errorMessage && <p>{errorMessage}</p>}
-      {successMessage && <p>{successMessage}</p>}
       <Button
         type="submit"
         className="align-self-start btn-submit"
@@ -76,6 +74,8 @@ export default function AddInStockToCartForm({
       >
         {isPending ? 'Adding to Cart...' : 'Add to Cart'}
       </Button>
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </Form>
   );
 }

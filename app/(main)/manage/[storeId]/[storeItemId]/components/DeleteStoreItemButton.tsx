@@ -3,7 +3,7 @@
 import { deleteStoreItem } from '@/app/actions/store';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 
 export default function DeleteStoreItemButton({
   storeItemId,
@@ -13,12 +13,10 @@ export default function DeleteStoreItemButton({
   const pathname = usePathname();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [isPending, startTransition] = useTransition();
 
   async function handleDelete() {
     setErrorMessage('');
-    setSuccessMessage('');
     startTransition(async () => {
       const result = await deleteStoreItem(storeItemId);
 
@@ -27,7 +25,6 @@ export default function DeleteStoreItemButton({
         return;
       }
 
-      setSuccessMessage('Store item deleted successfully!');
       const targetPath = pathname.split('/').slice(0, -1).join('/') || '/';
 
       if (pathname === targetPath) {
@@ -41,17 +38,20 @@ export default function DeleteStoreItemButton({
 
   return (
     <>
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
       <Button
         type="button"
         variant="outline-danger"
-        className="btn-remove"
+        className="btn-remove align-self-start"
         onClick={handleDelete}
         disabled={isPending}
       >
         {isPending ? 'Removing...' : 'Remove'}
       </Button>
+      {errorMessage && (
+        <Alert className="w-100" variant="danger">
+          {errorMessage}
+        </Alert>
+      )}
     </>
   );
 }

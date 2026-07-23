@@ -2,7 +2,7 @@
 
 import { updateTicketItemDescription } from '@/app/actions/ticket';
 import { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 
 interface OutOfStockTicketItemCardProps {
   ticketItemId: string;
@@ -85,8 +85,11 @@ export default function OutOfStockTicketItemCard({
           </Button>
         </div>
       )}
-
-      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {errorMessage && (
+        <Alert className="w-100" variant="danger">
+          {errorMessage}
+        </Alert>
+      )}
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { addToCart } from '@/app/actions/ticket';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
 
 interface AddOutOfStockToCartFormProps {
@@ -34,10 +34,10 @@ export default function AddOutOfStockToCartForm({
       description,
     );
     if (err) {
-      setErrorMessage('Failed to add item to cart: ' + err);
+      setErrorMessage('Failed to add to cart: ' + err);
       return;
     } else {
-      setSuccessMessage('Item added to cart successfully!');
+      setSuccessMessage('Added to cart.');
     }
   };
 
@@ -67,11 +67,11 @@ export default function AddOutOfStockToCartForm({
               {formErrorMessage}
             </Form.Control.Feedback>
           </Form.Group>
-          {errorMessage && <p>{errorMessage}</p>}
-          {successMessage && <p>{successMessage}</p>}
           <Button type="submit" className="align-self-start btn-submit">
             Add to Cart
           </Button>
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </Form>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 
 type FormValues = {
   newPassword: string;
@@ -21,7 +21,7 @@ export default function UpdatePasswordForm() {
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
       newPassword: '',
       newPasswordConfirmation: '',
@@ -70,6 +70,15 @@ export default function UpdatePasswordForm() {
     }
   };
 
+  const handleCancel = () => {
+    reset({
+      newPassword: '',
+      newPasswordConfirmation: '',
+    });
+    setErrorMessage('');
+    setSuccessMessage('');
+  };
+
   return (
     <div className="form-card">
       <div className="card-body">
@@ -106,30 +115,31 @@ export default function UpdatePasswordForm() {
               Passwords do not match.
             </Form.Control.Feedback>
           </Form.Group>
-          {errorMessage && <p role="alert">{errorMessage}</p>}
-          {successMessage && <p role="status">{successMessage}</p>}
-          <div className="btn-row">
-            {passwordsMatch && (
-              <Button className="btn-submit" type="submit" disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Save'}
-              </Button>
-            )}
-            {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+
+          {(newPassword.length > 0 || newPasswordConfirmation.length > 0) && (
+            <div className="btn-row">
+              {passwordsMatch && (
+                <Button
+                  className="btn-submit"
+                  type="submit"
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </Button>
+              )}
               <Button
                 type="button"
                 className="btn-cancel"
-                onClick={() =>
-                  reset({
-                    newPassword: '',
-                    newPasswordConfirmation: '',
-                  })
-                }
+                onClick={handleCancel}
                 disabled={isSaving}
               >
                 Cancel
               </Button>
-            )}
-          </div>
+            </div>
+          )}
+
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </Form>
       </div>
     </div>

@@ -206,9 +206,7 @@ export default async function TicketDetails({
                     statusOptions={statusOptions}
                   />
                 </div>
-                <div className="align-self-start align-self-md-end">
-                  <DeleteTicketButton ticketId={userTicket.ticket_id} />
-                </div>
+                <DeleteTicketButton ticketId={userTicket.ticket_id} />
               </Col>
             </Row>
           </Card>

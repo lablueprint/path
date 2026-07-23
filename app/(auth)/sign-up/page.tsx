@@ -5,7 +5,7 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { forwardRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { PatternFormat } from 'react-number-format';
 
@@ -57,7 +57,7 @@ export default function SignUpPage() {
     });
     setIsLoading(false);
     if (error) {
-      setErrorMessage('Failed to sign up: ' + error.message);
+      setErrorMessage(error.message ?? 'Failed to sign up.');
       return;
     }
     window.location.assign('/home');
@@ -210,13 +210,13 @@ export default function SignUpPage() {
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ? 'Creating account...' : 'Sign Up'}
+                {isLoading ? 'Creating Account...' : 'Sign Up'}
               </Button>
             </div>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             {successMessage && (
-              <p style={{ color: 'green' }}>{successMessage}</p>
+              <Alert variant="success">{successMessage}</Alert>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </form>
       </div>

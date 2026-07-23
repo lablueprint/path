@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/user';
 import profileFormStyles from '@/app/(main)/profile/components/ProfileForm.module.css';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 
 export default function Dropdown({
   userId,
@@ -16,14 +16,12 @@ export default function Dropdown({
   const [originalRoleId, setOriginalRoleId] = useState(roleId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   const hasChanged = currentRoleId !== originalRoleId;
 
   const handleSave = async () => {
     setIsSubmitting(true);
     setErrorMessage('');
-    setSuccessMessage('');
     try {
       const res = await updateUserRole(userId, currentRoleId);
       if (!res.success) {
@@ -31,7 +29,6 @@ export default function Dropdown({
         return;
       }
       setOriginalRoleId(currentRoleId);
-      setSuccessMessage('Role updated.');
     } catch (error) {
       console.error('Role update error:', error);
       setErrorMessage('Failed to update role.');
@@ -43,7 +40,6 @@ export default function Dropdown({
   const handleCancel = () => {
     setCurrentRoleId(originalRoleId);
     setErrorMessage('');
-    setSuccessMessage('');
   };
 
   const allRoles = [
@@ -100,8 +96,6 @@ export default function Dropdown({
           ))}
         </select>
       </div>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
-      {successMessage && <p role="status">{successMessage}</p>}
       {hasChanged && (
         <div className="btn-row">
           <Button
@@ -122,6 +116,7 @@ export default function Dropdown({
           </Button>
         </div>
       )}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </div>
   );
 }

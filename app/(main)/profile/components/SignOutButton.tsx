@@ -1,7 +1,7 @@
 'use client';
 
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 
 export default function SignOutButton() {
@@ -30,10 +30,14 @@ export default function SignOutButton() {
 
   return (
     <>
-      <Button className="btn-submit" onClick={signOut} disabled={isSigningOut}>
+      <Button
+        className="btn-submit align-self-start"
+        onClick={signOut}
+        disabled={isSigningOut}
+      >
         {isSigningOut ? 'Signing Out...' : 'Sign Out'}
       </Button>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </>
   );
 }

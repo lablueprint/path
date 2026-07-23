@@ -3,7 +3,7 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ export default function ResetPasswordPage() {
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormValues>({
     defaultValues: { password: '', passwordConfirmation: '' },
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   const passwordValue = useWatch({
@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
     });
 
     if (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.message ?? 'Failed to update password.');
       return;
     }
 
@@ -114,10 +114,10 @@ export default function ResetPasswordPage() {
               </Button>
             </div>
 
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             {successMessage && (
-              <p style={{ color: 'green' }}>{successMessage}</p>
+              <Alert variant="success">{successMessage}</Alert>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </form>
       </div>

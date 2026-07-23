@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -70,6 +70,7 @@ export default function StoreItemsDonationForm({
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [itemsErrorMessage, setItemsErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [rawPhone, setRawPhone] = useState('');
   const handleRawPhone = (value: string) => {
@@ -99,15 +100,23 @@ export default function StoreItemsDonationForm({
       }
     }
   }, [isGiftSelected, isInventorySelected, autoFillItems, methods]);
+
   const onSubmit = async (data: CombinedFormData) => {
     setIsSubmitting(true);
     setErrorMessage('');
     setSuccessMessage('');
+    setItemsErrorMessage('');
     try {
       const inventoryErrors: string[] = [];
       let donationError = '';
 
       if (data.itemSettings?.includes('addInventoryItems')) {
+        if (data.items.length === 0) {
+          setItemsErrorMessage(
+            'Please select one or more items to add to inventory.',
+          );
+          return;
+        }
         for (const item of data.items) {
           const { error } = await addUpdateStoreItemQuantity(
             item.inventory_item_id,
@@ -170,7 +179,6 @@ export default function StoreItemsDonationForm({
       } else if (donationError) {
         setErrorMessage(donationError);
       } else {
-        alert('Success!');
         // Reset all fields to empty/default values
         methods.reset({
           itemSettings: [],
@@ -246,20 +254,22 @@ export default function StoreItemsDonationForm({
                 selectedItems={selectedItems}
                 setSelectedItems={setSelectedItems}
               />
-              {/* add autofillitems connection pass in prop to storeitemsform */}
-              {errorMessage && <p role="alert">{errorMessage}</p>}
-              {successMessage && <p role="status">{successMessage}</p>}
+              {itemsErrorMessage && selectedItems.length === 0 && (
+                <Alert variant="danger">{itemsErrorMessage}</Alert>
+              )}
               <div>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
                   className="btn-submit"
                 >
-                  Submit
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </Button>
               </div>
             </>
           )}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
         </form>
       </FormProvider>
     </>

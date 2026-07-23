@@ -6,7 +6,7 @@ import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 type FormValues = {
   name: string;
@@ -16,7 +16,6 @@ type FormValues = {
 export default function EditStoreForm({ store }: { store: Store }) {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string | null>(
@@ -66,7 +65,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
   const onCancel = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setErrorMessage('');
-    setSuccessMessage('');
     setPreviewUrl(null);
     setSelectedFile(null);
     setIsPendingDelete(false);
@@ -78,7 +76,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     setErrorMessage('');
-    setSuccessMessage('');
     try {
       let finalPhotoUrl = photoUrl;
 
@@ -130,7 +127,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
         setErrorMessage('Failed to update store: ' + result.error);
         console.error('Error updating store:', result.error);
       }
-      setSuccessMessage('Store updated.');
     } catch (error) {
       setErrorMessage('Error saving store: ' + error);
       console.error('Error saving store:', error);
@@ -186,8 +182,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
                 {errors.street_address?.message}
               </Form.Control.Feedback>
             </div>
-            {errorMessage && <p role="alert">{errorMessage}</p>}
-            {successMessage && <p role="status">{successMessage}</p>}
             {hasDirtyTextOrImage && (
               <div className="btn-row">
                 <Button
@@ -208,6 +202,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
                 </Button>
               </div>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </div>
       </div>

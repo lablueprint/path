@@ -31,9 +31,7 @@ export default async function PersonalProfilePage() {
       <ProfileForm user={profile as User} />
       <h2>Change Password</h2>
       <UpdatePasswordForm />
-      <div>
-        <SignOutButton />
-      </div>
+      <SignOutButton />
     </>
   );
 }

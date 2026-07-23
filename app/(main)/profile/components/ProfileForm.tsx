@@ -10,7 +10,7 @@ import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 
 type ProfileFormValues = {
@@ -169,8 +169,8 @@ export default function ProfileForm({ user }: { user: User }) {
         setIsEditing(false);
         setSuccessMessage(
           data.email !== user.email
-            ? 'Profile saved. Please check both your new and old email addresses to verify the change.'
-            : 'Profile saved.',
+            ? 'Please check both your new and old email addresses to verify the change.'
+            : '',
         );
       } else {
         setErrorMessage(result.error ?? 'Failed to save profile.');
@@ -333,9 +333,6 @@ export default function ProfileForm({ user }: { user: User }) {
             </div>
           </div>
 
-          {errorMessage && <p role="alert">{errorMessage}</p>}
-          {successMessage && <p role="status">{successMessage}</p>}
-
           {isEditing && (
             <div className="btn-row">
               <Button className="btn-submit" type="submit" disabled={isSaving}>
@@ -363,6 +360,9 @@ export default function ProfileForm({ user }: { user: User }) {
               </Button>
             </div>
           )}
+
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </form>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { deleteStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 
 type RemoveStoreButtonProps = {
   storeId: string;
@@ -16,12 +16,10 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProps) {
 
   const [isRemoving, setIsRemoving] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   const handleDeletion = async () => {
     setIsRemoving(true);
     setErrorMessage('');
-    setSuccessMessage('');
     try {
       // Remove photo from bucket first
       const { error: storageError } = await supabase.storage
@@ -29,11 +27,10 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProps) {
         .remove([`${storeId}/store.jpg`]);
       const { success, error } = await deleteStore(storeId);
       if (storageError || !success) {
-        setErrorMessage('Failed to remove store.');
+        setErrorMessage('Failed to remove store: ' + error);
         console.error(error);
         return;
       }
-      setSuccessMessage('Store removed.');
       router.push('/administration/stores');
     } catch (error) {
       setErrorMessage('Failed to remove store: ' + error);
@@ -44,16 +41,16 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProps) {
 
   return (
     <>
-      {errorMessage && <p role="alert">{errorMessage}</p>}
-      {successMessage && <p role="status">{successMessage}</p>}
       <Button
         type="button"
         variant="outline-danger"
         onClick={handleDeletion}
-        className="btn-remove"
+        className="btn-remove align-self-start"
+        disabled={isRemoving}
       >
         {isRemoving ? 'Removing...' : 'Remove'}
       </Button>
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </>
   );
 }
