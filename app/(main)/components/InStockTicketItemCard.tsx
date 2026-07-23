@@ -105,7 +105,6 @@ export default function InStockTicketItemCard({
                       setQuantity(Number(e.target.value));
                       setErrorMessage('');
                     }}
-                    disabled={isSaving}
                     className={`form-control-sm ${styles.quantityInput}`}
                   />
                   <Form.Control.Feedback type="invalid">

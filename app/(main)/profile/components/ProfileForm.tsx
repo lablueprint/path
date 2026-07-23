@@ -62,13 +62,6 @@ export default function ProfileForm({ user }: { user: User }) {
   const handleFileSelect = (file: File) => {
     setErrorMessage('');
     setSuccessMessage('');
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      setErrorMessage(
-        'File is too large. Please select an image under 200 KB.',
-      );
-      return;
-    }
     setPreviewUrl(URL.createObjectURL(file));
     setSelectedFile(file);
     setIsPendingDelete(false);
@@ -128,9 +121,7 @@ export default function ProfileForm({ user }: { user: User }) {
             });
 
           if (uploadError) {
-            setErrorMessage(
-              uploadError.message ?? 'Failed to upload profile photo.',
-            );
+            setErrorMessage('Failed to upload photo: ' + uploadError.message);
             return;
           } else {
             const { data: publicData } = supabase.storage

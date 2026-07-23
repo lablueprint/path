@@ -65,7 +65,6 @@ export default function OutOfStockTicketItemCard({
         onChange={handleChange}
         placeholder="Description of item..."
         rows={4}
-        disabled={isSaving}
       />
       {isChanged && (
         <div className="btn-row">

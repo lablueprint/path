@@ -2,7 +2,7 @@
 import { updateTicketDestStore } from '@/app/actions/ticket';
 import { Store } from '@/app/types/store';
 import { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 export default function TicketDestStoreDropdown({
   ticketId,
@@ -13,21 +13,23 @@ export default function TicketDestStoreDropdown({
   currentDestStore: Store | null;
   destStoreOptions: { store: Store }[];
 }) {
+  const [isSaving, setIsSaving] = useState(false);
   const [selectedDestStore, setSelectedDestStore] = useState<Store | null>(
     currentDestStore,
   );
   const [originalDestStore, setOriginalDestStore] = useState<Store | null>(
     currentDestStore,
   );
-  const [error, setError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleCancel = () => {
-    setError(null);
+    setErrorMessage('');
     setSelectedDestStore(originalDestStore);
   };
 
   const handleSave = async () => {
-    setError(null);
+    setIsSaving(true);
+    setErrorMessage('');
 
     const result = await updateTicketDestStore(
       selectedDestStore?.store_id ?? null,
@@ -36,12 +38,13 @@ export default function TicketDestStoreDropdown({
     if (result.success) {
       setOriginalDestStore(selectedDestStore);
     } else {
-      setError('Error updating destination store. No changes were saved.');
+      setErrorMessage('Failed to update destination store.');
     }
+    setIsSaving(false);
   };
 
   return (
-    <div className="form-body align-self-start">
+    <div className="form-body">
       <Form.Select
         value={selectedDestStore?.store_id || ''}
         onChange={(e) => {
@@ -57,6 +60,7 @@ export default function TicketDestStoreDropdown({
 
           setSelectedDestStore(selectedStore);
         }}
+        className="align-self-start"
       >
         <option value="">No Destination Store</option>
         {[...destStoreOptions]
@@ -69,14 +73,28 @@ export default function TicketDestStoreDropdown({
       </Form.Select>
       {selectedDestStore != originalDestStore && (
         <div className="btn-row">
-          <Button type="button" className="btn-submit" onClick={handleSave}>
-            Save
+          <Button
+            type="button"
+            className="btn-submit"
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? 'Saving...' : 'Save'}
           </Button>
-          <Button type="button" className="btn-cancel" onClick={handleCancel}>
+          <Button
+            type="button"
+            className="btn-cancel"
+            onClick={handleCancel}
+            disabled={isSaving}
+          >
             Cancel
           </Button>
-          {error && <div className="w-100">{error}</div>}
         </div>
+      )}
+      {errorMessage && (
+        <Alert variant="danger" className="w-100">
+          {errorMessage}
+        </Alert>
       )}
     </div>
   );

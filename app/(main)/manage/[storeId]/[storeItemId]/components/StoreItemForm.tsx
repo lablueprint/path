@@ -78,7 +78,6 @@ export default function StoreItemForm({
           type="number"
           step={1}
           placeholder=""
-          disabled={isSubmitting}
           isInvalid={!!errors.quantityAvailable}
           {...register('quantityAvailable', {
             valueAsNumber: true,
@@ -98,7 +97,6 @@ export default function StoreItemForm({
           className={styles.isHiddenCheckbox}
           type="checkbox"
           label="Is Hidden?"
-          disabled={isSubmitting}
           id="is-hidden"
           {...register('isHidden')}
         />

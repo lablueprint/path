@@ -55,7 +55,6 @@ export default function TicketStatusDropdown({
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value as TicketStatus)}
         className="text-capitalize form-select-sm"
-        disabled={isSaving}
       >
         {statusOptions.map((status) => (
           <option key={status} value={status}>

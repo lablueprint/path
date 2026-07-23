@@ -128,7 +128,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
     const result = await createDonation(donation);
 
     if (result.success) {
-      setSuccessMessage('Donation submitted successfully.');
+      setSuccessMessage('Donation saved.');
       setResetKey((k) => k + 1);
 
       reset({

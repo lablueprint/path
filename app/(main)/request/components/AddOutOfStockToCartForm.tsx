@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { addToCart } from '@/app/actions/ticket';
 import { Form, Button, Alert } from 'react-bootstrap';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
@@ -15,6 +15,7 @@ export default function AddOutOfStockToCartForm({
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
     setErrorMessage('');
@@ -27,18 +28,19 @@ export default function AddOutOfStockToCartForm({
       setFormErrorMessage('Please enter a description.');
       return;
     }
-    const { error: err } = await addToCart(
-      storeId,
-      undefined,
-      undefined,
-      description,
-    );
-    if (err) {
-      setErrorMessage('Failed to add to cart: ' + err);
-      return;
-    } else {
-      setSuccessMessage('Added to cart.');
-    }
+    startTransition(async () => {
+      const { error: err } = await addToCart(
+        storeId,
+        undefined,
+        undefined,
+        description,
+      );
+      if (err) {
+        setErrorMessage('Failed to add to cart: ' + err);
+      } else {
+        setSuccessMessage('Added to cart.');
+      }
+    });
   };
 
   const handleInputChange = () => {
@@ -67,8 +69,12 @@ export default function AddOutOfStockToCartForm({
               {formErrorMessage}
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit" className="align-self-start btn-submit">
-            Add to Cart
+          <Button
+            type="submit"
+            className="align-self-start btn-submit"
+            disabled={isPending}
+          >
+            {isPending ? 'Adding to Cart...' : 'Add to Cart'}
           </Button>
           {successMessage && <Alert variant="success">{successMessage}</Alert>}
           {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}

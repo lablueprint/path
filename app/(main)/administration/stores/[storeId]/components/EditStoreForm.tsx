@@ -44,11 +44,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
   });
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024; // 200 KB in bytes
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
     const preview = URL.createObjectURL(file);
     setPreviewUrl(preview);
     setSelectedFile(file);
@@ -96,7 +91,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
           });
 
         if (uploadError) {
-          setErrorMessage('Failed to update store: ' + uploadError.message);
+          setErrorMessage('Failed to upload photo: ' + uploadError.message);
         } else {
           const { data: publicData } = supabase.storage
             .from('store_photos')
@@ -126,7 +121,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
         setErrorMessage('Failed to update store: ' + result.error);
       }
     } catch (error) {
-      setErrorMessage('Error saving store: ' + error);
+      setErrorMessage('Failed to update store: ' + error);
     } finally {
       setIsSaving(false);
     }

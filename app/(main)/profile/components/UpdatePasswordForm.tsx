@@ -62,7 +62,7 @@ export default function UpdatePasswordForm() {
       setSuccessMessage('Password updated.');
       reset();
     } catch {
-      setErrorMessage('Failed to update password. Please try again.');
+      setErrorMessage('Failed to update password.');
     } finally {
       setIsSaving(false);
     }

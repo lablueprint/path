@@ -86,7 +86,6 @@ export default function Dropdown({
           className="form-select w-auto"
           value={currentRoleId}
           onChange={(e) => setCurrentRoleId(Number(e.target.value))}
-          disabled={isSubmitting}
         >
           {sortedRoles.map((r) => (
             <option key={r.id} value={r.id}>

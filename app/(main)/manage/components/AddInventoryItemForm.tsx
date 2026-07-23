@@ -53,11 +53,6 @@ export default function AddInventoryItemForm({
   };
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
     handleFileChanged(file);
   };
 
