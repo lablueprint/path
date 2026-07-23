@@ -14,9 +14,9 @@ create table tickets (
   status ticket_status not null,
   date_submitted timestamp with time zone default now(),
   dest_store_id uuid,
-  constraint fk_dest_stores foreign key (dest_store_id) references stores (store_id),
-  constraint fk_users foreign key (requestor_user_id) references users (user_id),
-  constraint fk_stores foreign key (store_id) references stores (store_id)
+  constraint fk_dest_stores foreign key (dest_store_id) references stores (store_id) on delete set null,
+  constraint fk_users foreign key (requestor_user_id) references users (user_id) on delete cascade,
+  constraint fk_stores foreign key (store_id) references stores (store_id) on delete cascade
 );
 
 create unique index uq_requestor_user_id_store_id_draft on tickets (requestor_user_id, store_id)

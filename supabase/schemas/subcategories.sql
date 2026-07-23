@@ -2,7 +2,7 @@ create table "subcategories" (
   subcategory_id serial primary key,
   category_id int not null,
   name text not null,
-  constraint fk_categories foreign key (category_id) references categories (category_id) on delete cascade on update cascade
+  constraint fk_categories foreign key (category_id) references categories (category_id) on update cascade
 );
 
 alter table subcategories
