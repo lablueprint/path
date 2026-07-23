@@ -136,6 +136,24 @@ Table {
   margin-bottom: 1rem;
 }
 
+/* —— modals —— */
+.modal-content {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+.modal-header {
+  padding: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-color: #dee2e6;
+}
+
+.modal-body {
+  padding: 0.75rem;
+  border: none;
+}
+
 /* ── accordions ── */
 .accordion .accordion-item .accordion-header .accordion-button,
 .accordion .accordion-item .accordion-header .accordion-button.collapsed {
@@ -342,7 +360,7 @@ Table {
 .fields-col {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
   width: 100%;
 }
 

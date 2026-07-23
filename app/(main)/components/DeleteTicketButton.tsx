@@ -2,14 +2,23 @@
 
 import { deleteTicket } from '@/app/actions/ticket';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button, Alert } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useState, useTransition } from 'react';
+import ConfirmModal from '@/app/(main)/components/ConfirmModal';
 
 export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleCloseModal = () => {
+    if (!isPending) {
+      setShowModal(false);
+      setErrorMessage('');
+    }
+  };
 
   async function handleDelete() {
     setErrorMessage('');
@@ -21,6 +30,7 @@ export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
         return;
       }
 
+      setShowModal(false);
       const parentPath = pathname.split('/').slice(0, -1).join('/') || '/';
       router.push(parentPath);
     });
@@ -31,19 +41,19 @@ export default function DeleteTicketButton({ ticketId }: { ticketId: string }) {
       <Button
         variant="outline-danger"
         className="btn-remove btn-sm align-self-start align-self-md-end"
-        onClick={handleDelete}
-        disabled={isPending}
+        onClick={() => setShowModal(true)}
       >
-        {isPending ? 'Removing...' : 'Remove'}
+        Remove
       </Button>
-      {errorMessage && (
-        <Alert
-          variant="danger"
-          className="align-self-start align-self-md-end w-100"
-        >
-          {errorMessage}
-        </Alert>
-      )}
+      <ConfirmModal
+        show={showModal}
+        title="Remove ticket?"
+        message="This action cannot be undone."
+        errorMessage={errorMessage}
+        isLoading={isPending}
+        onConfirm={handleDelete}
+        onClose={handleCloseModal}
+      />
     </>
   );
 }

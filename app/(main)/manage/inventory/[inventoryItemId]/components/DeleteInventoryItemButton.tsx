@@ -3,7 +3,8 @@
 import { deleteItem } from '@/app/actions/inventory';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Button, Alert } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import ConfirmModal from '@/app/(main)/components/ConfirmModal';
 
 export default function DeleteInventoryItemButton({
   inventoryItemId,
@@ -14,6 +15,14 @@ export default function DeleteInventoryItemButton({
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending, startTransition] = useTransition();
+  const [showModal, setShowModal] = useState(false);
+
+  const handleCloseModal = () => {
+    if (!isPending) {
+      setShowModal(false);
+      setErrorMessage('');
+    }
+  };
 
   async function handleDelete() {
     setErrorMessage('');
@@ -25,6 +34,7 @@ export default function DeleteInventoryItemButton({
         return;
       }
 
+      setShowModal(false);
       const targetPath = pathname.split('/').slice(0, -1).join('/') || '/';
 
       if (pathname === targetPath) {
@@ -42,12 +52,19 @@ export default function DeleteInventoryItemButton({
         type="button"
         variant="outline-danger"
         className="btn-remove align-self-start"
-        onClick={handleDelete}
-        disabled={isPending}
+        onClick={() => setShowModal(true)}
       >
-        {isPending ? 'Removing...' : 'Remove'}
+        Remove
       </Button>
-      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      <ConfirmModal
+        show={showModal}
+        title="Remove inventory item?"
+        message="Removing an inventory item removes all associated store items, ticket items, and cart items for all users. This action cannot be undone."
+        errorMessage={errorMessage}
+        isLoading={isPending}
+        onConfirm={handleDelete}
+        onClose={handleCloseModal}
+      />
     </>
   );
 }

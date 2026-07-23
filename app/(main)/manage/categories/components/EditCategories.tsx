@@ -284,13 +284,19 @@ function EditableField({
       if (type === 'category') {
         const categoryResult = await deleteCategory(id);
         if (!categoryResult.success) {
-          setErrorMessage('Failed to delete category: ' + categoryResult.error);
+          setErrorMessage(
+            categoryResult.error?.includes('foreign key constraint')
+              ? 'Failed to remove category because there are still subcategories associated with it.'
+              : 'Failed to remove category: ' + categoryResult.error,
+          );
         }
       } else {
         const subcategoryResult = await deleteSubcategory(id);
         if (!subcategoryResult.success) {
           setErrorMessage(
-            'Failed to delete subcategory: ' + subcategoryResult.error,
+            subcategoryResult.error?.includes('foreign key constraint')
+              ? 'Failed to remove subcategory because there are still inventory items associated with it.'
+              : 'Failed to remove subcategory: ' + subcategoryResult.error,
           );
         }
       }
