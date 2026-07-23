@@ -10,7 +10,7 @@ import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import Image from 'next/image';
 import defaultProfilePhoto from '@/public/image-placeholder.svg';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 
 type ProfileFormValues = {
@@ -29,6 +29,8 @@ BootstrapInput.displayName = 'BootstrapInput';
 export default function ProfileForm({ user }: { user: User }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [photoUrl, setPhotoUrl] = useState<string | null>(
     user.profile_photo_url,
   );
@@ -58,17 +60,16 @@ export default function ProfileForm({ user }: { user: User }) {
   const watchedValues = watch();
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
+    setErrorMessage('');
+    setSuccessMessage('');
     setPreviewUrl(URL.createObjectURL(file));
     setSelectedFile(file);
     setIsPendingDelete(false);
   };
 
   const handleRemovePhoto = () => {
+    setErrorMessage('');
+    setSuccessMessage('');
     setPreviewUrl(null);
     setSelectedFile(null);
     setIsPendingDelete(true);
@@ -76,6 +77,8 @@ export default function ProfileForm({ user }: { user: User }) {
   };
 
   const onCancel = () => {
+    setErrorMessage('');
+    setSuccessMessage('');
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setSelectedFile(null);
@@ -88,6 +91,8 @@ export default function ProfileForm({ user }: { user: User }) {
 
   const onSubmit = async (data: ProfileFormValues) => {
     setIsSaving(true);
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
       let finalPhotoUrl = photoUrl;
       const {
@@ -96,9 +101,15 @@ export default function ProfileForm({ user }: { user: User }) {
 
       if (authUser) {
         if (isPendingDelete) {
-          await supabase.storage
+          const { error: deleteError } = await supabase.storage
             .from('profile_photos')
             .remove([`${authUser.id}/profile.jpg`]);
+          if (deleteError) {
+            setErrorMessage(
+              deleteError.message ?? 'Failed to remove profile photo.',
+            );
+            return;
+          }
           finalPhotoUrl = null;
         }
 
@@ -110,7 +121,8 @@ export default function ProfileForm({ user }: { user: User }) {
             });
 
           if (uploadError) {
-            console.error('Upload error:', uploadError.message);
+            setErrorMessage('Failed to upload photo: ' + uploadError.message);
+            return;
           } else {
             const { data: publicData } = supabase.storage
               .from('profile_photos')
@@ -145,14 +157,17 @@ export default function ProfileForm({ user }: { user: User }) {
           phone: data.phone,
         });
         setIsEditing(false);
-        if (data.email !== user.email) {
-          alert('Please check your new email address to verify the change.');
-        }
+        setSuccessMessage(
+          data.email !== user.email
+            ? 'Please check both your new and old email addresses to verify the change.'
+            : '',
+        );
       } else {
-        console.error('Error updating profile:', result.error);
+        setErrorMessage(result.error ?? 'Failed to save profile.');
+        return;
       }
-    } catch (error) {
-      console.error('Error saving profile:', error);
+    } catch {
+      setErrorMessage('Failed to save profile.');
     } finally {
       setIsSaving(false);
     }
@@ -334,6 +349,9 @@ export default function ProfileForm({ user }: { user: User }) {
               </Button>
             </div>
           )}
+
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </form>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { updateStore } from '@/app/actions/store';
 import { useRef, useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 type FormValues = {
   name: string;
@@ -15,6 +15,7 @@ type FormValues = {
 
 export default function EditStoreForm({ store }: { store: Store }) {
   const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // photoUrl represents what is currently in the DB
   const [photoUrl, setPhotoUrl] = useState<string | null>(
@@ -43,11 +44,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
   });
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024; // 200 KB in bytes
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
     const preview = URL.createObjectURL(file);
     setPreviewUrl(preview);
     setSelectedFile(file);
@@ -63,6 +59,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
 
   const onCancel = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setErrorMessage('');
     setPreviewUrl(null);
     setSelectedFile(null);
     setIsPendingDelete(false);
@@ -73,6 +70,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
 
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
+    setErrorMessage('');
     try {
       let finalPhotoUrl = photoUrl;
 
@@ -93,7 +91,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
           });
 
         if (uploadError) {
-          console.error('Upload error:', uploadError.message);
+          setErrorMessage('Failed to upload photo: ' + uploadError.message);
         } else {
           const { data: publicData } = supabase.storage
             .from('store_photos')
@@ -120,10 +118,10 @@ export default function EditStoreForm({ store }: { store: Store }) {
         photoUploadRef.current?.resetFile();
         reset({ name: data.name, street_address: data.street_address });
       } else {
-        console.error('Error updating store:', result.error);
+        setErrorMessage('Failed to update store: ' + result.error);
       }
     } catch (error) {
-      console.error('Error saving store:', error);
+      setErrorMessage('Failed to update store: ' + error);
     } finally {
       setIsSaving(false);
     }
@@ -176,7 +174,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
                 {errors.street_address?.message}
               </Form.Control.Feedback>
             </div>
-
             {hasDirtyTextOrImage && (
               <div className="btn-row">
                 <Button
@@ -197,6 +194,7 @@ export default function EditStoreForm({ store }: { store: Store }) {
                 </Button>
               </div>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </div>
       </div>

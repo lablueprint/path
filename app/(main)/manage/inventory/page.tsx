@@ -3,6 +3,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Link from 'next/link';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import { Alert } from 'react-bootstrap';
 
 type SearchParams = {
   query?: string;
@@ -57,8 +58,7 @@ export default async function InventoryPage({
     >();
 
   if (itemError) {
-    console.error(itemError);
-    return <div>Failed to load inventory items.</div>;
+    return <Alert variant="danger">Failed to load items.</Alert>;
   }
 
   const { data: categories, error } = await supabase
@@ -79,8 +79,7 @@ export default async function InventoryPage({
     >();
 
   if (error) {
-    console.error(error);
-    return <div>Failed to load categories.</div>;
+    return <Alert variant="danger">Failed to load categories.</Alert>;
   }
 
   const items = itemsData
@@ -137,7 +136,7 @@ export default async function InventoryPage({
           ))}
         </div>
       ) : (
-        <>No items found.</>
+        <p>No items found.</p>
       )}
     </>
   );

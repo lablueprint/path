@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { addToCart } from '@/app/actions/ticket';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
 
 interface AddOutOfStockToCartFormProps {
@@ -12,31 +12,40 @@ interface AddOutOfStockToCartFormProps {
 export default function AddOutOfStockToCartForm({
   storeId,
 }: AddOutOfStockToCartFormProps) {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [formErrorMessage, setFormErrorMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
-    setErrorMessage(null);
+    setErrorMessage('');
+    setSuccessMessage('');
+    setFormErrorMessage(null);
 
     const description = formData.get('description') as string;
 
     if (!description) {
-      setErrorMessage('Please enter a description.');
+      setFormErrorMessage('Please enter a description.');
       return;
     }
-    const { error: err } = await addToCart(
-      storeId,
-      undefined,
-      undefined,
-      description,
-    );
-    if (err) {
-      console.error('Error fetching ticket:', err);
-    }
+    startTransition(async () => {
+      const { error: err } = await addToCart(
+        storeId,
+        undefined,
+        undefined,
+        description,
+      );
+      if (err) {
+        setErrorMessage('Failed to add to cart: ' + err);
+      } else {
+        setSuccessMessage('Added to cart.');
+      }
+    });
   };
 
   const handleInputChange = () => {
-    if (errorMessage) {
-      setErrorMessage(null);
+    if (formErrorMessage) {
+      setFormErrorMessage(null);
     }
   };
 
@@ -52,17 +61,23 @@ export default function AddOutOfStockToCartForm({
               name="description"
               as="textarea"
               placeholder="Description of item..."
-              isInvalid={!!errorMessage}
+              isInvalid={!!formErrorMessage}
               onChange={handleInputChange}
               rows={4}
             />
             <Form.Control.Feedback type="invalid">
-              {errorMessage}
+              {formErrorMessage}
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit" className="align-self-start btn-submit">
-            Add to Cart
+          <Button
+            type="submit"
+            className="align-self-start btn-submit"
+            disabled={isPending}
+          >
+            {isPending ? 'Adding to Cart...' : 'Add to Cart'}
           </Button>
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </Form>
       </div>
     </div>

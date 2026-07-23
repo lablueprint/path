@@ -4,6 +4,7 @@ import recordGiftInKindIcon from '@/public/action-buttons/record-gift-in-kind.sv
 import requestInventoryIcon from '@/public/action-buttons/request-inventory.svg';
 import manageInventoryIcon from '@/public/action-buttons/manage-inventory.svg';
 import administrationIcon from '@/public/action-buttons/administration.svg';
+import { Alert } from 'react-bootstrap';
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -12,7 +13,7 @@ export default async function HomePage() {
     await supabase.auth.getClaims();
 
   if (claimsError) {
-    console.error('Error fetching claims:', claimsError);
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const userRole = claimsData?.claims?.user_role;

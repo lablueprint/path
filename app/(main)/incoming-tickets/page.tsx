@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import { Store } from '@/app/types/store';
+import { Alert } from 'react-bootstrap';
 
 export default async function IncomingTicketsPage() {
   const supabase = await createClient();
@@ -10,7 +11,7 @@ export default async function IncomingTicketsPage() {
     await supabase.auth.getClaims();
 
   if (claimsError) {
-    console.error('Error fetching claims:', claimsError);
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const userRole = claimsData?.claims?.user_role;
@@ -22,7 +23,7 @@ export default async function IncomingTicketsPage() {
     const { data, error } = await supabase.from('stores').select('*');
 
     if (error) {
-      console.error('Error fetching stores:', error);
+      return <Alert variant="danger">Failed to load stores.</Alert>;
     }
 
     stores = data as Store[];
@@ -39,7 +40,7 @@ export default async function IncomingTicketsPage() {
       >();
 
     if (error) {
-      console.error('Error fetching stores:', error);
+      return <Alert variant="danger">Failed to load store admins.</Alert>;
     }
     stores = (data ?? []).map((row) => row.stores as Store);
   }

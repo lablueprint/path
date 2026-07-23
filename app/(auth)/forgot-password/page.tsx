@@ -1,8 +1,9 @@
 'use client';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 import Link from 'next/link';
 
@@ -12,10 +13,12 @@ type ForgotPasswordFormValues = {
 
 export default function ForgotPasswordPage() {
   const supabase = createClient();
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordFormValues>({
     defaultValues: { email: '' },
@@ -23,14 +26,19 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = async (values: ForgotPasswordFormValues) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+
     const { error } = await supabase.auth.resetPasswordForEmail(values.email);
 
     if (error) {
-      alert(error.message);
+      setErrorMessage(error.message ?? 'Failed to send reset password email.');
       return;
     }
-
-    alert('Instructions to reset your password have been sent to your email.');
+    reset();
+    setSuccessMessage(
+      'Instructions to reset your password have been sent to your email.',
+    );
   };
 
   return (
@@ -80,6 +88,10 @@ export default function ForgotPasswordPage() {
                 {isSubmitting ? 'Sending...' : 'Reset'}
               </Button>
             </div>
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
+            )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </form>
       </div>

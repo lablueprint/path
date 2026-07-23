@@ -4,7 +4,7 @@ import AddInStockToCartForm from '@/app/(main)/request/components/AddInStockToCa
 import styles from '@/app/(main)/request/[storeId]/[storeItemId]/RequestStoreItemPage.module.css';
 import { createClient } from '@/app/lib/supabase/server-client';
 import imagePlaceholder from '@/public/image-placeholder.svg';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Alert } from 'react-bootstrap';
 import pinIcon from '@/public/pin-icon.svg';
 import cartStyles from '@/app/(main)/request/Cart.module.css';
 import cartIcon from '@/public/cart-icon.svg';
@@ -58,8 +58,7 @@ export default async function RequestStoreItemPage({
     >();
 
   if (itemError || !itemData) {
-    console.error('Error fetching request page data:', itemError);
-    return <div>Failed to load data.</div>;
+    return <Alert variant="danger">Failed to load store item.</Alert>;
   }
 
   const storeName = storeId == 'all' ? 'All Stores' : itemData.stores.name;

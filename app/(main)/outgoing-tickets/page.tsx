@@ -1,5 +1,6 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import OutgoingTicketsList from '@/app/(main)/outgoing-tickets/components/OutgoingTicketsList';
+import { Alert } from 'react-bootstrap';
 
 export default async function OutgoingTicketsPage() {
   const supabase = await createClient();
@@ -23,7 +24,9 @@ export default async function OutgoingTicketsPage() {
     )
     .eq('requestor_user_id', user?.id);
 
-  if (error) return <div>Failed to load data: {error.message}</div>;
+  if (error) {
+    return <Alert variant="danger">Failed to load tickets.</Alert>;
+  }
 
   return (
     <>

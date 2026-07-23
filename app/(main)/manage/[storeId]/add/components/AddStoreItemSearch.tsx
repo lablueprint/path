@@ -14,7 +14,7 @@ import AddInventoryItemForm, {
   Inputs,
 } from '@/app/(main)/manage/components/AddInventoryItemForm';
 import { createItem } from '@/app/actions/inventory';
-import { Form, Card, Button } from 'react-bootstrap';
+import { Form, Card, Button, Alert } from 'react-bootstrap';
 import AddItemCard from '@/app/(main)/manage/[storeId]/add/components/AddItemCard';
 import { ListGroup } from 'react-bootstrap';
 
@@ -41,6 +41,9 @@ export default function AddStoreItemSearch({
   });
   const [results, setResults] = useState<ItemWithNames[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [creationErrorMessage, setCreationErrorMessage] = useState('');
+  const [creationSuccessMessage, setCreationSuccessMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const createItemMethods = useForm<Inputs>({
     defaultValues: {
@@ -50,6 +53,7 @@ export default function AddStoreItemSearch({
       selectedSubcategory: '',
     },
   });
+  const { isSubmitting } = createItemMethods.formState;
 
   const [inventoryType, setInventoryType] = useState<'existing' | 'new' | null>(
     null,
@@ -74,6 +78,7 @@ export default function AddStoreItemSearch({
     const timeout = setTimeout(async () => {
       if (!searchQuery) {
         setResults([]);
+        setErrorMessage('');
         return;
       }
       const { data, error } = await supabase
@@ -81,7 +86,8 @@ export default function AddStoreItemSearch({
         .select(`*, subcategories (name, categories(name))`)
         .ilike('name', `%${searchQuery}%`);
       if (error) {
-        console.error(error);
+        setErrorMessage(error.message ?? 'Failed to search inventory items.');
+        setResults([]);
         return;
       }
       const items: ItemWithNames[] = data.map((item) => ({
@@ -89,6 +95,7 @@ export default function AddStoreItemSearch({
         category_name: item.subcategories.categories?.name,
         subcategory_name: item.subcategories?.name,
       }));
+      setErrorMessage('');
       setResults(items);
     }, 300);
     return () => clearTimeout(timeout);
@@ -121,6 +128,8 @@ export default function AddStoreItemSearch({
   };
 
   const handleCreateAndSelect = async (formData: Inputs) => {
+    setCreationErrorMessage('');
+    setCreationSuccessMessage('');
     try {
       let photoUrl: string | null = null;
 
@@ -141,7 +150,10 @@ export default function AddStoreItemSearch({
             .upload(filePath, selectedFile, { upsert: true });
 
           if (uploadError) {
-            console.error('Upload error:', uploadError.message);
+            setCreationErrorMessage(
+              'Failed to upload photo: ' + uploadError.message,
+            );
+            return;
           } else {
             const { data: publicData } = supabase.storage
               .from('inventory_item_photos')
@@ -180,11 +192,12 @@ export default function AddStoreItemSearch({
         });
 
         createItemMethods.reset({}, { keepValues: false });
+        setCreationSuccessMessage('Item created and selected.');
       } else {
-        console.error('Failed to create item:', result.error);
+        setCreationErrorMessage('Failed to create item: ' + result.error);
       }
     } catch (error) {
-      console.error('Error creating item:', error);
+      setCreationErrorMessage('Failed to create item: ' + error);
     }
   };
 
@@ -238,23 +251,31 @@ export default function AddStoreItemSearch({
                 )}
               </div>
             )}
+            {inventoryType == 'existing' && errorMessage && (
+              <Alert variant="danger">{errorMessage}</Alert>
+            )}
             {inventoryType == 'new' && (
               <FormProvider {...createItemMethods}>
                 <AddInventoryItemForm
                   selectedFile={selectedFile}
                   onFileChange={setSelectedFile}
                 />
-                <div>
-                  <Button
-                    type="button"
-                    onClick={createItemMethods.handleSubmit(
-                      handleCreateAndSelect,
-                    )}
-                    className="btn-submit"
-                  >
-                    Create Item
-                  </Button>
-                </div>
+                <Button
+                  type="button"
+                  onClick={createItemMethods.handleSubmit(
+                    handleCreateAndSelect,
+                  )}
+                  className="btn-submit align-self-start"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Creating Item...' : 'Create Item'}
+                </Button>
+                {creationSuccessMessage && (
+                  <Alert variant="success">{creationSuccessMessage}</Alert>
+                )}
+                {creationErrorMessage && (
+                  <Alert variant="danger">{creationErrorMessage}</Alert>
+                )}
               </FormProvider>
             )}
           </div>

@@ -4,6 +4,7 @@ import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import AddAdminCard from '@/app/(main)/administration/store-admins/[storeId]/components/AddAdminCard';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
+import { Alert } from 'react-bootstrap';
 
 export default async function StoreAdminPage({
   params,
@@ -24,15 +25,14 @@ export default async function StoreAdminPage({
     .eq('store_id', storeId)
     .single();
   if (store_error) {
-    console.error('Error fetching store information:', store_error);
-    return <div>Failed to load store data.</div>;
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   // get user's claims
   const { data: claimsData, error: claimsError } =
     await supabase.auth.getClaims();
   if (claimsError) {
-    console.error('Error fetching claims data:', claimsError);
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const userRole = claimsData?.claims?.user_role;
@@ -74,8 +74,7 @@ export default async function StoreAdminPage({
       { merge: false }
     >();
   if (adminsError) {
-    console.error('Error fetching store admins:', adminsError);
-    return <div>Failed to load store admins.</div>;
+    return <Alert variant="danger">Failed to load store admins.</Alert>;
   }
   const existingAdminUserIds = admins?.map((admin) => admin.user_id);
 
@@ -120,7 +119,7 @@ export default async function StoreAdminPage({
             );
           })
         ) : (
-          <div>No admins found.</div>
+          <p>No admins found.</p>
         )}
       </div>
     </>

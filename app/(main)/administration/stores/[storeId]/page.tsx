@@ -2,10 +2,10 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import type { Store } from '@/app/types/store';
 import EditStoreForm from '@/app/(main)/administration/stores/[storeId]/components/EditStoreForm';
 import RemoveStoreButton from '@/app/(main)/administration/stores/[storeId]/components/RemoveStoreButton';
-import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
+import { Alert } from 'react-bootstrap';
 
 export default async function StoreDetailsPage({
   params,
@@ -21,13 +21,8 @@ export default async function StoreDetailsPage({
     .eq('store_id', storeId)
     .single();
 
-  if (!storeData) {
-    notFound();
-  }
-
-  if (storeError) {
-    console.error('Error fetching store:', storeError);
-    return <div>Failed to load store.</div>;
+  if (!storeData || storeError) {
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   const store = storeData as Store;
@@ -44,9 +39,7 @@ export default async function StoreDetailsPage({
         <Image src={pinIcon} height={32} alt="Pin icon" />
       </h1>
       <EditStoreForm store={store} />
-      <div>
-        <RemoveStoreButton storeId={store.store_id} />
-      </div>
+      <RemoveStoreButton storeId={store.store_id} />
     </>
   );
 }

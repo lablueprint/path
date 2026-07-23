@@ -1,11 +1,11 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import { notFound } from 'next/navigation';
 import ItemCard from '@/app/(main)/components/ItemCard';
 import ItemSearch from '@/app/(main)/components/ItemSearch';
 import Link from 'next/link';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
+import { Alert } from 'react-bootstrap';
 
 type SearchParams = {
   query?: string;
@@ -31,7 +31,7 @@ export default async function ManageStorePage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return notFound();
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   // Check if user can manage the store
@@ -40,13 +40,8 @@ export default async function ManageStorePage({
     { store_to_manage_id: storeId },
   );
 
-  if (canManageError) {
-    console.error('Error checking store access:', canManageError);
-    return notFound();
-  }
-
-  if (!canManage) {
-    return notFound();
+  if (canManageError || !canManage) {
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   const { data: categories } = await supabase
@@ -66,8 +61,7 @@ export default async function ManageStorePage({
     .single();
 
   if (storeError || !store) {
-    console.error('Error fetching store:', storeError);
-    return <div>Failed to load store.</div>;
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   let filteredItems = supabase
@@ -126,8 +120,7 @@ export default async function ManageStorePage({
     >();
 
   if (itemsError) {
-    console.error('Error fetching store items:', itemsError);
-    return <div>Failed to load store items.</div>;
+    return <Alert variant="danger">Failed to load store items.</Alert>;
   }
 
   // Sort itemsData in JavaScript

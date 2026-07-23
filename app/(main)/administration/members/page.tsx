@@ -2,6 +2,7 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import UsersList from '@/app/(main)/administration/members/components/UsersList';
 import UserSearch from '@/app/(main)/administration/members/components/UserSearch';
+import { Alert } from 'react-bootstrap';
 
 type searchParams = {
   query?: string;
@@ -59,7 +60,7 @@ export default async function UsersPage({
 
   const { data: usersData, error: usersErr } = await filteredUsersData;
   if (usersErr) {
-    console.error('Error fetching users:', usersErr);
+    return <Alert variant="danger">Failed to load users.</Alert>;
   }
 
   const users = (usersData ?? []).map((u) => {

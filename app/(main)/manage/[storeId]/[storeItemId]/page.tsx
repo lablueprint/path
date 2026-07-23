@@ -1,12 +1,11 @@
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import DeleteStoreItemButton from '@/app/(main)/manage/[storeId]/[storeItemId]/components/DeleteStoreItemButton';
 import StoreItemForm from '@/app/(main)/manage/[storeId]/[storeItemId]/components/StoreItemForm';
 import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/ManageStoreItemPage.module.css';
 import { createClient } from '@/app/lib/supabase/server-client';
 import imagePlaceholder from '@/public/image-placeholder.svg';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Alert } from 'react-bootstrap';
 import pinIcon from '@/public/pin-icon.svg';
 
 export default async function ManageStoreItemPage({
@@ -23,7 +22,7 @@ export default async function ManageStoreItemPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return notFound();
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   // Check if user can manage the store
@@ -32,13 +31,8 @@ export default async function ManageStoreItemPage({
     { store_to_manage_id: storeId },
   );
 
-  if (canManageError) {
-    console.error('Error checking store access:', canManageError);
-    return notFound();
-  }
-
-  if (!canManage) {
-    return notFound();
+  if (canManageError || !canManage) {
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   const [{ data: store }, { data: itemData, error: itemError }] =
@@ -88,8 +82,7 @@ export default async function ManageStoreItemPage({
     ]);
 
   if (itemError || !itemData) {
-    console.error('Error fetching store item:', itemError);
-    return <div>Failed to load store item.</div>;
+    return <Alert variant="danger">Failed to load store item.</Alert>;
   }
 
   return (
@@ -158,9 +151,7 @@ export default async function ManageStoreItemPage({
           </Row>
         </div>
       </Card>
-      <div>
-        <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
-      </div>
+      <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
     </>
   );
 }

@@ -3,9 +3,10 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import Image from 'next/image';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import pathLogo from '@/public/path.png';
 import Link from 'next/link';
+import { useState } from 'react';
 
 type ResetPasswordFormValues = {
   password: string;
@@ -14,6 +15,8 @@ type ResetPasswordFormValues = {
 
 export default function ResetPasswordPage() {
   const supabase = createClient();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const {
     register,
@@ -22,7 +25,7 @@ export default function ResetPasswordPage() {
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormValues>({
     defaultValues: { password: '', passwordConfirmation: '' },
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   const passwordValue = useWatch({
@@ -31,16 +34,19 @@ export default function ResetPasswordPage() {
   });
 
   const onSubmit = async (values: ResetPasswordFormValues) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+
     const { error } = await supabase.auth.updateUser({
       password: values.password,
     });
 
     if (error) {
-      alert(error.message);
+      setErrorMessage(error.message ?? 'Failed to update password.');
       return;
     }
 
-    alert('Your password has been updated.');
+    setSuccessMessage('Your password has been updated.');
     window.location.assign('/home');
   };
 
@@ -107,6 +113,11 @@ export default function ResetPasswordPage() {
                 {isSubmitting ? 'Saving...' : 'Save'}
               </Button>
             </div>
+
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
+            )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </form>
       </div>

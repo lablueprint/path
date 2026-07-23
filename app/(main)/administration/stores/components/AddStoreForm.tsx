@@ -6,7 +6,7 @@ import { createStore, updateStore } from '@/app/actions/store';
 import { createClient } from '@/app/lib/supabase/browser-client';
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import defaultStorePhoto from '@/public/image-placeholder.svg';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 type FormValues = {
   storeName: string;
@@ -15,6 +15,8 @@ type FormValues = {
 
 export default function AddStoreForm() {
   const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -34,11 +36,6 @@ export default function AddStoreForm() {
   });
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
     setPreviewUrl(URL.createObjectURL(file));
     setSelectedFile(file);
   };
@@ -50,6 +47,8 @@ export default function AddStoreForm() {
   };
 
   const onSubmit = async (data: FormValues) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     setIsSaving(true);
     try {
       const store = await createStore({
@@ -57,7 +56,10 @@ export default function AddStoreForm() {
         street_address: data.storeStreetAddress,
       });
 
-      if (!store.success || !store.data) return;
+      if (!store.success || !store.data) {
+        setErrorMessage('Failed to add store: ' + store.error);
+        return;
+      }
 
       const store_id = store.data.store_id;
       let finalPhotoUrl = defaultStorePhoto.src;
@@ -68,14 +70,21 @@ export default function AddStoreForm() {
           .upload(`${store_id}/store.jpg`, selectedFile, { upsert: true });
 
         if (uploadError) {
-          console.error('Upload error:', uploadError.message);
+          setErrorMessage('Failed to upload photo: ' + uploadError.message);
+          return;
         } else {
           const { data: publicData } = supabase.storage
             .from('store_photos')
             .getPublicUrl(`${store_id}/store.jpg`);
 
           finalPhotoUrl = `${publicData.publicUrl}?t=${Date.now()}`;
-          await updateStore(store_id, { photo_url: finalPhotoUrl });
+          const result = await updateStore(store_id, {
+            photo_url: finalPhotoUrl,
+          });
+          if (!result.success) {
+            setErrorMessage('Failed to add photo: ' + result.error);
+            return;
+          }
         }
       }
 
@@ -83,8 +92,9 @@ export default function AddStoreForm() {
       setSelectedFile(null);
       setPreviewUrl(null);
       photoUploadRef.current?.resetFile();
+      setSuccessMessage('Store added.');
     } catch (error) {
-      console.error('Error saving store profile:', error);
+      setErrorMessage('Failed to add store: ' + error);
     } finally {
       setIsSaving(false);
     }
@@ -143,6 +153,10 @@ export default function AddStoreForm() {
                   {isSaving ? 'Saving...' : 'Save'}
                 </Button>
               </div>
+              {successMessage && (
+                <Alert variant="success">{successMessage}</Alert>
+              )}
+              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
             </div>
           </div>
         </form>

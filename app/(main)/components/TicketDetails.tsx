@@ -6,7 +6,7 @@ import TicketUserCard from '@/app/(main)/components/TicketUserCard';
 import { User } from '@/app/types/user';
 import TicketStatusDropdown from '@/app/(main)/components/TicketStatusDropdown';
 import styles from '@/app/(main)/components/TicketDetails.module.css';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Alert } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Image from 'next/image';
 import imagePlaceholder from '@/public/image-placeholder.svg';
@@ -45,8 +45,7 @@ export default async function TicketDetails({
     .single();
 
   if (err) {
-    console.error('Error fetching ticket:', err);
-    return <div>Failed to load data.</div>;
+    return <Alert variant="danger">Failed to load ticket.</Alert>;
   }
 
   const store = userTicket.stores as unknown as {
@@ -134,9 +133,8 @@ export default async function TicketDetails({
       .select('store_id, name, street_address')
       .neq('store_id', userTicket.store_id);
   if (destStoreOptionsError) {
-    console.error(
-      'Error fetching destination store options:',
-      destStoreOptionsError,
+    return (
+      <Alert variant="danger">Failed to load destination store options.</Alert>
     );
   }
 
@@ -206,9 +204,7 @@ export default async function TicketDetails({
                     statusOptions={statusOptions}
                   />
                 </div>
-                <div className="align-self-start align-self-md-end">
-                  <DeleteTicketButton ticketId={userTicket.ticket_id} />
-                </div>
+                <DeleteTicketButton ticketId={userTicket.ticket_id} />
               </Col>
             </Row>
           </Card>
@@ -250,7 +246,7 @@ export default async function TicketDetails({
           </Row>
         </>
       ) : (
-        <>No ticket found.</>
+        <p>No ticket found.</p>
       )}
     </>
   );

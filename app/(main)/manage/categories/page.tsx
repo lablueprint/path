@@ -2,11 +2,18 @@ import { createClient } from '@/app/lib/supabase/server-client';
 import EditCategories from '@/app/(main)/manage/categories/components/EditCategories';
 import ViewCategories from '@/app/(main)/manage/categories/components/ViewCategories';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import { Alert } from 'react-bootstrap';
 
 export default async function InventoryPage() {
   const supabase = await createClient();
 
-  const { data: claimsData } = await supabase.auth.getClaims();
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
+
+  if (claimsError) {
+    return <Alert variant="danger">Failed to load user.</Alert>;
+  }
+
   const role = claimsData?.claims?.user_role;
 
   const { data: categories, error } = await supabase
@@ -27,8 +34,7 @@ export default async function InventoryPage() {
     >();
 
   if (error) {
-    console.error(error);
-    return <div>Failed to load categories.</div>;
+    return <Alert variant="danger">Failed to load categories.</Alert>;
   }
 
   return (

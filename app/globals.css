@@ -103,9 +103,16 @@ Table {
   padding: calc(1.5rem + 3.875rem) 1.5rem 1.5rem 1.5rem;
 }
 
+.not-found-container {
+  padding: 1.5rem;
+}
+
 @media (min-width: 576px) {
   .main-container {
     padding: calc(3rem + 3.875rem) 3rem 3rem 3rem;
+  }
+  .not-found-container {
+    padding: 3rem;
   }
 }
 
@@ -185,6 +192,26 @@ Table {
 
 .field-label {
   margin-bottom: 0.25rem;
+}
+
+/* —— alerts –– */
+.alert {
+  margin-bottom: 0;
+  padding: 0.75rem;
+  line-height: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.alert-success {
+  background-color: #e7ffee;
+  border: none;
+  color: #24704a;
+}
+
+.alert-danger {
+  background-color: #ffefef;
+  border: none;
+  color: #c53030;
 }
 
 /* ── buttons ── */

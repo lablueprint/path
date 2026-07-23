@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import { notFound } from 'next/navigation';
+import { Alert } from 'react-bootstrap';
 import TicketDetails from '@/app/(main)/components/TicketDetails';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 
@@ -16,7 +16,7 @@ export default async function IncomingTicketDetailsPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return notFound();
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   // Check if user can manage the store
@@ -26,10 +26,7 @@ export default async function IncomingTicketDetailsPage({
   );
 
   if (canManageError || !canManage) {
-    if (canManageError) {
-      console.error('Error checking store access:', canManageError);
-    }
-    return notFound();
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   const { data: store, error: storeError } = await supabase
@@ -39,7 +36,7 @@ export default async function IncomingTicketDetailsPage({
     .single();
 
   if (storeError) {
-    console.error('Error fetching store for breadcrumbs:', storeError);
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   return (

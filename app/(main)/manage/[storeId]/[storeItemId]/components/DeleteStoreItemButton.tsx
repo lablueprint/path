@@ -2,7 +2,8 @@
 
 import { deleteStoreItem } from '@/app/actions/store';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button } from 'react-bootstrap';
+import { useState, useTransition } from 'react';
+import { Button, Alert } from 'react-bootstrap';
 
 export default function DeleteStoreItemButton({
   storeItemId,
@@ -11,33 +12,46 @@ export default function DeleteStoreItemButton({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   async function handleDelete() {
-    const result = await deleteStoreItem(storeItemId);
+    setErrorMessage('');
+    startTransition(async () => {
+      const result = await deleteStoreItem(storeItemId);
 
-    if (!result.success) {
-      console.error('Failed to delete store item:', result.error);
-      return;
-    }
+      if (!result.success) {
+        setErrorMessage('Failed to delete store item: ' + result.error);
+        return;
+      }
 
-    const targetPath = pathname.split('/').slice(0, -1).join('/') || '/';
+      const targetPath = pathname.split('/').slice(0, -1).join('/') || '/';
 
-    if (pathname === targetPath) {
-      router.refresh();
-      return;
-    }
+      if (pathname === targetPath) {
+        router.refresh();
+        return;
+      }
 
-    router.push(targetPath);
+      router.push(targetPath);
+    });
   }
 
   return (
-    <Button
-      type="button"
-      variant="outline-danger"
-      onClick={handleDelete}
-      className="btn-remove"
-    >
-      Remove
-    </Button>
+    <>
+      <Button
+        type="button"
+        variant="outline-danger"
+        className="btn-remove align-self-start"
+        onClick={handleDelete}
+        disabled={isPending}
+      >
+        {isPending ? 'Removing...' : 'Remove'}
+      </Button>
+      {errorMessage && (
+        <Alert className="w-100" variant="danger">
+          {errorMessage}
+        </Alert>
+      )}
+    </>
   );
 }

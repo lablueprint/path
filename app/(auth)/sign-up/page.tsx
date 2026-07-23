@@ -5,7 +5,7 @@ import { createClient } from '@/app/lib/supabase/browser-client';
 import { forwardRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import type { FormControlProps } from 'react-bootstrap';
 import { PatternFormat } from 'react-number-format';
 
@@ -32,6 +32,8 @@ export default function SignUpPage() {
     formState: { errors },
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const supabase = createClient();
   const passwordValue = useWatch({
     control,
@@ -39,6 +41,8 @@ export default function SignUpPage() {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     setIsLoading(true);
     const { error } = await supabase.auth.signUp({
       email: formData.email,
@@ -53,9 +57,13 @@ export default function SignUpPage() {
     });
     setIsLoading(false);
     if (error) {
-      console.error('Sign-up error:', error);
+      setErrorMessage(error.message ?? 'Failed to sign up.');
+      return;
     }
     window.location.assign('/home');
+    setSuccessMessage(
+      'Account created successfully! Please check your email to confirm your account.',
+    );
   };
 
   return (
@@ -202,9 +210,13 @@ export default function SignUpPage() {
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ? 'Creating account...' : 'Sign Up'}
+                {isLoading ? 'Creating Account...' : 'Sign Up'}
               </Button>
             </div>
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
+            )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </form>
       </div>

@@ -10,7 +10,7 @@ import { createDonation } from '@/app/actions/donation';
 import { addUpdateStoreItemQuantity } from '@/app/actions/store';
 import { InventoryItem } from '@/app/types/inventory';
 import AddStoreItemSearch from '@/app/(main)/manage/[storeId]/add/components/AddStoreItemSearch';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 type ItemWithNames = InventoryItem & {
   category_name: string;
   subcategory_name: string;
@@ -68,6 +68,10 @@ export default function StoreItemsDonationForm({
   const donorType = useWatch({ control: methods.control, name: 'donor_type' });
   const [selectedItems, setSelectedItems] = useState<ItemWithNames[]>([]);
   const [autoFillItems, setAutoFillItems] = useState<ItemWithNames[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [itemsErrorMessage, setItemsErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [rawPhone, setRawPhone] = useState('');
   const handleRawPhone = (value: string) => {
     setRawPhone(value);
@@ -96,19 +100,30 @@ export default function StoreItemsDonationForm({
       }
     }
   }, [isGiftSelected, isInventorySelected, autoFillItems, methods]);
+
   const onSubmit = async (data: CombinedFormData) => {
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    setItemsErrorMessage('');
     try {
-      let inventoryErrorOccurred = false;
-      let donationErrorOccurred = false;
+      const inventoryErrors: string[] = [];
+      let donationError = '';
 
       if (data.itemSettings?.includes('addInventoryItems')) {
+        if (data.items.length === 0) {
+          setItemsErrorMessage(
+            'Please select one or more items to add to inventory.',
+          );
+          return;
+        }
         for (const item of data.items) {
           const { error } = await addUpdateStoreItemQuantity(
             item.inventory_item_id,
             item.quantity,
             store.store_id,
           );
-          if (error) inventoryErrorOccurred = true;
+          if (error) inventoryErrors.push(error);
         }
       }
 
@@ -150,16 +165,20 @@ export default function StoreItemsDonationForm({
           store_street_address: store?.street_address,
         };
         const { error } = await createDonation(donation);
-        if (error) donationErrorOccurred = true;
+        if (error) donationError = error;
       }
-      if (inventoryErrorOccurred && donationErrorOccurred) {
-        alert('Both inventory update and donation submission failed.');
-      } else if (inventoryErrorOccurred) {
-        alert('Inventory update failed.');
-      } else if (donationErrorOccurred) {
-        alert('Donation submission failed.');
+
+      if (inventoryErrors.length > 0 && donationError) {
+        setErrorMessage(
+          'Inventory update and donation submission failed: ' + donationError,
+        );
+      } else if (inventoryErrors.length > 0) {
+        setErrorMessage(
+          inventoryErrors[0] ?? 'One or more inventory updates failed.',
+        );
+      } else if (donationError) {
+        setErrorMessage(donationError);
       } else {
-        alert('Success!');
         // Reset all fields to empty/default values
         methods.reset({
           itemSettings: [],
@@ -181,9 +200,12 @@ export default function StoreItemsDonationForm({
         setSelectedItems([]);
         setAutoFillItems([]);
         methods.clearErrors();
+        setSuccessMessage('Submission saved.');
       }
     } catch (error) {
-      console.error('Failed to process form:', error);
+      setErrorMessage('Failed to process submission: ' + error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -232,14 +254,22 @@ export default function StoreItemsDonationForm({
                 selectedItems={selectedItems}
                 setSelectedItems={setSelectedItems}
               />
-              {/* add autofillitems connection pass in prop to storeitemsform */}
+              {itemsErrorMessage && selectedItems.length === 0 && (
+                <Alert variant="danger">{itemsErrorMessage}</Alert>
+              )}
               <div>
-                <Button type="submit" className="btn-submit">
-                  Submit
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-submit"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </Button>
               </div>
             </>
           )}
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+          {successMessage && <Alert variant="success">{successMessage}</Alert>}
         </form>
       </FormProvider>
     </>

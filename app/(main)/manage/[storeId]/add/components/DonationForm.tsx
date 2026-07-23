@@ -27,7 +27,7 @@ export default function DonationForm({
   const {
     register,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useFormContext<CombinedFormData>();
 
   return (
@@ -302,11 +302,17 @@ export default function DonationForm({
           </Form.Group>
 
           {showSubmitButton && (
-            <div>
-              <Button type="submit" className="btn-submit">
-                Submit
-              </Button>
-            </div>
+            <>
+              <div>
+                <Button
+                  type="submit"
+                  className="btn-submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                </Button>
+              </div>
+            </>
           )}
         </div>
       </Card.Body>

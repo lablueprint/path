@@ -4,6 +4,7 @@ import Dropdown from '@/app/(main)/administration/members/[userId]/components/Dr
 import Image from 'next/image';
 import styles from '@/app/(main)/profile/components/ProfileForm.module.css';
 import imagePlaceholder from '@/public/image-placeholder.svg';
+import { Alert } from 'react-bootstrap';
 
 export default async function TeamProfilePage({
   params,
@@ -25,14 +26,8 @@ export default async function TeamProfilePage({
     .eq('user_id', userId)
     .single();
 
-  if (userErr) {
-    console.error('Error fetching users:', userErr);
-    return <div>Failed to load data.</div>;
-  }
-
-  if (userRoleErr) {
-    console.error('Error fetching user role:', userRoleErr);
-    return <div>Failed to load data.</div>;
+  if (userErr || userRoleErr) {
+    return <Alert variant="danger">Failed to load users.</Alert>;
   }
 
   return (

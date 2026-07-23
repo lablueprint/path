@@ -42,9 +42,10 @@ type FormData = {
 };
 
 export default function LightweightDonationForm({ stores, user }: Props) {
-  const [showSuccess, setShowSuccess] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [rawPhone, setRawPhone] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const {
     register,
@@ -52,7 +53,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
     control,
     reset,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
       donor_type: undefined,
@@ -75,7 +76,8 @@ export default function LightweightDonationForm({ stores, user }: Props) {
   const receivingSiteOptions = ['None', ...storeNames];
 
   const onSubmit = async (data: FormData) => {
-    setShowSuccess(false);
+    setErrorMessage('');
+    setSuccessMessage('');
 
     const finalReceivingSite =
       data.receiving_site === 'None' || !data.receiving_site
@@ -126,7 +128,7 @@ export default function LightweightDonationForm({ stores, user }: Props) {
     const result = await createDonation(donation);
 
     if (result.success) {
-      setShowSuccess(true);
+      setSuccessMessage('Donation saved.');
       setResetKey((k) => k + 1);
 
       reset({
@@ -147,7 +149,9 @@ export default function LightweightDonationForm({ stores, user }: Props) {
 
       clearErrors();
     } else {
-      console.error('Failed to create donation:', result.error);
+      setErrorMessage(
+        'Failed to create donation: ' + (result.error || 'Unknown error'),
+      );
     }
   };
 
@@ -446,16 +450,19 @@ export default function LightweightDonationForm({ stores, user }: Props) {
             </Form.Group>
 
             <div>
-              <Button type="submit" className="btn-submit">
-                Submit
+              <Button
+                type="submit"
+                className="btn-submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
             </div>
 
-            {showSuccess && (
-              <Alert variant="success" className="mb-0">
-                Form submitted successfully!
-              </Alert>
+            {successMessage && (
+              <Alert variant="success">{successMessage}</Alert>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </form>
         </Card.Body>
       </Card>

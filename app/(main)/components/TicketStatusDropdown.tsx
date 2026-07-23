@@ -25,6 +25,7 @@ export default function TicketStatusDropdown({
   const [originalStatus, setOriginalStatus] =
     useState<TicketStatus>(currentStatus);
   const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleCancel = () => {
     setError(null);
@@ -33,12 +34,18 @@ export default function TicketStatusDropdown({
 
   const handleSave = async () => {
     setError(null);
+    setIsSaving(true);
 
-    const result = await updateTicketStatus(selectedStatus, ticketId);
-    if (result.success) {
-      setOriginalStatus(selectedStatus);
-    } else {
-      setError('Error updating status. No changes were saved.');
+    try {
+      const result = await updateTicketStatus(selectedStatus, ticketId);
+      if (result.success) {
+        setOriginalStatus(selectedStatus);
+        return;
+      } else {
+        setError('Failed to update status: ' + result.error);
+      }
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -62,13 +69,15 @@ export default function TicketStatusDropdown({
             type="button"
             className="btn-submit btn-sm"
             onClick={handleSave}
+            disabled={isSaving}
           >
-            Save
+            {isSaving ? 'Saving...' : 'Save'}
           </Button>
           <Button
             type="button"
             className="btn-cancel btn-sm"
             onClick={handleCancel}
+            disabled={isSaving}
           >
             Cancel
           </Button>

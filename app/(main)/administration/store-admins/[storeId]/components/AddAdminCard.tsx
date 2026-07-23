@@ -3,9 +3,10 @@
 import { User } from '@/app/types/user';
 import Image from 'next/image';
 import styles from '@/app/(main)/components/Card.module.css';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import imagePlaceholder from '@/public/image-placeholder.svg';
 import { deleteStoreAdmin } from '@/app/actions/store';
+import { useState } from 'react';
 
 interface AddAdminCardProps {
   user: User;
@@ -19,6 +20,23 @@ export default function AddAdminCard({
   storeAdminId,
 }: AddAdminCardProps) {
   const profilePhoto = user.profile_photo_url?.trim();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setErrorMessage('');
+    try {
+      const result = await deleteStoreAdmin(storeAdminId);
+      if (!result.success) {
+        setErrorMessage('Failed to remove admin.');
+        return;
+      }
+    } catch {
+      setErrorMessage('Failed to remove admin.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div>
@@ -40,13 +58,17 @@ export default function AddAdminCard({
             <p className={styles.cardText}>{user.email}</p>
           </div>
           {showRemove && (
-            <Button
-              variant="outline-danger"
-              className="btn-remove"
-              onClick={() => deleteStoreAdmin(storeAdminId)}
-            >
-              Remove
-            </Button>
+            <>
+              <Button
+                variant="outline-danger"
+                className="btn-remove"
+                onClick={handleDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Removing...' : 'Remove'}
+              </Button>
+              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+            </>
           )}
         </div>
       </div>

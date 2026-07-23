@@ -1,12 +1,12 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { Button, Form, Alert } from 'react-bootstrap';
 import {
   updateStoreItemQuantity,
   updateStoreItemIsHidden,
 } from '@/app/actions/store';
+import { useState } from 'react';
 import styles from '@/app/(main)/manage/[storeId]/[storeItemId]/ManageStoreItemPage.module.css';
 
 export default function StoreItemForm({
@@ -32,10 +32,13 @@ export default function StoreItemForm({
     },
   });
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const onSubmit = async (values: {
     quantityAvailable: number;
     isHidden: boolean;
   }) => {
+    setErrorMessage('');
     const qtyRes = await updateStoreItemQuantity(
       storeId,
       storeItemId,
@@ -43,7 +46,7 @@ export default function StoreItemForm({
     );
 
     if (!qtyRes.success) {
-      alert(qtyRes.error ?? 'Failed to update quantity.');
+      setErrorMessage(qtyRes.error ?? 'Failed to update quantity.');
       return;
     }
 
@@ -54,11 +57,16 @@ export default function StoreItemForm({
     );
 
     if (!hiddenRes.success) {
-      alert(hiddenRes.error ?? 'Failed to update visibility.');
+      setErrorMessage(hiddenRes.error ?? 'Failed to update visibility.');
       return;
     }
 
     reset(values);
+  };
+
+  const handleCancel = () => {
+    reset();
+    setErrorMessage('');
   };
 
   return (
@@ -70,7 +78,6 @@ export default function StoreItemForm({
           type="number"
           step={1}
           placeholder=""
-          disabled={isSubmitting}
           isInvalid={!!errors.quantityAvailable}
           {...register('quantityAvailable', {
             valueAsNumber: true,
@@ -90,7 +97,6 @@ export default function StoreItemForm({
           className={styles.isHiddenCheckbox}
           type="checkbox"
           label="Is Hidden?"
-          disabled={isSubmitting}
           id="is-hidden"
           {...register('isHidden')}
         />
@@ -105,12 +111,13 @@ export default function StoreItemForm({
             type="button"
             className="btn-cancel"
             disabled={isSubmitting}
-            onClick={() => reset()}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
         </div>
       )}
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </Form>
   );
 }

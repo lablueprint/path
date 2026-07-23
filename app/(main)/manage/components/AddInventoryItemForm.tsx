@@ -53,11 +53,6 @@ export default function AddInventoryItemForm({
   };
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
     handleFileChanged(file);
   };
 
@@ -75,14 +70,8 @@ export default function AddInventoryItemForm({
 
   useEffect(() => {
     async function fetchCategories() {
-      const { data, error: err } = await supabase
-        .from('categories')
-        .select('*');
-      if (err) {
-        console.error('Error fetching categories:', err);
-      } else {
-        setCategories(data);
-      }
+      const { data } = await supabase.from('categories').select('*');
+      setCategories(data || []);
     }
     fetchCategories();
   }, []);
@@ -93,15 +82,12 @@ export default function AddInventoryItemForm({
         setSubcategories([]);
         return;
       }
-      const { data, error: err } = await supabase
+      const { data } = await supabase
         .from('subcategories')
         .select('*')
         .eq('category_id', selectedCategory);
-      if (err) {
-        console.error('Error fetching subcategories:', err);
-      } else {
-        setSubcategories(data);
-      }
+
+      setSubcategories(data || []);
     }
     fetchSubcategories();
   }, [selectedCategory]);

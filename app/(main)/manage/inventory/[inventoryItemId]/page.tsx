@@ -2,6 +2,7 @@ import DeleteInventoryItemButton from '@/app/(main)/manage/inventory/[inventoryI
 import EditInventoryItemForm from '@/app/(main)/manage/inventory/[inventoryItemId]/components/EditInventoryItemForm';
 import { createClient } from '@/app/lib/supabase/server-client';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import { Alert } from 'react-bootstrap';
 
 export default async function InventoryItemPage({
   params,
@@ -15,7 +16,7 @@ export default async function InventoryItemPage({
     await supabase.auth.getClaims();
 
   if (claimsError) {
-    console.error('Error fetching claims:', claimsError);
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const userRole = claimsData?.claims?.user_role;
@@ -54,8 +55,7 @@ export default async function InventoryItemPage({
     >();
 
   if (error || !data) {
-    console.error('Error fetching inventory item:', error);
-    return <div>Failed to load inventory item.</div>;
+    return <Alert variant="danger">Failed to load item.</Alert>;
   }
 
   const [categoriesRes, subcategoriesRes] = await Promise.all([
@@ -107,9 +107,7 @@ export default async function InventoryItemPage({
         initialCategories={categoriesRes.data || []}
         initialSubcategories={subcategoriesRes.data || []}
       />
-      <div>
-        <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
-      </div>
+      <DeleteInventoryItemButton inventoryItemId={item.inventory_item_id} />
     </>
   );
 }

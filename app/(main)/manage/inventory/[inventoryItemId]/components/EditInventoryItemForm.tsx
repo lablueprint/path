@@ -10,7 +10,7 @@ import type {
 import PhotoUpload from '@/app/(main)/components/PhotoUpload';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
 type FormValues = {
   name: string;
@@ -56,6 +56,7 @@ export default function EditInventoryItemForm({
 }) {
   const [subcategories, setSubcategories] =
     useState<Subcategory[]>(initialSubcategories);
+  const [errorMessage, setErrorMessage] = useState('');
   const [initialValues, setInitialValues] = useState<FormValues>(() =>
     getDefaultValues(item),
   );
@@ -101,7 +102,6 @@ export default function EditInventoryItemForm({
         .eq('category_id', Number(selectedCategory));
 
       if (error) {
-        console.error('Error fetching subcategories:', error);
         setSubcategories([]);
         return;
       }
@@ -113,11 +113,7 @@ export default function EditInventoryItemForm({
   }, [selectedCategory, item.category_id, initialSubcategories]);
 
   const handleFileSelect = (file: File) => {
-    const maxSize = 200 * 1024;
-    if (file.size > maxSize) {
-      alert('File is too large. Please select an image under 200 KB.');
-      return;
-    }
+    setErrorMessage('');
     const preview = URL.createObjectURL(file);
     setPreviewUrl(preview);
     setSelectedFile(file);
@@ -125,6 +121,7 @@ export default function EditInventoryItemForm({
   };
 
   const handleRemovePhoto = () => {
+    setErrorMessage('');
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setSelectedFile(null);
@@ -133,14 +130,19 @@ export default function EditInventoryItemForm({
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+    setErrorMessage('');
     try {
       await supabase.auth.getUser();
       let finalPhotoUrl = photoUrl;
 
       if (isPendingDelete) {
-        await supabase.storage
+        const { error: deleteError } = await supabase.storage
           .from('inventory_item_photos')
           .remove([`${item.inventory_item_id}/item.jpg`]);
+        if (deleteError) {
+          setErrorMessage(deleteError.message ?? 'Failed to remove photo.');
+          return;
+        }
         finalPhotoUrl = null;
       }
 
@@ -152,14 +154,14 @@ export default function EditInventoryItemForm({
           });
 
         if (uploadError) {
-          console.error('Upload error:', uploadError.message);
+          setErrorMessage('Failed to upload photo: ' + uploadError.message);
           return;
+        } else {
+          const { data: publicData } = supabase.storage
+            .from('inventory_item_photos')
+            .getPublicUrl(`${item.inventory_item_id}/item.jpg`);
+          finalPhotoUrl = `${publicData.publicUrl}?t=${time}`;
         }
-
-        const { data: publicData } = supabase.storage
-          .from('inventory_item_photos')
-          .getPublicUrl(`${item.inventory_item_id}/item.jpg`);
-        finalPhotoUrl = `${publicData.publicUrl}?t=${time}`;
       }
 
       const result = await updateItem(item.inventory_item_id, {
@@ -172,7 +174,7 @@ export default function EditInventoryItemForm({
       });
 
       if (!result.success) {
-        console.error('Failed to update inventory item:', result.error);
+        setErrorMessage('Failed to save item.');
         return;
       }
 
@@ -184,12 +186,13 @@ export default function EditInventoryItemForm({
       /* photoUploadRef.current?.resetFile(); */
       setInitialValues(formData);
       reset(formData);
-    } catch (error) {
-      console.error('Error submitting form:', error);
+    } catch {
+      setErrorMessage('Failed to save item.');
     }
   };
 
   const handleCancel = () => {
+    setErrorMessage('');
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setSelectedFile(null);
@@ -313,6 +316,7 @@ export default function EditInventoryItemForm({
                 </Button>
               </div>
             )}
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
           </div>
         </div>
       </div>

@@ -76,7 +76,7 @@
 
 .headerCardContact {
   margin-top: 1rem;
-  width: auto;
+  width: 100%;
 }
 
 .headerCard h1 {
@@ -101,5 +101,6 @@
   .headerCardContact {
     flex: 0 0 auto;
     margin-top: 0;
+    width: auto;
   }
 }

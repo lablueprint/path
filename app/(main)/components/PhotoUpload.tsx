@@ -44,25 +44,53 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
     const processAndCompressFile = async (file: File) => {
       if (!file.type.startsWith('image/')) return;
 
+      const MAX_KB = 200;
+      const TARGET_MB = 0.18;
+
       // If the file is already under 200 KB, skip compression
       if (file.size / 1024 < 200) {
         onFileSelect?.(file);
         return;
       }
 
-      const options = {
-        maxSizeMB: 0.195, // Target just under 200 KB (0.2 MB)
-        maxWidthOrHeight: 1024, // Restrict dimensions to avoid massive memory usage
-        useWebWorker: true, // Speed up processing on a separate UI thread
-      };
-
       try {
         setIsCompressing(true);
-        const compressedBlob = await imageCompression(file, options);
 
-        // Re-package the blob back into a standard File object
-        const compressedFile = new File([compressedBlob], file.name, {
-          type: file.type,
+        let currentDimensions = 1024;
+
+        // Force lossy compression for unpredictable PNGs/transparent images
+        const targetFileType =
+          file.type === 'image/png' ? 'image/jpeg' : file.type;
+
+        const baseOptions = {
+          maxSizeMB: TARGET_MB,
+          maxWidthOrHeight: currentDimensions,
+          useWebWorker: true,
+          fileType: targetFileType,
+          maxIteration: 20, // Increase binary search resolution
+        };
+
+        let compressedBlob = await imageCompression(file, baseOptions);
+
+        // If still > 200 KB, progressively scale down dimensions
+        while (compressedBlob.size / 1024 > MAX_KB && currentDimensions > 200) {
+          currentDimensions = Math.floor(currentDimensions * 0.8); // Reduce dimensions by 20%
+
+          compressedBlob = await imageCompression(compressedBlob, {
+            ...baseOptions,
+            maxWidthOrHeight: currentDimensions,
+            initialQuality: 0.6,
+          });
+        }
+
+        // Preserve original extension/name, updating MIME type if converted from PNG to JPEG
+        const newFileName =
+          file.type === 'image/png'
+            ? file.name.replace(/\.png$/i, '.jpg')
+            : file.name;
+
+        const compressedFile = new File([compressedBlob], newFileName, {
+          type: targetFileType,
           lastModified: Date.now(),
         });
 
@@ -120,7 +148,7 @@ const PhotoUpload = forwardRef<{ resetFile: () => void }, PhotoUploadProps>(
           {hasPhoto ? (
             <Image
               src={displayImage}
-              alt="Profile photo"
+              alt="Photo"
               width={variant === 'circle' ? 200 : 256}
               height={variant === 'circle' ? 200 : 256}
               className="object-fit-cover"

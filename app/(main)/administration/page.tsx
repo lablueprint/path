@@ -4,6 +4,7 @@ import membersIcon from '@/public/action-buttons/members.svg';
 import storesIcon from '@/public/action-buttons/stores.svg';
 import exportsIcon from '@/public/action-buttons/exports.svg';
 import storeAdminsIcon from '@/public/action-buttons/store-admins.svg';
+import { Alert } from 'react-bootstrap';
 
 export default async function AdministrationPage() {
   const supabase = await createClient();
@@ -12,7 +13,7 @@ export default async function AdministrationPage() {
     await supabase.auth.getClaims();
 
   if (claimsError) {
-    console.error('Error fetching claims:', claimsError);
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const userRole = claimsData?.claims?.user_role;
