@@ -9,7 +9,7 @@ import {
   createCategory,
   createSubcategory,
 } from '@/app/actions/inventory';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import styles from '@/app/(main)/manage/categories/components/EditCategories.module.css';
 
 type Category = {
@@ -27,33 +27,52 @@ export default function EditCategories({
   categories: Category[];
 }) {
   const [editing, setEditing] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
-
   const [addingSubcategory, setAddingSubcategory] = useState<number | null>(
     null,
   );
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
 
   const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) return;
+    try {
+      setLoading(true);
+      if (!newCategoryName.trim()) return;
 
-    await createCategory({ name: newCategoryName });
-    setNewCategoryName('');
-    setShowAddCategory(false);
+      const categoryResult = await createCategory({ name: newCategoryName });
+      if (!categoryResult.success) {
+        setErrorMessage('Failed to save category: ' + categoryResult.error);
+      }
+      setNewCategoryName('');
+      setShowAddCategory(false);
+    } catch {
+      setErrorMessage('Failed to save category.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCreateSubcategory = async (categoryId: number) => {
-    if (!newSubcategoryName.trim()) return;
+    try {
+      setLoading(true);
+      if (!newSubcategoryName.trim()) return;
 
-    await createSubcategory({
-      name: newSubcategoryName,
-      category_id: Number(categoryId),
-    });
-
-    setNewSubcategoryName('');
-    setAddingSubcategory(null);
+      const subcategoryResult = await createSubcategory({
+        name: newSubcategoryName,
+        category_id: Number(categoryId),
+      });
+      if (!subcategoryResult.success) {
+        setErrorMessage('Failed to save category: ' + subcategoryResult.error);
+      }
+      setNewSubcategoryName('');
+      setAddingSubcategory(null);
+    } catch {
+      setErrorMessage('Failed to save subcategory.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,7 +95,7 @@ export default function EditCategories({
       )}
 
       {editing && showAddCategory && (
-        <ul className="mb-0">
+        <ul className="mb-0 gap-container">
           <li>
             <div className="btn-row">
               <Form.Control
@@ -88,8 +107,12 @@ export default function EditCategories({
               />
 
               {newCategoryName && (
-                <Button className="btn-submit" onClick={handleCreateCategory}>
-                  Save
+                <Button
+                  className="btn-submit"
+                  onClick={handleCreateCategory}
+                  disabled={loading}
+                >
+                  {loading ? 'Saving...' : 'Save'}
                 </Button>
               )}
               <Button
@@ -98,11 +121,13 @@ export default function EditCategories({
                   setNewCategoryName('');
                   setShowAddCategory(false);
                 }}
+                disabled={loading}
               >
                 Cancel
               </Button>
             </div>
           </li>
+          {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
         </ul>
       )}
 
@@ -135,7 +160,7 @@ export default function EditCategories({
                 )}
 
                 {editing && addingSubcategory === category.category_id && (
-                  <ul className="mb-0">
+                  <ul className="mb-0 gap-container">
                     <li>
                       <div className="btn-row">
                         <Form.Control
@@ -153,8 +178,9 @@ export default function EditCategories({
                             onClick={() =>
                               handleCreateSubcategory(category.category_id)
                             }
+                            disabled={loading}
                           >
-                            Save
+                            {loading ? 'Saving...' : 'Save'}
                           </Button>
                         )}
                         <Button
@@ -163,11 +189,15 @@ export default function EditCategories({
                             setNewSubcategoryName('');
                             setAddingSubcategory(null);
                           }}
+                          disabled={loading}
                         >
                           Cancel
                         </Button>
                       </div>
                     </li>
+                    {errorMessage && (
+                      <Alert variant="danger">{errorMessage}</Alert>
+                    )}
                   </ul>
                 )}
 
@@ -175,15 +205,17 @@ export default function EditCategories({
                   <ul className="mb-0 gap-container">
                     {category.subcategories.map((sub) => (
                       <li key={sub.subcategory_id}>
-                        {editing ? (
-                          <EditableField
-                            id={sub.subcategory_id}
-                            name={sub.name}
-                            type="subcategory"
-                          />
-                        ) : (
-                          sub.name
-                        )}
+                        <div className="gap-container">
+                          {editing ? (
+                            <EditableField
+                              id={sub.subcategory_id}
+                              name={sub.name}
+                              type="subcategory"
+                            />
+                          ) : (
+                            sub.name
+                          )}
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -213,20 +245,29 @@ function EditableField({
   const [value, setValue] = useState(name);
   const [isDirty, setIsDirty] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSave = async () => {
     try {
       setLoading(true);
 
       if (type === 'category') {
-        await updateCategory(id, { name: value });
+        const categoryResult = await updateCategory(id, { name: value });
+        if (!categoryResult.success) {
+          setErrorMessage('Failed to update category: ' + categoryResult.error);
+        }
       } else {
-        await updateSubcategory(id, { name: value });
+        const subcategoryResult = await updateSubcategory(id, { name: value });
+        if (!subcategoryResult.success) {
+          setErrorMessage(
+            'Failed to update subcategory: ' + subcategoryResult.error,
+          );
+        }
       }
 
       setIsDirty(false);
     } catch (err) {
-      console.error(err);
+      setErrorMessage('Failed to update ' + type + ': ' + err);
     } finally {
       setLoading(false);
     }
@@ -237,61 +278,71 @@ function EditableField({
       setLoading(true);
 
       if (type === 'category') {
-        await deleteCategory(id);
+        const categoryResult = await deleteCategory(id);
+        if (!categoryResult.success) {
+          setErrorMessage('Failed to delete category: ' + categoryResult.error);
+        }
       } else {
-        await deleteSubcategory(id);
+        const subcategoryResult = await deleteSubcategory(id);
+        if (!subcategoryResult.success) {
+          setErrorMessage(
+            'Failed to delete subcategory: ' + subcategoryResult.error,
+          );
+        }
       }
     } catch (err) {
-      console.error(err);
+      setErrorMessage('Failed to delete ' + type + ': ' + err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="btn-row">
-      <Form.Control
-        type="text"
-        value={value}
-        disabled={loading}
-        onChange={(e) => {
-          setValue(e.target.value);
-          setIsDirty(e.target.value !== name);
-        }}
-        className={styles.inputField}
-      />
+    <>
+      <div className="btn-row">
+        <Form.Control
+          type="text"
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setIsDirty(e.target.value !== name);
+          }}
+          className={styles.inputField}
+        />
 
-      {isDirty && (
-        <>
-          <Button
-            onClick={handleSave}
-            disabled={loading}
-            className="btn-submit"
-          >
-            {loading ? 'Saving...' : 'Save'}
-          </Button>
+        {isDirty && (
+          <>
+            <Button
+              onClick={handleSave}
+              disabled={loading}
+              className="btn-submit"
+            >
+              {loading ? 'Saving...' : 'Save'}
+            </Button>
 
-          <Button
-            onClick={() => {
-              setValue(name);
-              setIsDirty(false);
-            }}
-            disabled={loading}
-            className="btn-cancel"
-          >
-            Cancel
-          </Button>
-        </>
-      )}
+            <Button
+              onClick={() => {
+                setValue(name);
+                setIsDirty(false);
+              }}
+              disabled={loading}
+              className="btn-cancel"
+            >
+              Cancel
+            </Button>
+          </>
+        )}
 
-      <Button
-        variant="outline-danger"
-        onClick={handleDelete}
-        disabled={loading}
-        className="btn-remove"
-      >
-        Remove
-      </Button>
-    </div>
+        <Button
+          variant="outline-danger"
+          onClick={handleDelete}
+          disabled={loading}
+          className="btn-remove"
+        >
+          {loading ? 'Removing...' : 'Remove'}
+        </Button>
+      </div>
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+    </>
   );
 }

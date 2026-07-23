@@ -7,7 +7,13 @@ import { Alert } from 'react-bootstrap';
 export default async function InventoryPage() {
   const supabase = await createClient();
 
-  const { data: claimsData } = await supabase.auth.getClaims();
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
+
+  if (claimsError) {
+    return <Alert variant="danger">Failed to load user.</Alert>;
+  }
+
   const role = claimsData?.claims?.user_role;
 
   const { data: categories, error } = await supabase
@@ -28,7 +34,7 @@ export default async function InventoryPage() {
     >();
 
   if (error) {
-    return <Alert variant="danger">Failed to load stores.</Alert>;
+    return <Alert variant="danger">Failed to load categories.</Alert>;
   }
 
   return (
