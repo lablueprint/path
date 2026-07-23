@@ -37,6 +37,7 @@ export default function EditCategories({
   const [newSubcategoryName, setNewSubcategoryName] = useState('');
 
   const handleCreateCategory = async () => {
+    setErrorMessage('');
     try {
       setLoading(true);
       if (!newCategoryName.trim()) return;
@@ -55,6 +56,7 @@ export default function EditCategories({
   };
 
   const handleCreateSubcategory = async (categoryId: number) => {
+    setErrorMessage('');
     try {
       setLoading(true);
       if (!newSubcategoryName.trim()) return;
@@ -248,6 +250,7 @@ function EditableField({
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSave = async () => {
+    setErrorMessage('');
     try {
       setLoading(true);
 
@@ -274,6 +277,7 @@ function EditableField({
   };
 
   const handleDelete = async () => {
+    setErrorMessage('');
     try {
       setLoading(true);
 
