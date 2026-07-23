@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import { notFound } from 'next/navigation';
+import { Alert } from 'react-bootstrap';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import IncomingTicketsList from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketsList';
 
@@ -17,7 +17,7 @@ export default async function IncomingTicketsStorePage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return notFound();
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   // Check if user can manage the store
@@ -26,13 +26,8 @@ export default async function IncomingTicketsStorePage({
     { store_to_manage_id: storeId },
   );
 
-  if (canManageError) {
-    console.error('Error checking store access:', canManageError);
-    return notFound();
-  }
-
-  if (!canManage) {
-    return notFound();
+  if (canManageError || !canManage) {
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   // Fetch the store's entry in the stores table
@@ -43,8 +38,7 @@ export default async function IncomingTicketsStorePage({
     .single();
 
   if (storeError || !store) {
-    console.error('Error fetching store:', storeError);
-    return notFound();
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   // Fetch all tickets from the tickets table where store_id matches the storeId prop
@@ -55,8 +49,7 @@ export default async function IncomingTicketsStorePage({
     .in('status', ['requested', 'approved', 'ready', 'rejected', 'fulfilled']);
 
   if (ticketsError) {
-    console.error('Error fetching tickets:', ticketsError);
-    return <div>Failed to load tickets.</div>;
+    return <Alert variant="danger">Failed to load tickets.</Alert>;
   }
 
   const tickets =

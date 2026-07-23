@@ -128,7 +128,6 @@ export default function ProfileForm({ user }: { user: User }) {
             });
 
           if (uploadError) {
-            console.error('Upload error:', uploadError.message);
             setErrorMessage(
               uploadError.message ?? 'Failed to upload profile photo.',
             );
@@ -176,8 +175,7 @@ export default function ProfileForm({ user }: { user: User }) {
         setErrorMessage(result.error ?? 'Failed to save profile.');
         return;
       }
-    } catch (error) {
-      console.error('Error saving profile:', error);
+    } catch {
       setErrorMessage('Failed to save profile.');
     } finally {
       setIsSaving(false);

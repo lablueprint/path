@@ -37,7 +37,6 @@ export default function AddAdminSearch({
         )
         .ilike('full_name', `%${d}%`);
       if (error) {
-        console.error('Error searching for admins:', error);
         setErrorMessage(error.message ?? 'Failed to search for admins.');
         return;
       }
@@ -66,8 +65,7 @@ export default function AddAdminSearch({
         setErrorMessage(result.error ?? 'Failed to add admin.');
         return;
       }
-    } catch (error) {
-      console.error('Store admin creation error:', error);
+    } catch {
       setErrorMessage('Failed to add admin.');
     } finally {
       setIsAddingUserId(null);

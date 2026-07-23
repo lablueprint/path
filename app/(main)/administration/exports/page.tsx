@@ -2,6 +2,7 @@ import DonationsExportForm from '@/app/(main)/administration/exports/components/
 import { createClient } from '@/app/lib/supabase/server-client';
 import { Table } from 'react-bootstrap';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
+import { Alert } from 'react-bootstrap';
 
 export default async function ExportsPage() {
   const supabase = await createClient();
@@ -14,8 +15,7 @@ export default async function ExportsPage() {
     .limit(10);
 
   if (err) {
-    console.error('Error fetching donations:', err);
-    return <div>Failed to load data.</div>;
+    return <Alert variant="danger">Failed to load donations.</Alert>;
   }
 
   const sortedDonations = [...data].sort((a, b) =>

@@ -6,6 +6,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
+import { Alert } from 'react-bootstrap';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import accordionStyles from '@/app/(main)/request/all/Accordion.module.css';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
@@ -32,7 +33,7 @@ export default async function AllCartsPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return <>User not found.</>;
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   // Fetch stores
@@ -42,8 +43,7 @@ export default async function AllCartsPage() {
     .order('name');
 
   if (storesError || !stores) {
-    console.error('Error fetching stores:', storesError);
-    return <>Failed to load stores.</>;
+    return <Alert variant="danger">Failed to load stores.</Alert>;
   }
 
   const sortedStores = stores.sort((a, b) => a.name.localeCompare(b.name));
@@ -59,8 +59,7 @@ export default async function AllCartsPage() {
     .overrideTypes<DraftTicket[], { merge: false }>();
 
   if (ticketError || !draftTickets) {
-    console.log(ticketError);
-    return <>Failed to load carts.</>;
+    return <Alert variant="danger">Failed to load carts.</Alert>;
   }
 
   const draftTicketByStore = draftTickets.reduce<Record<string, DraftTicket>>(

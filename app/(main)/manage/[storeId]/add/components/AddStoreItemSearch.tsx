@@ -83,7 +83,6 @@ export default function AddStoreItemSearch({
         .select(`*, subcategories (name, categories(name))`)
         .ilike('name', `%${searchQuery}%`);
       if (error) {
-        console.error(error);
         setErrorMessage(error.message ?? 'Failed to search inventory items.');
         setResults([]);
         return;
@@ -290,7 +289,7 @@ export default function AddStoreItemSearch({
           ))}
         </div>
       ) : (
-        <>No items selected.</>
+        <p>No items selected.</p>
       )}
     </>
   );

@@ -3,6 +3,7 @@ import ProfileForm from '@/app/(main)/profile/components/ProfileForm';
 import type { User } from '@/app/types/user';
 import UpdatePasswordForm from '@/app/(main)/profile/components/UpdatePasswordForm';
 import SignOutButton from '@/app/(main)/profile/components/SignOutButton';
+import { Alert } from 'react-bootstrap';
 
 export default async function PersonalProfilePage() {
   const supabase = await createClient();
@@ -11,7 +12,7 @@ export default async function PersonalProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return <div>Please sign in.</div>;
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const { data: profile, error: err } = await supabase
@@ -21,8 +22,7 @@ export default async function PersonalProfilePage() {
     .single();
 
   if (err || !profile) {
-    console.error('Error fetching profile:', err);
-    return <div>User profile not found.</div>;
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   return (

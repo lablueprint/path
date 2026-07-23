@@ -8,6 +8,7 @@ import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Link from 'next/link';
 import { Store } from '@/app/types/store';
 import AddOutOfStockToCartForm from '@/app/(main)/request/components/AddOutOfStockToCartForm';
+import { Alert } from 'react-bootstrap';
 
 export default async function CartPage({
   params,
@@ -27,7 +28,7 @@ export default async function CartPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return <div>User not found</div>;
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const { data: store, error: storeError } = await supabase
@@ -37,8 +38,7 @@ export default async function CartPage({
     .single();
 
   if (storeError || !store) {
-    console.error('Error fetching store:', storeError);
-    return <div>Failed to load store.</div>;
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   // Query for draft ticket
@@ -81,8 +81,7 @@ export default async function CartPage({
     .select('ticket_item_id')
     .eq('ticket_id', ticket.ticket_id);
   if (itemsError) {
-    console.error('Error fetching ticket items:', itemsError);
-    return <div>Failed to load cart items.</div>;
+    return <Alert variant="danger">Failed to load cart items.</Alert>;
   }
 
   const hasItems = ticketItems && ticketItems.length > 0;
@@ -94,9 +93,8 @@ export default async function CartPage({
       .select('store_id, name, street_address')
       .neq('store_id', storeId);
   if (destStoreOptionsError) {
-    console.error(
-      'Error fetching destination store options:',
-      destStoreOptionsError,
+    return (
+      <Alert variant="danger">Failed to load destination store options.</Alert>
     );
   }
 

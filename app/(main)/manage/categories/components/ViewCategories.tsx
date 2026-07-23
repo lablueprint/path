@@ -27,14 +27,14 @@ export default function ViewCategories({
                     ))}
                   </ul>
                 ) : (
-                  <div>No subcategories found.</div>
+                  <p>No subcategories found.</p>
                 )}
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <div>No categories found.</div>
+        <p>No categories found.</p>
       )}
     </>
   );

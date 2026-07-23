@@ -7,6 +7,7 @@ import styles from '@/app/(main)/request/Cart.module.css';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
 import cartIcon from '@/public/cart-icon.svg';
+import { Alert } from 'react-bootstrap';
 
 type SearchParams = {
   query?: string;
@@ -33,8 +34,7 @@ export default async function RequestStorePage({
     .single();
 
   if (storeError || !store) {
-    console.error('Error fetching store:', storeError);
-    return <div>Failed to load store.</div>;
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   // Fetch categories
@@ -107,8 +107,7 @@ export default async function RequestStorePage({
     >();
 
   if (itemsError) {
-    console.error('Error fetching store items:', itemsError);
-    return <div>Failed to load store items.</div>;
+    return <Alert variant="danger">Failed to load store items.</Alert>;
   }
 
   // Sort itemsData in JavaScript

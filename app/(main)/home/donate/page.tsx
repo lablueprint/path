@@ -1,7 +1,7 @@
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import LightweightDonationForm from '@/app/(main)/home/donate/components/LightweightDonationForm';
 import { createClient } from '@/app/lib/supabase/server-client';
-import { notFound } from 'next/navigation';
+import { Alert } from 'react-bootstrap';
 
 export default async function DonationPage() {
   const supabase = await createClient();
@@ -18,7 +18,7 @@ export default async function DonationPage() {
     >();
 
   if (error) {
-    console.error('Error fetching stores:', error);
+    return <Alert variant="danger">Failed to load stores.</Alert>;
   }
   const {
     data: { user },
@@ -33,7 +33,7 @@ export default async function DonationPage() {
     .eq('user_id', userId)
     .single();
 
-  if (userError) return notFound();
+  if (userError) return <Alert variant="danger">Failed to load user.</Alert>;
 
   return (
     <>

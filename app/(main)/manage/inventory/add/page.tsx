@@ -66,7 +66,6 @@ export default function AddInventoryItemPage() {
 
       methods.reset();
       setSelectedFile(null);
-      console.log('Item created successfully:', result.data);
     } catch (error) {
       console.error('Error submitting form:', error);
     }

@@ -1,9 +1,9 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoreItemsDonationForm from '@/app/(main)/manage/[storeId]/add/components/StoreItemsDonationForm';
-import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import Image from 'next/image';
 import pinIcon from '@/public/pin-icon.svg';
+import { Alert } from 'react-bootstrap';
 
 export default async function AddStoreItemsPage({
   params,
@@ -23,7 +23,7 @@ export default async function AddStoreItemsPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return notFound();
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   // Check if user can manage the store
@@ -32,13 +32,8 @@ export default async function AddStoreItemsPage({
     { store_to_manage_id: storeId },
   );
 
-  if (canManageError) {
-    console.error('Error checking store access:', canManageError);
-    return notFound();
-  }
-
-  if (!canManage) {
-    return notFound();
+  if (canManageError || !canManage || storeError) {
+    return <Alert variant="danger">Failed to load store.</Alert>;
   }
 
   // extract user id
@@ -50,7 +45,7 @@ export default async function AddStoreItemsPage({
     .eq('user_id', userId)
     .single();
 
-  if (userError || storeError) return notFound();
+  if (userError) return <Alert variant="danger">Failed to load user.</Alert>;
 
   return (
     <>

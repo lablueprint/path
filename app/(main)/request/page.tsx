@@ -1,6 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import StoresList from '@/app/(main)/components/StoresList';
 import Link from 'next/link';
+import { Alert } from 'react-bootstrap';
 
 export default async function RequestPage() {
   const supabase = await createClient();
@@ -10,7 +11,7 @@ export default async function RequestPage() {
     .select('*');
 
   if (err) {
-    console.error('Error fetching stores:', err);
+    return <Alert variant="danger">Failed to load stores.</Alert>;
   }
 
   const stores = storesData || [];

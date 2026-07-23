@@ -97,7 +97,6 @@ export default function EditStoreForm({ store }: { store: Store }) {
 
         if (uploadError) {
           setErrorMessage('Failed to update store: ' + uploadError.message);
-          console.error('Upload error:', uploadError.message);
         } else {
           const { data: publicData } = supabase.storage
             .from('store_photos')
@@ -125,11 +124,9 @@ export default function EditStoreForm({ store }: { store: Store }) {
         reset({ name: data.name, street_address: data.street_address });
       } else {
         setErrorMessage('Failed to update store: ' + result.error);
-        console.error('Error updating store:', result.error);
       }
     } catch (error) {
       setErrorMessage('Error saving store: ' + error);
-      console.error('Error saving store:', error);
     } finally {
       setIsSaving(false);
     }

@@ -6,6 +6,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionBody from 'react-bootstrap/AccordionBody';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
 import AccordionItem from 'react-bootstrap/AccordionItem';
+import { Alert } from 'react-bootstrap';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import styles from '@/app/(main)/request/Cart.module.css';
 import Image from 'next/image';
@@ -32,8 +33,7 @@ export default async function RequestAllStoresPage({
     .order('name');
 
   if (storesError || !stores) {
-    console.error('Error fetching stores:', storesError);
-    return <div>Failed to load stores.</div>;
+    return <Alert variant="danger">Failed to load stores.</Alert>;
   }
 
   //Fetch categories
@@ -42,8 +42,7 @@ export default async function RequestAllStoresPage({
     .select('category_id, name')
     .order('name');
   if (categoryError || !categories) {
-    console.error('Error fetching categories:', categoryError);
-    return <div>Failed to load categories.</div>;
+    return <Alert variant="danger">Failed to load categories.</Alert>;
   }
   //Fetch subcategories
   const { data: subcategories, error: subcategoryError } = await supabase
@@ -51,8 +50,7 @@ export default async function RequestAllStoresPage({
     .select('subcategory_id, name, category_id')
     .order('name');
   if (subcategoryError || !subcategories) {
-    console.error('Error fetching subcategories:', subcategoryError);
-    return <div>Failed to load subcategories.</div>;
+    return <Alert variant="danger">Failed to load subcategories.</Alert>;
   }
 
   // Fetch non-hidden store items
@@ -118,8 +116,7 @@ export default async function RequestAllStoresPage({
     >();
 
   if (itemsError) {
-    console.error('Error fetching store items:', itemsError);
-    return <div>Failed to load store items.</div>;
+    return <Alert variant="danger">Failed to load store items.</Alert>;
   }
 
   const sortedItemsData = itemsData?.sort((a, b) => {

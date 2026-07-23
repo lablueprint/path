@@ -15,13 +15,11 @@ export default function SignOutButton() {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error('Sign-out error:', error.message);
         setErrorMessage(error.message ?? 'Failed to sign out.');
         return;
       }
       window.location.assign('/home');
-    } catch (error) {
-      console.error('Sign-out error:', error);
+    } catch {
       setErrorMessage('Failed to sign out. Please try again.');
     } finally {
       setIsSigningOut(false);

@@ -28,7 +28,6 @@ export default function RemoveStoreButton({ storeId }: RemoveStoreButtonProps) {
       const { success, error } = await deleteStore(storeId);
       if (storageError || !success) {
         setErrorMessage('Failed to remove store: ' + error);
-        console.error(error);
         return;
       }
       router.push('/administration/stores');

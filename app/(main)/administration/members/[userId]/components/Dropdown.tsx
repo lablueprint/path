@@ -29,8 +29,7 @@ export default function Dropdown({
         return;
       }
       setOriginalRoleId(currentRoleId);
-    } catch (error) {
-      console.error('Role update error:', error);
+    } catch {
       setErrorMessage('Failed to update role.');
     } finally {
       setIsSubmitting(false);

@@ -1,7 +1,7 @@
 import TicketDetails from '@/app/(main)/components/TicketDetails';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
 import { createClient } from '@/app/lib/supabase/server-client';
-import { notFound } from 'next/navigation';
+import { Alert } from 'react-bootstrap';
 
 export default async function OutgoingTicketDetailsPage({
   params,
@@ -16,7 +16,7 @@ export default async function OutgoingTicketDetailsPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return notFound();
+    return <Alert variant="danger">Failed to load user.</Alert>;
   }
 
   const { data: ticket, error } = await supabase
@@ -26,7 +26,7 @@ export default async function OutgoingTicketDetailsPage({
     .single();
 
   if (error || !ticket || ticket.requestor_user_id !== user.id) {
-    return notFound();
+    return <Alert variant="danger">Failed to load ticket.</Alert>;
   }
 
   return (

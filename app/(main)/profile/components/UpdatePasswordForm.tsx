@@ -55,15 +55,13 @@ export default function UpdatePasswordForm() {
       });
 
       if (error) {
-        console.error('Password update error:', error);
         setErrorMessage(error.message ?? 'Failed to update password.');
         return;
       }
 
       setSuccessMessage('Password updated.');
       reset();
-    } catch (error) {
-      console.error('Password update error:', error);
+    } catch {
       setErrorMessage('Failed to update password. Please try again.');
     } finally {
       setIsSaving(false);

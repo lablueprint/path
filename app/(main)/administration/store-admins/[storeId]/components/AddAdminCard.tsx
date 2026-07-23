@@ -31,8 +31,7 @@ export default function AddAdminCard({
         setErrorMessage('Failed to remove admin.');
         return;
       }
-    } catch (error) {
-      console.error('Store admin deletion error:', error);
+    } catch {
       setErrorMessage('Failed to remove admin.');
     } finally {
       setIsDeleting(false);
