@@ -78,7 +78,7 @@ export async function updateSession(request: NextRequest) {
     }
   }
   if (
-    ['/request', '/outgoing-tickets', '/administration'].some((path) =>
+    ['/request', '/my-tickets', '/administration'].some((path) =>
       request.nextUrl.pathname.startsWith(path),
     )
   ) {
@@ -90,7 +90,7 @@ export async function updateSession(request: NextRequest) {
     }
   }
   if (
-    ['/manage', '/incoming-tickets'].some((path) =>
+    ['/manage', '/store-tickets'].some((path) =>
       request.nextUrl.pathname.startsWith(path),
     )
   ) {

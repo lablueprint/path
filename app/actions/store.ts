@@ -29,7 +29,7 @@ export const createStore = async (data: StoreInsert) => {
   revalidatePath(`/hq`);
   revalidatePath(`/request`);
   revalidatePath(`/manage`);
-  revalidatePath(`/incoming-tickets`);
+  revalidatePath(`/store-tickets`);
   revalidatePath(`/team/store-admins`);
 
   return { success: true, data: entry as Store };
@@ -52,7 +52,7 @@ export const updateStore = async (storeId: string, data: StoreUpdate) => {
   revalidatePath(`/hq`);
   revalidatePath(`/request`);
   revalidatePath(`/manage`);
-  revalidatePath(`/incoming-tickets`);
+  revalidatePath(`/store-tickets`);
   revalidatePath(`/team/store-admins`);
 
   return { success: true, data: entry as Store };
@@ -76,7 +76,7 @@ export const deleteStore = async (storeId: string) => {
   revalidatePath(`/hq`);
   revalidatePath(`/request`);
   revalidatePath(`/manage`);
-  revalidatePath(`/incoming-tickets`);
+  revalidatePath(`/store-tickets`);
   revalidatePath(`/team/store-admins`);
 
   return { success: true, data: entry as Store };

@@ -56,10 +56,10 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
   }
 
   revalidatePath(`/request/${entry.store_id}/cart`);
-  revalidatePath('/outgoing-tickets');
-  revalidatePath(`/outgoing-tickets/${ticketId}`);
-  revalidatePath(`/incoming-tickets/${entry.store_id}`);
-  revalidatePath(`/incoming-tickets/${entry.store_id}/${ticketId}`);
+  revalidatePath('/my-tickets');
+  revalidatePath(`/my-tickets/${ticketId}`);
+  revalidatePath(`/store-tickets/${entry.store_id}`);
+  revalidatePath(`/store-tickets/${entry.store_id}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };
 }
@@ -140,8 +140,8 @@ export async function deleteTicketItem(ticketItemId: string) {
     .single();
 
   revalidatePath(`/request/${ticket?.store_id}/cart`);
-  revalidatePath(`/outgoing-tickets/${entry.ticket_id}`);
-  revalidatePath(`/incoming-tickets/${ticket?.store_id}/${entry.ticket_id}`);
+  revalidatePath(`/my-tickets/${entry.ticket_id}`);
+  revalidatePath(`/store-tickets/${ticket?.store_id}/${entry.ticket_id}`);
 
   return { success: true, data: entry as TicketItem };
 }
@@ -296,8 +296,8 @@ export async function updateTicketDestStore(
     .single();
 
   revalidatePath(`/request/${ticket?.store_id}/cart`);
-  revalidatePath(`incoming-tickets.${ticket?.store_id}`);
-  revalidatePath(`/incoming-tickets/${ticket?.store_id}/${ticketId}`);
+  revalidatePath(`/store-tickets.${ticket?.store_id}`);
+  revalidatePath(`/store-tickets/${ticket?.store_id}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };
 }

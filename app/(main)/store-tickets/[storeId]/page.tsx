@@ -1,7 +1,7 @@
 import { createClient } from '@/app/lib/supabase/server-client';
 import { Alert } from 'react-bootstrap';
 import Breadcrumbs from '@/app/(main)/components/Breadcrumbs';
-import IncomingTicketsList from '@/app/(main)/incoming-tickets/[storeId]/components/IncomingTicketsList';
+import IncomingTicketsList from '@/app/(main)/store-tickets/[storeId]/components/IncomingTicketsList';
 
 export default async function IncomingTicketsStorePage({
   params,
@@ -65,7 +65,7 @@ export default async function IncomingTicketsStorePage({
     <>
       <Breadcrumbs
         labelMap={{
-          'incoming-tickets': 'Store Tickets',
+          'store-tickets': 'Store Tickets',
           [storeId]: store.name,
         }}
       />

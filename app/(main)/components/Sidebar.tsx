@@ -65,7 +65,7 @@ export default async function Sidebar() {
         },
         {
           label: 'My Tickets',
-          href: '/outgoing-tickets',
+          href: '/my-tickets',
           allowedRoles: ['requestor', 'admin', 'superadmin', 'owner'],
         },
       ],
@@ -80,7 +80,7 @@ export default async function Sidebar() {
         },
         {
           label: 'Store Tickets',
-          href: '/incoming-tickets',
+          href: '/store-tickets',
           allowedRoles: ['admin', 'superadmin', 'owner'],
         },
       ],

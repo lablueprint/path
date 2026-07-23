@@ -66,7 +66,7 @@ export default async function CartPage({
         {showSuccess && (
           <>
             <p>Ticket submitted successfully!</p>
-            <Link href={`/outgoing-tickets/${ticketId}`}>Go to Ticket</Link>
+            <Link href={`/my-tickets/${ticketId}`}>Go to Ticket</Link>
           </>
         )}
         <TicketItemsList ticketId={null} />
@@ -120,7 +120,7 @@ export default async function CartPage({
       {showSuccess && (
         <>
           <p>Ticket submitted successfully!</p>
-          <Link href={`/outgoing-tickets/${ticketId}`}>Go to Ticket</Link>
+          <Link href={`/my-tickets/${ticketId}`}>Go to Ticket</Link>
         </>
       )}
       <TicketItemsList ticketId={ticket.ticket_id} />

@@ -1,5 +1,5 @@
 import { createClient } from '@/app/lib/supabase/server-client';
-import OutgoingTicketsList from '@/app/(main)/outgoing-tickets/components/OutgoingTicketsList';
+import OutgoingTicketsList from '@/app/(main)/my-tickets/components/OutgoingTicketsList';
 import { Alert } from 'react-bootstrap';
 
 export default async function OutgoingTicketsPage() {
