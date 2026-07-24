@@ -86,7 +86,7 @@ export const createSubcategory = async (data: SubcategoryInsert) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/categories');
 
   return { success: true, data: entry as Subcategory };
 };
@@ -108,7 +108,7 @@ export const updateSubcategory = async (
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/categories');
 
   return { success: true, data: entry as Subcategory };
 };
@@ -127,7 +127,7 @@ export const deleteSubcategory = async (subcategoryId: number) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/categories');
 
   return { success: true, data: entry as Subcategory };
 };
@@ -145,7 +145,7 @@ export const createCategory = async (data: CategoryInsert) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/categories');
 
   return { success: true, data: entry as Category };
 };
@@ -167,7 +167,7 @@ export const updateCategory = async (
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/categories');
 
   return { success: true, data: entry as Category };
 };
@@ -186,7 +186,7 @@ export const deleteCategory = async (categoryId: number) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath('/manage/inventory');
+  revalidatePath('/manage/categories');
 
   return { success: true, data: entry as Category };
 };

@@ -8,8 +8,10 @@ import ConfirmModal from '@/app/(main)/components/ConfirmModal';
 
 export default function DeleteStoreItemButton({
   storeItemId,
+  storeId,
 }: {
   storeItemId: string;
+  storeId: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -27,7 +29,7 @@ export default function DeleteStoreItemButton({
   async function handleDelete() {
     setErrorMessage('');
     startTransition(async () => {
-      const result = await deleteStoreItem(storeItemId);
+      const result = await deleteStoreItem(storeItemId, storeId);
 
       if (!result.success) {
         setErrorMessage('Failed to delete store item: ' + result.error);

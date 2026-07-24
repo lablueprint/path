@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { Donation, DonationInsert } from '@/app/types/donation';
 import { createClient } from '@/app/lib/supabase/server-client';
 
@@ -12,6 +13,9 @@ export async function createDonation(data: DonationInsert) {
     console.error('Error creating donation:', err);
     return { success: false, error: err.message };
   }
+
+  revalidatePath('/administration/exports');
+
   return { success: true }; // return the row that was created
 }
 
@@ -30,6 +34,9 @@ export async function deleteDonation(donationId: string) {
     console.error('Error deleting donation:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/administration/exports');
+
   return { success: true, data: entry as Donation };
 }
 

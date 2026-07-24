@@ -26,11 +26,11 @@ export const createStore = async (data: StoreInsert) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/hq`);
-  revalidatePath(`/request`);
-  revalidatePath(`/manage`);
-  revalidatePath(`/store-tickets`);
-  revalidatePath(`/team/store-admins`);
+  revalidatePath('/administration/store-admins');
+  revalidatePath('/administration/stores');
+  revalidatePath('/manage');
+  revalidatePath('/request');
+  revalidatePath('/store-tickets');
 
   return { success: true, data: entry as Store };
 };
@@ -49,11 +49,11 @@ export const updateStore = async (storeId: string, data: StoreUpdate) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/hq`);
-  revalidatePath(`/request`);
-  revalidatePath(`/manage`);
-  revalidatePath(`/store-tickets`);
-  revalidatePath(`/team/store-admins`);
+  revalidatePath('/administration/store-admins');
+  revalidatePath('/administration/stores');
+  revalidatePath('/manage');
+  revalidatePath('/request');
+  revalidatePath('/store-tickets');
 
   return { success: true, data: entry as Store };
 };
@@ -73,11 +73,11 @@ export const deleteStore = async (storeId: string) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/hq`);
-  revalidatePath(`/request`);
-  revalidatePath(`/manage`);
-  revalidatePath(`/store-tickets`);
-  revalidatePath(`/team/store-admins`);
+  revalidatePath('/administration/store-admins');
+  revalidatePath('/administration/stores');
+  revalidatePath('/manage');
+  revalidatePath('/request');
+  revalidatePath('/store-tickets');
 
   return { success: true, data: entry as Store };
 };
@@ -95,7 +95,7 @@ export const createStoreAdmin = async (data: StoreAdminInsert) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/team/${data.store_id}`);
+  revalidatePath(`/administration/store-admins/${data.store_id}`);
 
   return { success: true, data: entry as StoreAdmin };
 };
@@ -114,7 +114,7 @@ export const deleteStoreAdmin = async (storeAdminId: string) => {
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/team/${entry.stores.store_id}`);
+  revalidatePath(`/administration/store-admins/${entry.stores.store_id}`);
 
   return { success: true, data: entry as StoreAdmin };
 };
@@ -131,10 +131,15 @@ export const createStoreItem = async (data: StoreItemInsert) => {
     console.error('Error creating store item:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/manage/${data.store_id}`);
+  revalidatePath(`/request/${data.store_id}`);
+  revalidatePath('/request/all');
+
   return { success: true, data: entry as StoreItem };
 };
 
-export const deleteStoreItem = async (storeItemId: string) => {
+export const deleteStoreItem = async (storeItemId: string, storeId: string) => {
   const supabase = await createClient();
   const { data: entry, error: err } = await supabase
     .from('store_items')
@@ -147,6 +152,11 @@ export const deleteStoreItem = async (storeItemId: string) => {
     console.error('Error deleting store item:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath(`/manage/${storeId}`);
+  revalidatePath(`/request/${storeId}`);
+  revalidatePath('/request/all');
+
   return { success: true, data: entry as StoreItem };
 };
 
@@ -168,9 +178,7 @@ export const updateStoreItemQuantity = async (
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/manage/${storeId}`);
   revalidatePath(`/manage/${storeId}/${storeItemId}`);
-  revalidatePath(`/request/${storeId}`);
   revalidatePath(`/request/${storeId}/${storeItemId}`);
 
   return { success: true, data: entry as StoreItem };
@@ -194,9 +202,9 @@ export const updateStoreItemIsHidden = async (
     return { success: false, data: null, error: err.message };
   }
 
-  revalidatePath(`/manage/${storeId}`);
   revalidatePath(`/manage/${storeId}/${storeItemId}`);
   revalidatePath(`/request/${storeId}`);
+  revalidatePath('/request/all');
   revalidatePath(`/request/${storeId}/${storeItemId}`);
 
   return { success: true, data: entry as StoreItem };
@@ -232,6 +240,10 @@ export const addUpdateStoreItemQuantity = async (
       console.error('Error updating store item quantity:', err);
       return { success: false, data: null, error: err.message };
     }
+
+    revalidatePath(`/manage/${storeId}/${entry.store_item_id}`);
+    revalidatePath(`/request/${storeId}/${entry.store_item_id}`);
+
     return { success: true, data: entry as StoreItem };
   } else {
     const { data: entry, error: err } = await supabase
@@ -248,6 +260,11 @@ export const addUpdateStoreItemQuantity = async (
       console.error('Error adding store item and quantity:', err);
       return { success: false, data: null, error: err.message };
     }
+
+    revalidatePath(`/manage/${storeId}`);
+    revalidatePath(`/request/${storeId}`);
+    revalidatePath('/request/all');
+
     return { success: true, data: entry as StoreItem };
   }
 };

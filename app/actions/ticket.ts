@@ -1,11 +1,6 @@
 'use server'; // directive that indicates that the functions we define are server actions
 
-import {
-  Ticket,
-  TicketInsert,
-  TicketItem,
-  TicketItemInsert,
-} from '@/app/types/ticket';
+import { Ticket, TicketInsert, TicketItem } from '@/app/types/ticket';
 import { createClient } from '@/app/lib/supabase/server-client';
 import { revalidatePath } from 'next/cache';
 
@@ -22,6 +17,9 @@ export async function createTicket(data: TicketInsert) {
     console.error('Error creating ticket:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/my-tickets');
+
   return { success: true, data: entry as Ticket };
 }
 
@@ -38,6 +36,10 @@ export async function deleteTicket(ticketId: string) {
     console.error('Error deleting ticket:', err);
     return { success: false, data: null, error: err.message };
   }
+
+  revalidatePath('/my-tickets');
+  revalidatePath(`/store-tickets/${entry.store_id}`);
+
   return { success: true, data: entry as Ticket };
 }
 
@@ -56,28 +58,13 @@ export async function updateTicketStatus(newStatus: string, ticketId: string) {
   }
 
   revalidatePath(`/request/${entry.store_id}/cart`);
+  revalidatePath('/request/all/cart');
   revalidatePath('/my-tickets');
   revalidatePath(`/my-tickets/${ticketId}`);
   revalidatePath(`/store-tickets/${entry.store_id}`);
   revalidatePath(`/store-tickets/${entry.store_id}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };
-}
-
-export async function createTicketItem(data: TicketItemInsert) {
-  const supabase = await createClient();
-  // Server Action uses a mutation method
-  const { data: entry, error: err } = await supabase
-    .from('ticket_items')
-    .insert(data)
-    .select()
-    .single();
-
-  if (err) {
-    console.error('Error creating ticket item:', err);
-    return { success: false, data: null, error: err.message };
-  }
-  return { success: true, data: entry as TicketItem };
 }
 
 export async function updateTicketItemQuantity(
@@ -140,6 +127,7 @@ export async function deleteTicketItem(ticketItemId: string) {
     .single();
 
   revalidatePath(`/request/${ticket?.store_id}/cart`);
+  revalidatePath('/request/all/cart');
   revalidatePath(`/my-tickets/${entry.ticket_id}`);
   revalidatePath(`/store-tickets/${ticket?.store_id}/${entry.ticket_id}`);
 
@@ -216,7 +204,7 @@ export async function addToCart(
       .eq('store_item_id', storeItemId)
       .maybeSingle();
 
-    // If ticket item already exists, incremented by quantity, if does not exist, set to quantity
+    // If ticket item already exists, increment by quantity, if does not exist, set to quantity
     const newQuantity = existingItem
       ? existingItem.quantity_requested + quantity
       : quantity;
@@ -243,7 +231,7 @@ export async function addToCart(
     }
 
     revalidatePath(`/request/${storeId}/cart`);
-    revalidatePath(`/request/all/cart`);
+    revalidatePath('/request/all/cart');
 
     return { success: true, data: ticketItem };
   } else if (description) {
@@ -263,7 +251,7 @@ export async function addToCart(
     }
 
     revalidatePath(`/request/${storeId}/cart`);
-    revalidatePath(`/request/all/cart`);
+    revalidatePath('/request/all/cart');
 
     return { success: true, data: ticketItem };
   }
@@ -296,7 +284,8 @@ export async function updateTicketDestStore(
     .single();
 
   revalidatePath(`/request/${ticket?.store_id}/cart`);
-  revalidatePath(`/store-tickets.${ticket?.store_id}`);
+  revalidatePath('/request/all/cart');
+  revalidatePath(`/my-tickets/${ticketId}`);
   revalidatePath(`/store-tickets/${ticket?.store_id}/${ticketId}`);
 
   return { success: true, data: entry as Ticket };

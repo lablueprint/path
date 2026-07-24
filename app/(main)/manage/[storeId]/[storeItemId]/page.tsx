@@ -151,7 +151,10 @@ export default async function ManageStoreItemPage({
           </Row>
         </div>
       </Card>
-      <DeleteStoreItemButton storeItemId={itemData.store_item_id} />
+      <DeleteStoreItemButton
+        storeItemId={itemData.store_item_id}
+        storeId={storeId}
+      />
     </>
   );
 }

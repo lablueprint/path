@@ -18,7 +18,7 @@ export async function updateUserRole(userId: string, roleId: number) {
     return { success: false, data: null, error: err.message };
   }
   revalidatePath('/profile');
-  revalidatePath('/team/[userId]');
+  revalidatePath(`/administration/members/${userId}`);
   return { success: true, data: entry as UserRole };
 }
 
@@ -62,6 +62,7 @@ export const updateUser = async (userId: string, data: UserUpdate) => {
   }
 
   revalidatePath('/profile');
+  revalidatePath(`/administration/members/${userId}`);
 
   return { success: true, data: null };
 };
