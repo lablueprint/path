@@ -25,13 +25,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(redirectTo);
     }
 
-    // TODO: remove once redirect to error page is implemented
+    redirectTo.pathname = '/auth-error';
     if (error) {
-      return NextResponse.json(error, { status: 400 });
+      return NextResponse.redirect(redirectTo);
     }
   }
 
-  // TODO: redirect to error page
-  redirectTo.pathname = '/home';
+  redirectTo.pathname = '/auth-error';
   return NextResponse.redirect(redirectTo);
 }

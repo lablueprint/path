@@ -258,15 +258,15 @@ otp_expiry = 3600
 # content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.email_change]
-subject = "Confirm email change"
+subject = "[PATH] Confirm Email Change"
 content_path = "./supabase/templates/email-change.html"
 
 [auth.email.template.confirmation]
-subject = "Confirm sign-up"
+subject = "[PATH] Confirm Sign-Up"
 content_path = "./supabase/templates/sign-up.html"
 
 [auth.email.template.recovery]
-subject = "Confirm password reset"
+subject = "[PATH] Confirm Password Reset"
 content_path = "./supabase/templates/password-reset.html"
 
 # Uncomment to customize notification email template

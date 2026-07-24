@@ -60,7 +60,6 @@ export default function SignUpPage() {
       setErrorMessage(error.message ?? 'Failed to sign up.');
       return;
     }
-    window.location.assign('/home');
     setSuccessMessage(
       'Account created successfully! Please check your email to confirm your account.',
     );

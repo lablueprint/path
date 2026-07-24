@@ -103,7 +103,7 @@ Table {
   padding: calc(1.5rem + 3.875rem) 1.5rem 1.5rem 1.5rem;
 }
 
-.not-found-container {
+.standalone-page-container {
   padding: 1.5rem;
 }
 
@@ -111,7 +111,7 @@ Table {
   .main-container {
     padding: calc(3rem + 3.875rem) 3rem 3rem 3rem;
   }
-  .not-found-container {
+  .standalone-page-container {
     padding: 3rem;
   }
 }
